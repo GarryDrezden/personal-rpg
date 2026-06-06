@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+  --color-gold: #f59e0b;
+  --color-rpg-surface: #faf8f5;
+  --color-rpg-border: #e8e0d4;
+  --color-rpg-muted: #78716c;
+}
+
+body {
+  @apply bg-rpg-surface text-stone-800 antialiased;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+#root {
+  @apply min-h-screen;
+}

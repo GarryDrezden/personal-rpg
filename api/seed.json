@@ -1,0 +1,19 @@
+{
+  "defaults": {
+    "caloriesLimit": 2650,
+    "stepsGoal": 11500,
+    "gymTarget": 2,
+    "weeklyPointsGoal": 500,
+    "weekStart": "2026-06-09"
+  },
+  "measurements": [],
+  "dailyEntries": [],
+  "rewards": [
+    { "title": "Кофе вне дома", "description": "Чашка кофе в любимом кафе", "cost": 200, "category": "Отдых" },
+    { "title": "Вечер игры", "description": "Вечер за игрой без чувства вины", "cost": 300, "category": "Отдых" },
+    { "title": "Покупка для цветов", "description": "Для домашних растений", "cost": 500, "category": "Хобби" },
+    { "title": "Покупка для хобби", "description": "Материалы для любимого дела", "cost": 1000, "category": "Хобби" },
+    { "title": "Поездка выходного дня", "description": "Вылазка на природу", "cost": 2000, "category": "Приключения" },
+    { "title": "Крупная покупка", "description": "Что-то давно желаемое", "cost": 3000, "category": "Крупное" }
+  ]
+}

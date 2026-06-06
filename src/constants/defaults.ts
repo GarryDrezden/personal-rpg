@@ -1,0 +1,45 @@
+import type { AppSettings, PointSettings } from '../types';
+
+export const DEFAULT_POINT_SETTINGS: PointSettings = {
+  caloriesOk: 40,
+  stepsOk: 35,
+  noAlcohol: 35,
+  alcoholModerate: -20,
+  alcoholHeavy: -60,
+  morningExercise: 20,
+  gym: 25,
+  journal: 20,
+  cooking: 10,
+  repair: 10,
+  plants: 10,
+  hobby: 10,
+  gymWeeklyBonus: 50,
+  noAlcoholWeekBonus: 70,
+  caloriesWeekBonus: 70,
+  measurementsMondayBonus: 30,
+};
+
+export const DEFAULT_APP_SETTINGS: AppSettings = {
+  defaultCaloriesLimit: 2650,
+  defaultStepsGoal: 11500,
+  defaultGymTarget: 2,
+  defaultWeeklyPointsGoal: 500,
+  pointSettings: DEFAULT_POINT_SETTINGS,
+  weeklySettings: [],
+};
+
+export const DAY_STATUS_THRESHOLDS = [
+  { min: 100, label: 'Отличный день' as const },
+  { min: 70, label: 'Хороший день' as const },
+  { min: 40, label: 'Нормально' as const },
+  { min: 0, label: 'День выживания' as const },
+];
+
+export const WEEK_STATUS_THRESHOLDS = [
+  { min: 100, label: 'Сильная неделя' as const },
+  { min: 80, label: 'Хорошая неделя' as const },
+  { min: 50, label: 'Нормальная неделя' as const },
+  { min: 0, label: 'Слабая неделя' as const },
+];
+
+export const LEVEL_THRESHOLDS = [0, 500, 1200, 2200, 3500];
