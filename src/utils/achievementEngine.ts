@@ -20,6 +20,7 @@ import {
   getBossHistory,
   maxBossDefeatStreak,
 } from './bossEngine';
+import { isMinimalDayCompleted } from './recoveryEngine';
 
 export type AchievementEngineParams = {
   dailyEntries: DailyEntry[];
@@ -238,6 +239,20 @@ function weekPerfectBase(ws: string, entries: DailyEntry[], settings: AppSetting
   );
 }
 
+function hasRecoveryAfterBadWeek(
+  entries: DailyEntry[],
+  measurements: MeasurementEntry[],
+  settings: AppSettings,
+): boolean {
+  const weeks = getAllWeekStarts(entries, measurements);
+  for (let i = 0; i < weeks.length - 1; i++) {
+    const badPercent = weekPointsPercent(weeks[i]!, entries, measurements, settings);
+    const nextPercent = weekPointsPercent(weeks[i + 1]!, entries, measurements, settings);
+    if (badPercent < 40 && nextPercent >= 60) return true;
+  }
+  return false;
+}
+
 function completedWeeksCount(entries: DailyEntry[]): number {
   const weeks = new Set(entries.map((e) => weekStart(e.date)));
   let count = 0;
@@ -346,6 +361,10 @@ function buildMetrics(params: AchievementEngineParams): AchievementMetrics {
     defeatedBosses: countDefeatedBosses(bossHistory),
     perfectBosses: countPerfectBosses(bossHistory),
     maxBossDefeatStreak: maxBossDefeatStreak(bossHistory),
+    hasMinimalDay: entries.some((e) =>
+      isMinimalDayCompleted({ todayEntry: e, settings }),
+    ),
+    hasRecoveryAfterBadWeek: hasRecoveryAfterBadWeek(entries, measurements, settings),
   };
 
   return m;
@@ -388,6 +407,8 @@ function evaluateAchievement(achievement: Achievement, m: AchievementMetrics): {
     start_first_week: (m.completedWeeks as number) >= 1,
     boss_first_defeat: (m.defeatedBosses as number) >= 1,
     boss_perfect_win: (m.perfectBosses as number) >= 1,
+    recovery_minimal_day: !!m.hasMinimalDay,
+    recovery_not_robot: !!m.hasRecoveryAfterBadWeek,
   };
 
   if (achievement.conditionType === 'instant' || achievement.conditionType === 'combo') {

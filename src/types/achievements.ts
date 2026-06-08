@@ -10,6 +10,7 @@ export type AchievementCategory =
   | 'life'
   | 'combo'
   | 'boss'
+  | 'recovery'
   | 'xp';
 
 export type AchievementTier =

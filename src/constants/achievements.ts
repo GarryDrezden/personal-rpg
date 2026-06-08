@@ -40,6 +40,7 @@ export const CATEGORY_LABELS: Record<AchievementCategory, string> = {
   life: 'Жизнь',
   combo: 'Комбо',
   boss: 'Боссы',
+  recovery: 'Восстановление',
   xp: 'XP',
 };
 
@@ -131,6 +132,8 @@ export const ICON_EMOJI_MAP: Record<string, string> = {
   'boss-perfect': '✨',
   'boss-3-streak': '🔥',
   'boss-month': '👑',
+  'recovery-minimal': '🛡️',
+  'recovery-not-robot': '🤝',
 };
 
 export const ACHIEVEMENTS: Achievement[] = [
@@ -225,6 +228,9 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: 'boss_perfect_win', title: 'Идеальная победа', description: 'Получить идеальную победу над боссом недели', category: 'boss', tier: 'gold', iconKey: 'boss-perfect', conditionType: 'instant' },
   { id: 'boss_3_streak', title: 'Три босса подряд', description: 'Победить 3 недельных босса подряд', category: 'boss', tier: 'silver', iconKey: 'boss-3-streak', conditionType: 'streak', target: 3 },
   { id: 'boss_4_streak', title: 'Месяц побед', description: 'Победить 4 недельных босса подряд', category: 'boss', tier: 'epic', iconKey: 'boss-month', conditionType: 'streak', target: 4 },
+
+  { id: 'recovery_minimal_day', title: 'День удержан', description: 'Выполнить минимальный день', category: 'recovery', tier: 'bronze', iconKey: 'recovery-minimal', conditionType: 'instant' },
+  { id: 'recovery_not_robot', title: 'Не робот, но стараюсь', description: 'После слабой недели выполнить 60% следующей', category: 'recovery', tier: 'silver', iconKey: 'recovery-not-robot', conditionType: 'combo' },
 
   { id: 'xp_500', title: 'Новичок системы', description: 'Набрать 500 XP', category: 'xp', tier: 'bronze', iconKey: 'xp-500', conditionType: 'milestone', target: 500 },
   { id: 'xp_1200', title: 'Уверенный старт', description: 'Набрать 1200 XP', category: 'xp', tier: 'bronze', iconKey: 'xp-1200', conditionType: 'milestone', target: 1200 },

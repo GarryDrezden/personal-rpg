@@ -5,6 +5,8 @@ import { todayISO, formatDateFull } from '../utils/dates';
 import { calcDailyPoints, getWeeklySettingsForDate, getDayStatus } from '../utils/points';
 import { previewDailyCoins } from '../utils/coinEngine';
 import { getDailyQuests, getQuestCompletionStats, isDayEmpty } from '../utils/questEngine';
+import { getRecoveryState, shouldShowRecoveryCard } from '../utils/recoveryEngine';
+import { RecoveryCard } from '../components/recovery/RecoveryCard';
 import { QuestCard } from '../components/quests/QuestCard';
 import { Card } from '../components/ui/Card';
 import { ProgressBar } from '../components/ui/ProgressBar';
@@ -45,6 +47,20 @@ export function TodayPage() {
   const coins = previewDailyCoins(entry, settings);
   const dayStatus = getDayStatus(points);
   const dayEmpty = isDayEmpty(existing) && isDayEmpty(entry);
+  const showRecovery = shouldShowRecoveryCard({
+    today,
+    dailyEntries: entriesForQuests,
+    settings,
+    todayEntry: entry,
+  });
+  const recoveryState = getRecoveryState({
+    today,
+    dailyEntries: entriesForQuests,
+    settings,
+    todayEntry: entry,
+  });
+  const mainQuestsLabel =
+    recoveryState === 'after_bad_day' ? 'Минимальный набор' : 'Основные квесты';
 
   const mainQuests = quests.filter((q) => q.category === 'main');
   const mediumQuests = quests.filter((q) => q.category === 'medium');
@@ -111,6 +127,16 @@ export function TodayPage() {
         </div>
       </header>
 
+      {showRecovery && (
+        <RecoveryCard
+          today={today}
+          dailyEntries={entriesForQuests}
+          settings={settings}
+          todayEntry={entry}
+          showLink={false}
+        />
+      )}
+
       <Card className="border-amber-200/70 bg-gradient-to-br from-amber-50 via-white to-orange-50 shadow-md">
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -149,7 +175,7 @@ export function TodayPage() {
         </div>
       </Card>
 
-      {dayEmpty && (
+      {dayEmpty && recoveryState === 'normal' && (
         <p className="rounded-2xl border border-dashed border-amber-200 bg-amber-50/50 px-4 py-4 text-center text-sm text-rpg-muted">
           День ещё пустой. Начни с одного квеста — калории, шаги или день без алкоголя.
         </p>
@@ -157,7 +183,7 @@ export function TodayPage() {
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-rpg-muted">
-          Основные квесты
+          {mainQuestsLabel}
         </h2>
         {mainQuests.map((q) => (
           <QuestCard

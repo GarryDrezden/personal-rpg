@@ -12,6 +12,7 @@ export const DEFAULT_COIN_SETTINGS: CoinSettings = {
   caloriesWeekCoins: 3,
   perfectBaseWeekCoins: 7,
   measurementsMondayCoins: 1,
+  minimalDayCoins: 1,
 };
 
 export function resolveCoinSettings(settings: { coinSettings?: CoinSettings }): CoinSettings {

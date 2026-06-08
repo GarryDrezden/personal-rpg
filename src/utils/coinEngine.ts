@@ -12,6 +12,7 @@ import {
   isNoAlcohol,
   isStepsGoalDone,
 } from './achievementEngine';
+import { isMinimalDayCompleted } from './recoveryEngine';
 
 export function calculateCoinBalance(transactions: CoinTransaction[]): number {
   return Math.max(0, transactions.reduce((sum, tx) => sum + tx.amount, 0));
@@ -73,6 +74,11 @@ export function getCoinTransactionsFromDailyEntries(params: {
     if (ironDay) {
       amount += cs.ironDayBonusCoins;
       parts.push('железный день');
+    }
+
+    if (isMinimalDayCompleted({ todayEntry: entry, settings })) {
+      amount += cs.minimalDayCoins;
+      parts.push('минимальный день');
     }
 
     if (amount <= 0) continue;

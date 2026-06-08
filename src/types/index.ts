@@ -50,6 +50,7 @@ export type CoinSettings = {
   caloriesWeekCoins: number;
   perfectBaseWeekCoins: number;
   measurementsMondayCoins: number;
+  minimalDayCoins: number;
 };
 
 export interface PointSettings {

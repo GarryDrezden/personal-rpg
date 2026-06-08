@@ -17,6 +17,8 @@ import { RewardsBankCard } from '../components/dashboard/RewardsBankCard';
 import { QuickStatsCard } from '../components/dashboard/QuickStatsCard';
 import { SkillsOverviewCard } from '../components/skills/SkillsOverviewCard';
 import { RecentAchievements } from '../components/achievements/RecentAchievements';
+import { RecoveryCard } from '../components/recovery/RecoveryCard';
+import { shouldShowRecoveryCard } from '../utils/recoveryEngine';
 
 export function DashboardPage() {
   const { dailyEntries, measurements, settings } = useAppStore();
@@ -28,6 +30,17 @@ export function DashboardPage() {
   const skills = useMemo(
     () => calcAllSkillProgress(dailyEntries, measurements, settings),
     [dailyEntries, measurements, settings],
+  );
+
+  const showRecovery = useMemo(
+    () =>
+      shouldShowRecoveryCard({
+        today,
+        dailyEntries,
+        settings,
+        todayEntry: stats.todayEntry,
+      }),
+    [today, dailyEntries, settings, stats.todayEntry],
   );
 
   const weeklyBoss = useMemo(
@@ -61,6 +74,14 @@ export function DashboardPage() {
             todayPoints={stats.todayPoints}
             todayCoins={stats.coins.todayEarned}
           />
+          {showRecovery && (
+            <RecoveryCard
+              today={today}
+              dailyEntries={dailyEntries}
+              settings={settings}
+              todayEntry={stats.todayEntry}
+            />
+          )}
           <DailyQuestsCard
             entry={stats.todayEntry}
             dailyEntries={dailyEntries}
