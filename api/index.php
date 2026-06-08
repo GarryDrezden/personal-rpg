@@ -188,7 +188,8 @@ if ($uri === '/settings' && $method === 'PUT') {
            default_gym_target = :dgt,
            default_weekly_points_goal = :dwpg,
            point_settings = :ps,
-           gender = :gender
+           gender = :gender,
+           weight_goal = :weight_goal
          WHERE id = 1'
     )->execute([
         'dcl' => $body['defaultCaloriesLimit'],
@@ -199,6 +200,7 @@ if ($uri === '/settings' && $method === 'PUT') {
         'gender' => in_array($body['gender'] ?? 'male', ['male', 'female'], true)
             ? $body['gender']
             : 'male',
+        'weight_goal' => isset($body['weightGoal']) ? (float) $body['weightGoal'] : 100.0,
     ]);
 
     $pdo->exec('DELETE FROM weekly_settings');

@@ -73,6 +73,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     },
     weeklySettings: [],
     gender: 'male',
+    weightGoal: 100,
   },
   loading: true,
   error: null,
@@ -84,7 +85,11 @@ export const useAppStore = create<AppState>((set, get) => ({
       set({
         ...data,
         bankDeposits: data.bankDeposits ?? [],
-        settings: { ...data.settings, gender: data.settings.gender ?? 'male' },
+        settings: {
+          ...data.settings,
+          gender: data.settings.gender ?? 'male',
+          weightGoal: data.settings.weightGoal ?? 100,
+        },
         loading: false,
       });
     } catch (e) {

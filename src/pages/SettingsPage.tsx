@@ -78,21 +78,32 @@ export function SettingsPage() {
 
       <Card>
         <h2 className="font-semibold mb-4">Персонаж прогресса</h2>
-        <div className="flex gap-2">
-          {(['male', 'female'] as const).map((g) => (
-            <button
-              key={g}
-              type="button"
-              onClick={() => setLocal({ ...local, gender: g })}
-              className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium transition-colors ${
-                local.gender === g
-                  ? 'border-gold bg-amber-100 text-amber-900'
-                  : 'border-rpg-border text-rpg-muted hover:bg-stone-50'
-              }`}
-            >
-              {g === 'male' ? 'Мужской' : 'Женский'}
-            </button>
-          ))}
+        <div className="space-y-4">
+          <NumberInput
+            label="Целевой вес (кг)"
+            value={local.weightGoal}
+            onChange={(v) => setLocal({ ...local, weightGoal: v ?? 100 })}
+          />
+          <p className="text-xs text-rpg-muted">
+            Путь считается от пика веса до этой цели. При небольшом сбросе (напр. 75→65 кг)
+            персонаж начнёт с 3-й стадии с конца и дойдёт до финальной картинки.
+          </p>
+          <div className="flex gap-2">
+            {(['male', 'female'] as const).map((g) => (
+              <button
+                key={g}
+                type="button"
+                onClick={() => setLocal({ ...local, gender: g })}
+                className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium transition-colors ${
+                  local.gender === g
+                    ? 'border-gold bg-amber-100 text-amber-900'
+                    : 'border-rpg-border text-rpg-muted hover:bg-stone-50'
+                }`}
+              >
+                {g === 'male' ? 'Мужской' : 'Женский'}
+              </button>
+            ))}
+          </div>
         </div>
       </Card>
 

@@ -25,7 +25,7 @@ export function DashboardPage() {
   const { dailyEntries, measurements, rewards, settings } = useAppStore();
   const today = todayISO();
   const stats = useDerivedStats(dailyEntries, measurements, rewards, settings, today);
-  const weightJourney = calcWeightJourney(measurements);
+  const weightJourney = calcWeightJourney(measurements, settings.weightGoal);
 
   return (
     <div className="space-y-6">

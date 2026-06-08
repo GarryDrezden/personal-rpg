@@ -82,6 +82,8 @@ export interface AppSettings {
   defaultStepsGoal: number;
   defaultGymTarget: number;
   defaultWeeklyPointsGoal: number;
+  /** Целевой вес (кг) — конец пути персонажа */
+  weightGoal: number;
   pointSettings: PointSettings;
   weeklySettings: WeeklySettings[];
   gender: CharacterGender;

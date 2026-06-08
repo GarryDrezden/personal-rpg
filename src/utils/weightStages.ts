@@ -15,3 +15,12 @@ export function getWeightStageImage(stage: number, gender: CharacterGender): str
   const images = getWeightStageImages(gender);
   return images[Math.min(WEIGHT_STAGE_COUNT - 1, Math.max(0, stage))];
 }
+
+/** Картинки только для активного диапазона пути (напр. stage-5…7 при 75→65 кг) */
+export function getActiveWeightStageImages(
+  gender: CharacterGender,
+  startImage: number,
+  count: number,
+): string[] {
+  return getWeightStageImages(gender).slice(startImage, startImage + count);
+}

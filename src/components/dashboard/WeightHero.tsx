@@ -23,7 +23,7 @@ export function WeightHero({ journey, gender }: WeightHeroProps) {
       <h2 className="mb-1 text-lg font-semibold">Путь к {journey.targetWeight} кг</h2>
       <p className="mb-4 text-sm text-rpg-muted">
         {journey.hasData
-          ? `Пик ${journey.peakWeight} кг · сейчас ${journey.currentWeight} кг · стадия ${journey.stage + 1} из 7`
+          ? `Пик ${journey.peakWeight} кг · сейчас ${journey.currentWeight} кг · стадия ${journey.stage + 1} из ${journey.visualStageCount}`
           : 'Запишите стартовый вес в разделе «Замеры»'}
       </p>
 

@@ -1,9 +1,37 @@
 import type { MeasurementEntry } from '../types';
 import { sortMeasurementsByDate } from './measurements';
+import { WEIGHT_STAGE_COUNT } from './weightStages';
 
 export const WEIGHT_TARGET_KG = 100;
 export const WEIGHT_DEATH_KG = 200;
-export const WEIGHT_STAGE_COUNT = 7;
+
+/** Минимум картинок в пути (напр. 75→65 кг: стадии 5, 6, 7) */
+const MIN_VISUAL_STAGES = 3;
+
+/** Пороги «сколько сбросить» → сколько стадий показывать */
+const VISUAL_STAGE_TIERS: { maxKg: number; stages: number }[] = [
+  { maxKg: 12, stages: 3 },
+  { maxKg: 24, stages: 4 },
+  { maxKg: 36, stages: 5 },
+  { maxKg: 48, stages: 6 },
+  { maxKg: Infinity, stages: 7 },
+];
+
+export interface VisualStageRange {
+  /** Сколько стадий в прогрессе (3…7) */
+  count: number;
+  /** Индекс первой картинки 0…6 (stage-1 … stage-7) */
+  startImage: number;
+}
+
+export function getVisualStageRange(toLoseTotal: number): VisualStageRange {
+  const stages =
+    VISUAL_STAGE_TIERS.find((t) => toLoseTotal <= t.maxKg)?.stages ?? WEIGHT_STAGE_COUNT;
+  return {
+    count: stages,
+    startImage: WEIGHT_STAGE_COUNT - stages,
+  };
+}
 
 export interface WeightJourney {
   hasData: boolean;
@@ -21,11 +49,16 @@ export interface WeightJourney {
   deltaSinceLast: number | null;
   remaining: number;
   progressPercent: number;
+  /** Индекс прогресса 0…visualStageCount−1 */
   stage: number;
+  /** Индекс картинки 0…6 для отображения */
+  imageStage: number;
+  visualStageCount: number;
+  visualStartImage: number;
   stageInterval: number;
   /** Сколько ещё сбросить до следующей стадии (null если цель достигнута) */
   kgUntilNextStage: number | null;
-  /** Номер следующей стадии 2…7 */
+  /** Номер следующей стадии в визуальном пути */
   nextStage: number | null;
   kgUntilDeath: number | null;
   isGameOver: boolean;
@@ -48,6 +81,9 @@ export function calcWeightJourney(
     remaining: 0,
     progressPercent: 0,
     stage: 0,
+    imageStage: 0,
+    visualStageCount: MIN_VISUAL_STAGES,
+    visualStartImage: WEIGHT_STAGE_COUNT - MIN_VISUAL_STAGES,
     stageInterval: 0,
     kgUntilNextStage: null,
     nextStage: null,
@@ -74,13 +110,22 @@ export function calcWeightJourney(
       ? Math.min(100, (lostFromPeak / toLoseTotal) * 100)
       : 0;
 
-  const interval = toLoseTotal > 0 ? toLoseTotal / WEIGHT_STAGE_COUNT : 0;
+  const { count: visualStageCount, startImage: visualStartImage } =
+    getVisualStageRange(toLoseTotal);
+
+  const interval =
+    toLoseTotal > 0 ? toLoseTotal / visualStageCount : 0;
   const stage =
     toLoseTotal <= 0
       ? 0
       : lostFromPeak >= toLoseTotal
-        ? WEIGHT_STAGE_COUNT - 1
-        : Math.min(WEIGHT_STAGE_COUNT - 1, Math.floor(lostFromPeak / interval));
+        ? visualStageCount - 1
+        : Math.min(visualStageCount - 1, Math.floor(lostFromPeak / interval));
+
+  const imageStage = Math.min(
+    WEIGHT_STAGE_COUNT - 1,
+    visualStartImage + stage,
+  );
 
   const deltaSinceLast =
     previousWeight !== null ? currentWeight - previousWeight : null;
@@ -88,7 +133,7 @@ export function calcWeightJourney(
   const isGameOver = currentWeight >= WEIGHT_DEATH_KG;
   const kgUntilDeath = isGameOver ? 0 : WEIGHT_DEATH_KG - currentWeight;
 
-  const atFinalStage = stage >= WEIGHT_STAGE_COUNT - 1;
+  const atFinalStage = stage >= visualStageCount - 1;
   const kgUntilNextStage = atFinalStage
     ? null
     : Math.max(0, interval * (stage + 1) - lostFromPeak);
@@ -107,6 +152,9 @@ export function calcWeightJourney(
     remaining,
     progressPercent,
     stage,
+    imageStage,
+    visualStageCount,
+    visualStartImage,
     stageInterval: interval,
     kgUntilNextStage,
     nextStage,

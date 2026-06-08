@@ -124,5 +124,8 @@ function getAppSettings(PDO $pdo): array
         'gender' => in_array($row['gender'] ?? 'male', ['male', 'female'], true)
             ? $row['gender']
             : 'male',
+        'weightGoal' => isset($row['weight_goal']) && $row['weight_goal'] !== null
+            ? (float) $row['weight_goal']
+            : 100.0,
     ];
 }

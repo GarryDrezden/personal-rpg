@@ -19,11 +19,14 @@ export const DEFAULT_POINT_SETTINGS: PointSettings = {
   measurementsMondayBonus: 30,
 };
 
+export const DEFAULT_WEIGHT_GOAL_KG = 100;
+
 export const DEFAULT_APP_SETTINGS: AppSettings = {
   defaultCaloriesLimit: 2650,
   defaultStepsGoal: 11500,
   defaultGymTarget: 2,
   defaultWeeklyPointsGoal: 500,
+  weightGoal: DEFAULT_WEIGHT_GOAL_KG,
   pointSettings: DEFAULT_POINT_SETTINGS,
   weeklySettings: [],
   gender: 'male',
