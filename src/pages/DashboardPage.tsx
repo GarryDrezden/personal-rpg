@@ -19,6 +19,8 @@ import { SkillsOverviewCard } from '../components/skills/SkillsOverviewCard';
 import { RecentAchievements } from '../components/achievements/RecentAchievements';
 import { RecoveryCard } from '../components/recovery/RecoveryCard';
 import { shouldShowRecoveryCard } from '../utils/recoveryEngine';
+import { ProgressMapPreviewCard } from '../components/dashboard/ProgressMapPreviewCard';
+import { getMapSummary, getProgressPaths } from '../utils/progressMapEngine';
 
 export function DashboardPage() {
   const { dailyEntries, measurements, settings } = useAppStore();
@@ -42,6 +44,11 @@ export function DashboardPage() {
       }),
     [today, dailyEntries, settings, stats.todayEntry],
   );
+
+  const mapSummary = useMemo(() => {
+    const paths = getProgressPaths({ dailyEntries, measurements, settings });
+    return getMapSummary(paths);
+  }, [dailyEntries, measurements, settings]);
 
   const weeklyBoss = useMemo(
     () =>
@@ -114,6 +121,11 @@ export function DashboardPage() {
             waist={stats.latest?.waist}
           />
           <SkillsOverviewCard skills={skills} />
+          <ProgressMapPreviewCard
+            nearestGoal={mapSummary.nearestGoal}
+            completedMilestones={mapSummary.completedMilestones}
+            totalMilestones={mapSummary.totalMilestones}
+          />
           <RecentAchievements
             unlocked={unlockedAchievements}
             totalCount={ACHIEVEMENTS.length}
