@@ -14,7 +14,9 @@ import {
 import { Card } from '../components/ui/Card';
 import { NumberInput } from '../components/ui/NumberInput';
 import { ThemeSelector } from '../components/settings/ThemeSelector';
+import { HabitsEditor } from '../components/settings/HabitsEditor';
 import { useAppTheme } from '../hooks/useAppTheme';
+import { DEFAULT_HABIT_CONFIG } from '../utils/habitConfig';
 
 export function SettingsPage() {
   const { settings, measurements, saveSettings } = useAppStore();
@@ -153,6 +155,19 @@ export function SettingsPage() {
           Выберите визуальную тему интерфейса. Настройка сохраняется автоматически.
         </p>
         <ThemeSelector value={themeId} onChange={setThemeId} />
+      </Card>
+
+      <Card>
+        <h2 className="mb-4 font-semibold text-[var(--app-text)]">Второстепенные цели</h2>
+        <HabitsEditor
+          settings={local}
+          onChange={(habitConfig) =>
+            setLocal({
+              ...local,
+              habitConfig: habitConfig ?? DEFAULT_HABIT_CONFIG,
+            })
+          }
+        />
       </Card>
 
       <Card>

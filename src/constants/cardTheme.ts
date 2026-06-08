@@ -4,6 +4,7 @@ export const CARD_ACCENT = {
   default: 'bg-[color-mix(in_srgb,var(--app-secondary)_8%,var(--app-card))]',
   primary: 'bg-[color-mix(in_srgb,var(--app-primary)_8%,var(--app-card))]',
   success: 'bg-[color-mix(in_srgb,var(--app-success)_8%,var(--app-card))]',
+  secondary: 'bg-[color-mix(in_srgb,var(--app-secondary)_18%,var(--app-card))]',
   danger: 'bg-[color-mix(in_srgb,var(--app-danger)_8%,var(--app-card))]',
   warning: 'bg-[color-mix(in_srgb,var(--app-warning)_8%,var(--app-card))]',
 } as const;

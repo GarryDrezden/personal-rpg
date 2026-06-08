@@ -96,6 +96,17 @@ class Database
         if (!in_array('theme_id', $appCols, true)) {
             $this->pdo->exec("ALTER TABLE app_settings ADD COLUMN theme_id TEXT NOT NULL DEFAULT 'cozy'");
         }
+        if (!in_array('habit_config', $appCols, true)) {
+            $this->pdo->exec('ALTER TABLE app_settings ADD COLUMN habit_config TEXT');
+        }
+
+        $dailyCols = array_column(
+            $this->pdo->query('PRAGMA table_info(daily_entries)')->fetchAll(),
+            'name',
+        );
+        if (!in_array('custom_completions', $dailyCols, true)) {
+            $this->pdo->exec("ALTER TABLE daily_entries ADD COLUMN custom_completions TEXT NOT NULL DEFAULT '{}'");
+        }
     }
 
     private function seedIfEmpty(): void
@@ -189,11 +200,11 @@ class Database
     {
         $this->pdo->prepare(
             'INSERT OR REPLACE INTO daily_entries
-             (id, date, calories, steps, alcohol, morning_exercise, gym, journal, cooking, repair, plants, hobby, comment)
+             (id, date, calories, steps, alcohol, morning_exercise, gym, journal, cooking, repair, plants, hobby, comment, custom_completions)
              VALUES (
                COALESCE((SELECT id FROM daily_entries WHERE date = :date), :new_id),
                :date, :calories, :steps, :alcohol,
-               :morning_exercise, :gym, :journal, :cooking, :repair, :plants, :hobby, :comment
+               :morning_exercise, :gym, :journal, :cooking, :repair, :plants, :hobby, :comment, :custom_completions
              )'
         )->execute([
             'new_id' => $this->uuid(),
@@ -209,6 +220,7 @@ class Database
             'plants' => !empty($d['plants']) ? 1 : 0,
             'hobby' => !empty($d['hobby']) ? 1 : 0,
             'comment' => $d['comment'] ?? '',
+            'custom_completions' => json_encode($d['customCompletions'] ?? [], JSON_UNESCAPED_UNICODE),
         ]);
     }
 

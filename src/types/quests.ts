@@ -11,6 +11,8 @@ export type QuestStatus =
   | 'neutral'
   | 'partial';
 
+import type { HabitCardColorId } from './habits';
+
 export type DailyQuest = {
   id: string;
   title: string;
@@ -25,6 +27,8 @@ export type DailyQuest = {
   }[];
   coins?: number;
   actionLabel?: string;
+  cardColor?: HabitCardColorId;
+  isCustom?: boolean;
 };
 
 export const QUEST_STATUS_LABELS: Record<QuestStatus, string> = {

@@ -47,6 +47,7 @@ export function DailyQuestsCard({
       plants: false,
       hobby: false,
       comment: '',
+      customCompletions: {},
     } satisfies DailyEntry);
 
   const weekly = getWeeklySettingsForDate(date, settings);

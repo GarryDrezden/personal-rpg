@@ -2,8 +2,10 @@ import type { AlcoholStatus, DailyEntry } from '../../types';
 import type { WeeklySettings } from '../../types';
 import type { DailyQuest } from '../../types/quests';
 import { QUEST_STATUS_LABELS } from '../../types/quests';
+import { getHabitCardColorClass } from '../../constants/habitColors';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import { getQuestStatusStyles } from '../../utils/questTheme';
+import { isBuiltinHabitId } from '../../utils/habitConfig';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
 import { NumberInput } from '../ui/NumberInput';
@@ -17,9 +19,26 @@ type QuestCardProps = {
   compact?: boolean;
 };
 
+function toggleHabit(
+  quest: DailyQuest,
+  entry: DailyEntry,
+  onPatch: (partial: Partial<DailyEntry>) => void,
+) {
+  if (quest.isCustom) {
+    const next = { ...(entry.customCompletions ?? {}) };
+    next[quest.id] = !next[quest.id];
+    onPatch({ customCompletions: next });
+    return;
+  }
+  if (isBuiltinHabitId(quest.id)) {
+    onPatch({ [quest.id]: !entry[quest.id] } as Partial<DailyEntry>);
+  }
+}
+
 export function QuestCard({ quest, entry, weekly, onPatch, compact = false }: QuestCardProps) {
   const { themeId } = useAppTheme();
   const style = getQuestStatusStyles(quest.status, themeId);
+  const accentClass = quest.cardColor ? getHabitCardColorClass(quest.cardColor) : '';
 
   const rewards = (
     <div className="flex flex-wrap gap-2 text-xs">
@@ -87,12 +106,7 @@ export function QuestCard({ quest, entry, weekly, onPatch, compact = false }: Qu
         return (
           <button
             type="button"
-            onClick={() => {
-              const key = quest.id as keyof DailyEntry;
-              if (typeof entry[key] === 'boolean') {
-                onPatch({ [key]: !entry[key] } as Partial<DailyEntry>);
-              }
-            }}
+            onClick={() => toggleHabit(quest, entry, onPatch)}
             className={`w-full rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors ${
               quest.status === 'done'
                 ? 'border-[color-mix(in_srgb,var(--app-success)_45%,var(--app-border))] bg-[color-mix(in_srgb,var(--app-success)_18%,var(--app-card-strong))] text-[var(--app-success)]'
@@ -108,7 +122,7 @@ export function QuestCard({ quest, entry, weekly, onPatch, compact = false }: Qu
   if (compact) {
     return (
       <div
-        className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 ${style.card}`}
+        className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 ${accentClass || style.card}`}
       >
         <span className="text-xl" aria-hidden>
           {quest.icon}
@@ -124,7 +138,7 @@ export function QuestCard({ quest, entry, weekly, onPatch, compact = false }: Qu
   }
 
   return (
-    <Card className={`border ${style.card}`}>
+    <Card className={`border ${accentClass || style.card}`}>
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-card-strong)] text-2xl shadow-sm">

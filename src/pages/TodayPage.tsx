@@ -47,7 +47,7 @@ export function TodayPage() {
   const points = calcDailyPoints(entry, settings);
   const coins = previewDailyCoins(entry, settings);
   const dayStatus = getDayStatus(points);
-  const dayEmpty = isDayEmpty(existing) && isDayEmpty(entry);
+  const dayEmpty = isDayEmpty(existing, settings) && isDayEmpty(entry, settings);
   const showRecovery = shouldShowRecoveryCard({
     today,
     dailyEntries: entriesForQuests,

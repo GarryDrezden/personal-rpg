@@ -50,6 +50,9 @@ function rowToDaily(array $row): array
         'plants' => (bool) $row['plants'],
         'hobby' => (bool) $row['hobby'],
         'comment' => $row['comment'] ?? '',
+        'customCompletions' => isset($row['custom_completions']) && $row['custom_completions']
+            ? json_decode($row['custom_completions'], true) ?? []
+            : [],
     ];
 }
 
@@ -136,5 +139,8 @@ function getAppSettings(PDO $pdo): array
         'themeId' => in_array($row['theme_id'] ?? 'cozy', ['cozy', 'darkFantasy'], true)
             ? $row['theme_id']
             : 'cozy',
+        'habitConfig' => isset($row['habit_config']) && $row['habit_config']
+            ? json_decode($row['habit_config'], true)
+            : null,
     ];
 }

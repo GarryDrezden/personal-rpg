@@ -30,6 +30,7 @@ function emptyDaily(date: string): DailyEntry {
     plants: false,
     hobby: false,
     comment: '',
+    customCompletions: {},
   };
 }
 
@@ -100,6 +101,7 @@ export const useAppStore = create<AppState>((set, get) => ({
           themeId: resolveThemeId(
             data.settings.themeId ?? getStoredThemeId(),
           ),
+          habitConfig: data.settings.habitConfig,
         },
         loading: false,
       });

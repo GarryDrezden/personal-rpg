@@ -14,6 +14,8 @@ export interface DailyEntry {
   plants: boolean;
   hobby: boolean;
   comment: string;
+  /** Выполнение пользовательских целей: questId → done */
+  customCompletions?: Record<string, boolean>;
 }
 
 export interface MeasurementEntry {
@@ -94,9 +96,11 @@ export type CharacterGender = 'male' | 'female';
 
 import type { AvatarSettings } from './avatar';
 import type { AppThemeId } from './theme';
+import type { HabitConfig } from './habits';
 
 export type { AvatarSettings } from './avatar';
 export type { AppThemeId } from './theme';
+export type { HabitConfig, CustomHabitDefinition, BuiltinHabitId, HabitCardColorId } from './habits';
 
 export interface AppSettings {
   defaultCaloriesLimit: number;
@@ -111,6 +115,7 @@ export interface AppSettings {
   gender: CharacterGender;
   avatarSettings?: AvatarSettings;
   themeId?: AppThemeId;
+  habitConfig?: HabitConfig;
 }
 
 export interface AppData {

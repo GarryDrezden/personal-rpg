@@ -192,7 +192,8 @@ if ($uri === '/settings' && $method === 'PUT') {
            avatar_settings = :avs,
            gender = :gender,
            weight_goal = :weight_goal,
-           theme_id = :theme_id
+           theme_id = :theme_id,
+           habit_config = :habit_config
          WHERE id = 1'
     )->execute([
         'dcl' => $body['defaultCaloriesLimit'],
@@ -209,6 +210,7 @@ if ($uri === '/settings' && $method === 'PUT') {
         'theme_id' => in_array($body['themeId'] ?? 'cozy', ['cozy', 'darkFantasy'], true)
             ? $body['themeId']
             : 'cozy',
+        'habit_config' => json_encode($body['habitConfig'] ?? null, JSON_UNESCAPED_UNICODE),
     ]);
 
     $pdo->exec('DELETE FROM weekly_settings');

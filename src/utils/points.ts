@@ -42,6 +42,12 @@ export function calcDailyPoints(entry: DailyEntry, settings: AppSettings): numbe
   if (entry.plants) total += p.plants;
   if (entry.hobby) total += p.hobby;
 
+  for (const custom of settings.habitConfig?.customHabits ?? []) {
+    if (entry.customCompletions?.[custom.id]) {
+      total += custom.points;
+    }
+  }
+
   return total;
 }
 
