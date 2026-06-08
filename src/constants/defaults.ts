@@ -34,6 +34,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   weeklySettings: [],
   gender: 'male',
   avatarSettings: DEFAULT_AVATAR_SETTINGS,
+  themeId: 'cozy',
 };
 
 export const DAY_STATUS_THRESHOLDS = [

@@ -52,20 +52,20 @@ export function DailyQuestsCard({
   const weekly = getWeeklySettingsForDate(date, settings);
 
   return (
-    <Card className="bg-gradient-to-br from-stone-50 to-white">
+    <Card>
       <div className="mb-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <Swords className="text-gold" size={22} />
+          <Swords className="text-[var(--app-primary)]" size={22} />
           <div>
-            <h2 className="text-lg font-semibold">Квесты дня</h2>
-            <p className="text-sm text-rpg-muted">
+            <h2 className="text-lg font-semibold text-[var(--app-text)]">Квесты дня</h2>
+            <p className="text-sm text-[var(--app-text-muted)]">
               Основные {stats.mainDone}/{stats.mainTotal} · всего {stats.done}/{stats.total}
             </p>
           </div>
         </div>
         <Link
           to="/today"
-          className="shrink-0 rounded-xl border border-amber-200 bg-white px-3 py-1.5 text-sm font-medium text-gold hover:bg-amber-50"
+          className="shrink-0 rounded-xl border border-[var(--app-border)] bg-[var(--app-card-strong)] px-3 py-1.5 text-sm font-medium text-[var(--app-primary)] hover:brightness-[1.03]"
         >
           Открыть квесты →
         </Link>

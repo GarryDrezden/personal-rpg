@@ -17,20 +17,20 @@ import { useAppStore } from './store/appStore';
 
 function LoadingScreen() {
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <p className="text-rpg-muted">Загрузка…</p>
+    <div className="flex min-h-screen items-center justify-center bg-[var(--app-bg)]">
+      <p className="text-[var(--app-text-muted)]">Загрузка…</p>
     </div>
   );
 }
 
 function ErrorScreen({ message }: { message: string }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 text-center">
-      <p className="text-danger font-medium">Не удалось подключиться к API</p>
-      <p className="text-sm text-rpg-muted">{message}</p>
-      <p className="text-sm text-rpg-muted max-w-md">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[var(--app-bg)] p-6 text-center text-[var(--app-text)]">
+      <p className="font-medium text-[var(--app-danger)]">Не удалось подключиться к API</p>
+      <p className="text-sm text-[var(--app-text-muted)]">{message}</p>
+      <p className="max-w-md text-sm text-[var(--app-text-muted)]">
         Убедитесь, что nginx и PHP запущены на порту 8080, или используйте{' '}
-        <code className="bg-stone-100 px-1 rounded">npm run dev</code> с работающим API.
+        <code className="rounded bg-[var(--app-card-strong)] px-1">npm run dev</code> с работающим API.
       </p>
     </div>
   );

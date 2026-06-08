@@ -8,6 +8,7 @@ import { getDailyQuests, getQuestCompletionStats, isDayEmpty } from '../utils/qu
 import { getRecoveryState, shouldShowRecoveryCard } from '../utils/recoveryEngine';
 import { RecoveryCard } from '../components/recovery/RecoveryCard';
 import { QuestCard } from '../components/quests/QuestCard';
+import { CARD_ACCENT } from '../constants/cardTheme';
 import { Card } from '../components/ui/Card';
 import { ProgressBar } from '../components/ui/ProgressBar';
 
@@ -98,9 +99,9 @@ export function TodayPage() {
     <div className="space-y-6 pb-8">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Квесты дня</h1>
-          <p className="text-sm text-rpg-muted">{formatDateFull(today)}</p>
-          <p className="mt-1 text-sm font-medium text-amber-800">{dayStatus}</p>
+          <h1 className="text-2xl font-bold text-[var(--app-text)]">Квесты дня</h1>
+          <p className="text-sm text-[var(--app-text-muted)]">{formatDateFull(today)}</p>
+          <p className="mt-1 text-sm font-medium text-[var(--app-primary)]">{dayStatus}</p>
         </div>
         <div className="flex flex-col items-end gap-2">
           {dirty && (
@@ -137,18 +138,18 @@ export function TodayPage() {
         />
       )}
 
-      <Card className="border-amber-200/70 bg-gradient-to-br from-amber-50 via-white to-orange-50 shadow-md">
+      <Card className={CARD_ACCENT.primary}>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <p className="text-sm text-rpg-muted">Очки дня (XP)</p>
-            <p className="text-3xl font-bold text-gold">+{Math.max(0, points)}</p>
+            <p className="text-sm text-[var(--app-text-muted)]">Очки дня (XP)</p>
+            <p className="text-3xl font-bold text-[var(--app-primary)]">+{Math.max(0, points)}</p>
           </div>
           <div>
-            <p className="text-sm text-rpg-muted">Монеты за день</p>
-            <p className="text-3xl font-bold text-amber-800">+{coins} 🪙</p>
+            <p className="text-sm text-[var(--app-text-muted)]">Монеты за день</p>
+            <p className="text-3xl font-bold text-[var(--app-primary)]">+{coins} 🪙</p>
           </div>
         </div>
-        <div className="mt-4 flex flex-wrap gap-4 text-sm">
+        <div className="mt-4 flex flex-wrap gap-4 text-sm text-[var(--app-text)]">
           <span>
             Основные:{' '}
             <strong>
@@ -163,7 +164,7 @@ export function TodayPage() {
           </span>
         </div>
         <div className="mt-3">
-          <div className="mb-1 flex justify-between text-xs text-rpg-muted">
+          <div className="mb-1 flex justify-between text-xs text-[var(--app-text-muted)]">
             <span>Прогресс квестов</span>
             <span>{stats.percent}%</span>
           </div>
@@ -176,13 +177,13 @@ export function TodayPage() {
       </Card>
 
       {dayEmpty && recoveryState === 'normal' && (
-        <p className="rounded-2xl border border-dashed border-amber-200 bg-amber-50/50 px-4 py-4 text-center text-sm text-rpg-muted">
+        <p className="rounded-2xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-4 text-center text-sm text-[var(--app-text-muted)]">
           День ещё пустой. Начни с одного квеста — калории, шаги или день без алкоголя.
         </p>
       )}
 
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-rpg-muted">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
           {mainQuestsLabel}
         </h2>
         {mainQuests.map((q) => (
@@ -197,7 +198,7 @@ export function TodayPage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-rpg-muted">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
           Средние квесты
         </h2>
         {mediumQuests.map((q) => (
@@ -212,7 +213,7 @@ export function TodayPage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-rpg-muted">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
           Бонусные квесты
         </h2>
         {bonusQuests.map((q) => (
@@ -228,12 +229,12 @@ export function TodayPage() {
 
       <Card>
         <label className="block">
-          <span className="mb-2 block text-sm font-medium">Комментарий дня</span>
+          <span className="mb-2 block text-sm font-medium text-[var(--app-text)]">Комментарий дня</span>
           <textarea
             value={entry.comment}
             onChange={(e) => patch({ comment: e.target.value })}
             rows={3}
-            className="w-full rounded-xl border border-rpg-border bg-white px-4 py-3 focus:border-gold focus:outline-none"
+            className="w-full rounded-xl border border-[var(--app-border)] bg-[var(--app-card-strong)] px-4 py-3 text-[var(--app-text)] focus:border-[var(--app-primary)] focus:outline-none"
             placeholder="Что получилось, что было сложно…"
           />
         </label>

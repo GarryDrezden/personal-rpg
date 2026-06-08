@@ -21,19 +21,19 @@ export function RecentAchievements({ unlocked, totalCount }: RecentAchievementsP
   return (
     <Card>
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Достижения</h2>
-        <Link to="/achievements" className="text-sm font-medium text-gold hover:underline">
+        <h2 className="text-lg font-semibold text-[var(--app-text)]">Достижения</h2>
+        <Link to="/achievements" className="text-sm font-medium text-[var(--app-primary)] hover:underline">
           Все →
         </Link>
       </div>
 
-      <p className="mb-2 text-sm text-rpg-muted">
+      <p className="mb-2 text-sm text-[var(--app-text-muted)]">
         Получено {unlockedCount} из {totalCount} достижений
       </p>
       <ProgressBar value={percent} color="gold" className="mb-4" />
 
       {recent.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-rpg-border bg-stone-50 px-4 py-4 text-center text-sm text-rpg-muted">
+        <p className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-4 text-center text-sm text-[var(--app-text-muted)]">
           Первые достижения появятся после внесения данных.
         </p>
       ) : (
@@ -42,11 +42,14 @@ export function RecentAchievements({ unlocked, totalCount }: RecentAchievementsP
             const a = ACHIEVEMENT_BY_ID[u.achievementId];
             if (!a) return null;
             return (
-              <div key={u.achievementId} className="flex items-center gap-3 rounded-xl bg-stone-50 p-3">
+              <div
+                key={u.achievementId}
+                className="flex items-center gap-3 rounded-xl bg-[var(--app-bg-soft)] p-3"
+              >
                 <AchievementIcon iconKey={a.iconKey} tier={a.tier} unlocked size="sm" />
                 <div className="min-w-0 flex-1">
-                  <div className="truncate font-medium">{a.title}</div>
-                  <div className="text-xs text-rpg-muted">
+                  <div className="truncate font-medium text-[var(--app-text)]">{a.title}</div>
+                  <div className="text-xs text-[var(--app-text-muted)]">
                     {getTierLabel(a.tier)} · {formatDateRu(u.unlockedAt, 'd MMM')}
                   </div>
                 </div>

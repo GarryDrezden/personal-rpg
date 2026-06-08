@@ -191,7 +191,8 @@ if ($uri === '/settings' && $method === 'PUT') {
            coin_settings = :cs,
            avatar_settings = :avs,
            gender = :gender,
-           weight_goal = :weight_goal
+           weight_goal = :weight_goal,
+           theme_id = :theme_id
          WHERE id = 1'
     )->execute([
         'dcl' => $body['defaultCaloriesLimit'],
@@ -205,6 +206,9 @@ if ($uri === '/settings' && $method === 'PUT') {
             ? $body['gender']
             : 'male',
         'weight_goal' => isset($body['weightGoal']) ? (float) $body['weightGoal'] : 100.0,
+        'theme_id' => in_array($body['themeId'] ?? 'cozy', ['cozy', 'darkFantasy'], true)
+            ? $body['themeId']
+            : 'cozy',
     ]);
 
     $pdo->exec('DELETE FROM weekly_settings');

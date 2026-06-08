@@ -12,6 +12,8 @@ import { syncAchievementsFromData } from '../utils/achievementSync';
 import { useAchievementStore } from './achievementStore';
 import { useCoinStore } from './coinStore';
 import { buildCoinWalletSummary } from '../utils/coinEngine';
+import { resolveThemeId } from '../constants/themes';
+import { getStoredThemeId } from '../utils/themeApply';
 
 function emptyDaily(date: string): DailyEntry {
   return {
@@ -95,6 +97,9 @@ export const useAppStore = create<AppState>((set, get) => ({
           weightGoal: data.settings.weightGoal ?? 100,
           coinSettings: data.settings.coinSettings,
           avatarSettings: data.settings.avatarSettings,
+          themeId: resolveThemeId(
+            data.settings.themeId ?? getStoredThemeId(),
+          ),
         },
         loading: false,
       });

@@ -93,6 +93,9 @@ class Database
         if (!in_array('avatar_settings', $appCols, true)) {
             $this->pdo->exec('ALTER TABLE app_settings ADD COLUMN avatar_settings TEXT');
         }
+        if (!in_array('theme_id', $appCols, true)) {
+            $this->pdo->exec("ALTER TABLE app_settings ADD COLUMN theme_id TEXT NOT NULL DEFAULT 'cozy'");
+        }
     }
 
     private function seedIfEmpty(): void

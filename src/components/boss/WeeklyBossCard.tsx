@@ -34,12 +34,12 @@ function hpBarColor(status: WeeklyBoss['status']): 'danger' | 'success' | 'gold'
 
 function cardGlow(status: WeeklyBoss['status']): string {
   if (status === 'perfect') {
-    return 'ring-2 ring-yellow-400/60 shadow-[0_0_24px_rgba(234,179,8,0.35)] bg-gradient-to-br from-amber-50 via-white to-yellow-50/80';
+    return 'ring-2 ring-[color-mix(in_srgb,var(--app-primary)_50%,transparent)] hero-glow bg-[color-mix(in_srgb,var(--app-primary)_10%,var(--app-card))]';
   }
   if (status === 'defeated') {
-    return 'ring-2 ring-emerald-400/50 bg-gradient-to-br from-emerald-50/80 via-white to-stone-50';
+    return 'ring-2 ring-[color-mix(in_srgb,var(--app-success)_45%,transparent)] bg-[color-mix(in_srgb,var(--app-success)_10%,var(--app-card))]';
   }
-  return 'bg-gradient-to-br from-red-50/60 via-white to-stone-50';
+  return 'bg-[color-mix(in_srgb,var(--app-danger)_8%,var(--app-card))]';
 }
 
 function ConditionRow({ condition }: { condition: WeeklyBoss['conditions'][number] }) {
@@ -51,20 +51,20 @@ function ConditionRow({ condition }: { condition: WeeklyBoss['conditions'][numbe
         : 0;
 
   return (
-    <div className="rounded-xl border border-rpg-border bg-white/80 px-3 py-2.5">
+    <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card-strong)] px-3 py-2.5">
       <div className="flex items-start justify-between gap-2">
-        <div className="flex items-start gap-2 min-w-0">
+        <div className="flex min-w-0 items-start gap-2">
           <span className="text-lg leading-none">{condition.icon}</span>
           <div className="min-w-0">
-            <p className="font-medium text-sm">{condition.title}</p>
-            <p className="text-xs text-rpg-muted truncate">{condition.description}</p>
+            <p className="text-sm font-medium text-[var(--app-text)]">{condition.title}</p>
+            <p className="truncate text-xs text-[var(--app-text-muted)]">{condition.description}</p>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-1.5">
           {condition.completed ? (
-            <Check className="text-success" size={16} />
+            <Check className="text-[var(--app-success)]" size={16} />
           ) : (
-            <span className="text-xs font-semibold text-stone-600">
+            <span className="text-xs font-semibold text-[var(--app-text)]">
               {condition.current}/{condition.target}
             </span>
           )}
@@ -86,7 +86,7 @@ export function WeeklyBossCard({ boss, variant = 'compact' }: WeeklyBossCardProp
     <Card className={cardGlow(boss.status)}>
       <div className={`flex gap-4 ${isFull ? 'flex-col sm:flex-row sm:items-start' : ''}`}>
         <div
-          className={`flex shrink-0 items-center justify-center rounded-2xl bg-stone-900/5 ${
+          className={`flex shrink-0 items-center justify-center rounded-2xl bg-[var(--app-bg-soft)] ${
             isFull ? 'h-28 w-28 text-6xl' : 'h-16 w-16 text-4xl'
           }`}
         >
@@ -98,25 +98,32 @@ export function WeeklyBossCard({ boss, variant = 'compact' }: WeeklyBossCardProp
             <div>
               <div className="flex items-center gap-2">
                 {isFull ? (
-                  <Skull className="text-danger" size={22} />
+                  <Skull className="text-[var(--app-danger)]" size={22} />
                 ) : (
-                  <Swords className="text-danger" size={20} />
+                  <Swords className="text-[var(--app-danger)]" size={20} />
                 )}
-                <h2 className={`font-bold ${isFull ? 'text-2xl' : 'text-lg'}`}>{boss.title}</h2>
+                <h2 className={`font-bold text-[var(--app-text)] ${isFull ? 'text-2xl' : 'text-lg'}`}>
+                  {boss.title}
+                </h2>
               </div>
-              <p className="text-sm text-rpg-muted">{boss.subtitle}</p>
+              <p className="text-sm text-[var(--app-text-muted)]">{boss.subtitle}</p>
             </div>
             {!isFull && (
-              <Link to="/week" className="text-sm font-medium text-gold hover:underline shrink-0">
+              <Link
+                to="/week"
+                className="shrink-0 text-sm font-medium text-[var(--app-primary)] hover:underline"
+              >
                 Открыть неделю →
               </Link>
             )}
           </div>
 
-          {isFull && <p className="mb-4 text-sm text-stone-700">{boss.description}</p>}
+          {isFull && (
+            <p className="mb-4 text-sm text-[var(--app-text-muted)]">{boss.description}</p>
+          )}
 
           <div className="mb-2 flex items-center justify-between gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-rpg-muted">
+            <span className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
               HP босса
             </span>
             <Badge variant={statusBadgeVariant(boss.status)}>
@@ -125,44 +132,48 @@ export function WeeklyBossCard({ boss, variant = 'compact' }: WeeklyBossCardProp
           </div>
 
           <ProgressBar value={boss.hpPercent} color={hpBarColor(boss.status)} />
-          <p className="mt-1 text-xs text-rpg-muted">
+          <p className="mt-1 text-xs text-[var(--app-text-muted)]">
             {boss.hpPercent}% здоровья · {completedCount}/{boss.conditions.length} условий
           </p>
         </div>
       </div>
 
       <div className={`space-y-2 ${isFull ? 'mt-5' : 'mt-4'}`}>
-        <p className="text-xs font-semibold uppercase tracking-wide text-rpg-muted">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
           Условия победы
         </p>
         {(isFull ? boss.conditions : boss.conditions.slice(0, 3)).map((c) => (
           <ConditionRow key={c.id} condition={c} />
         ))}
         {!isFull && boss.conditions.length > 3 && (
-          <p className="text-center text-xs text-rpg-muted">
+          <p className="text-center text-xs text-[var(--app-text-muted)]">
             +{boss.conditions.length - 3} условий на странице недели
           </p>
         )}
       </div>
 
       <div
-        className={`mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-rpg-border px-4 py-3 ${
-          won ? 'bg-emerald-50/60' : 'bg-stone-50/80'
+        className={`mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--app-border)] px-4 py-3 ${
+          won
+            ? 'bg-[color-mix(in_srgb,var(--app-success)_12%,var(--app-card-strong))]'
+            : 'bg-[var(--app-card-strong)]'
         }`}
       >
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-rpg-muted">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
             {won ? 'Награда' : 'Награда за победу'}
           </p>
-          <p className="text-sm font-semibold">
+          <p className="text-sm font-semibold text-[var(--app-text)]">
             +{boss.rewardXp} XP · +{boss.rewardCoins} 🪙
           </p>
           {boss.status === 'perfect' && (
-            <p className="text-xs text-gold font-medium">Идеальная победа — бонусная награда</p>
+            <p className="text-xs font-medium text-[var(--app-primary)]">
+              Идеальная победа — бонусная награда
+            </p>
           )}
         </div>
         {won && (
-          <span className="rounded-full bg-success/15 px-3 py-1 text-sm font-semibold text-success">
+          <span className="rounded-full bg-[color-mix(in_srgb,var(--app-success)_18%,var(--app-card-strong))] px-3 py-1 text-sm font-semibold text-[var(--app-success)]">
             {boss.status === 'perfect' ? 'Идеально!' : 'Победа!'}
           </span>
         )}

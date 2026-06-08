@@ -133,5 +133,8 @@ function getAppSettings(PDO $pdo): array
         'avatarSettings' => isset($row['avatar_settings']) && $row['avatar_settings']
             ? json_decode($row['avatar_settings'], true)
             : null,
+        'themeId' => in_array($row['theme_id'] ?? 'cozy', ['cozy', 'darkFantasy'], true)
+            ? $row['theme_id']
+            : 'cozy',
     ];
 }

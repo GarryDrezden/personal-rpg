@@ -5,6 +5,7 @@ import {
   formatPathCurrentValue,
   getMilestoneStatus,
 } from '../../utils/progressMapEngine';
+import { GOAL_BANNER, GOAL_BANNER_SUCCESS } from '../../constants/cardTheme';
 import { MilestoneNode } from './MilestoneNode';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
@@ -13,12 +14,12 @@ type ProgressPathCardProps = {
   path: ProgressPath;
 };
 
-const pathGradients: Record<ProgressPath['id'], string> = {
-  weight: 'from-blue-50/80 via-white to-indigo-50/50',
-  alcohol: 'from-sky-50/80 via-white to-cyan-50/50',
-  steps: 'from-emerald-50/80 via-white to-green-50/50',
-  gym: 'from-orange-50/80 via-white to-amber-50/50',
-  measurements: 'from-violet-50/80 via-white to-purple-50/50',
+const PATH_TINT: Record<ProgressPath['id'], string> = {
+  weight: 'color-mix(in srgb, var(--app-secondary) 10%, var(--app-card))',
+  alcohol: 'color-mix(in srgb, var(--app-success) 10%, var(--app-card))',
+  steps: 'color-mix(in srgb, var(--app-success) 10%, var(--app-card))',
+  gym: 'color-mix(in srgb, var(--app-warning) 10%, var(--app-card))',
+  measurements: 'color-mix(in srgb, var(--app-secondary) 12%, var(--app-card))',
 };
 
 export function ProgressPathCard({ path }: ProgressPathCardProps) {
@@ -28,25 +29,27 @@ export function ProgressPathCard({ path }: ProgressPathCardProps) {
   const nearest = buildNearestGoal(path);
 
   return (
-    <Card className={`bg-gradient-to-br ${pathGradients[path.id]}`}>
+    <Card style={{ background: PATH_TINT[path.id] }}>
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/80 text-2xl shadow-sm">
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--app-card-strong)] text-2xl shadow-sm">
             {path.icon}
           </span>
           <div>
-            <h3 className="text-lg font-bold text-stone-900">{path.title}</h3>
-            <p className="text-sm text-rpg-muted">{path.description}</p>
+            <h3 className="text-lg font-bold text-[var(--app-text)]">{path.title}</h3>
+            <p className="text-sm text-[var(--app-text-muted)]">{path.description}</p>
           </div>
         </div>
         <div className="text-right">
-          <p className="text-xs font-semibold uppercase tracking-wide text-rpg-muted">Сейчас</p>
-          <p className="text-xl font-bold text-stone-900">{formatPathCurrentValue(path)}</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
+            Сейчас
+          </p>
+          <p className="text-xl font-bold text-[var(--app-text)]">{formatPathCurrentValue(path)}</p>
         </div>
       </div>
 
       <div className="mb-4">
-        <div className="mb-1 flex justify-between text-xs text-rpg-muted">
+        <div className="mb-1 flex justify-between text-xs text-[var(--app-text-muted)]">
           <span>
             Пройдено точек: {completed}/{total}
           </span>
@@ -56,13 +59,11 @@ export function ProgressPathCard({ path }: ProgressPathCardProps) {
       </div>
 
       {nearest ? (
-        <p className="mb-4 rounded-xl border border-amber-200/70 bg-amber-50/60 px-3 py-2 text-sm text-amber-900">
-          <span className="font-medium">Ближайшая цель:</span> {nearest.label}
+        <p className={`mb-4 ${GOAL_BANNER}`}>
+          <span className="font-medium text-[var(--app-primary)]">Ближайшая цель:</span> {nearest.label}
         </p>
       ) : (
-        <p className="mb-4 rounded-xl border border-emerald-200/70 bg-emerald-50/60 px-3 py-2 text-sm font-medium text-emerald-800">
-          Все точки этого пути пройдены
-        </p>
+        <p className={`mb-4 ${GOAL_BANNER_SUCCESS}`}>Все точки этого пути пройдены</p>
       )}
 
       <div className="relative overflow-x-auto pb-2">
@@ -78,10 +79,10 @@ export function ProgressPathCard({ path }: ProgressPathCardProps) {
                   <div
                     className={`mx-1 mt-5 h-0.5 w-6 shrink-0 sm:w-10 ${
                       path.currentValue >= path.milestones[index + 1]!.value
-                        ? 'bg-emerald-400'
+                        ? 'bg-[var(--app-success)]'
                         : path.currentValue >= milestone.value
-                          ? 'bg-gradient-to-r from-emerald-400 to-stone-300'
-                          : 'bg-stone-300'
+                          ? 'bg-gradient-to-r from-[var(--app-success)] to-[var(--app-border)]'
+                          : 'bg-[var(--app-border)]'
                     }`}
                     aria-hidden
                   />

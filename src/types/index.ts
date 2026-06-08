@@ -93,8 +93,10 @@ export interface BankDeposit {
 export type CharacterGender = 'male' | 'female';
 
 import type { AvatarSettings } from './avatar';
+import type { AppThemeId } from './theme';
 
 export type { AvatarSettings } from './avatar';
+export type { AppThemeId } from './theme';
 
 export interface AppSettings {
   defaultCaloriesLimit: number;
@@ -108,6 +110,7 @@ export interface AppSettings {
   weeklySettings: WeeklySettings[];
   gender: CharacterGender;
   avatarSettings?: AvatarSettings;
+  themeId?: AppThemeId;
 }
 
 export interface AppData {

@@ -20,23 +20,23 @@ export function AchievementToast({ achievement, onDismiss, autoHideMs = 5000 }: 
 
   return (
     <div
-      className={`pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border-2 bg-white p-4 shadow-xl ${tierStyle.borderColor} ${
-        achievement.tier === 'legendary' ? 'shadow-[0_0_25px_rgba(251,146,60,0.45)]' : ''
+      className={`pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border-2 bg-[var(--app-card-strong)] p-4 shadow-[var(--app-shadow)] ${tierStyle.borderColor} ${
+        achievement.tier === 'legendary' ? 'achievement-legendary-glow' : ''
       }`}
       role="status"
     >
       <AchievementIcon iconKey={achievement.iconKey} tier={achievement.tier} unlocked size="sm" />
       <div className="min-w-0 flex-1">
-        <p className="text-xs font-semibold uppercase tracking-wide text-gold">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-primary)]">
           Достижение открыто!
         </p>
-        <p className="mt-1 font-semibold text-stone-900">{achievement.title}</p>
-        <p className="text-sm text-rpg-muted">{achievement.description}</p>
+        <p className="mt-1 font-semibold text-[var(--app-text)]">{achievement.title}</p>
+        <p className="text-sm text-[var(--app-text-muted)]">{achievement.description}</p>
       </div>
       <button
         type="button"
         onClick={onDismiss}
-        className="shrink-0 rounded-lg p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-600"
+        className="shrink-0 rounded-lg p-1 text-[var(--app-text-muted)] hover:bg-[var(--app-bg-soft)] hover:text-[var(--app-text)]"
         aria-label="Закрыть"
       >
         <X size={18} />

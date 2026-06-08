@@ -11,11 +11,12 @@ export function ToggleButton({ label, checked, onChange }: ToggleButtonProps) {
       onClick={() => onChange(!checked)}
       className={`min-h-12 w-full rounded-xl border-2 px-4 py-3 text-left font-medium transition-colors ${
         checked
-          ? 'border-success bg-green-50 text-green-900'
-          : 'border-rpg-border bg-white text-stone-600 hover:bg-stone-50'
+          ? 'border-[var(--app-success)] bg-[color-mix(in_srgb,var(--app-success)_18%,var(--app-card-strong))] text-[var(--app-success)]'
+          : 'border-[var(--app-border)] bg-[var(--app-card-strong)] text-[var(--app-text)] hover:brightness-[1.04]'
       }`}
     >
-      {checked ? '✓ ' : ''}{label}
+      {checked ? '✓ ' : ''}
+      {label}
     </button>
   );
 }

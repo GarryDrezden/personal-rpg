@@ -1,5 +1,6 @@
 import type { AchievementCategory, AchievementTier } from '../../types/achievements';
 import { CATEGORY_LABELS, ACHIEVEMENT_TIERS } from '../../constants/achievements';
+import { FILTER_ACTIVE_GOLD, FILTER_IDLE } from '../../constants/cardTheme';
 
 export type StatusFilter = 'all' | 'unlocked' | 'locked';
 
@@ -24,6 +25,9 @@ const CATEGORY_LABELS_EXT: Record<AchievementCategory | 'all', string> = {
 
 const TIERS: (AchievementTier | 'all')[] = ['all', 'bronze', 'silver', 'gold', 'epic', 'legendary'];
 
+const FILTER_ACTIVE_DARK =
+  'rounded-full px-3 py-1.5 text-xs font-medium bg-[var(--app-bg-soft)] text-[var(--app-text)]';
+
 export function AchievementFilters({
   category,
   tier,
@@ -40,9 +44,11 @@ export function AchievementFilters({
             key={s}
             type="button"
             onClick={() => onStatusChange(s)}
-            className={`rounded-full px-3 py-1.5 text-xs font-medium ${
-              status === s ? 'bg-gold text-white' : 'bg-stone-100 text-stone-600'
-            }`}
+            className={
+              status === s
+                ? 'rounded-full bg-[var(--app-primary)] px-3 py-1.5 text-xs font-medium text-slate-950'
+                : FILTER_IDLE
+            }
           >
             {s === 'all' ? 'Все' : s === 'unlocked' ? 'Полученные' : 'Не полученные'}
           </button>
@@ -55,9 +61,7 @@ export function AchievementFilters({
             key={c}
             type="button"
             onClick={() => onCategoryChange(c)}
-            className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium ${
-              category === c ? 'bg-amber-100 text-amber-900' : 'bg-stone-100 text-stone-600'
-            }`}
+            className={`shrink-0 ${category === c ? FILTER_ACTIVE_GOLD : FILTER_IDLE}`}
           >
             {CATEGORY_LABELS_EXT[c]}
           </button>
@@ -70,9 +74,7 @@ export function AchievementFilters({
             key={t}
             type="button"
             onClick={() => onTierChange(t)}
-            className={`rounded-full px-3 py-1.5 text-xs font-medium ${
-              tier === t ? 'bg-stone-800 text-white' : 'bg-stone-100 text-stone-600'
-            }`}
+            className={tier === t ? FILTER_ACTIVE_DARK : FILTER_IDLE}
           >
             {t === 'all' ? 'Все ранги' : ACHIEVEMENT_TIERS[t].label}
           </button>

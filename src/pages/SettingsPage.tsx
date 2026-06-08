@@ -13,9 +13,12 @@ import {
 } from '../utils/avatarEngine';
 import { Card } from '../components/ui/Card';
 import { NumberInput } from '../components/ui/NumberInput';
+import { ThemeSelector } from '../components/settings/ThemeSelector';
+import { useAppTheme } from '../hooks/useAppTheme';
 
 export function SettingsPage() {
   const { settings, measurements, saveSettings } = useAppStore();
+  const { themeId, setThemeId } = useAppTheme();
   const [local, setLocal] = useState(settings);
   const [saving, setSaving] = useState(false);
 
@@ -145,6 +148,14 @@ export function SettingsPage() {
       </header>
 
       <Card>
+        <h2 className="mb-2 font-semibold text-[var(--app-text)]">Внешний вид</h2>
+        <p className="mb-4 text-sm text-[var(--app-text-muted)]">
+          Выберите визуальную тему интерфейса. Настройка сохраняется автоматически.
+        </p>
+        <ThemeSelector value={themeId} onChange={setThemeId} />
+      </Card>
+
+      <Card>
         <h2 className="font-semibold mb-4">Персонаж прогресса</h2>
         <div className="space-y-4">
           <NumberInput
@@ -188,7 +199,7 @@ export function SettingsPage() {
                     className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium transition-colors ${
                       avatarSettings.gender === g
                         ? 'border-gold bg-amber-100 text-amber-900'
-                        : 'border-rpg-border text-rpg-muted hover:bg-stone-50'
+                        : 'border-[var(--app-border)] text-[var(--app-text-muted)] hover:bg-[var(--app-bg-soft)]'
                     }`}
                   >
                     {g === 'male' ? 'Мужской' : 'Женский'}
@@ -213,7 +224,7 @@ export function SettingsPage() {
                     className={`flex-1 rounded-xl border px-4 py-2 text-sm font-medium transition-colors ${
                       avatarSettings.mode === m.id
                         ? 'border-gold bg-amber-100 text-amber-900'
-                        : 'border-rpg-border text-rpg-muted hover:bg-stone-50'
+                        : 'border-[var(--app-border)] text-[var(--app-text-muted)] hover:bg-[var(--app-bg-soft)]'
                     }`}
                   >
                     {m.label}
@@ -236,7 +247,7 @@ export function SettingsPage() {
                   className={`h-10 w-10 rounded-xl border text-sm font-semibold transition-colors ${
                     avatarSettings.manualStage === s
                       ? 'border-gold bg-amber-100 text-amber-900'
-                      : 'border-rpg-border text-rpg-muted hover:bg-stone-50'
+                      : 'border-[var(--app-border)] text-[var(--app-text-muted)] hover:bg-[var(--app-bg-soft)]'
                   }`}
                 >
                   {s}
@@ -344,7 +355,7 @@ export function SettingsPage() {
         <a
           href="/api/backup"
           download
-          className="inline-block rounded-xl border border-rpg-border px-4 py-3 text-sm font-medium hover:bg-stone-50"
+          className="inline-block rounded-xl border border-[var(--app-border)] bg-[var(--app-card-strong)] px-4 py-3 text-sm font-medium text-[var(--app-text)] hover:brightness-[1.04]"
         >
           Скачать .sqlite
         </a>

@@ -8,6 +8,7 @@ import {
   type StatusFilter,
 } from '../components/achievements/AchievementFilters';
 import { AchievementIcon } from '../components/achievements/AchievementIcon';
+import { CARD_ACCENT, SURFACE_INSET } from '../constants/cardTheme';
 import { Card } from '../components/ui/Card';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { calcTotalEarnedXP } from '../utils/points';
@@ -71,14 +72,14 @@ export function AchievementsPage() {
         </p>
       </header>
 
-      <Card className="bg-gradient-to-br from-amber-50 to-white">
+      <Card className={CARD_ACCENT.primary}>
         <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <div className="text-3xl font-bold text-gold">
+            <div className="text-3xl font-bold text-[var(--app-primary)]">
               {unlockedCount}
-              <span className="text-lg text-rpg-muted"> / {totalCount}</span>
+              <span className="text-lg text-[var(--app-text-muted)]"> / {totalCount}</span>
             </div>
-            <p className="text-sm text-rpg-muted">Коллекция {collectionPercent}%</p>
+            <p className="text-sm text-[var(--app-text-muted)]">Коллекция {collectionPercent}%</p>
           </div>
         </div>
         <ProgressBar value={collectionPercent} color="gold" />
@@ -91,7 +92,7 @@ export function AchievementsPage() {
               return (
                 <div
                   key={u.achievementId}
-                  className="flex items-center gap-2 rounded-xl bg-white/80 px-3 py-2"
+                  className={`flex items-center gap-2 px-3 py-2 ${SURFACE_INSET}`}
                 >
                   <AchievementIcon iconKey={a.iconKey} tier={a.tier} unlocked size="sm" />
                   <div>

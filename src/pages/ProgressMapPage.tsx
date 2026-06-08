@@ -21,12 +21,12 @@ export function ProgressMapPage() {
     <div className="space-y-6 pb-8">
       <header>
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-700">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--app-card-strong)] text-[var(--app-secondary)]">
             <Map size={26} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">Карта прогресса</h1>
-            <p className="text-rpg-muted">
+            <h1 className="text-2xl font-bold text-[var(--app-text)]">Карта прогресса</h1>
+            <p className="text-[var(--app-text-muted)]">
               Пять маршрутов — вес, ясность, шаги, тренировки и замеры
             </p>
           </div>
@@ -53,9 +53,9 @@ export function ProgressMapPage() {
       </div>
 
       {!hasData && (
-        <Card className="border-dashed border-indigo-200 bg-indigo-50/40 text-center">
-          <p className="text-lg font-medium text-stone-800">Маршрут только начинается</p>
-          <p className="mt-2 text-sm text-rpg-muted">
+        <Card className="border-dashed text-center">
+          <p className="text-lg font-medium text-[var(--app-text)]">Маршрут только начинается</p>
+          <p className="mt-2 text-sm text-[var(--app-text-muted)]">
             Внеси первые данные — замер, шаги или день без алкоголя — и точки появятся на карте.
           </p>
         </Card>

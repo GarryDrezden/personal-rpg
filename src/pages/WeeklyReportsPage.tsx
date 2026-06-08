@@ -4,6 +4,7 @@ import { useCoinStore } from '../store/coinStore';
 import { useAchievementStore } from '../store/achievementStore';
 import { WeeklyReportCard } from '../components/reports/WeeklyReportCard';
 import { Card } from '../components/ui/Card';
+import { FILTER_ACTIVE_GOLD, FILTER_IDLE } from '../constants/cardTheme';
 import {
   generateAllWeeklyReports,
   generateWeeklyReport,
@@ -70,12 +71,12 @@ export function WeeklyReportsPage() {
     <div className="space-y-6 pb-8">
       <header>
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-700">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--app-card-strong)] text-[var(--app-secondary)]">
             <FileText size={26} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">Еженедельные отчёты</h1>
-            <p className="text-rpg-muted">
+            <h1 className="text-2xl font-bold text-[var(--app-text)]">Еженедельные отчёты</h1>
+            <p className="text-[var(--app-text-muted)]">
               Итоги недели: очки, привычки, достижения и советы
             </p>
           </div>
@@ -83,9 +84,9 @@ export function WeeklyReportsPage() {
       </header>
 
       {reports.length === 0 ? (
-        <Card className="border-dashed border-indigo-200 bg-indigo-50/40 text-center">
-          <p className="text-lg font-medium text-stone-800">Отчётов пока нет</p>
-          <p className="mt-2 text-sm text-rpg-muted">
+        <Card className="border-dashed text-center">
+          <p className="text-lg font-medium text-[var(--app-text)]">Отчётов пока нет</p>
+          <p className="mt-2 text-sm text-[var(--app-text-muted)]">
             Начни вносить данные за дни — первая неделя появится в списке автоматически.
           </p>
         </Card>
@@ -97,13 +98,12 @@ export function WeeklyReportsPage() {
                 key={ws}
                 type="button"
                 onClick={() => setSelectedWeek(ws)}
-                className={`rounded-xl border px-3 py-2 text-sm font-medium transition-colors ${
-                  selectedWeek === ws
-                    ? 'border-gold bg-amber-100 text-amber-900'
-                    : 'border-rpg-border bg-white text-rpg-muted hover:bg-stone-50'
-                }`}
+                className={selectedWeek === ws ? FILTER_ACTIVE_GOLD : FILTER_IDLE}
               >
-                {formatDateRu(ws)} — {formatDateRu(reports.find((r) => r.weekStart === ws)?.weekEnd ?? weekDays(ws)[6]!)}
+                {formatDateRu(ws)} —{' '}
+                {formatDateRu(
+                  reports.find((r) => r.weekStart === ws)?.weekEnd ?? weekDays(ws)[6]!,
+                )}
               </button>
             ))}
           </div>

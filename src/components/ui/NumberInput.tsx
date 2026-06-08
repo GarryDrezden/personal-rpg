@@ -9,7 +9,7 @@ interface NumberInputProps {
 export function NumberInput({ label, value, onChange, placeholder, disabled }: NumberInputProps) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm font-medium text-stone-700">{label}</span>
+      <span className="mb-1 block text-sm font-medium text-[var(--app-text)]">{label}</span>
       <input
         type="number"
         value={value ?? ''}
@@ -19,7 +19,7 @@ export function NumberInput({ label, value, onChange, placeholder, disabled }: N
         }}
         placeholder={placeholder}
         disabled={disabled}
-        className="min-h-12 w-full rounded-xl border border-rpg-border bg-white px-4 text-lg focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:bg-stone-100 disabled:text-stone-500"
+        className="min-h-12 w-full rounded-xl border border-[var(--app-border)] bg-[var(--app-card-strong)] px-4 text-lg text-[var(--app-text)] focus:border-[var(--app-primary)] focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_30%,transparent)] disabled:opacity-60"
       />
     </label>
   );

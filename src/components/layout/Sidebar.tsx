@@ -1,5 +1,18 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Calendar, CalendarDays, Ruler, Gift, Trophy, Sparkles, Settings, Swords, Map, FileText, Lightbulb } from 'lucide-react';
+import {
+  Home,
+  Calendar,
+  CalendarDays,
+  Ruler,
+  Gift,
+  Trophy,
+  Sparkles,
+  Settings,
+  Swords,
+  Map,
+  FileText,
+  Lightbulb,
+} from 'lucide-react';
 
 const links = [
   { to: '/', icon: Home, label: 'Главная' },
@@ -17,10 +30,10 @@ const links = [
 
 export function Sidebar() {
   return (
-    <aside className="hidden md:flex md:w-60 md:flex-col md:fixed md:inset-y-0 border-r border-rpg-border bg-white">
-      <div className="flex items-center gap-2 px-6 py-5 border-b border-rpg-border">
-        <Swords className="text-gold" size={28} />
-        <span className="text-lg font-bold">Личная RPG</span>
+    <aside className="hidden md:flex md:w-60 md:flex-col md:fixed md:inset-y-0 border-r border-[var(--app-border)] bg-[var(--app-card-strong)] backdrop-blur-md">
+      <div className="flex items-center gap-2 border-b border-[var(--app-border)] px-6 py-5">
+        <Swords className="text-[var(--app-primary)]" size={28} />
+        <span className="text-lg font-bold text-[var(--app-text)]">Личная RPG</span>
       </div>
       <nav className="flex flex-col gap-1 p-4">
         {links.map(({ to, icon: Icon, label }) => (
@@ -30,8 +43,8 @@ export function Sidebar() {
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-amber-50 text-amber-900'
-                  : 'text-stone-600 hover:bg-stone-50'
+                  ? 'nav-link-active'
+                  : 'text-[var(--app-text-muted)] hover:bg-[var(--app-bg-soft)]'
               }`
             }
           >

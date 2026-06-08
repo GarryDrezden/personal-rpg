@@ -100,9 +100,9 @@ export function WeekPage() {
             { label: '7 дней калории в лимите', ok: stats.caloriesOkDays === 7, pts: bonuses.caloriesWeekBonus },
             { label: 'Замеры в понедельник', ok: bonuses.measurementsMondayBonus > 0, pts: bonuses.measurementsMondayBonus },
           ].map((b) => (
-            <div key={b.label} className="flex items-center justify-between rounded-xl border border-rpg-border bg-white px-4 py-3">
-              <span className="flex items-center gap-2">
-                {b.ok ? <Check className="text-success" size={18} /> : <X className="text-stone-400" size={18} />}
+            <div key={b.label} className="flex items-center justify-between rounded-xl border border-[var(--app-border)] bg-[var(--app-card)] px-4 py-3">
+              <span className="flex items-center gap-2 text-[var(--app-text)]">
+                {b.ok ? <Check className="text-[var(--app-success)]" size={18} /> : <X className="text-[var(--app-text-muted)]" size={18} />}
                 {b.label}
               </span>
               <span className="font-medium text-gold">+{b.pts}</span>

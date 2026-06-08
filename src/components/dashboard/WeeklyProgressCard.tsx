@@ -22,30 +22,30 @@ export function WeeklyProgressCard({
   const cappedPercent = Math.min(100, weekPercent);
 
   return (
-    <Card className="bg-gradient-to-br from-blue-50/80 to-white">
+    <Card className="bg-[color-mix(in_srgb,var(--app-secondary)_8%,var(--app-card))]">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <CalendarDays className="text-blue-600" size={22} />
-          <h2 className="text-lg font-semibold">Прогресс недели</h2>
+          <CalendarDays className="text-[var(--app-secondary)]" size={22} />
+          <h2 className="text-lg font-semibold text-[var(--app-text)]">Прогресс недели</h2>
         </div>
-        <Link to="/week" className="text-sm font-medium text-gold hover:underline">
+        <Link to="/week" className="text-sm font-medium text-[var(--app-primary)] hover:underline">
           Подробнее →
         </Link>
       </div>
 
       <div className="mb-2 flex items-end justify-between">
         <div>
-          <p className="text-3xl font-bold text-stone-900">{weekTotal}</p>
-          <p className="text-sm text-rpg-muted">XP из {weekGoal}</p>
+          <p className="text-3xl font-bold text-[var(--app-text)]">{weekTotal}</p>
+          <p className="text-sm text-[var(--app-text-muted)]">XP из {weekGoal}</p>
         </div>
-        <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800">
+        <span className="rounded-full bg-[color-mix(in_srgb,var(--app-secondary)_14%,var(--app-card-strong))] px-3 py-1 text-sm font-semibold text-[var(--app-secondary)]">
           {getWeekStatus(weekPercent)}
         </span>
       </div>
 
       <ProgressBar value={cappedPercent} color={cappedPercent >= 100 ? 'success' : 'gold'} />
 
-      <p className="mt-3 text-sm text-rpg-muted">
+      <p className="mt-3 text-sm text-[var(--app-text-muted)]">
         Зал: {gymCount}/{gymTarget} · {weekPercent}% недельной цели
       </p>
     </Card>

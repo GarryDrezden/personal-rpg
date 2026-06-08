@@ -3,6 +3,7 @@ import type { WeeklyReport } from '../../types/weeklyReport';
 import { WEEKLY_REPORT_STATUS_LABELS } from '../../types/weeklyReport';
 import { formatReportForCopy } from '../../utils/weeklyReportEngine';
 import { formatDateRu } from '../../utils/dates';
+import { CARD_ACCENT, BTN_SECONDARY, SURFACE_INSET } from '../../constants/cardTheme';
 import { ReportMetric } from './ReportMetric';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
@@ -33,15 +34,15 @@ function statusVariant(
 function cardAccent(status: WeeklyReport['status']): string {
   switch (status) {
     case 'perfect':
-      return 'from-amber-50 via-white to-yellow-50 ring-amber-200/60';
+      return CARD_ACCENT.primary;
     case 'strong':
-      return 'from-emerald-50 via-white to-green-50 ring-emerald-200/50';
+      return CARD_ACCENT.success;
     case 'good':
-      return 'from-sky-50 via-white to-blue-50 ring-sky-200/50';
+      return CARD_ACCENT.default;
     case 'weak':
-      return 'from-stone-50 via-white to-slate-50 ring-stone-200/50';
+      return CARD_ACCENT.danger;
     default:
-      return 'from-orange-50 via-white to-amber-50 ring-orange-200/40';
+      return CARD_ACCENT.warning;
   }
 }
 
@@ -59,13 +60,13 @@ export function WeeklyReportCard({ report, compact = false }: WeeklyReportCardPr
   };
 
   return (
-    <Card className={`bg-gradient-to-br ring-1 ${cardAccent(report.status)}`}>
+    <Card className={cardAccent(report.status)}>
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-rpg-muted">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
             {formatDateRu(report.weekStart)} — {formatDateRu(report.weekEnd)}
           </p>
-          <h2 className={`mt-1 font-bold text-stone-900 ${compact ? 'text-xl' : 'text-2xl'}`}>
+          <h2 className={`mt-1 font-bold text-[var(--app-text)] ${compact ? 'text-xl' : 'text-2xl'}`}>
             {report.summary}
           </h2>
         </div>
@@ -76,10 +77,10 @@ export function WeeklyReportCard({ report, compact = false }: WeeklyReportCardPr
 
       <div className="mb-4">
         <div className="mb-1 flex justify-between text-sm">
-          <span className="text-rpg-muted">
+          <span className="text-[var(--app-text-muted)]">
             {report.points} / {report.pointsGoal} XP
           </span>
-          <span className="font-semibold">{report.pointsPercent}%</span>
+          <span className="font-semibold text-[var(--app-text)]">{report.pointsPercent}%</span>
         </div>
         <ProgressBar
           value={Math.min(150, report.pointsPercent)}
@@ -103,16 +104,8 @@ export function WeeklyReportCard({ report, compact = false }: WeeklyReportCardPr
           value={`${report.stepsGoalDays}/7`}
           sub={`~${report.averageSteps.toLocaleString('ru')} / день`}
         />
-        <ReportMetric
-          icon="💧"
-          label="Без алкоголя"
-          value={`${report.noAlcoholDays}/7`}
-        />
-        <ReportMetric
-          icon="🏋️"
-          label="Зал"
-          value={`${report.gymCount}/${report.gymTarget}`}
-        />
+        <ReportMetric icon="💧" label="Без алкоголя" value={`${report.noAlcoholDays}/7`} />
+        <ReportMetric icon="🏋️" label="Зал" value={`${report.gymCount}/${report.gymTarget}`} />
         {report.weightChange !== undefined && (
           <ReportMetric
             icon="⚖️"
@@ -139,29 +132,25 @@ export function WeeklyReportCard({ report, compact = false }: WeeklyReportCardPr
       </div>
 
       {report.bestDayDate && report.bestDayPoints !== undefined && !compact && (
-        <p className="mt-4 text-sm text-rpg-muted">
+        <p className="mt-4 text-sm text-[var(--app-text-muted)]">
           Лучший день:{' '}
-          <span className="font-medium text-stone-800">
+          <span className="font-medium text-[var(--app-text)]">
             {formatDateRu(report.bestDayDate)} · {report.bestDayPoints} XP
           </span>
         </p>
       )}
 
       {!compact && (
-        <div className="mt-4 rounded-xl border border-rpg-border bg-white/70 px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-rpg-muted">
+        <div className={`mt-4 ${SURFACE_INSET} px-4 py-3`}>
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
             Совет недели
           </p>
-          <p className="mt-1 text-sm text-stone-800">{report.advice}</p>
+          <p className="mt-1 text-sm text-[var(--app-text)]">{report.advice}</p>
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={() => void handleCopy()}
-        className="mt-4 inline-flex items-center gap-2 rounded-xl border border-rpg-border bg-white px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
-      >
-        {copied ? <Check size={16} className="text-success" /> : <Copy size={16} />}
+      <button type="button" onClick={() => void handleCopy()} className={`mt-4 inline-flex items-center gap-2 ${BTN_SECONDARY}`}>
+        {copied ? <Check size={16} className="text-[var(--app-success)]" /> : <Copy size={16} />}
         {copied ? 'Скопировано' : 'Скопировать отчёт'}
       </button>
     </Card>

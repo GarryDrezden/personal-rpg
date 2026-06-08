@@ -10,6 +10,8 @@ type AvatarDisplayProps = {
   weightLossKg: number;
   hasWeightData?: boolean;
   compact?: boolean;
+  /** Подпись под аватаром (этап, вес). В hero-блоке выводится отдельно. */
+  showFooter?: boolean;
 };
 
 function AvatarPlaceholder({
@@ -63,6 +65,7 @@ export function AvatarDisplay({
   weightLossKg,
   hasWeightData = true,
   compact = false,
+  showFooter = true,
 }: AvatarDisplayProps) {
   const candidates = useMemo(
     () => (imagePath ? [imagePath, ...getAvatarImageCandidates(gender, stage)] : getAvatarImageCandidates(gender, stage)),
@@ -106,21 +109,23 @@ export function AvatarDisplay({
         )}
       </div>
 
-      <div className={`text-center ${compact ? 'text-[10px]' : 'text-xs'}`}>
-        <p className="font-semibold text-stone-800">
-          Этап {stage}/{AVATAR_STAGE_COUNT}
-        </p>
-        <p className="text-rpg-muted">{AVATAR_STAGE_LABELS[stage]}</p>
-        {hasWeightData ? (
-          <p className="mt-0.5 font-medium text-emerald-700">
-            −{weightLossKg.toFixed(1)} кг
+      {showFooter && (
+        <div className={`text-center ${compact ? 'text-[10px]' : 'text-xs'}`}>
+          <p className="font-semibold text-[var(--app-text)]">
+            Этап {stage}/{AVATAR_STAGE_COUNT}
           </p>
-        ) : (
-          <p className="mt-0.5 text-amber-800/80">
-            Добавь первый вес, чтобы аватар начал меняться
-          </p>
-        )}
-      </div>
+          <p className="text-[var(--app-text-muted)]">{AVATAR_STAGE_LABELS[stage]}</p>
+          {hasWeightData ? (
+            <p className="mt-0.5 font-medium text-[var(--app-success)]">
+              −{weightLossKg.toFixed(1)} кг
+            </p>
+          ) : (
+            <p className="mt-0.5 text-[var(--app-warning)]">
+              Добавь первый вес, чтобы аватар начал меняться
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

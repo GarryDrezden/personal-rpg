@@ -11,6 +11,7 @@ import {
   getRecoveryState,
   isMinimalDayCompleted,
 } from '../../utils/recoveryEngine';
+import { CARD_ACCENT, BTN_SECONDARY, SURFACE_INSET } from '../../constants/cardTheme';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
 import { Badge } from '../ui/Badge';
@@ -27,15 +28,15 @@ type RecoveryCardProps = {
 function stateAccent(state: RecoveryState): string {
   switch (state) {
     case 'recovered':
-      return 'from-emerald-50 via-white to-teal-50 ring-emerald-200/70';
+      return CARD_ACCENT.success;
     case 'after_absence':
-      return 'from-sky-50 via-white to-indigo-50 ring-sky-200/70';
+      return CARD_ACCENT.default;
     case 'after_bad_day':
-      return 'from-amber-50 via-white to-orange-50 ring-amber-200/70';
+      return CARD_ACCENT.warning;
     case 'minimal_day_available':
-      return 'from-stone-50 via-white to-slate-50 ring-stone-200/70';
+      return CARD_ACCENT.default;
     default:
-      return 'from-stone-50 to-white ring-stone-200/50';
+      return CARD_ACCENT.default;
   }
 }
 
@@ -60,35 +61,29 @@ export function RecoveryCard({
       : RECOVERY_STATE_TITLES[state] || 'Поддержка режима';
 
   const message =
-    state === 'recovered'
-      ? RECOVERY_STATE_MESSAGES.recovered
-      : RECOVERY_STATE_MESSAGES[state];
+    state === 'recovered' ? RECOVERY_STATE_MESSAGES.recovered : RECOVERY_STATE_MESSAGES[state];
 
   return (
-    <Card className={`bg-gradient-to-br shadow-sm ring-1 ${stateAccent(state)}`}>
+    <Card className={stateAccent(state)}>
       <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
         <div className="flex items-start gap-2">
           {state === 'recovered' ? (
-            <Sparkles className="mt-0.5 shrink-0 text-emerald-600" size={22} />
+            <Sparkles className="mt-0.5 shrink-0 text-[var(--app-success)]" size={22} />
           ) : (
-            <HeartHandshake className="mt-0.5 shrink-0 text-teal-600" size={22} />
+            <HeartHandshake className="mt-0.5 shrink-0 text-[var(--app-secondary)]" size={22} />
           )}
           <div>
-            <h2 className="text-lg font-semibold text-stone-900">{title}</h2>
-            <p className="mt-1 text-sm leading-relaxed text-stone-700">{message}</p>
+            <h2 className="text-lg font-semibold text-[var(--app-text)]">{title}</h2>
+            <p className="mt-1 text-sm leading-relaxed text-[var(--app-text-muted)]">{message}</p>
           </div>
         </div>
-        {state === 'recovered' && (
-          <Badge variant="success">День удержан</Badge>
-        )}
-        {minimalDone && state !== 'recovered' && (
-          <Badge variant="gold">Минимум выполнен</Badge>
-        )}
+        {state === 'recovered' && <Badge variant="success">День удержан</Badge>}
+        {minimalDone && state !== 'recovered' && <Badge variant="gold">Минимум выполнен</Badge>}
       </div>
 
       {quests.length > 0 && (
         <>
-          <div className="mb-2 flex items-center justify-between text-xs text-rpg-muted">
+          <div className="mb-2 flex items-center justify-between text-xs text-[var(--app-text-muted)]">
             <span>Прогресс восстановления</span>
             <span>
               {stats.done}/{stats.total}
@@ -102,19 +97,16 @@ export function RecoveryCard({
 
           <ul className="space-y-2">
             {quests.map((q) => (
-              <li
-                key={q.id}
-                className="flex items-center gap-3 rounded-xl border border-rpg-border/80 bg-white/80 px-3 py-2.5"
-              >
+              <li key={q.id} className={`flex items-center gap-3 px-3 py-2.5 ${SURFACE_INSET}`}>
                 <span className="text-lg leading-none">{q.icon}</span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium">{q.title}</p>
-                  <p className="text-xs text-rpg-muted">{q.description}</p>
+                  <p className="text-sm font-medium text-[var(--app-text)]">{q.title}</p>
+                  <p className="text-xs text-[var(--app-text-muted)]">{q.description}</p>
                 </div>
                 {q.completed ? (
-                  <Check className="shrink-0 text-success" size={18} />
+                  <Check className="shrink-0 text-[var(--app-success)]" size={18} />
                 ) : (
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-stone-300" />
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-[var(--app-border)]" />
                 )}
               </li>
             ))}
@@ -123,16 +115,13 @@ export function RecoveryCard({
       )}
 
       {minimalDone && (
-        <p className="mt-3 text-sm font-medium text-emerald-700">
+        <p className="mt-3 text-sm font-medium text-[var(--app-success)]">
           +1 🪙 за минимальный день (при сохранении)
         </p>
       )}
 
       {showLink && state !== 'recovered' && (
-        <Link
-          to="/today"
-          className="mt-4 inline-flex rounded-xl border border-teal-200 bg-white px-4 py-2 text-sm font-medium text-teal-800 hover:bg-teal-50"
-        >
+        <Link to="/today" className={`mt-4 inline-flex ${BTN_SECONDARY}`}>
           Открыть квесты дня →
         </Link>
       )}

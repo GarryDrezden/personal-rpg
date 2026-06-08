@@ -1,5 +1,4 @@
-import type { MilestoneStatus } from '../../types/progressMap';
-import type { ProgressMilestone } from '../../types/progressMap';
+import type { MilestoneStatus, ProgressMilestone } from '../../types/progressMap';
 
 type MilestoneNodeProps = {
   milestone: ProgressMilestone;
@@ -9,19 +8,19 @@ type MilestoneNodeProps = {
 
 const statusStyles: Record<MilestoneStatus, { node: string; ring: string; label: string }> = {
   completed: {
-    node: 'bg-emerald-500 text-white border-emerald-400',
-    ring: 'ring-emerald-200',
-    label: 'text-emerald-700 font-medium',
+    node: 'bg-[var(--app-success)] text-slate-950 border-[var(--app-success)]',
+    ring: 'ring-[color-mix(in_srgb,var(--app-success)_30%,transparent)]',
+    label: 'text-[var(--app-success)] font-medium',
   },
   current: {
-    node: 'bg-gold text-white border-amber-400 shadow-md shadow-amber-200/60',
-    ring: 'ring-4 ring-amber-200/80',
-    label: 'text-amber-800 font-semibold',
+    node: 'bg-[var(--app-primary)] text-slate-950 border-[var(--app-primary)] shadow-md',
+    ring: 'ring-4 ring-[color-mix(in_srgb,var(--app-primary)_35%,transparent)]',
+    label: 'text-[var(--app-primary)] font-semibold',
   },
   upcoming: {
-    node: 'bg-stone-200 text-stone-500 border-stone-300',
-    ring: 'ring-stone-100',
-    label: 'text-stone-400',
+    node: 'bg-[var(--app-bg-soft)] text-[var(--app-text-muted)] border-[var(--app-border)]',
+    ring: 'ring-[var(--app-border)]',
+    label: 'text-[var(--app-text-muted)]',
   },
 };
 

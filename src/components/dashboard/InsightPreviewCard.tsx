@@ -10,28 +10,30 @@ type InsightPreviewCardProps = {
 
 export function InsightPreviewCard({ insight, hasEnoughData }: InsightPreviewCardProps) {
   return (
-    <Card className="bg-gradient-to-br from-teal-50/70 via-white to-cyan-50/40">
+    <Card className="bg-[color-mix(in_srgb,var(--app-success)_8%,var(--app-card))]">
       <div className="mb-2 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Lightbulb className="text-teal-600" size={22} />
-          <h2 className="text-lg font-semibold">Инсайт недели</h2>
+          <Lightbulb className="text-[var(--app-success)]" size={22} />
+          <h2 className="text-lg font-semibold text-[var(--app-text)]">Инсайт недели</h2>
         </div>
-        <Link to="/insights" className="text-sm font-medium text-gold hover:underline">
+        <Link to="/insights" className="text-sm font-medium text-[var(--app-primary)] hover:underline">
           Аналитика →
         </Link>
       </div>
 
       {!hasEnoughData ? (
-        <p className="text-sm text-rpg-muted">
+        <p className="text-sm text-[var(--app-text-muted)]">
           Нужно хотя бы 7 дней данных, чтобы появились первые выводы.
         </p>
       ) : insight ? (
         <>
-          <p className="font-medium text-stone-900">{insight.title}</p>
-          <p className="mt-1 text-sm leading-relaxed text-stone-700">{insight.description}</p>
+          <p className="font-medium text-[var(--app-text)]">{insight.title}</p>
+          <p className="mt-1 text-sm leading-relaxed text-[var(--app-text-muted)]">
+            {insight.description}
+          </p>
         </>
       ) : (
-        <p className="text-sm text-rpg-muted">
+        <p className="text-sm text-[var(--app-text-muted)]">
           Продолжай вносить данные — закономерности появятся по мере накопления истории.
         </p>
       )}

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useAppStore } from '../store/appStore';
 import { InsightCard } from '../components/insights/InsightCard';
 import { Card } from '../components/ui/Card';
+import { FILTER_ACTIVE_GOLD, FILTER_IDLE } from '../constants/cardTheme';
 import type { InsightFilter } from '../types/insights';
 import {
   countDaysWithData,
@@ -35,12 +36,12 @@ export function InsightsPage() {
     <div className="space-y-6 pb-8">
       <header>
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-100 text-teal-700">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--app-card-strong)] text-[var(--app-success)]">
             <Lightbulb size={26} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">Аналитика</h1>
-            <p className="text-rpg-muted">
+            <h1 className="text-2xl font-bold text-[var(--app-text)]">Аналитика</h1>
+            <p className="text-[var(--app-text-muted)]">
               Локальные выводы из твоих данных — без облака и без AI
             </p>
           </div>
@@ -48,9 +49,9 @@ export function InsightsPage() {
       </header>
 
       {!enoughData && (
-        <Card className="border-dashed border-teal-200 bg-teal-50/40 text-center">
-          <p className="text-lg font-medium text-stone-800">Данных пока мало</p>
-          <p className="mt-2 text-sm text-rpg-muted">
+        <Card className="border-dashed text-center">
+          <p className="text-lg font-medium text-[var(--app-text)]">Данных пока мало</p>
+          <p className="mt-2 text-sm text-[var(--app-text-muted)]">
             Нужно хотя бы 7 дней данных, чтобы появились первые выводы. Сейчас: {daysCount}{' '}
             {daysCount === 1 ? 'день' : daysCount < 5 ? 'дня' : 'дней'}.
           </p>
@@ -65,11 +66,7 @@ export function InsightsPage() {
                 key={f.id}
                 type="button"
                 onClick={() => setFilter(f.id)}
-                className={`rounded-xl border px-3 py-2 text-sm font-medium transition-colors ${
-                  filter === f.id
-                    ? 'border-gold bg-amber-100 text-amber-900'
-                    : 'border-rpg-border bg-white text-rpg-muted hover:bg-stone-50'
-                }`}
+                className={filter === f.id ? FILTER_ACTIVE_GOLD : FILTER_IDLE}
               >
                 {f.label}
               </button>
@@ -78,7 +75,7 @@ export function InsightsPage() {
 
           {filtered.length === 0 ? (
             <Card className="text-center">
-              <p className="text-sm text-rpg-muted">
+              <p className="text-sm text-[var(--app-text-muted)]">
                 В этой категории пока нет выводов — попробуй фильтр «Все».
               </p>
             </Card>
