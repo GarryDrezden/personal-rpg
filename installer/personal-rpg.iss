@@ -22,15 +22,15 @@ Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
 PrivilegesRequired=admin
-ArchitecturesInstallIn64BitMode=x64
+ArchitecturesInstallIn64BitMode=x64compatible
 
 [Languages]
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "Создать ярлык на рабочем столе"; GroupDescription: "Дополнительно:"
-Name: "autostart"; Description: "Запускать сервер при входе в Windows"; GroupDescription: "Дополнительно:"
-Name: "openbrowser"; Description: "Открыть сайт после установки"; GroupDescription: "Дополнительно:"; Flags: checked
+Name: "desktopicon"; Description: "Создать ярлык на рабочем столе"; GroupDescription: "Дополнительно:"; Flags: unchecked
+Name: "autostart"; Description: "Запускать сервер при входе в Windows"; GroupDescription: "Дополнительно:"; Flags: unchecked
+Name: "openbrowser"; Description: "Открыть сайт после установки"; GroupDescription: "Дополнительно:"
 
 [Files]
 Source: "{#MyStagingDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -46,8 +46,8 @@ Filename: "powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -Win
 Filename: "http://127.0.0.1:8080/"; Description: "Открыть Personal RPG"; Tasks: openbrowser; Flags: postinstall shellexec skipifsilent
 
 [UninstallRun]
-Filename: "powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\scripts\stop-all.ps1"""; Flags: runhidden
-Filename: "powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\scripts\uninstall-autostart.ps1"""; Flags: runhidden
+Filename: "powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\scripts\stop-all.ps1"""; Flags: runhidden; RunOnceId: "StopServer"
+Filename: "powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\scripts\uninstall-autostart.ps1"""; Flags: runhidden; RunOnceId: "RemoveAutostart"
 
 [Code]
 function InitializeSetup(): Boolean;
