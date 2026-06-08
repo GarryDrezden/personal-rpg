@@ -60,5 +60,6 @@ CREATE TABLE IF NOT EXISTS app_settings (
   default_steps_goal INTEGER NOT NULL DEFAULT 8000,
   default_gym_target INTEGER NOT NULL DEFAULT 2,
   default_weekly_points_goal INTEGER NOT NULL DEFAULT 500,
-  point_settings TEXT NOT NULL
+  point_settings TEXT NOT NULL,
+  gender TEXT NOT NULL DEFAULT 'male'
 );

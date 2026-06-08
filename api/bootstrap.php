@@ -121,5 +121,8 @@ function getAppSettings(PDO $pdo): array
         'defaultWeeklyPointsGoal' => (int) $row['default_weekly_points_goal'],
         'pointSettings' => json_decode($row['point_settings'], true),
         'weeklySettings' => array_map('rowToWeekly', $weekly),
+        'gender' => in_array($row['gender'] ?? 'male', ['male', 'female'], true)
+            ? $row['gender']
+            : 'male',
     ];
 }

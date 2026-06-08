@@ -1,23 +1,26 @@
+import type { CharacterGender } from '../../types';
 import type { WeightJourney } from '../../utils/weightJourney';
 import {
   getWeightStageImage,
+  getWeightStageImages,
   STAGE_LABELS,
   WEIGHT_STAGE_COUNT,
-  WEIGHT_STAGE_IMAGES,
 } from '../../utils/weightStages';
 
 interface WeightSpriteProgressProps {
   journey: WeightJourney;
+  gender: CharacterGender;
 }
 
-export function WeightSpriteProgress({ journey }: WeightSpriteProgressProps) {
+export function WeightSpriteProgress({ journey, gender }: WeightSpriteProgressProps) {
   const currentStage = journey.hasData ? journey.stage : 0;
+  const stageImages = getWeightStageImages(gender);
 
   return (
     <div className="w-full space-y-4">
       <div className="flex justify-center rounded-xl bg-white/80 py-4">
         <img
-          src={getWeightStageImage(currentStage)}
+          src={getWeightStageImage(currentStage, gender)}
           alt={`Стадия ${currentStage + 1}`}
           className="h-44 w-auto object-contain transition-opacity duration-300 sm:h-52"
           draggable={false}
@@ -36,7 +39,7 @@ export function WeightSpriteProgress({ journey }: WeightSpriteProgressProps) {
           />
         </div>
         <div className="grid grid-cols-7 gap-1">
-          {WEIGHT_STAGE_IMAGES.map((src, stage) => {
+          {stageImages.map((src, stage) => {
             const reached = journey.hasData && stage <= currentStage;
             const active = journey.hasData && stage === currentStage;
             const label = STAGE_LABELS[stage];

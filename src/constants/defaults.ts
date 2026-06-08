@@ -26,6 +26,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   defaultWeeklyPointsGoal: 500,
   pointSettings: DEFAULT_POINT_SETTINGS,
   weeklySettings: [],
+  gender: 'male',
 };
 
 export const DAY_STATUS_THRESHOLDS = [

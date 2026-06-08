@@ -1,4 +1,5 @@
 import { Skull } from 'lucide-react';
+import type { CharacterGender } from '../../types';
 import type { WeightJourney } from '../../utils/weightJourney';
 import { WEIGHT_DEATH_KG } from '../../utils/weightJourney';
 import { Card } from '../ui/Card';
@@ -7,9 +8,10 @@ import { WeightSpriteProgress } from './WeightSpriteProgress';
 
 interface WeightHeroProps {
   journey: WeightJourney;
+  gender: CharacterGender;
 }
 
-export function WeightHero({ journey }: WeightHeroProps) {
+export function WeightHero({ journey, gender }: WeightHeroProps) {
   const delta = journey.deltaSinceLast;
 
   return (
@@ -37,7 +39,7 @@ export function WeightHero({ journey }: WeightHeroProps) {
         </div>
       )}
 
-      <WeightSpriteProgress journey={journey} />
+      <WeightSpriteProgress journey={journey} gender={gender} />
 
       <div className="mt-4">
         {journey.hasData ? (

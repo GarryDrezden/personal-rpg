@@ -77,6 +77,26 @@ export function SettingsPage() {
       </header>
 
       <Card>
+        <h2 className="font-semibold mb-4">Персонаж прогресса</h2>
+        <div className="flex gap-2">
+          {(['male', 'female'] as const).map((g) => (
+            <button
+              key={g}
+              type="button"
+              onClick={() => setLocal({ ...local, gender: g })}
+              className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium transition-colors ${
+                local.gender === g
+                  ? 'border-gold bg-amber-100 text-amber-900'
+                  : 'border-rpg-border text-rpg-muted hover:bg-stone-50'
+              }`}
+            >
+              {g === 'male' ? 'Мужской' : 'Женский'}
+            </button>
+          ))}
+        </div>
+      </Card>
+
+      <Card>
         <h2 className="font-semibold mb-4">Цели по умолчанию</h2>
         <div className="grid grid-cols-2 gap-3">
           <NumberInput label="Калории/день" value={local.defaultCaloriesLimit} onChange={(v) => setLocal({ ...local, defaultCaloriesLimit: v ?? 2500 })} />

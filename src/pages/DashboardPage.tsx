@@ -34,7 +34,7 @@ export function DashboardPage() {
         <p className="text-rpg-muted mt-1">{formatDateFull(today)}</p>
       </header>
 
-      <WeightHero journey={weightJourney} />
+      <WeightHero journey={weightJourney} gender={settings.gender} />
 
       <Card className="bg-gradient-to-br from-amber-50 to-white">
         <div className="flex flex-wrap items-center justify-between gap-3">

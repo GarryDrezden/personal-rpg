@@ -72,6 +72,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       measurementsMondayBonus: 30,
     },
     weeklySettings: [],
+    gender: 'male',
   },
   loading: true,
   error: null,
@@ -80,7 +81,12 @@ export const useAppStore = create<AppState>((set, get) => ({
     try {
       set({ loading: true, error: null });
       const data = await apiRepository.loadAll();
-      set({ ...data, bankDeposits: data.bankDeposits ?? [], loading: false });
+      set({
+        ...data,
+        bankDeposits: data.bankDeposits ?? [],
+        settings: { ...data.settings, gender: data.settings.gender ?? 'male' },
+        loading: false,
+      });
     } catch (e) {
       set({
         loading: false,

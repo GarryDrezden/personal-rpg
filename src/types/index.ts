@@ -75,6 +75,8 @@ export interface BankDeposit {
   comment: string;
 }
 
+export type CharacterGender = 'male' | 'female';
+
 export interface AppSettings {
   defaultCaloriesLimit: number;
   defaultStepsGoal: number;
@@ -82,6 +84,7 @@ export interface AppSettings {
   defaultWeeklyPointsGoal: number;
   pointSettings: PointSettings;
   weeklySettings: WeeklySettings[];
+  gender: CharacterGender;
 }
 
 export interface AppData {

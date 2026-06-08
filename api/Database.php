@@ -76,6 +76,14 @@ class Database
         if (!in_array('money_goal', $cols, true)) {
             $this->pdo->exec('ALTER TABLE rewards ADD COLUMN money_goal REAL');
         }
+
+        $appCols = array_column(
+            $this->pdo->query('PRAGMA table_info(app_settings)')->fetchAll(),
+            'name',
+        );
+        if (!in_array('gender', $appCols, true)) {
+            $this->pdo->exec("ALTER TABLE app_settings ADD COLUMN gender TEXT NOT NULL DEFAULT 'male'");
+        }
     }
 
     private function seedIfEmpty(): void
@@ -102,8 +110,8 @@ class Database
         $weekGoal = (int) ($defs['weeklyPointsGoal'] ?? 500);
 
         $stmt = $this->pdo->prepare(
-            'INSERT INTO app_settings (id, default_calories_limit, default_steps_goal, default_gym_target, default_weekly_points_goal, point_settings)
-             VALUES (1, :cl, :sg, :gt, :wg, :ps)'
+            'INSERT INTO app_settings (id, default_calories_limit, default_steps_goal, default_gym_target, default_weekly_points_goal, point_settings, gender)
+             VALUES (1, :cl, :sg, :gt, :wg, :ps, :gender)'
         );
         $stmt->execute([
             'cl' => $calLimit,
@@ -111,6 +119,7 @@ class Database
             'gt' => $gymTarget,
             'wg' => $weekGoal,
             'ps' => json_encode($defaultPoints),
+            'gender' => 'male',
         ]);
 
         if (!empty($defs['weekStart'])) {
