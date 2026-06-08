@@ -1,5 +1,5 @@
 import { useAppStore } from '../store/appStore';
-import { useDerivedStats } from '../store/selectors';
+import { useGameStats } from '../hooks/useGameStats';
 import { todayISO, weekStart, weekDays, formatDateRu } from '../utils/dates';
 import { calcDailyPoints, calcWeeklyBonuses, getWeekStatus } from '../utils/points';
 import { Card } from '../components/ui/Card';
@@ -9,11 +9,11 @@ import { StatTile } from '../components/ui/StatTile';
 import { Check, X } from 'lucide-react';
 
 export function WeekPage() {
-  const { dailyEntries, measurements, rewards, settings } = useAppStore();
+  const { dailyEntries, measurements, settings } = useAppStore();
   const today = todayISO();
   const ws = weekStart(today);
   const days = weekDays(ws);
-  const stats = useDerivedStats(dailyEntries, measurements, rewards, settings, today);
+  const stats = useGameStats(today);
   const bonuses = calcWeeklyBonuses(ws, dailyEntries, measurements, settings);
 
   return (
@@ -29,7 +29,7 @@ export function WeekPage() {
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
           <div>
             <span className="text-3xl font-bold">{stats.weekTotal}</span>
-            <span className="text-rpg-muted"> / {stats.weekly.weeklyPointsGoal} очков</span>
+            <span className="text-rpg-muted"> / {stats.weekly.weeklyPointsGoal} XP</span>
           </div>
           <Badge variant={stats.weekPercent >= 80 ? 'success' : stats.weekPercent >= 50 ? 'default' : 'danger'}>
             {getWeekStatus(stats.weekPercent)}

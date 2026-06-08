@@ -1,11 +1,13 @@
 import type { AppSettings, DailyEntry, MeasurementEntry, Reward } from '../types';
+import type { UnlockedAchievement } from '../types/achievements';
+import type { CoinTransaction } from '../types/currency';
 import {
-  calcAvailablePoints,
   calcDailyPoints,
   calcTotalEarnedXP,
   calcWeeklyBonuses,
   getWeeklySettingsForDate,
 } from '../utils/points';
+import { buildCoinWalletSummary } from '../utils/coinEngine';
 import { weekStart, weekDays } from '../utils/dates';
 import { getLevelInfo } from '../utils/levels';
 import { calcStreaks } from '../utils/streaks';
@@ -17,6 +19,8 @@ export function useDerivedStats(
   rewards: Reward[],
   settings: AppSettings,
   today: string,
+  unlockedAchievements: UnlockedAchievement[] = [],
+  manualCoinTransactions: CoinTransaction[] = [],
 ) {
   const ws = weekStart(today);
   const weekEntries = weekDays(ws).map(
@@ -37,11 +41,16 @@ export function useDerivedStats(
     : 0;
 
   const totalXP = calcTotalEarnedXP(dailyEntries, measurements, settings);
-  const purchasedCosts = rewards
-    .filter((r) => r.purchasedAt)
-    .map((r) => r.cost);
-  const availablePoints = calcAvailablePoints(totalXP, purchasedCosts);
   const level = getLevelInfo(totalXP);
+  const coins = buildCoinWalletSummary(
+    dailyEntries,
+    measurements,
+    rewards,
+    settings,
+    today,
+    unlockedAchievements,
+    manualCoinTransactions,
+  );
   const streaks = calcStreaks(dailyEntries, settings);
   const latest = getLatestMeasurement(measurements);
   const deltas = getDelta(measurements, 'weight');
@@ -60,8 +69,10 @@ export function useDerivedStats(
     weekly,
     bonuses,
     totalXP,
-    availablePoints,
     level,
+    coins,
+    /** @deprecated use coins.available */
+    availablePoints: coins.available,
     streaks,
     latest,
     weightDelta: deltas,

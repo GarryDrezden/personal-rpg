@@ -36,7 +36,7 @@ export function WeeklyProgressCard({
       <div className="mb-2 flex items-end justify-between">
         <div>
           <p className="text-3xl font-bold text-stone-900">{weekTotal}</p>
-          <p className="text-sm text-rpg-muted">очков из {weekGoal}</p>
+          <p className="text-sm text-rpg-muted">XP из {weekGoal}</p>
         </div>
         <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800">
           {getWeekStatus(weekPercent)}

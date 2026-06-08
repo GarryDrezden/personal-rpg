@@ -53,7 +53,7 @@ export function MeasurementsPage() {
         <h1 className="text-2xl font-bold">Замеры</h1>
         {isMonday(today) && (
           <p className="text-success text-sm mt-1">
-            Сегодня понедельник — +{settings.pointSettings.measurementsMondayBonus} очков за внесение замеров
+            Сегодня понедельник — +{settings.pointSettings.measurementsMondayBonus} XP и бонусные монеты за замеры
           </p>
         )}
       </header>

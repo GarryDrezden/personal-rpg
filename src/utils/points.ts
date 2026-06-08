@@ -121,6 +121,7 @@ export function calcTotalEarnedXP(
   return total;
 }
 
+/** @deprecated XP не тратится — используйте coinEngine.calcAvailableCoins */
 export function calcAvailablePoints(
   totalEarnedXP: number,
   purchasedCosts: number[],

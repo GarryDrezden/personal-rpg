@@ -10,6 +10,7 @@ import type {
 import { apiRepository } from './apiRepository';
 import { syncAchievementsFromData } from '../utils/achievementSync';
 import { useAchievementStore } from './achievementStore';
+import { useCoinStore } from './coinStore';
 
 function emptyDaily(date: string): DailyEntry {
   return {
@@ -95,6 +96,7 @@ export const useAppStore = create<AppState>((set, get) => ({
         loading: false,
       });
       useAchievementStore.getState().hydrate();
+      useCoinStore.getState().hydrate();
       syncAchievementsFromData(
         get().dailyEntries,
         get().measurements,

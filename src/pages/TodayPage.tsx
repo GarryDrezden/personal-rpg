@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useAppStore, emptyDaily } from '../store/appStore';
 import { todayISO } from '../utils/dates';
 import { calcDailyPoints, getWeeklySettingsForDate } from '../utils/points';
+import { calcDailyCoins } from '../utils/coinEngine';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { NumberInput } from '../components/ui/NumberInput';
@@ -22,6 +23,7 @@ export function TodayPage() {
 
   const weekly = getWeeklySettingsForDate(today, settings);
   const points = calcDailyPoints(entry, settings);
+  const coins = calcDailyCoins(entry, settings);
 
   const save = useCallback(async (updated: DailyEntry) => {
     setSaving(true);
@@ -65,7 +67,10 @@ export function TodayPage() {
       <header className="flex flex-wrap items-start justify-between gap-3">
         <h1 className="text-2xl font-bold">Сегодня</h1>
         <div className="flex flex-col items-end gap-2">
-          <Badge variant="gold">{Math.max(0, points)} очков</Badge>
+          <div className="flex flex-wrap justify-end gap-2">
+            <Badge variant="gold">+{Math.max(0, points)} XP</Badge>
+            <Badge variant="default">+{coins} монет</Badge>
+          </div>
           {saving && <div className="text-xs text-rpg-muted">сохранение…</div>}
           {hasSavedData && (
             <button
