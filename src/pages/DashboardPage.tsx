@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import { useAppStore } from '../store/appStore';
 import { useGameStats } from '../hooks/useGameStats';
-import { formatDateFull, todayISO, weekStart } from '../utils/dates';
+import { formatDateFull, isMonday, todayISO, weekStart } from '../utils/dates';
 import { useAchievementStore } from '../store/achievementStore';
+import { useCoinStore } from '../store/coinStore';
 import { ACHIEVEMENTS } from '../constants/achievements';
 import { getAvatarState } from '../utils/avatarEngine';
 import { calcAllSkillProgress } from '../utils/skillEngine';
@@ -21,10 +22,13 @@ import { RecoveryCard } from '../components/recovery/RecoveryCard';
 import { shouldShowRecoveryCard } from '../utils/recoveryEngine';
 import { ProgressMapPreviewCard } from '../components/dashboard/ProgressMapPreviewCard';
 import { getMapSummary, getProgressPaths } from '../utils/progressMapEngine';
+import { WeeklyReportPreviewCard } from '../components/dashboard/WeeklyReportPreviewCard';
+import { generateWeeklyReport, previousWeekStart } from '../utils/weeklyReportEngine';
 
 export function DashboardPage() {
   const { dailyEntries, measurements, settings } = useAppStore();
   const unlockedAchievements = useAchievementStore((s) => s.unlockedAchievements);
+  const coinTransactions = useCoinStore((s) => s.transactions);
   const today = todayISO();
   const stats = useGameStats(today);
   const avatar = useMemo(
@@ -52,6 +56,18 @@ export function DashboardPage() {
     const paths = getProgressPaths({ dailyEntries, measurements, settings });
     return getMapSummary(paths);
   }, [dailyEntries, measurements, settings]);
+
+  const lastWeekReport = useMemo(() => {
+    if (!isMonday(today)) return null;
+    return generateWeeklyReport({
+      weekStart: previousWeekStart(today),
+      dailyEntries,
+      measurements,
+      settings,
+      unlockedAchievements,
+      coinTransactions,
+    });
+  }, [today, dailyEntries, measurements, settings, unlockedAchievements, coinTransactions]);
 
   const weeklyBoss = useMemo(
     () =>
@@ -103,6 +119,13 @@ export function DashboardPage() {
             weekGoal={stats.weekly.weeklyPointsGoal}
             gymCount={stats.gymCount}
             gymTarget={stats.weekly.gymTarget}
+          />
+          <WeeklyReportPreviewCard
+            today={today}
+            report={lastWeekReport}
+            currentWeekPercent={stats.weekPercent}
+            currentWeekTotal={stats.weekTotal}
+            currentWeekGoal={stats.weekly.weeklyPointsGoal}
           />
           <WeeklyBossCard boss={weeklyBoss} />
           <RewardsBankCard
