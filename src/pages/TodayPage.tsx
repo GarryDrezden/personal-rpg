@@ -1,14 +1,13 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import type { DailyEntry } from '../types';
 import { useAppStore, emptyDaily } from '../store/appStore';
-import { todayISO } from '../utils/dates';
-import { calcDailyPoints, getWeeklySettingsForDate } from '../utils/points';
+import { todayISO, formatDateFull } from '../utils/dates';
+import { calcDailyPoints, getWeeklySettingsForDate, getDayStatus } from '../utils/points';
 import { previewDailyCoins } from '../utils/coinEngine';
+import { getDailyQuests, getQuestCompletionStats, isDayEmpty } from '../utils/questEngine';
+import { QuestCard } from '../components/quests/QuestCard';
 import { Card } from '../components/ui/Card';
-import { Badge } from '../components/ui/Badge';
-import { NumberInput } from '../components/ui/NumberInput';
-import { ToggleButton } from '../components/ui/ToggleButton';
-import { SegmentedControl } from '../components/ui/SegmentedControl';
-import type { AlcoholStatus, DailyEntry } from '../types';
+import { ProgressBar } from '../components/ui/ProgressBar';
 
 export function TodayPage() {
   const { dailyEntries, settings, updateDaily, deleteDaily } = useAppStore();
@@ -16,68 +15,95 @@ export function TodayPage() {
   const existing = dailyEntries.find((e) => e.date === today);
   const [entry, setEntry] = useState<DailyEntry>(existing ?? emptyDaily(today));
   const [saving, setSaving] = useState(false);
+  const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
-    if (existing) setEntry(existing);
+    if (existing) {
+      setEntry(existing);
+      setDirty(false);
+    }
   }, [existing]);
 
+  const entriesForQuests = useMemo(() => {
+    const others = dailyEntries.filter((e) => e.date !== today);
+    return [...others, entry];
+  }, [dailyEntries, entry, today]);
+
   const weekly = getWeeklySettingsForDate(today, settings);
+  const quests = useMemo(
+    () =>
+      getDailyQuests({
+        date: today,
+        dailyEntries: entriesForQuests,
+        settings,
+      }),
+    [today, entriesForQuests, settings],
+  );
+
+  const stats = getQuestCompletionStats(quests);
   const points = calcDailyPoints(entry, settings);
   const coins = previewDailyCoins(entry, settings);
+  const dayStatus = getDayStatus(points);
+  const dayEmpty = isDayEmpty(existing) && isDayEmpty(entry);
 
-  const save = useCallback(async (updated: DailyEntry) => {
+  const mainQuests = quests.filter((q) => q.category === 'main');
+  const mediumQuests = quests.filter((q) => q.category === 'medium');
+  const bonusQuests = quests.filter((q) => q.category === 'bonus');
+
+  const patch = (partial: Partial<DailyEntry>) => {
+    setEntry((prev) => ({ ...prev, ...partial }));
+    setDirty(true);
+  };
+
+  const saveDay = async () => {
     setSaving(true);
     try {
-      await updateDaily(updated);
+      await updateDaily(entry);
+      setDirty(false);
     } finally {
       setSaving(false);
     }
-  }, [updateDaily]);
-
-  const patch = (partial: Partial<DailyEntry>) => {
-    const updated = { ...entry, ...partial };
-    setEntry(updated);
-    void save(updated);
   };
 
-  const caloriesVariant =
-    entry.calories === null ? 'neutral' :
-    entry.calories <= weekly.caloriesLimit ? 'success' : 'danger';
-
-  const stepsVariant =
-    entry.steps === null ? 'neutral' :
-    entry.steps >= weekly.stepsGoal ? 'success' : 'neutral';
-
-  const hasSavedData = existing !== undefined;
-
   const resetToday = async () => {
-    if (!hasSavedData) return;
+    if (!existing) return;
     if (!confirm('Сбросить все данные за сегодня?')) return;
     setSaving(true);
     try {
       await deleteDaily(today);
       setEntry(emptyDaily(today));
+      setDirty(false);
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-8">
       <header className="flex flex-wrap items-start justify-between gap-3">
-        <h1 className="text-2xl font-bold">Сегодня</h1>
+        <div>
+          <h1 className="text-2xl font-bold">Квесты дня</h1>
+          <p className="text-sm text-rpg-muted">{formatDateFull(today)}</p>
+          <p className="mt-1 text-sm font-medium text-amber-800">{dayStatus}</p>
+        </div>
         <div className="flex flex-col items-end gap-2">
-          <div className="flex flex-wrap justify-end gap-2">
-            <Badge variant="gold">+{Math.max(0, points)} XP</Badge>
-            <Badge variant="default">+{coins} монет</Badge>
-          </div>
-          {saving && <div className="text-xs text-rpg-muted">сохранение…</div>}
-          {hasSavedData && (
+          {dirty && (
+            <span className="text-xs text-amber-700">Есть несохранённые изменения</span>
+          )}
+          <button
+            type="button"
+            onClick={() => void saveDay()}
+            disabled={saving || !dirty}
+            className="rounded-xl bg-gold px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-40 hover:bg-amber-600"
+          >
+            {saving ? 'Сохранение…' : 'Сохранить день'}
+          </button>
+          {existing && (
             <button
               type="button"
               onClick={() => void resetToday()}
               disabled={saving}
-              className="rounded-lg border border-danger/40 bg-red-50 px-3 py-1.5 text-sm font-medium text-danger hover:bg-red-100 disabled:opacity-50"
+              className="text-sm text-danger hover:underline disabled:opacity-50"
             >
               Сбросить день
             </button>
@@ -85,57 +111,107 @@ export function TodayPage() {
         </div>
       </header>
 
-      <Card variant={caloriesVariant as 'success' | 'danger' | 'neutral'}>
-        <NumberInput
-          label={`Калории (лимит ${weekly.caloriesLimit})`}
-          value={entry.calories}
-          onChange={(v) => patch({ calories: v })}
-        />
+      <Card className="border-amber-200/70 bg-gradient-to-br from-amber-50 via-white to-orange-50 shadow-md">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <p className="text-sm text-rpg-muted">Очки дня (XP)</p>
+            <p className="text-3xl font-bold text-gold">+{Math.max(0, points)}</p>
+          </div>
+          <div>
+            <p className="text-sm text-rpg-muted">Монеты за день</p>
+            <p className="text-3xl font-bold text-amber-800">+{coins} 🪙</p>
+          </div>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-4 text-sm">
+          <span>
+            Основные:{' '}
+            <strong>
+              {stats.mainDone}/{stats.mainTotal}
+            </strong>
+          </span>
+          <span>
+            Всего квестов:{' '}
+            <strong>
+              {stats.done}/{stats.total}
+            </strong>
+          </span>
+        </div>
+        <div className="mt-3">
+          <div className="mb-1 flex justify-between text-xs text-rpg-muted">
+            <span>Прогресс квестов</span>
+            <span>{stats.percent}%</span>
+          </div>
+          <ProgressBar
+            value={stats.percent}
+            color={stats.percent >= 70 ? 'success' : 'gold'}
+            className="h-2.5"
+          />
+        </div>
       </Card>
 
-      <Card variant={stepsVariant as 'success' | 'neutral'}>
-        <NumberInput
-          label={`Шаги (цель ${weekly.stepsGoal})`}
-          value={entry.steps}
-          onChange={(v) => patch({ steps: v })}
-        />
+      {dayEmpty && (
+        <p className="rounded-2xl border border-dashed border-amber-200 bg-amber-50/50 px-4 py-4 text-center text-sm text-rpg-muted">
+          День ещё пустой. Начни с одного квеста — калории, шаги или день без алкоголя.
+        </p>
+      )}
+
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-rpg-muted">
+          Основные квесты
+        </h2>
+        {mainQuests.map((q) => (
+          <QuestCard
+            key={q.id}
+            quest={q}
+            entry={entry}
+            weekly={weekly}
+            onPatch={patch}
+          />
+        ))}
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-rpg-muted">
+          Средние квесты
+        </h2>
+        {mediumQuests.map((q) => (
+          <QuestCard
+            key={q.id}
+            quest={q}
+            entry={entry}
+            weekly={weekly}
+            onPatch={patch}
+          />
+        ))}
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-rpg-muted">
+          Бонусные квесты
+        </h2>
+        {bonusQuests.map((q) => (
+          <QuestCard
+            key={q.id}
+            quest={q}
+            entry={entry}
+            weekly={weekly}
+            onPatch={patch}
+          />
+        ))}
+      </section>
+
+      <Card>
+        <label className="block">
+          <span className="mb-2 block text-sm font-medium">Комментарий дня</span>
+          <textarea
+            value={entry.comment}
+            onChange={(e) => patch({ comment: e.target.value })}
+            rows={3}
+            className="w-full rounded-xl border border-rpg-border bg-white px-4 py-3 focus:border-gold focus:outline-none"
+            placeholder="Что получилось, что было сложно…"
+          />
+        </label>
       </Card>
-
-      <Card variant={entry.alcohol === 'heavy' ? 'danger' : entry.alcohol === 'none' ? 'success' : 'neutral'}>
-        <SegmentedControl<AlcoholStatus>
-          label="Алкоголь"
-          value={entry.alcohol}
-          options={[
-            { value: 'none', label: 'Не пил' },
-            { value: 'moderate', label: 'Умеренно' },
-            { value: 'heavy', label: 'Много' },
-          ]}
-          onChange={(v) => patch({ alcohol: v })}
-          getVariant={(v) => (v === 'none' ? 'success' : v === 'heavy' ? 'danger' : 'neutral')}
-        />
-      </Card>
-
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-        <ToggleButton label="Зарядка" checked={entry.morningExercise} onChange={(v) => patch({ morningExercise: v })} />
-        <ToggleButton label="Зал" checked={entry.gym} onChange={(v) => patch({ gym: v })} />
-        <ToggleButton label="Дневник" checked={entry.journal} onChange={(v) => patch({ journal: v })} />
-        <ToggleButton label="Готовка" checked={entry.cooking} onChange={(v) => patch({ cooking: v })} />
-        <ToggleButton label="Ремонт" checked={entry.repair} onChange={(v) => patch({ repair: v })} />
-        <ToggleButton label="Цветы" checked={entry.plants} onChange={(v) => patch({ plants: v })} />
-        <ToggleButton label="Хобби" checked={entry.hobby} onChange={(v) => patch({ hobby: v })} />
-      </div>
-
-      <label className="block">
-        <span className="mb-1 block text-sm font-medium">Комментарий дня</span>
-        <textarea
-          value={entry.comment}
-          onChange={(e) => setEntry({ ...entry, comment: e.target.value })}
-          onBlur={() => void save(entry)}
-          rows={3}
-          className="w-full rounded-xl border border-rpg-border bg-white px-4 py-3 focus:border-gold focus:outline-none"
-          placeholder="Что получилось, что было сложно…"
-        />
-      </label>
     </div>
   );
 }

@@ -96,7 +96,12 @@ export function DashboardPage() {
 
           />
 
-          <DailyQuestsCard entry={stats.todayEntry} weekly={stats.weekly} />
+          <DailyQuestsCard
+            entry={stats.todayEntry}
+            dailyEntries={dailyEntries}
+            settings={settings}
+            date={today}
+          />
 
           <WeeklyProgressCard
 
