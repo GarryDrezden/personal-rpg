@@ -8,6 +8,7 @@ import { MeasurementsPage } from './pages/MeasurementsPage';
 import { RewardsPage } from './pages/RewardsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { AchievementsPage } from './pages/AchievementsPage';
+import { SkillsPage } from './pages/SkillsPage';
 import { AchievementToastHost } from './components/achievements/AchievementToastHost';
 import { useAppStore } from './store/appStore';
 
@@ -52,6 +53,7 @@ export default function App() {
           <Route path="/measurements" element={<MeasurementsPage />} />
           <Route path="/rewards" element={<RewardsPage />} />
           <Route path="/achievements" element={<AchievementsPage />} />
+          <Route path="/skills" element={<SkillsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Routes>

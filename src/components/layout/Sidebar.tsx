@@ -1,11 +1,12 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Calendar, CalendarDays, Ruler, Gift, Trophy, Settings, Swords } from 'lucide-react';
+import { Home, Calendar, CalendarDays, Ruler, Gift, Trophy, Sparkles, Settings, Swords } from 'lucide-react';
 
 const links = [
   { to: '/', icon: Home, label: 'Главная' },
   { to: '/today', icon: Calendar, label: 'Сегодня' },
   { to: '/week', icon: CalendarDays, label: 'Неделя' },
   { to: '/measurements', icon: Ruler, label: 'Замеры' },
+  { to: '/skills', icon: Sparkles, label: 'Навыки' },
   { to: '/rewards', icon: Gift, label: 'Награды' },
   { to: '/achievements', icon: Trophy, label: 'Достижения' },
   { to: '/settings', icon: Settings, label: 'Настройки' },
