@@ -7,6 +7,8 @@ import { WeekPage } from './pages/WeekPage';
 import { MeasurementsPage } from './pages/MeasurementsPage';
 import { RewardsPage } from './pages/RewardsPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { AchievementsPage } from './pages/AchievementsPage';
+import { AchievementToastHost } from './components/achievements/AchievementToastHost';
 import { useAppStore } from './store/appStore';
 
 function LoadingScreen() {
@@ -49,9 +51,11 @@ export default function App() {
           <Route path="/week" element={<WeekPage />} />
           <Route path="/measurements" element={<MeasurementsPage />} />
           <Route path="/rewards" element={<RewardsPage />} />
+          <Route path="/achievements" element={<AchievementsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Routes>
+      <AchievementToastHost />
     </BrowserRouter>
   );
 }

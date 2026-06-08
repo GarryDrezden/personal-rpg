@@ -8,6 +8,8 @@ import type {
   BankDeposit,
 } from '../types';
 import { apiRepository } from './apiRepository';
+import { syncAchievementsFromData } from '../utils/achievementSync';
+import { useAchievementStore } from './achievementStore';
 
 function emptyDaily(date: string): DailyEntry {
   return {
@@ -92,6 +94,12 @@ export const useAppStore = create<AppState>((set, get) => ({
         },
         loading: false,
       });
+      useAchievementStore.getState().hydrate();
+      syncAchievementsFromData(
+        get().dailyEntries,
+        get().measurements,
+        get().settings,
+      );
     } catch (e) {
       set({
         loading: false,
@@ -103,7 +111,9 @@ export const useAppStore = create<AppState>((set, get) => ({
   updateDaily: async (entry) => {
     const saved = await apiRepository.upsertDaily(entry);
     const entries = get().dailyEntries.filter((e) => e.date !== saved.date);
-    set({ dailyEntries: [...entries, saved].sort((a, b) => a.date.localeCompare(b.date)) });
+    const dailyEntries = [...entries, saved].sort((a, b) => a.date.localeCompare(b.date));
+    set({ dailyEntries });
+    syncAchievementsFromData(dailyEntries, get().measurements, get().settings);
   },
 
   deleteDaily: async (date) => {
@@ -115,7 +125,9 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   addMeasurement: async (entry) => {
     const saved = await apiRepository.addMeasurement(entry);
-    set({ measurements: [...get().measurements, saved].sort((a, b) => a.date.localeCompare(b.date)) });
+    const measurements = [...get().measurements, saved].sort((a, b) => a.date.localeCompare(b.date));
+    set({ measurements });
+    syncAchievementsFromData(get().dailyEntries, measurements, get().settings);
   },
 
   addReward: async (reward) => {

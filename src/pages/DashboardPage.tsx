@@ -9,6 +9,9 @@ import { ProgressBar } from '../components/ui/ProgressBar';
 import { StatTile } from '../components/ui/StatTile';
 import { Heart, Shield, Activity, Home, Palette, Gift, Flame } from 'lucide-react';
 import { WeightHero } from '../components/dashboard/WeightHero';
+import { RecentAchievements } from '../components/achievements/RecentAchievements';
+import { ACHIEVEMENTS } from '../constants/achievements';
+import { useAchievementStore } from '../store/achievementStore';
 import { calcWeightJourney } from '../utils/weightJourney';
 
 const categories = [
@@ -23,6 +26,7 @@ const categories = [
 export function DashboardPage() {
   const navigate = useNavigate();
   const { dailyEntries, measurements, rewards, settings } = useAppStore();
+  const unlockedAchievements = useAchievementStore((s) => s.unlockedAchievements);
   const today = todayISO();
   const stats = useDerivedStats(dailyEntries, measurements, rewards, settings, today);
   const weightJourney = calcWeightJourney(measurements, settings.weightGoal);
@@ -35,6 +39,11 @@ export function DashboardPage() {
       </header>
 
       <WeightHero journey={weightJourney} gender={settings.gender} />
+
+      <RecentAchievements
+        unlocked={unlockedAchievements}
+        totalCount={ACHIEVEMENTS.length}
+      />
 
       <Card className="bg-gradient-to-br from-amber-50 to-white">
         <div className="flex flex-wrap items-center justify-between gap-3">

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Calendar, CalendarDays, Ruler, Gift, Settings, Swords } from 'lucide-react';
+import { Home, Calendar, CalendarDays, Ruler, Gift, Trophy, Settings, Swords } from 'lucide-react';
 
 const links = [
   { to: '/', icon: Home, label: 'Главная' },
@@ -7,6 +7,7 @@ const links = [
   { to: '/week', icon: CalendarDays, label: 'Неделя' },
   { to: '/measurements', icon: Ruler, label: 'Замеры' },
   { to: '/rewards', icon: Gift, label: 'Награды' },
+  { to: '/achievements', icon: Trophy, label: 'Достижения' },
   { to: '/settings', icon: Settings, label: 'Настройки' },
 ];
 

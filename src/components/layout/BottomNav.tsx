@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Calendar, CalendarDays, Ruler, Gift, Settings } from 'lucide-react';
+import { Home, Calendar, CalendarDays, Ruler, Gift, Trophy, Settings } from 'lucide-react';
 
 const links = [
   { to: '/', icon: Home, label: 'Главная' },
@@ -7,6 +7,7 @@ const links = [
   { to: '/week', icon: CalendarDays, label: 'Неделя' },
   { to: '/measurements', icon: Ruler, label: 'Замеры' },
   { to: '/rewards', icon: Gift, label: 'Награды' },
+  { to: '/achievements', icon: Trophy, label: 'Ачивки' },
   { to: '/settings', icon: Settings, label: 'Настройки' },
 ];
 
@@ -19,12 +20,12 @@ export function BottomNav() {
             key={to}
             to={to}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-0.5 px-2 py-1 text-xs ${
+              `flex min-w-0 flex-col items-center gap-0.5 px-1 py-1 text-[10px] ${
                 isActive ? 'text-gold font-semibold' : 'text-rpg-muted'
               }`
             }
           >
-            <Icon size={22} />
+            <Icon size={20} />
             <span>{label}</span>
           </NavLink>
         ))}
