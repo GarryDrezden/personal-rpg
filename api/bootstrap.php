@@ -127,5 +127,8 @@ function getAppSettings(PDO $pdo): array
         'weightGoal' => isset($row['weight_goal']) && $row['weight_goal'] !== null
             ? (float) $row['weight_goal']
             : 100.0,
+        'coinSettings' => isset($row['coin_settings']) && $row['coin_settings']
+            ? json_decode($row['coin_settings'], true)
+            : null,
     ];
 }

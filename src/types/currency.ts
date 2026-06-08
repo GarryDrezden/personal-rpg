@@ -29,4 +29,13 @@ export type CoinWalletSummary = {
   totalSpent: number;
   available: number;
   todayEarned: number;
+  weekEarned: number;
+  transactions: CoinTransaction[];
 };
+
+export type NearestRewardInfo = {
+  rewardId: string;
+  title: string;
+  cost: number;
+  missing?: number;
+} | null;

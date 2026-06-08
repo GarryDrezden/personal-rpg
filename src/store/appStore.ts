@@ -11,6 +11,7 @@ import { apiRepository } from './apiRepository';
 import { syncAchievementsFromData } from '../utils/achievementSync';
 import { useAchievementStore } from './achievementStore';
 import { useCoinStore } from './coinStore';
+import { buildCoinWalletSummary } from '../utils/coinEngine';
 
 function emptyDaily(date: string): DailyEntry {
   return {
@@ -92,11 +93,13 @@ export const useAppStore = create<AppState>((set, get) => ({
           ...data.settings,
           gender: data.settings.gender ?? 'male',
           weightGoal: data.settings.weightGoal ?? 100,
+          coinSettings: data.settings.coinSettings,
         },
         loading: false,
       });
       useAchievementStore.getState().hydrate();
       useCoinStore.getState().hydrate();
+      useCoinStore.getState().syncFromRewards(get().rewards);
       syncAchievementsFromData(
         get().dailyEntries,
         get().measurements,
@@ -152,6 +155,22 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   purchaseReward: async (id) => {
+    const reward = get().rewards.find((r) => r.id === id);
+    if (!reward || reward.purchasedAt) return;
+
+    const balance = buildCoinWalletSummary(
+      get().dailyEntries,
+      get().measurements,
+      get().settings,
+      new Date().toISOString().slice(0, 10),
+      useCoinStore.getState().transactions,
+    ).available;
+
+    if (balance < reward.cost) {
+      throw new Error('Не хватает монет');
+    }
+
+    useCoinStore.getState().addSpentForReward(reward);
     const saved = await apiRepository.purchaseReward(id);
     set({
       rewards: get().rewards.map((r) => (r.id === id ? saved : r)),

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAppStore } from '../store/appStore';
 import { DEFAULT_POINT_SETTINGS } from '../constants/defaults';
-import type { PointSettings, WeeklySettings } from '../types';
+import { DEFAULT_COIN_SETTINGS } from '../constants/coins';
+import type { CoinSettings, PointSettings, WeeklySettings } from '../types';
 import { Card } from '../components/ui/Card';
 import { NumberInput } from '../components/ui/NumberInput';
 
@@ -18,6 +19,18 @@ export function SettingsPage() {
     setLocal({
       ...local,
       pointSettings: { ...local.pointSettings, [key]: value },
+    });
+  };
+
+  const coinSettings: CoinSettings = {
+    ...DEFAULT_COIN_SETTINGS,
+    ...local.coinSettings,
+  };
+
+  const updateCoins = (key: keyof CoinSettings, value: number) => {
+    setLocal({
+      ...local,
+      coinSettings: { ...coinSettings, [key]: value },
     });
   };
 
@@ -61,6 +74,11 @@ export function SettingsPage() {
   const handleReset = () => {
     if (!confirm('Сбросить баллы к значениям по умолчанию?')) return;
     setLocal({ ...local, pointSettings: { ...DEFAULT_POINT_SETTINGS } });
+  };
+
+  const handleResetCoins = () => {
+    if (!confirm('Сбросить монеты к значениям по умолчанию?')) return;
+    setLocal({ ...local, coinSettings: { ...DEFAULT_COIN_SETTINGS } });
   };
 
   return (
@@ -143,7 +161,29 @@ export function SettingsPage() {
 
       <Card>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="font-semibold">Баллы</h2>
+          <h2 className="font-semibold">Монеты 🪙</h2>
+          <button onClick={handleResetCoins} className="text-sm text-rpg-muted">
+            Сбросить
+          </button>
+        </div>
+        <p className="mb-4 text-xs text-rpg-muted">
+          Награды за хорошие дни и недели. XP настраивается отдельно в блоке «Баллы».
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          {(Object.keys(coinSettings) as (keyof CoinSettings)[]).map((key) => (
+            <NumberInput
+              key={key}
+              label={key}
+              value={coinSettings[key]}
+              onChange={(v) => updateCoins(key, v ?? 0)}
+            />
+          ))}
+        </div>
+      </Card>
+
+      <Card>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="font-semibold">Баллы (XP)</h2>
           <button onClick={handleReset} className="text-sm text-rpg-muted">Сбросить</button>
         </div>
         <div className="grid grid-cols-2 gap-3">

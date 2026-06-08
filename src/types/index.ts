@@ -38,6 +38,20 @@ export interface WeeklySettings {
   weeklyPointsGoal: number;
 }
 
+export type CoinSettings = {
+  goodDayCoins: number;
+  greatDayCoins: number;
+  heroDayBonusCoins: number;
+  ironDayBonusCoins: number;
+  week80Coins: number;
+  week100Coins: number;
+  noAlcoholWeekCoins: number;
+  gymWeekCoins: number;
+  caloriesWeekCoins: number;
+  perfectBaseWeekCoins: number;
+  measurementsMondayCoins: number;
+};
+
 export interface PointSettings {
   caloriesOk: number;
   stepsOk: number;
@@ -85,6 +99,7 @@ export interface AppSettings {
   /** Целевой вес (кг) — конец пути персонажа */
   weightGoal: number;
   pointSettings: PointSettings;
+  coinSettings?: CoinSettings;
   weeklySettings: WeeklySettings[];
   gender: CharacterGender;
 }

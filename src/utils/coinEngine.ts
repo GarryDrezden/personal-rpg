@@ -1,214 +1,325 @@
 import type { AppSettings, DailyEntry, MeasurementEntry, Reward } from '../types';
-import type { UnlockedAchievement } from '../types/achievements';
-import type { CoinTransaction, CoinWalletSummary } from '../types/currency';
-import {
-  ACHIEVEMENT_COIN_BONUS,
-  COIN_AWARDS,
-} from '../constants/coins';
-import { ACHIEVEMENT_BY_ID } from '../constants/achievements';
+import type { CoinTransaction, CoinWalletSummary, NearestRewardInfo } from '../types/currency';
+import { resolveCoinSettings } from '../constants/coins';
 import {
   calcDailyPoints,
   calcWeeklyBonuses,
   getWeeklySettingsForDate,
 } from './points';
-import { weekStart } from './dates';
+import { isMonday, weekDays, weekStart } from './dates';
+import {
+  isCaloriesInLimit,
+  isNoAlcohol,
+  isStepsGoalDone,
+} from './achievementEngine';
 
-export function calcDailyCoins(entry: DailyEntry, settings: AppSettings): number {
-  const weekly = getWeeklySettingsForDate(entry.date, settings);
-  const c = COIN_AWARDS;
-  let total = 0;
-
-  if (entry.calories !== null && entry.calories <= weekly.caloriesLimit) total += c.caloriesOk;
-  if (entry.steps !== null && entry.steps >= weekly.stepsGoal) total += c.stepsOk;
-  if (entry.alcohol === 'none') total += c.noAlcohol;
-  if (entry.morningExercise) total += c.morningExercise;
-  if (entry.gym) total += c.gym;
-  if (entry.journal) total += c.journal;
-  if (entry.cooking) total += c.cooking;
-  if (entry.repair) total += c.repair;
-  if (entry.plants) total += c.plants;
-  if (entry.hobby) total += c.hobby;
-
-  const dayXp = calcDailyPoints(entry, settings);
-  if (dayXp >= 100) total += c.greatDayBonus;
-  else if (dayXp >= 70) total += c.goodDayBonus;
-
-  return total;
+export function calculateCoinBalance(transactions: CoinTransaction[]): number {
+  return Math.max(0, transactions.reduce((sum, tx) => sum + tx.amount, 0));
 }
 
-export function calcWeeklyCoinBonuses(
-  weekStartDate: string,
+function weekPointsTotal(
+  ws: string,
   entries: DailyEntry[],
   measurements: MeasurementEntry[],
   settings: AppSettings,
 ): number {
-  const weekly = getWeeklySettingsForDate(weekStartDate, settings);
-  const bonuses = calcWeeklyBonuses(weekStartDate, entries, measurements, settings);
-  const c = COIN_AWARDS;
-  let total = 0;
-
-  if (bonuses.gymWeeklyBonus > 0) total += c.gymWeeklyBonus;
-  if (bonuses.noAlcoholWeekBonus > 0) total += c.noAlcoholWeekBonus;
-  if (bonuses.caloriesWeekBonus > 0) total += c.caloriesWeekBonus;
-  if (bonuses.measurementsMondayBonus > 0) total += c.measurementsMondayBonus;
-
-  const weekDailyXp = entries
-    .filter((e) => weekStart(e.date) === weekStartDate)
-    .reduce((sum, e) => sum + calcDailyPoints(e, settings), 0);
-  const weekTotal = weekDailyXp + bonuses.total;
-  if (weekTotal >= weekly.weeklyPointsGoal) total += c.weekGoalBonus;
-
-  return total;
-}
-
-export function calcAchievementCoins(unlocked: UnlockedAchievement[]): number {
-  return unlocked.reduce((sum, u) => {
-    const achievement = ACHIEVEMENT_BY_ID[u.achievementId];
-    if (!achievement) return sum;
-    return sum + ACHIEVEMENT_COIN_BONUS[achievement.tier];
+  const daily = weekDays(ws).reduce((sum, d) => {
+    const e = entries.find((x) => x.date === d);
+    return sum + (e ? calcDailyPoints(e, settings) : 0);
   }, 0);
+  return daily + calcWeeklyBonuses(ws, entries, measurements, settings).total;
 }
 
-export function calcTotalEarnedCoins(
-  entries: DailyEntry[],
-  measurements: MeasurementEntry[],
-  settings: AppSettings,
-  unlockedAchievements: UnlockedAchievement[] = [],
-): number {
-  const processedWeeks = new Set<string>();
-  let total = 0;
+function weekPerfectBase(ws: string, entries: DailyEntry[], settings: AppSettings): boolean {
+  const days = weekDays(ws);
+  const weekEntries = days.map((d) => entries.find((e) => e.date === d));
+  if (weekEntries.some((e) => !e)) return false;
+  return weekEntries.every(
+    (e) => e && isNoAlcohol(e) && isStepsGoalDone(e, settings) && isCaloriesInLimit(e, settings),
+  );
+}
 
-  for (const entry of entries) {
-    total += calcDailyCoins(entry, settings);
+export function getCoinTransactionsFromDailyEntries(params: {
+  dailyEntries: DailyEntry[];
+  settings: AppSettings;
+}): CoinTransaction[] {
+  const { dailyEntries, settings } = params;
+  const cs = resolveCoinSettings(settings);
+  const txs: CoinTransaction[] = [];
+
+  for (const entry of dailyEntries) {
+    const dayXp = calcDailyPoints(entry, settings);
+    let amount = 0;
+    const parts: string[] = [];
+
+    if (dayXp >= 100) {
+      amount += cs.greatDayCoins;
+      parts.push('отличный день');
+    } else if (dayXp >= 70) {
+      amount += cs.goodDayCoins;
+      parts.push('хороший день');
+    }
+
+    const heroDay =
+      isCaloriesInLimit(entry, settings) &&
+      isStepsGoalDone(entry, settings) &&
+      isNoAlcohol(entry);
+    const ironDay = heroDay && entry.gym;
+
+    if (heroDay) {
+      amount += cs.heroDayBonusCoins;
+      parts.push('день героя');
+    }
+    if (ironDay) {
+      amount += cs.ironDayBonusCoins;
+      parts.push('железный день');
+    }
+
+    if (amount <= 0) continue;
+
+    txs.push({
+      id: `gen-daily-${entry.date}`,
+      type: 'earned',
+      source: 'daily',
+      amount,
+      title: 'Монеты за день',
+      description: parts.join(' · '),
+      date: entry.date,
+      relatedId: `daily_${entry.date}`,
+    });
+  }
+
+  return txs;
+}
+
+export function getCoinTransactionsFromWeeks(params: {
+  dailyEntries: DailyEntry[];
+  measurements: MeasurementEntry[];
+  settings: AppSettings;
+}): CoinTransaction[] {
+  const { dailyEntries, measurements, settings } = params;
+  const cs = resolveCoinSettings(settings);
+  const processedWeeks = new Set<string>();
+  const txs: CoinTransaction[] = [];
+
+  for (const entry of dailyEntries) {
     const ws = weekStart(entry.date);
-    if (!processedWeeks.has(ws)) {
-      processedWeeks.add(ws);
-      total += calcWeeklyCoinBonuses(ws, entries, measurements, settings);
+    if (processedWeeks.has(ws)) continue;
+    processedWeeks.add(ws);
+
+    const days = weekDays(ws);
+    const weekEntries = days.map((d) => dailyEntries.find((e) => e.date === d));
+    const allDaysLogged = weekEntries.every((e) => e !== undefined);
+    const weekly = getWeeklySettingsForDate(ws, settings);
+    const weekTotal = weekPointsTotal(ws, dailyEntries, measurements, settings);
+    const percent =
+      weekly.weeklyPointsGoal > 0
+        ? (weekTotal / weekly.weeklyPointsGoal) * 100
+        : 0;
+
+    let amount = 0;
+    const parts: string[] = [];
+
+    if (percent >= 80 && percent < 100) {
+      amount += cs.week80Coins;
+      parts.push('80% недельной цели');
+    }
+    if (percent >= 100) {
+      amount += cs.week100Coins;
+      parts.push('100% недельной цели');
+    }
+
+    if (allDaysLogged && weekEntries.every((e) => e && isNoAlcohol(e))) {
+      amount += cs.noAlcoholWeekCoins;
+      parts.push('7 дней без алкоголя');
+    }
+
+    const gymCount = weekEntries.filter((e) => e?.gym).length;
+    if (gymCount >= weekly.gymTarget) {
+      amount += cs.gymWeekCoins;
+      parts.push('норма зала');
+    }
+
+    if (
+      allDaysLogged &&
+      weekEntries.every((e) => e && e.calories !== null && isCaloriesInLimit(e, settings))
+    ) {
+      amount += cs.caloriesWeekCoins;
+      parts.push('7 дней калории в лимите');
+    }
+
+    if (weekPerfectBase(ws, dailyEntries, settings)) {
+      amount += cs.perfectBaseWeekCoins;
+      parts.push('идеальная база');
+    }
+
+    if (amount <= 0) continue;
+
+    txs.push({
+      id: `gen-weekly-${ws}`,
+      type: 'earned',
+      source: 'weekly',
+      amount,
+      title: 'Монеты за неделю',
+      description: parts.join(' · '),
+      date: ws,
+      relatedId: `weekly_${ws}`,
+    });
+  }
+
+  return txs;
+}
+
+export function getCoinTransactionsFromMeasurements(params: {
+  measurements: MeasurementEntry[];
+  settings: AppSettings;
+}): CoinTransaction[] {
+  const { measurements, settings } = params;
+  const cs = resolveCoinSettings(settings);
+  const txs: CoinTransaction[] = [];
+
+  for (const m of measurements) {
+    if (!isMonday(m.date)) continue;
+    txs.push({
+      id: `gen-measurement-${m.date}`,
+      type: 'earned',
+      source: 'measurement',
+      amount: cs.measurementsMondayCoins,
+      title: 'Замер в понедельник',
+      description: 'Внесены замеры',
+      date: m.date,
+      relatedId: `measurement_${m.date}`,
+    });
+  }
+
+  return txs;
+}
+
+export function mergeCoinTransactions(params: {
+  existingTransactions: CoinTransaction[];
+  generatedTransactions: CoinTransaction[];
+}): CoinTransaction[] {
+  const { existingTransactions, generatedTransactions } = params;
+  const map = new Map<string, CoinTransaction>();
+
+  for (const tx of generatedTransactions) {
+    const key = tx.relatedId ?? tx.id;
+    map.set(key, tx);
+  }
+
+  for (const tx of existingTransactions) {
+    if (tx.type === 'spent' || tx.type === 'manual' || tx.type === 'refund') {
+      const key = tx.relatedId ?? tx.id;
+      map.set(key, tx);
     }
   }
 
-  total += calcAchievementCoins(unlockedAchievements);
-
-  return Math.max(0, total);
+  return [...map.values()].sort((a, b) => b.date.localeCompare(a.date));
 }
 
-export function calcManualCoinAdjustment(extraTransactions: CoinTransaction[]): number {
-  return extraTransactions.reduce((sum, tx) => sum + tx.amount, 0);
+export function generateEarnedCoinTransactions(
+  dailyEntries: DailyEntry[],
+  measurements: MeasurementEntry[],
+  settings: AppSettings,
+): CoinTransaction[] {
+  return [
+    ...getCoinTransactionsFromDailyEntries({ dailyEntries, settings }),
+    ...getCoinTransactionsFromWeeks({ dailyEntries, measurements, settings }),
+    ...getCoinTransactionsFromMeasurements({ measurements, settings }),
+  ];
 }
 
-export function calcSpentCoins(rewards: Reward[]): number {
-  return rewards
-    .filter((r) => r.purchasedAt)
-    .reduce((sum, r) => sum + r.cost, 0);
-}
-
-export function calcAvailableCoins(
-  totalEarned: number,
-  spent: number,
-  manualAdjustment = 0,
-): number {
-  return Math.max(0, totalEarned - spent + manualAdjustment);
+export function buildAllCoinTransactions(
+  dailyEntries: DailyEntry[],
+  measurements: MeasurementEntry[],
+  settings: AppSettings,
+  storedTransactions: CoinTransaction[],
+): CoinTransaction[] {
+  const generated = generateEarnedCoinTransactions(dailyEntries, measurements, settings);
+  const persisted = storedTransactions.filter(
+    (tx) => tx.type === 'spent' || tx.type === 'manual' || tx.type === 'refund',
+  );
+  return mergeCoinTransactions({
+    existingTransactions: persisted,
+    generatedTransactions: generated,
+  });
 }
 
 export function buildCoinWalletSummary(
-  entries: DailyEntry[],
+  dailyEntries: DailyEntry[],
   measurements: MeasurementEntry[],
-  rewards: Reward[],
   settings: AppSettings,
   today: string,
-  unlockedAchievements: UnlockedAchievement[] = [],
-  extraTransactions: CoinTransaction[] = [],
+  storedTransactions: CoinTransaction[],
 ): CoinWalletSummary {
-  const totalEarned = calcTotalEarnedCoins(
-    entries,
+  const transactions = buildAllCoinTransactions(
+    dailyEntries,
     measurements,
     settings,
-    unlockedAchievements,
+    storedTransactions,
   );
-  const totalSpent = calcSpentCoins(rewards);
-  const manualAdjustment = calcManualCoinAdjustment(extraTransactions);
-  const available = calcAvailableCoins(totalEarned, totalSpent, manualAdjustment);
-  const todayEntry = entries.find((e) => e.date === today);
-  const todayEarned = todayEntry ? calcDailyCoins(todayEntry, settings) : 0;
+  const available = calculateCoinBalance(transactions);
+  const totalEarned = transactions
+    .filter((tx) => tx.amount > 0)
+    .reduce((sum, tx) => sum + tx.amount, 0);
+  const totalSpent = transactions
+    .filter((tx) => tx.amount < 0)
+    .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
 
-  return { totalEarned, totalSpent, available, todayEarned };
+  const ws = weekStart(today);
+  const weekEarned = transactions
+    .filter((tx) => tx.amount > 0 && tx.date >= ws && tx.date <= today)
+    .reduce((sum, tx) => sum + tx.amount, 0);
+
+  const todayEarned = transactions
+    .filter((tx) => tx.relatedId === `daily_${today}` && tx.amount > 0)
+    .reduce((sum, tx) => sum + tx.amount, 0);
+
+  return {
+    totalEarned,
+    totalSpent,
+    available,
+    todayEarned,
+    weekEarned,
+    transactions,
+  };
 }
 
-export function buildCoinTransactionHistory(
-  entries: DailyEntry[],
-  measurements: MeasurementEntry[],
+export function getNearestRewards(
   rewards: Reward[],
-  settings: AppSettings,
-  unlockedAchievements: UnlockedAchievement[] = [],
-  extraTransactions: CoinTransaction[] = [],
-): CoinTransaction[] {
-  const txs: CoinTransaction[] = [];
-  const processedWeeks = new Set<string>();
+  balance: number,
+): { affordable: NearestRewardInfo; unaffordable: NearestRewardInfo } {
+  const available = rewards.filter((r) => !r.purchasedAt && !r.hidden);
+  const sorted = [...available].sort((a, b) => a.cost - b.cost);
 
-  for (const entry of entries) {
-    const dailyCoins = calcDailyCoins(entry, settings);
-    if (dailyCoins > 0) {
-      txs.push({
-        id: `daily-${entry.date}`,
-        type: 'earned',
-        source: 'daily',
-        amount: dailyCoins,
-        title: 'День',
-        description: `Запись за ${entry.date}`,
-        date: entry.date,
-        relatedId: entry.id,
-      });
-    }
+  const affordableList = sorted.filter((r) => r.cost <= balance);
+  const unaffordableList = sorted.filter((r) => r.cost > balance);
 
-    const ws = weekStart(entry.date);
-    if (!processedWeeks.has(ws)) {
-      processedWeeks.add(ws);
-      const weeklyCoins = calcWeeklyCoinBonuses(ws, entries, measurements, settings);
-      if (weeklyCoins > 0) {
-        txs.push({
-          id: `weekly-${ws}`,
-          type: 'earned',
-          source: 'weekly',
-          amount: weeklyCoins,
-          title: 'Недельные бонусы',
-          description: `Неделя с ${ws}`,
-          date: ws,
-        });
+  const affordable = affordableList.length
+    ? {
+        rewardId: affordableList[affordableList.length - 1]!.id,
+        title: affordableList[affordableList.length - 1]!.title,
+        cost: affordableList[affordableList.length - 1]!.cost,
       }
-    }
-  }
+    : null;
 
-  for (const u of unlockedAchievements) {
-    const achievement = ACHIEVEMENT_BY_ID[u.achievementId];
-    if (!achievement) continue;
-    const amount = ACHIEVEMENT_COIN_BONUS[achievement.tier];
-    txs.push({
-      id: `achievement-${u.achievementId}`,
-      type: 'bonus',
-      source: 'achievement',
-      amount,
-      title: achievement.title,
-      description: 'Бонус за достижение',
-      date: u.unlockedAt.slice(0, 10),
-      relatedId: u.achievementId,
-    });
-  }
+  const unaffordable = unaffordableList.length
+    ? {
+        rewardId: unaffordableList[0]!.id,
+        title: unaffordableList[0]!.title,
+        cost: unaffordableList[0]!.cost,
+        missing: unaffordableList[0]!.cost - balance,
+      }
+    : null;
 
-  for (const r of rewards) {
-    if (!r.purchasedAt) continue;
-    txs.push({
-      id: `reward-${r.id}`,
-      type: 'spent',
-      source: 'reward',
-      amount: -r.cost,
-      title: r.title,
-      description: 'Покупка награды',
-      date: r.purchasedAt.slice(0, 10),
-      relatedId: r.id,
-    });
-  }
+  return { affordable, unaffordable };
+}
 
-  txs.push(...extraTransactions);
-
-  return txs.sort((a, b) => b.date.localeCompare(a.date));
+/** Превью монет за один день (без записи в localStorage) */
+export function previewDailyCoins(entry: DailyEntry, settings: AppSettings): number {
+  const txs = getCoinTransactionsFromDailyEntries({
+    dailyEntries: [entry],
+    settings,
+  });
+  return txs.reduce((sum, tx) => sum + tx.amount, 0);
 }

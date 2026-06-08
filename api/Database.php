@@ -87,6 +87,9 @@ class Database
         if (!in_array('weight_goal', $appCols, true)) {
             $this->pdo->exec('ALTER TABLE app_settings ADD COLUMN weight_goal REAL NOT NULL DEFAULT 100');
         }
+        if (!in_array('coin_settings', $appCols, true)) {
+            $this->pdo->exec('ALTER TABLE app_settings ADD COLUMN coin_settings TEXT');
+        }
     }
 
     private function seedIfEmpty(): void

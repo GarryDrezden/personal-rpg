@@ -1,4 +1,5 @@
 import type { AppSettings, PointSettings } from '../types';
+import { DEFAULT_COIN_SETTINGS } from './coins';
 
 export const DEFAULT_POINT_SETTINGS: PointSettings = {
   caloriesOk: 40,
@@ -28,6 +29,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   defaultWeeklyPointsGoal: 500,
   weightGoal: DEFAULT_WEIGHT_GOAL_KG,
   pointSettings: DEFAULT_POINT_SETTINGS,
+  coinSettings: DEFAULT_COIN_SETTINGS,
   weeklySettings: [],
   gender: 'male',
 };

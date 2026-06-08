@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useAppStore, emptyDaily } from '../store/appStore';
 import { todayISO } from '../utils/dates';
 import { calcDailyPoints, getWeeklySettingsForDate } from '../utils/points';
-import { calcDailyCoins } from '../utils/coinEngine';
+import { previewDailyCoins } from '../utils/coinEngine';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { NumberInput } from '../components/ui/NumberInput';
@@ -23,7 +23,7 @@ export function TodayPage() {
 
   const weekly = getWeeklySettingsForDate(today, settings);
   const points = calcDailyPoints(entry, settings);
-  const coins = calcDailyCoins(entry, settings);
+  const coins = previewDailyCoins(entry, settings);
 
   const save = useCallback(async (updated: DailyEntry) => {
     setSaving(true);

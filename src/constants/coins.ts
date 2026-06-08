@@ -1,30 +1,19 @@
-import type { AchievementTier } from '../types/achievements';
+import type { CoinSettings } from '../types';
 
-/** Монеты за привычки — только положительные действия, без штрафов за алкоголь */
-export const COIN_AWARDS = {
-  caloriesOk: 5,
-  stepsOk: 5,
-  noAlcohol: 5,
-  morningExercise: 3,
-  gym: 5,
-  journal: 3,
-  cooking: 2,
-  repair: 2,
-  plants: 2,
-  hobby: 2,
-  gymWeeklyBonus: 12,
-  noAlcoholWeekBonus: 15,
-  caloriesWeekBonus: 15,
-  measurementsMondayBonus: 8,
-  weekGoalBonus: 20,
-  goodDayBonus: 3,
-  greatDayBonus: 5,
-} as const;
-
-export const ACHIEVEMENT_COIN_BONUS: Record<AchievementTier, number> = {
-  bronze: 5,
-  silver: 8,
-  gold: 12,
-  epic: 20,
-  legendary: 30,
+export const DEFAULT_COIN_SETTINGS: CoinSettings = {
+  goodDayCoins: 1,
+  greatDayCoins: 2,
+  heroDayBonusCoins: 1,
+  ironDayBonusCoins: 2,
+  week80Coins: 3,
+  week100Coins: 5,
+  noAlcoholWeekCoins: 3,
+  gymWeekCoins: 2,
+  caloriesWeekCoins: 3,
+  perfectBaseWeekCoins: 7,
+  measurementsMondayCoins: 1,
 };
+
+export function resolveCoinSettings(settings: { coinSettings?: CoinSettings }): CoinSettings {
+  return { ...DEFAULT_COIN_SETTINGS, ...settings.coinSettings };
+}
