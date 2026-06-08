@@ -14,6 +14,12 @@ import {
   getWeeklySettingsForDate,
 } from './points';
 import { sortMeasurementsByDate } from './measurements';
+import {
+  countDefeatedBosses,
+  countPerfectBosses,
+  getBossHistory,
+  maxBossDefeatStreak,
+} from './bossEngine';
 
 export type AchievementEngineParams = {
   dailyEntries: DailyEntry[];
@@ -278,6 +284,7 @@ function buildMetrics(params: AchievementEngineParams): AchievementMetrics {
   }).length;
   const perfectBaseWeeks = weeks.filter((ws) => weekPerfectBase(ws, entries, settings)).length;
   const gymWeeksMet = weeks.filter((ws) => weekGymMet(ws, entries, settings)).length;
+  const bossHistory = getBossHistory(entries, settings, measurements);
 
   const m: AchievementMetrics = {
     hasAnyEntry: entries.some((e) => hasDayData(e)),
@@ -336,6 +343,9 @@ function buildMetrics(params: AchievementEngineParams): AchievementMetrics {
     hasCaloriesReturnAfterOver: hasCaloriesReturnAfterOver(entries, settings),
     hasBackAfterBadDay: hasBackAfterBadDay(entries, settings),
     hasBackAfterAbsence: hasBackAfterAbsence(entries),
+    defeatedBosses: countDefeatedBosses(bossHistory),
+    perfectBosses: countPerfectBosses(bossHistory),
+    maxBossDefeatStreak: maxBossDefeatStreak(bossHistory),
   };
 
   return m;
@@ -376,6 +386,8 @@ function evaluateAchievement(achievement: Achievement, m: AchievementMetrics): {
     combo_hero_week: (m.heroWeeks as number) >= 1,
     combo_perfect_base: (m.perfectBaseWeeks as number) >= 1,
     start_first_week: (m.completedWeeks as number) >= 1,
+    boss_first_defeat: (m.defeatedBosses as number) >= 1,
+    boss_perfect_win: (m.perfectBosses as number) >= 1,
   };
 
   if (achievement.conditionType === 'instant' || achievement.conditionType === 'combo') {
@@ -436,6 +448,8 @@ function evaluateAchievement(achievement: Achievement, m: AchievementMetrics): {
     xp_10000: m.totalXp as number,
     xp_30000: m.totalXp as number,
     xp_100000: m.totalXp as number,
+    boss_3_streak: m.maxBossDefeatStreak as number,
+    boss_4_streak: m.maxBossDefeatStreak as number,
   };
 
   const current = metricMap[achievement.id] ?? 0;

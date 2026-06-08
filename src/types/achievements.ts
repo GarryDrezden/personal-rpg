@@ -9,6 +9,7 @@ export type AchievementCategory =
   | 'journal'
   | 'life'
   | 'combo'
+  | 'boss'
   | 'xp';
 
 export type AchievementTier =

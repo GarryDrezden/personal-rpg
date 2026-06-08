@@ -1,7 +1,10 @@
+import { useMemo } from 'react';
 import { useAppStore } from '../store/appStore';
 import { useGameStats } from '../hooks/useGameStats';
 import { todayISO, weekStart, weekDays, formatDateRu } from '../utils/dates';
 import { calcDailyPoints, calcWeeklyBonuses, getWeekStatus } from '../utils/points';
+import { getWeeklyBoss } from '../utils/bossEngine';
+import { WeeklyBossCard } from '../components/boss/WeeklyBossCard';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { ProgressBar } from '../components/ui/ProgressBar';
@@ -16,6 +19,17 @@ export function WeekPage() {
   const stats = useGameStats(today);
   const bonuses = calcWeeklyBonuses(ws, dailyEntries, measurements, settings);
 
+  const weeklyBoss = useMemo(
+    () =>
+      getWeeklyBoss({
+        weekStart: ws,
+        dailyEntries,
+        settings,
+        measurements,
+      }),
+    [ws, dailyEntries, settings, measurements],
+  );
+
   return (
     <div className="space-y-6">
       <header>
@@ -24,6 +38,8 @@ export function WeekPage() {
           {formatDateRu(days[0]!)} — {formatDateRu(days[6]!)}
         </p>
       </header>
+
+      <WeeklyBossCard boss={weeklyBoss} variant="full" />
 
       <Card>
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">

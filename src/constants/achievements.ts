@@ -39,6 +39,7 @@ export const CATEGORY_LABELS: Record<AchievementCategory, string> = {
   journal: 'Дневник',
   life: 'Жизнь',
   combo: 'Комбо',
+  boss: 'Боссы',
   xp: 'XP',
 };
 
@@ -126,6 +127,10 @@ export const ICON_EMOJI_MAP: Record<string, string> = {
   'xp-10000': '🚀',
   'xp-30000': '🔥',
   'xp-100000': '👑',
+  'boss-first': '👹',
+  'boss-perfect': '✨',
+  'boss-3-streak': '🔥',
+  'boss-month': '👑',
 };
 
 export const ACHIEVEMENTS: Achievement[] = [
@@ -215,6 +220,11 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: 'combo_perfect_base', title: 'Идеальная база', description: '7 дней без алкоголя, 7 дней шаги выполнены, 7 дней калории в лимите', category: 'combo', tier: 'legendary', iconKey: 'perfect-base', conditionType: 'weekly' },
   { id: 'combo_back_after_bad_day', title: 'Без отката', description: 'После плохого дня набрать 70+ очков', category: 'combo', tier: 'silver', iconKey: 'back-after-bad-day', conditionType: 'combo' },
   { id: 'combo_back_after_absence', title: 'Снова в игре', description: 'Вернуться после 7 дней без записей', category: 'combo', tier: 'bronze', iconKey: 'back-in-game', conditionType: 'combo' },
+
+  { id: 'boss_first_defeat', title: 'Первый босс', description: 'Победить первого недельного босса', category: 'boss', tier: 'bronze', iconKey: 'boss-first', conditionType: 'instant' },
+  { id: 'boss_perfect_win', title: 'Идеальная победа', description: 'Получить идеальную победу над боссом недели', category: 'boss', tier: 'gold', iconKey: 'boss-perfect', conditionType: 'instant' },
+  { id: 'boss_3_streak', title: 'Три босса подряд', description: 'Победить 3 недельных босса подряд', category: 'boss', tier: 'silver', iconKey: 'boss-3-streak', conditionType: 'streak', target: 3 },
+  { id: 'boss_4_streak', title: 'Месяц побед', description: 'Победить 4 недельных босса подряд', category: 'boss', tier: 'epic', iconKey: 'boss-month', conditionType: 'streak', target: 4 },
 
   { id: 'xp_500', title: 'Новичок системы', description: 'Набрать 500 XP', category: 'xp', tier: 'bronze', iconKey: 'xp-500', conditionType: 'milestone', target: 500 },
   { id: 'xp_1200', title: 'Уверенный старт', description: 'Набрать 1200 XP', category: 'xp', tier: 'bronze', iconKey: 'xp-1200', conditionType: 'milestone', target: 1200 },

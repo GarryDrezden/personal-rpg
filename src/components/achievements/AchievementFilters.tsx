@@ -14,7 +14,7 @@ type AchievementFiltersProps = {
 
 const CATEGORIES: (AchievementCategory | 'all')[] = [
   'all', 'start', 'weight', 'measurements', 'calories', 'steps',
-  'alcohol', 'training', 'journal', 'life', 'combo', 'xp',
+  'alcohol', 'training', 'journal', 'life', 'combo', 'boss', 'xp',
 ];
 
 const CATEGORY_LABELS_EXT: Record<AchievementCategory | 'all', string> = {
