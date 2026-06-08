@@ -143,7 +143,7 @@ export function SettingsPage() {
         <button
           onClick={() => void handleSave()}
           disabled={saving}
-          className="rounded-xl bg-gold px-4 py-2 text-white font-medium disabled:opacity-50"
+          className="rounded-xl bg-[var(--app-primary)] px-4 py-2 font-semibold text-slate-950 shadow-md transition hover:brightness-105 disabled:opacity-50"
         >
           {saving ? '…' : 'Сохранить'}
         </button>
@@ -155,19 +155,6 @@ export function SettingsPage() {
           Выберите визуальную тему интерфейса. Настройка сохраняется автоматически.
         </p>
         <ThemeSelector value={themeId} onChange={setThemeId} />
-      </Card>
-
-      <Card>
-        <h2 className="mb-4 font-semibold text-[var(--app-text)]">Второстепенные цели</h2>
-        <HabitsEditor
-          settings={local}
-          onChange={(habitConfig) =>
-            setLocal({
-              ...local,
-              habitConfig: habitConfig ?? DEFAULT_HABIT_CONFIG,
-            })
-          }
-        />
       </Card>
 
       <Card>
@@ -363,6 +350,19 @@ export function SettingsPage() {
             />
           ))}
         </div>
+      </Card>
+
+      <Card>
+        <h2 className="mb-4 font-semibold text-[var(--app-text)]">Второстепенные цели</h2>
+        <HabitsEditor
+          settings={local}
+          onChange={(habitConfig) =>
+            setLocal({
+              ...local,
+              habitConfig: habitConfig ?? DEFAULT_HABIT_CONFIG,
+            })
+          }
+        />
       </Card>
 
       <Card>
