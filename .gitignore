@@ -1,6 +1,7 @@
 node_modules/
 dist/
 release/
+installer/staging/
 tsconfig.tsbuildinfo
 data/*.sqlite
 server/runtime/
