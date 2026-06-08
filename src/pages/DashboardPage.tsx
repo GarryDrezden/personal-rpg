@@ -24,6 +24,12 @@ import { ProgressMapPreviewCard } from '../components/dashboard/ProgressMapPrevi
 import { getMapSummary, getProgressPaths } from '../utils/progressMapEngine';
 import { WeeklyReportPreviewCard } from '../components/dashboard/WeeklyReportPreviewCard';
 import { generateWeeklyReport, previousWeekStart } from '../utils/weeklyReportEngine';
+import { InsightPreviewCard } from '../components/dashboard/InsightPreviewCard';
+import {
+  generateInsights,
+  getTopInsight,
+  hasEnoughDataForInsights,
+} from '../utils/insightEngine';
 
 export function DashboardPage() {
   const { dailyEntries, measurements, settings } = useAppStore();
@@ -56,6 +62,13 @@ export function DashboardPage() {
     const paths = getProgressPaths({ dailyEntries, measurements, settings });
     return getMapSummary(paths);
   }, [dailyEntries, measurements, settings]);
+
+  const topInsight = useMemo(() => {
+    const list = generateInsights({ dailyEntries, measurements, settings });
+    return getTopInsight(list);
+  }, [dailyEntries, measurements, settings]);
+
+  const enoughInsightData = hasEnoughDataForInsights(dailyEntries);
 
   const lastWeekReport = useMemo(() => {
     if (!isMonday(today)) return null;
@@ -151,6 +164,7 @@ export function DashboardPage() {
             completedMilestones={mapSummary.completedMilestones}
             totalMilestones={mapSummary.totalMilestones}
           />
+          <InsightPreviewCard insight={topInsight} hasEnoughData={enoughInsightData} />
           <RecentAchievements
             unlocked={unlockedAchievements}
             totalCount={ACHIEVEMENTS.length}
