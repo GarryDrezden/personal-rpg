@@ -4,7 +4,7 @@ import { useGameStats } from '../hooks/useGameStats';
 import { formatDateFull, todayISO, weekStart } from '../utils/dates';
 import { useAchievementStore } from '../store/achievementStore';
 import { ACHIEVEMENTS } from '../constants/achievements';
-import { calcWeightJourney } from '../utils/weightJourney';
+import { getAvatarState } from '../utils/avatarEngine';
 import { calcAllSkillProgress } from '../utils/skillEngine';
 import { getWeeklyBoss } from '../utils/bossEngine';
 import { CharacterHero } from '../components/dashboard/CharacterHero';
@@ -27,7 +27,10 @@ export function DashboardPage() {
   const unlockedAchievements = useAchievementStore((s) => s.unlockedAchievements);
   const today = todayISO();
   const stats = useGameStats(today);
-  const weightJourney = calcWeightJourney(measurements, settings.weightGoal);
+  const avatar = useMemo(
+    () => getAvatarState({ measurements, settings }),
+    [measurements, settings],
+  );
 
   const skills = useMemo(
     () => calcAllSkillProgress(dailyEntries, measurements, settings),
@@ -70,8 +73,7 @@ export function DashboardPage() {
         todayPoints={stats.todayPoints}
         todayCoins={stats.coins.todayEarned}
         availableCoins={stats.coins.available}
-        gender={settings.gender}
-        journey={weightJourney}
+        avatar={avatar}
       />
 
       <div className="grid gap-4 lg:grid-cols-2">

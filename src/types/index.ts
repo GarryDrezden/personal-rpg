@@ -92,6 +92,10 @@ export interface BankDeposit {
 
 export type CharacterGender = 'male' | 'female';
 
+import type { AvatarSettings } from './avatar';
+
+export type { AvatarSettings } from './avatar';
+
 export interface AppSettings {
   defaultCaloriesLimit: number;
   defaultStepsGoal: number;
@@ -103,6 +107,7 @@ export interface AppSettings {
   coinSettings?: CoinSettings;
   weeklySettings: WeeklySettings[];
   gender: CharacterGender;
+  avatarSettings?: AvatarSettings;
 }
 
 export interface AppData {

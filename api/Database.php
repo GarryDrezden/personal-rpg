@@ -90,6 +90,9 @@ class Database
         if (!in_array('coin_settings', $appCols, true)) {
             $this->pdo->exec('ALTER TABLE app_settings ADD COLUMN coin_settings TEXT');
         }
+        if (!in_array('avatar_settings', $appCols, true)) {
+            $this->pdo->exec('ALTER TABLE app_settings ADD COLUMN avatar_settings TEXT');
+        }
     }
 
     private function seedIfEmpty(): void

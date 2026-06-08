@@ -1,5 +1,6 @@
 import type { AppSettings, PointSettings } from '../types';
 import { DEFAULT_COIN_SETTINGS } from './coins';
+import { DEFAULT_AVATAR_SETTINGS } from './avatar';
 
 export const DEFAULT_POINT_SETTINGS: PointSettings = {
   caloriesOk: 40,
@@ -32,6 +33,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   coinSettings: DEFAULT_COIN_SETTINGS,
   weeklySettings: [],
   gender: 'male',
+  avatarSettings: DEFAULT_AVATAR_SETTINGS,
 };
 
 export const DAY_STATUS_THRESHOLDS = [

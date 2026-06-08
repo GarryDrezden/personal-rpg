@@ -130,5 +130,8 @@ function getAppSettings(PDO $pdo): array
         'coinSettings' => isset($row['coin_settings']) && $row['coin_settings']
             ? json_decode($row['coin_settings'], true)
             : null,
+        'avatarSettings' => isset($row['avatar_settings']) && $row['avatar_settings']
+            ? json_decode($row['avatar_settings'], true)
+            : null,
     ];
 }

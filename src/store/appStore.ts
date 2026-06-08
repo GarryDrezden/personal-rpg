@@ -94,6 +94,7 @@ export const useAppStore = create<AppState>((set, get) => ({
           gender: data.settings.gender ?? 'male',
           weightGoal: data.settings.weightGoal ?? 100,
           coinSettings: data.settings.coinSettings,
+          avatarSettings: data.settings.avatarSettings,
         },
         loading: false,
       });

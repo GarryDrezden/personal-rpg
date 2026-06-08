@@ -189,6 +189,7 @@ if ($uri === '/settings' && $method === 'PUT') {
            default_weekly_points_goal = :dwpg,
            point_settings = :ps,
            coin_settings = :cs,
+           avatar_settings = :avs,
            gender = :gender,
            weight_goal = :weight_goal
          WHERE id = 1'
@@ -199,6 +200,7 @@ if ($uri === '/settings' && $method === 'PUT') {
         'dwpg' => $body['defaultWeeklyPointsGoal'],
         'ps' => json_encode($body['pointSettings']),
         'cs' => json_encode($body['coinSettings'] ?? []),
+        'avs' => json_encode($body['avatarSettings'] ?? null),
         'gender' => in_array($body['gender'] ?? 'male', ['male', 'female'], true)
             ? $body['gender']
             : 'male',

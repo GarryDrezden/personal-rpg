@@ -58,7 +58,7 @@ npm run dev
 
 ### Персонаж прогресса
 
-В **Настройки** можно выбрать пол персонажа (мужской / женский). Картинки стадий: `public/images/weight/male/` и `female/`.
+В **Настройки → Аватар** — пол, режим стадии (авто/ручной), пороги по кг. Картинки: `public/avatars/{male,female}/` (см. [docs/AVATAR_ASSETS.md](docs/AVATAR_ASSETS.md)); временно поддерживается legacy `public/images/weight/{gender}/stage-N.png`.
 
 ## Экраны
 

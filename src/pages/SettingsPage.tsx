@@ -2,12 +2,20 @@ import { useState, useEffect } from 'react';
 import { useAppStore } from '../store/appStore';
 import { DEFAULT_POINT_SETTINGS } from '../constants/defaults';
 import { DEFAULT_COIN_SETTINGS } from '../constants/coins';
+import { DEFAULT_AVATAR_SETTINGS, resolveAvatarSettings } from '../constants/avatar';
 import type { CoinSettings, PointSettings, WeeklySettings } from '../types';
+import type { AvatarMode, AvatarStage } from '../types/avatar';
+import { AvatarDisplay } from '../components/avatar/AvatarDisplay';
+import {
+  calcAutoAvatarStage,
+  getAvatarImagePath,
+  getWeightLossFromMeasurements,
+} from '../utils/avatarEngine';
 import { Card } from '../components/ui/Card';
 import { NumberInput } from '../components/ui/NumberInput';
 
 export function SettingsPage() {
-  const { settings, saveSettings } = useAppStore();
+  const { settings, measurements, saveSettings } = useAppStore();
   const [local, setLocal] = useState(settings);
   const [saving, setSaving] = useState(false);
 
@@ -81,6 +89,48 @@ export function SettingsPage() {
     setLocal({ ...local, coinSettings: { ...DEFAULT_COIN_SETTINGS } });
   };
 
+  const avatarSettings = resolveAvatarSettings(local);
+  const { weightLossKg, hasWeightData } = getWeightLossFromMeasurements(measurements);
+  const previewStage =
+    avatarSettings.mode === 'manual'
+      ? avatarSettings.manualStage
+      : calcAutoAvatarStage(weightLossKg, avatarSettings.stageThresholdsKg);
+
+  const updateAvatar = (patch: Partial<typeof avatarSettings>) => {
+    const next = {
+      ...avatarSettings,
+      ...patch,
+      stageThresholdsKg: {
+        ...avatarSettings.stageThresholdsKg,
+        ...patch.stageThresholdsKg,
+      },
+    };
+    setLocal({
+      ...local,
+      gender: next.gender,
+      avatarSettings: next,
+    });
+  };
+
+  const updateAvatarThreshold = (stage: AvatarStage, value: number) => {
+    if (stage === 1) return;
+    updateAvatar({
+      stageThresholdsKg: {
+        ...avatarSettings.stageThresholdsKg,
+        [stage]: value,
+      },
+    });
+  };
+
+  const handleResetAvatar = () => {
+    if (!confirm('Сбросить настройки аватара к значениям по умолчанию?')) return;
+    setLocal({
+      ...local,
+      gender: DEFAULT_AVATAR_SETTINGS.gender,
+      avatarSettings: { ...DEFAULT_AVATAR_SETTINGS },
+    });
+  };
+
   return (
     <div className="space-y-6">
       <header className="flex items-center justify-between">
@@ -103,23 +153,114 @@ export function SettingsPage() {
             onChange={(v) => setLocal({ ...local, weightGoal: v ?? 100 })}
           />
           <p className="text-xs text-rpg-muted">
-            Путь считается от пика веса до этой цели. При небольшом сбросе (напр. 75→65 кг)
-            персонаж начнёт с 3-й стадии с конца и дойдёт до финальной картинки.
+            Целевой вес используется в замерах и карте прогресса. Аватар меняется по снижению
+            веса от первого замера — настройки ниже.
           </p>
-          <div className="flex gap-2">
-            {(['male', 'female'] as const).map((g) => (
-              <button
-                key={g}
-                type="button"
-                onClick={() => setLocal({ ...local, gender: g })}
-                className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium transition-colors ${
-                  local.gender === g
-                    ? 'border-gold bg-amber-100 text-amber-900'
-                    : 'border-rpg-border text-rpg-muted hover:bg-stone-50'
-                }`}
-              >
-                {g === 'male' ? 'Мужской' : 'Женский'}
-              </button>
+        </div>
+      </Card>
+
+      <Card>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+          <h2 className="font-semibold">Аватар</h2>
+          <button onClick={handleResetAvatar} className="text-sm text-rpg-muted">
+            Сбросить
+          </button>
+        </div>
+
+        <div className="mb-6 flex flex-col items-center gap-4 sm:flex-row sm:items-start">
+          <AvatarDisplay
+            stage={previewStage}
+            gender={avatarSettings.gender}
+            imagePath={getAvatarImagePath(avatarSettings.gender, previewStage)}
+            weightLossKg={weightLossKg}
+            hasWeightData={hasWeightData}
+            compact
+          />
+          <div className="flex-1 space-y-4">
+            <div>
+              <p className="mb-2 text-sm font-medium">Тип аватара</p>
+              <div className="flex gap-2">
+                {(['male', 'female'] as const).map((g) => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => updateAvatar({ gender: g })}
+                    className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium transition-colors ${
+                      avatarSettings.gender === g
+                        ? 'border-gold bg-amber-100 text-amber-900'
+                        : 'border-rpg-border text-rpg-muted hover:bg-stone-50'
+                    }`}
+                  >
+                    {g === 'male' ? 'Мужской' : 'Женский'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-2 text-sm font-medium">Режим стадии</p>
+              <div className="flex gap-2">
+                {(
+                  [
+                    { id: 'auto' as AvatarMode, label: 'Автоматически' },
+                    { id: 'manual' as AvatarMode, label: 'Вручную' },
+                  ] as const
+                ).map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => updateAvatar({ mode: m.id })}
+                    className={`flex-1 rounded-xl border px-4 py-2 text-sm font-medium transition-colors ${
+                      avatarSettings.mode === m.id
+                        ? 'border-gold bg-amber-100 text-amber-900'
+                        : 'border-rpg-border text-rpg-muted hover:bg-stone-50'
+                    }`}
+                  >
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {avatarSettings.mode === 'manual' && (
+          <div className="mb-4">
+            <p className="mb-2 text-sm font-medium">Ручной этап (1–7)</p>
+            <div className="flex flex-wrap gap-2">
+              {([1, 2, 3, 4, 5, 6, 7] as AvatarStage[]).map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => updateAvatar({ manualStage: s })}
+                  className={`h-10 w-10 rounded-xl border text-sm font-semibold transition-colors ${
+                    avatarSettings.manualStage === s
+                      ? 'border-gold bg-amber-100 text-amber-900'
+                      : 'border-rpg-border text-rpg-muted hover:bg-stone-50'
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div>
+          <p className="mb-2 text-sm font-medium">Пороги стадий (кг сброшено)</p>
+          <p className="mb-3 text-xs text-rpg-muted">
+            В автоматическом режиме выбирается максимальная стадия, где сброс веса ≥ порога.
+            Этап 1 всегда начинается с 0 кг.
+          </p>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {([1, 2, 3, 4, 5, 6, 7] as AvatarStage[]).map((stage) => (
+              <NumberInput
+                key={stage}
+                label={`Этап ${stage}`}
+                value={avatarSettings.stageThresholdsKg[stage]}
+                onChange={(v) => updateAvatarThreshold(stage, v ?? 0)}
+                disabled={stage === 1}
+              />
             ))}
           </div>
         </div>
