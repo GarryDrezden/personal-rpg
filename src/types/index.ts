@@ -65,6 +65,14 @@ export interface Reward {
   category: string;
   purchasedAt: string | null;
   hidden: boolean;
+  moneyGoal: number | null;
+}
+
+export interface BankDeposit {
+  id: string;
+  amount: number;
+  date: string;
+  comment: string;
 }
 
 export interface AppSettings {
@@ -80,6 +88,7 @@ export interface AppData {
   dailyEntries: DailyEntry[];
   measurements: MeasurementEntry[];
   rewards: Reward[];
+  bankDeposits: BankDeposit[];
   settings: AppSettings;
 }
 

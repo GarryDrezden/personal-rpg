@@ -10,7 +10,7 @@ import { SegmentedControl } from '../components/ui/SegmentedControl';
 import type { AlcoholStatus, DailyEntry } from '../types';
 
 export function TodayPage() {
-  const { dailyEntries, settings, updateDaily } = useAppStore();
+  const { dailyEntries, settings, updateDaily, deleteDaily } = useAppStore();
   const today = todayISO();
   const existing = dailyEntries.find((e) => e.date === today);
   const [entry, setEntry] = useState<DailyEntry>(existing ?? emptyDaily(today));
@@ -46,13 +46,37 @@ export function TodayPage() {
     entry.steps === null ? 'neutral' :
     entry.steps >= weekly.stepsGoal ? 'success' : 'neutral';
 
+  const hasSavedData = existing !== undefined;
+
+  const resetToday = async () => {
+    if (!hasSavedData) return;
+    if (!confirm('Сбросить все данные за сегодня?')) return;
+    setSaving(true);
+    try {
+      await deleteDaily(today);
+      setEntry(emptyDaily(today));
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between">
+      <header className="flex flex-wrap items-start justify-between gap-3">
         <h1 className="text-2xl font-bold">Сегодня</h1>
-        <div className="text-right">
+        <div className="flex flex-col items-end gap-2">
           <Badge variant="gold">{Math.max(0, points)} очков</Badge>
           {saving && <div className="text-xs text-rpg-muted">сохранение…</div>}
+          {hasSavedData && (
+            <button
+              type="button"
+              onClick={() => void resetToday()}
+              disabled={saving}
+              className="rounded-lg border border-danger/40 bg-red-50 px-3 py-1.5 text-sm font-medium text-danger hover:bg-red-100 disabled:opacity-50"
+            >
+              Сбросить день
+            </button>
+          )}
         </div>
       </header>
 

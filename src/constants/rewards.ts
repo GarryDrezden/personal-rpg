@@ -7,6 +7,7 @@ export const DEFAULT_REWARDS: Omit<Reward, 'id' | 'purchasedAt'>[] = [
     cost: 200,
     category: 'Отдых',
     hidden: false,
+    moneyGoal: null,
   },
   {
     title: 'Вечер игры',
@@ -14,6 +15,7 @@ export const DEFAULT_REWARDS: Omit<Reward, 'id' | 'purchasedAt'>[] = [
     cost: 300,
     category: 'Отдых',
     hidden: false,
+    moneyGoal: null,
   },
   {
     title: 'Покупка для цветов',
@@ -21,6 +23,7 @@ export const DEFAULT_REWARDS: Omit<Reward, 'id' | 'purchasedAt'>[] = [
     cost: 500,
     category: 'Хобби',
     hidden: false,
+    moneyGoal: null,
   },
   {
     title: 'Покупка для хобби',
@@ -28,6 +31,7 @@ export const DEFAULT_REWARDS: Omit<Reward, 'id' | 'purchasedAt'>[] = [
     cost: 1000,
     category: 'Хобби',
     hidden: false,
+    moneyGoal: null,
   },
   {
     title: 'Поездка выходного дня',
@@ -35,6 +39,7 @@ export const DEFAULT_REWARDS: Omit<Reward, 'id' | 'purchasedAt'>[] = [
     cost: 2000,
     category: 'Приключения',
     hidden: false,
+    moneyGoal: null,
   },
   {
     title: 'Крупная покупка',
@@ -42,5 +47,6 @@ export const DEFAULT_REWARDS: Omit<Reward, 'id' | 'purchasedAt'>[] = [
     cost: 3000,
     category: 'Крупное',
     hidden: false,
+    moneyGoal: null,
   },
 ];

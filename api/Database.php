@@ -33,6 +33,49 @@ class Database
     {
         $schema = file_get_contents(__DIR__ . '/schema.sql');
         $this->pdo->exec($schema);
+        $this->migrateColumns();
+        $this->migrateBank();
+    }
+
+    private function migrateBank(): void
+    {
+        $hasBank = $this->pdo->query(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='bank_deposits'",
+        )->fetch();
+        if ($hasBank) {
+            return;
+        }
+
+        $this->pdo->exec(
+            'CREATE TABLE bank_deposits (
+               id TEXT PRIMARY KEY,
+               amount REAL NOT NULL,
+               date TEXT NOT NULL,
+               comment TEXT NOT NULL DEFAULT \'\'
+             )',
+        );
+
+        $hasOld = $this->pdo->query(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='reward_savings'",
+        )->fetch();
+        if ($hasOld) {
+            $this->pdo->exec(
+                'INSERT INTO bank_deposits (id, amount, date, comment)
+                 SELECT id, amount, date, comment FROM reward_savings',
+            );
+            $this->pdo->exec('DROP TABLE reward_savings');
+        }
+    }
+
+    private function migrateColumns(): void
+    {
+        $cols = array_column(
+            $this->pdo->query('PRAGMA table_info(rewards)')->fetchAll(),
+            'name',
+        );
+        if (!in_array('money_goal', $cols, true)) {
+            $this->pdo->exec('ALTER TABLE rewards ADD COLUMN money_goal REAL');
+        }
     }
 
     private function seedIfEmpty(): void

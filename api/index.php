@@ -20,12 +20,17 @@ if ($uri === '/daily' && $method === 'GET') {
 }
 
 // PUT /daily/{date}
-if (preg_match('#^/daily/(\d{4}-\d{2}-\d{2})$#', $uri, $m) && $method === 'PUT') {
+if (preg_match('#^/daily/(\d{4}-\d{2}-\d{2})$#', $uri, $m) && ($method === 'PUT' || $method === 'DELETE')) {
+    $date = $m[1];
+    if ($method === 'DELETE') {
+        $pdo->prepare('DELETE FROM daily_entries WHERE date = :date')->execute(['date' => $date]);
+        jsonResponse(['ok' => true, 'date' => $date]);
+    }
     $body = getJsonBody();
-    $body['date'] = $m[1];
+    $body['date'] = $date;
     $db->insertDaily($body);
     $stmt = $pdo->prepare('SELECT * FROM daily_entries WHERE date = :date');
-    $stmt->execute(['date' => $m[1]]);
+    $stmt->execute(['date' => $date]);
     jsonResponse(rowToDaily($stmt->fetch()));
 }
 
@@ -76,8 +81,8 @@ if ($uri === '/rewards' && $method === 'POST') {
     $body = getJsonBody();
     $id = $db->uuid();
     $pdo->prepare(
-        'INSERT INTO rewards (id, title, description, cost, category, purchased_at, hidden)
-         VALUES (:id, :title, :description, :cost, :category, NULL, :hidden)'
+        'INSERT INTO rewards (id, title, description, cost, category, purchased_at, hidden, money_goal)
+         VALUES (:id, :title, :description, :cost, :category, NULL, :hidden, :money_goal)'
     )->execute([
         'id' => $id,
         'title' => $body['title'],
@@ -85,10 +90,78 @@ if ($uri === '/rewards' && $method === 'POST') {
         'cost' => (int) $body['cost'],
         'category' => $body['category'] ?? 'Своё',
         'hidden' => !empty($body['hidden']) ? 1 : 0,
+        'money_goal' => isset($body['moneyGoal']) ? (float) $body['moneyGoal'] : null,
     ]);
     $stmt = $pdo->prepare('SELECT * FROM rewards WHERE id = :id');
     $stmt->execute(['id' => $id]);
     jsonResponse(rowToReward($stmt->fetch()), 201);
+}
+
+// PUT /rewards/{id}
+if (preg_match('#^/rewards/([^/]+)$#', $uri, $m) && $method === 'PUT') {
+    $body = getJsonBody();
+    $pdo->prepare(
+        'UPDATE rewards SET
+           title = COALESCE(:title, title),
+           description = COALESCE(:description, description),
+           cost = COALESCE(:cost, cost),
+           category = COALESCE(:category, category),
+           money_goal = :money_goal
+         WHERE id = :id'
+    )->execute([
+        'id' => $m[1],
+        'title' => $body['title'] ?? null,
+        'description' => array_key_exists('description', $body) ? $body['description'] : null,
+        'cost' => isset($body['cost']) ? (int) $body['cost'] : null,
+        'category' => $body['category'] ?? null,
+        'money_goal' => array_key_exists('moneyGoal', $body) ? $body['moneyGoal'] : null,
+    ]);
+    $stmt = $pdo->prepare('SELECT * FROM rewards WHERE id = :id');
+    $stmt->execute(['id' => $m[1]]);
+    $row = $stmt->fetch();
+    if (!$row) {
+        jsonError('Reward not found', 404);
+    }
+    jsonResponse(rowToReward($row));
+}
+
+// DELETE /rewards/{id}
+if (preg_match('#^/rewards/([^/]+)$#', $uri, $m) && $method === 'DELETE') {
+    $pdo->prepare('DELETE FROM rewards WHERE id = :id')->execute(['id' => $m[1]]);
+    jsonResponse(['ok' => true]);
+}
+
+// GET /bank
+if ($uri === '/bank' && $method === 'GET') {
+    $rows = $pdo->query('SELECT * FROM bank_deposits ORDER BY date DESC, id DESC')->fetchAll();
+    jsonResponse(array_map('rowToBankDeposit', $rows));
+}
+
+// POST /bank
+if ($uri === '/bank' && $method === 'POST') {
+    $body = getJsonBody();
+    if (!isset($body['amount']) || (float) $body['amount'] <= 0) {
+        jsonError('amount required');
+    }
+    $id = $db->uuid();
+    $pdo->prepare(
+        'INSERT INTO bank_deposits (id, amount, date, comment)
+         VALUES (:id, :amount, :date, :comment)'
+    )->execute([
+        'id' => $id,
+        'amount' => (float) $body['amount'],
+        'date' => $body['date'] ?? date('Y-m-d'),
+        'comment' => $body['comment'] ?? '',
+    ]);
+    $stmt = $pdo->prepare('SELECT * FROM bank_deposits WHERE id = :id');
+    $stmt->execute(['id' => $id]);
+    jsonResponse(rowToBankDeposit($stmt->fetch()), 201);
+}
+
+// DELETE /bank/{id}
+if (preg_match('#^/bank/([^/]+)$#', $uri, $m) && $method === 'DELETE') {
+    $pdo->prepare('DELETE FROM bank_deposits WHERE id = :id')->execute(['id' => $m[1]]);
+    jsonResponse(['ok' => true]);
 }
 
 // POST /rewards/{id}/purchase
@@ -154,10 +227,12 @@ if ($uri === '/' && $method === 'GET') {
     $daily = $pdo->query('SELECT * FROM daily_entries ORDER BY date')->fetchAll();
     $measurements = $pdo->query('SELECT * FROM measurements ORDER BY date')->fetchAll();
     $rewards = $pdo->query('SELECT * FROM rewards ORDER BY cost')->fetchAll();
+    $deposits = $pdo->query('SELECT * FROM bank_deposits ORDER BY date DESC, id DESC')->fetchAll();
     jsonResponse([
         'dailyEntries' => array_map('rowToDaily', $daily),
         'measurements' => array_map('rowToMeasurement', $measurements),
         'rewards' => array_map('rowToReward', $rewards),
+        'bankDeposits' => array_map('rowToBankDeposit', $deposits),
         'settings' => getAppSettings($pdo),
     ]);
 }

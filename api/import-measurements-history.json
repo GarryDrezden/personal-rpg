@@ -1,0 +1,17 @@
+[
+  { "date": "2026-01-12", "weight": 162.8, "chest": 122, "waist": 128, "biceps": 45, "hips": 137, "thigh": 83 },
+  { "date": "2026-01-19", "weight": 161.9, "chest": 118, "waist": 126, "biceps": 45, "hips": 137, "thigh": 84 },
+  { "date": "2026-01-26", "weight": 161.4, "chest": 118, "waist": 126, "biceps": 47, "hips": 137, "thigh": 84 },
+  { "date": "2026-02-16", "weight": 165.5, "chest": 122, "waist": 131, "biceps": 47, "hips": 140, "thigh": 84 },
+  { "date": "2026-03-10", "weight": 172.6, "chest": 123, "waist": 134, "biceps": 47, "hips": 142, "thigh": 87 },
+  { "date": "2026-03-16", "weight": 168.2, "chest": 120, "waist": 132, "biceps": 47, "hips": 139, "thigh": 85 },
+  { "date": "2026-03-24", "weight": 164.9, "chest": 120, "waist": 130, "biceps": 45, "hips": 139, "thigh": 84 },
+  { "date": "2026-04-13", "weight": 171.0, "chest": 124, "waist": 132, "biceps": 45, "hips": 141, "thigh": 86 },
+  { "date": "2026-04-20", "weight": 176.9, "chest": 125, "waist": 136, "biceps": 45, "hips": 144, "thigh": 89 },
+  { "date": "2026-04-27", "weight": 176.3, "chest": 126, "waist": 133, "biceps": 46, "hips": 142, "thigh": 89 },
+  { "date": "2026-05-04", "weight": 172.4, "chest": 124, "waist": 132, "biceps": 45, "hips": 140, "thigh": 89 },
+  { "date": "2026-05-12", "weight": 172.2, "chest": 122, "waist": 133, "biceps": 47, "hips": 140, "thigh": 90 },
+  { "date": "2026-05-18", "weight": 174.3, "chest": 126, "waist": 133, "biceps": 45, "hips": 143, "thigh": 90 },
+  { "date": "2026-05-25", "weight": 178.8, "chest": 126, "waist": 133, "biceps": 46, "hips": 144, "thigh": 89 },
+  { "date": "2026-06-01", "weight": 181, "chest": 124, "waist": 135, "biceps": 46, "hips": 145, "thigh": 89 }
+]

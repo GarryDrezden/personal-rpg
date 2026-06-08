@@ -79,6 +79,19 @@ function rowToReward(array $row): array
         'category' => $row['category'],
         'purchasedAt' => $row['purchased_at'],
         'hidden' => (bool) $row['hidden'],
+        'moneyGoal' => isset($row['money_goal']) && $row['money_goal'] !== null
+            ? (float) $row['money_goal']
+            : null,
+    ];
+}
+
+function rowToBankDeposit(array $row): array
+{
+    return [
+        'id' => $row['id'],
+        'amount' => (float) $row['amount'],
+        'date' => $row['date'],
+        'comment' => $row['comment'] ?? '',
     ];
 }
 

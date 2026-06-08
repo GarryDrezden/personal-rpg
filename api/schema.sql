@@ -34,7 +34,15 @@ CREATE TABLE IF NOT EXISTS rewards (
   cost INTEGER NOT NULL,
   category TEXT NOT NULL DEFAULT '',
   purchased_at TEXT,
-  hidden INTEGER NOT NULL DEFAULT 0
+  hidden INTEGER NOT NULL DEFAULT 0,
+  money_goal REAL
+);
+
+CREATE TABLE IF NOT EXISTS bank_deposits (
+  id TEXT PRIMARY KEY,
+  amount REAL NOT NULL,
+  date TEXT NOT NULL,
+  comment TEXT NOT NULL DEFAULT ''
 );
 
 CREATE TABLE IF NOT EXISTS weekly_settings (

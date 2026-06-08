@@ -1,20 +1,40 @@
 import { useState } from 'react';
+import { Trash2, PiggyBank } from 'lucide-react';
 import { useAppStore } from '../store/appStore';
 import { useDerivedStats } from '../store/selectors';
 import { todayISO } from '../utils/dates';
+import { totalBankBalance } from '../utils/bank';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 
-type Tab = 'available' | 'purchased' | 'add';
+type Tab = 'available' | 'purchased' | 'bank' | 'add';
 
 export function RewardsPage() {
-  const { rewards, dailyEntries, measurements, settings, purchaseReward, addReward } = useAppStore();
+  const {
+    rewards,
+    bankDeposits,
+    dailyEntries,
+    measurements,
+    settings,
+    purchaseReward,
+    addReward,
+    deleteReward,
+    addBankDeposit,
+    deleteBankDeposit,
+  } = useAppStore();
   const stats = useDerivedStats(dailyEntries, measurements, rewards, settings, todayISO());
   const [tab, setTab] = useState<Tab>('available');
-  const [newReward, setNewReward] = useState({ title: '', description: '', cost: 100, category: 'Своё' });
+  const [newReward, setNewReward] = useState({
+    title: '',
+    description: '',
+    cost: 100,
+    category: 'Своё',
+  });
+  const [deposit, setDeposit] = useState({ amount: '', comment: '' });
 
   const available = rewards.filter((r) => !r.purchasedAt && !r.hidden);
   const purchased = rewards.filter((r) => r.purchasedAt);
+  const bankBalance = totalBankBalance(bankDeposits);
 
   const handlePurchase = async (id: string, cost: number) => {
     if (stats.availablePoints < cost) {
@@ -25,23 +45,52 @@ export function RewardsPage() {
     await purchaseReward(id);
   };
 
+  const handleDeleteReward = async (id: string, title: string) => {
+    if (!confirm(`Удалить награду «${title}»?`)) return;
+    await deleteReward(id);
+  };
+
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newReward.title.trim()) return;
-    await addReward({ ...newReward, hidden: false });
+    await addReward({
+      title: newReward.title.trim(),
+      description: newReward.description,
+      cost: Number(newReward.cost),
+      category: newReward.category,
+      hidden: false,
+      moneyGoal: null,
+    });
     setNewReward({ title: '', description: '', cost: 100, category: 'Своё' });
     setTab('available');
   };
 
+  const handleDeposit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const amount = Number(deposit.amount);
+    if (!amount || amount <= 0) return;
+    await addBankDeposit({
+      amount,
+      date: todayISO(),
+      comment: deposit.comment,
+    });
+    setDeposit({ amount: '', comment: '' });
+  };
+
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between">
+      <header className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">Награды</h1>
-        <Badge variant="gold">{stats.availablePoints} очков</Badge>
+        <div className="flex flex-col items-end gap-1">
+          <Badge variant="gold">{stats.availablePoints} очков</Badge>
+          <span className="text-sm text-rpg-muted flex items-center gap-1">
+            <PiggyBank size={14} /> {bankBalance.toLocaleString('ru')} ₽ в копилке
+          </span>
+        </div>
       </header>
 
-      <div className="flex gap-2 border-b border-rpg-border pb-2">
-        {(['available', 'purchased', 'add'] as Tab[]).map((t) => (
+      <div className="flex flex-wrap gap-2 border-b border-rpg-border pb-2">
+        {(['available', 'purchased', 'bank', 'add'] as Tab[]).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -49,7 +98,13 @@ export function RewardsPage() {
               tab === t ? 'bg-amber-100 text-amber-900' : 'text-rpg-muted hover:bg-stone-100'
             }`}
           >
-            {t === 'available' ? 'Доступные' : t === 'purchased' ? 'Купленные' : 'Добавить'}
+            {t === 'available'
+              ? 'Доступные'
+              : t === 'purchased'
+                ? 'Купленные'
+                : t === 'bank'
+                  ? 'Копилка'
+                  : 'Добавить'}
           </button>
         ))}
       </div>
@@ -58,13 +113,23 @@ export function RewardsPage() {
         <div className="grid gap-3 sm:grid-cols-2">
           {available.map((r) => (
             <Card key={r.id}>
-              <div className="flex justify-between items-start">
-                <div>
+              <div className="flex justify-between items-start gap-2">
+                <div className="min-w-0">
                   <h3 className="font-semibold">{r.title}</h3>
                   <p className="text-sm text-rpg-muted mt-1">{r.description}</p>
                   <Badge variant="default">{r.category}</Badge>
                 </div>
-                <span className="text-gold font-bold">{r.cost}</span>
+                <div className="flex shrink-0 flex-col items-end gap-2">
+                  <span className="text-gold font-bold">{r.cost}</span>
+                  <button
+                    type="button"
+                    onClick={() => void handleDeleteReward(r.id, r.title)}
+                    className="rounded-lg p-1.5 text-rpg-muted hover:bg-red-50 hover:text-danger"
+                    title="Удалить"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
               </div>
               <button
                 onClick={() => void handlePurchase(r.id, r.cost)}
@@ -83,12 +148,93 @@ export function RewardsPage() {
           {purchased.length === 0 && <p className="text-rpg-muted">Пока нет купленных наград</p>}
           {purchased.map((r) => (
             <Card key={r.id} className="opacity-80">
-              <h3 className="font-semibold">{r.title}</h3>
-              <p className="text-sm text-rpg-muted">
-                Куплено: {r.purchasedAt ? new Date(r.purchasedAt).toLocaleDateString('ru') : '—'} · {r.cost} оч.
-              </p>
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-semibold">{r.title}</h3>
+                  <p className="text-sm text-rpg-muted">
+                    Куплено: {r.purchasedAt ? new Date(r.purchasedAt).toLocaleDateString('ru') : '—'} · {r.cost} оч.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void handleDeleteReward(r.id, r.title)}
+                  className="rounded-lg p-1.5 text-rpg-muted hover:bg-red-50 hover:text-danger"
+                  title="Удалить"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
             </Card>
           ))}
+        </div>
+      )}
+
+      {tab === 'bank' && (
+        <div className="space-y-4">
+          <Card className="bg-gradient-to-br from-emerald-50 to-white">
+            <div className="text-sm text-rpg-muted">Баланс копилки</div>
+            <div className="text-3xl font-bold text-emerald-700">
+              {bankBalance.toLocaleString('ru')} ₽
+            </div>
+          </Card>
+
+          <Card>
+            <h3 className="mb-3 font-semibold">Пополнить</h3>
+            <form onSubmit={handleDeposit} className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={deposit.amount}
+                  onChange={(e) => setDeposit({ ...deposit, amount: e.target.value })}
+                  placeholder="Сумма, ₽"
+                  className="rounded-xl border border-rpg-border px-4 py-3"
+                  required
+                />
+                <input
+                  value={deposit.comment}
+                  onChange={(e) => setDeposit({ ...deposit, comment: e.target.value })}
+                  placeholder="Комментарий"
+                  className="rounded-xl border border-rpg-border px-4 py-3"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full min-h-11 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700"
+              >
+                Отложить на баланс
+              </button>
+            </form>
+          </Card>
+
+          <div className="space-y-2">
+            <h3 className="font-semibold">История</h3>
+            {bankDeposits.length === 0 && (
+              <p className="text-sm text-rpg-muted">Пока нет пополнений</p>
+            )}
+            {bankDeposits.map((d) => (
+              <Card key={d.id} className="flex items-center justify-between gap-3 py-3">
+                <div className="text-sm">
+                  <div className="font-medium text-emerald-700">
+                    +{d.amount.toLocaleString('ru')} ₽
+                  </div>
+                  <div className="text-rpg-muted">
+                    {new Date(d.date).toLocaleDateString('ru')}
+                    {d.comment ? ` · ${d.comment}` : ''}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void deleteBankDeposit(d.id)}
+                  className="rounded-lg p-1.5 text-rpg-muted hover:bg-red-50 hover:text-danger"
+                  title="Удалить запись"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </Card>
+            ))}
+          </div>
         </div>
       )}
 
@@ -114,7 +260,7 @@ export function RewardsPage() {
                 type="number"
                 value={newReward.cost}
                 onChange={(e) => setNewReward({ ...newReward, cost: Number(e.target.value) })}
-                placeholder="Стоимость"
+                placeholder="Стоимость в очках"
                 className="rounded-xl border border-rpg-border px-4 py-3"
               />
               <input

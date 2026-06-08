@@ -8,6 +8,8 @@ import { Badge } from '../components/ui/Badge';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { StatTile } from '../components/ui/StatTile';
 import { Heart, Shield, Activity, Home, Palette, Gift, Flame } from 'lucide-react';
+import { WeightHero } from '../components/dashboard/WeightHero';
+import { calcWeightJourney } from '../utils/weightJourney';
 
 const categories = [
   { key: 'health', title: 'Здоровье', icon: Heart, color: 'text-red-500', to: '/today' },
@@ -23,6 +25,7 @@ export function DashboardPage() {
   const { dailyEntries, measurements, rewards, settings } = useAppStore();
   const today = todayISO();
   const stats = useDerivedStats(dailyEntries, measurements, rewards, settings, today);
+  const weightJourney = calcWeightJourney(measurements);
 
   return (
     <div className="space-y-6">
@@ -30,6 +33,8 @@ export function DashboardPage() {
         <h1 className="text-2xl font-bold md:hidden">Личная RPG</h1>
         <p className="text-rpg-muted mt-1">{formatDateFull(today)}</p>
       </header>
+
+      <WeightHero journey={weightJourney} />
 
       <Card className="bg-gradient-to-br from-amber-50 to-white">
         <div className="flex flex-wrap items-center justify-between gap-3">

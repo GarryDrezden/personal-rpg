@@ -4,6 +4,7 @@ import type {
   DailyEntry,
   MeasurementEntry,
   Reward,
+  BankDeposit,
 } from '../types';
 import type { DataRepository } from './repository';
 
@@ -30,6 +31,9 @@ export const apiRepository: DataRepository = {
       body: JSON.stringify(entry),
     }),
 
+  deleteDaily: (date) =>
+    request(`${API}/daily/${date}`, { method: 'DELETE' }).then(() => undefined),
+
   getDaily: (from, to) =>
     request<DailyEntry[]>(`${API}/daily?from=${from}&to=${to}`),
 
@@ -52,8 +56,28 @@ export const apiRepository: DataRepository = {
       body: JSON.stringify(reward),
     }),
 
+  updateReward: (id, patch) =>
+    request<Reward>(`${API}/rewards/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(patch),
+    }),
+
+  deleteReward: (id) =>
+    request(`${API}/rewards/${id}`, { method: 'DELETE' }).then(() => undefined),
+
   purchaseReward: (id) =>
     request<Reward>(`${API}/rewards/${id}/purchase`, { method: 'POST' }),
+
+  getBankDeposits: () => request<BankDeposit[]>(`${API}/bank`),
+
+  addBankDeposit: (entry) =>
+    request<BankDeposit>(`${API}/bank`, {
+      method: 'POST',
+      body: JSON.stringify(entry),
+    }),
+
+  deleteBankDeposit: (id) =>
+    request(`${API}/bank/${id}`, { method: 'DELETE' }).then(() => undefined),
 
   getSettings: () => request<AppSettings>(`${API}/settings`),
 
