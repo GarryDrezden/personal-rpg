@@ -9,8 +9,6 @@ import { getAvatarState } from '../utils/avatarEngine';
 import { calcAllSkillProgress } from '../utils/skillEngine';
 import { getWeeklyBoss } from '../utils/bossEngine';
 import { CharacterHero } from '../components/dashboard/CharacterHero';
-import { LevelProgressCard } from '../components/dashboard/LevelProgressCard';
-import { TodayStatusCard } from '../components/dashboard/TodayStatusCard';
 import { DailyQuestsCard } from '../components/dashboard/DailyQuestsCard';
 import { WeeklyProgressCard } from '../components/dashboard/WeeklyProgressCard';
 import { WeeklyBossCard } from '../components/boss/WeeklyBossCard';
@@ -99,19 +97,15 @@ export function DashboardPage() {
 
       <CharacterHero
         level={stats.level.level}
+        totalXp={stats.totalXP}
         todayPoints={stats.todayPoints}
         todayCoins={stats.coins.todayEarned}
         availableCoins={stats.coins.available}
         avatar={avatar}
       />
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-3">
         <div className="space-y-4">
-          <LevelProgressCard totalXp={stats.totalXP} />
-          <TodayStatusCard
-            todayPoints={stats.todayPoints}
-            todayCoins={stats.coins.todayEarned}
-          />
           {showRecovery && (
             <RecoveryCard
               today={today}
@@ -126,6 +120,9 @@ export function DashboardPage() {
             settings={settings}
             date={today}
           />
+        </div>
+
+        <div className="space-y-4">
           <WeeklyProgressCard
             weekTotal={stats.weekTotal}
             weekPercent={stats.weekPercent}
@@ -133,6 +130,7 @@ export function DashboardPage() {
             gymCount={stats.gymCount}
             gymTarget={stats.weekly.gymTarget}
           />
+          <WeeklyBossCard boss={weeklyBoss} />
           <WeeklyReportPreviewCard
             today={today}
             report={lastWeekReport}
@@ -140,7 +138,6 @@ export function DashboardPage() {
             currentWeekTotal={stats.weekTotal}
             currentWeekGoal={stats.weekly.weeklyPointsGoal}
           />
-          <WeeklyBossCard boss={weeklyBoss} />
           <RewardsBankCard
             availableCoins={stats.coins.available}
             weekEarned={stats.coins.weekEarned}

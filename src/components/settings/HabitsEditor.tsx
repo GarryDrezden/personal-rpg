@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import type { AppSettings } from '../../types';
 import type {
   BuiltinHabitId,
@@ -25,24 +26,62 @@ type EditorRow =
   | { kind: 'builtin'; id: BuiltinHabitId }
   | { kind: 'custom'; habit: CustomHabitDefinition };
 
+type RowKey = `builtin:${BuiltinHabitId}` | `custom:${string}`;
+
+function rowKey(row: EditorRow): RowKey {
+  return row.kind === 'builtin' ? `builtin:${row.id}` : `custom:${row.habit.id}`;
+}
+
 function ensureConfig(settings: AppSettings): HabitConfig {
   return resolveHabitConfig(settings);
 }
 
 export function HabitsEditor({ settings, onChange }: HabitsEditorProps) {
   const config = ensureConfig(settings);
+  const [selectedKey, setSelectedKey] = useState<RowKey | ''>('');
 
   const update = (patch: Partial<HabitConfig>) => {
     onChange({ ...config, ...patch });
   };
 
-  const rows: EditorRow[] = [
-    ...BUILTIN_HABITS.filter((h) => !config.hiddenBuiltinIds.includes(h.id)).map((h) => ({
-      kind: 'builtin' as const,
-      id: h.id,
-    })),
-    ...config.customHabits.map((h) => ({ kind: 'custom' as const, habit: h })),
-  ];
+  const rows: EditorRow[] = useMemo(
+    () => [
+      ...BUILTIN_HABITS.filter((h) => !config.hiddenBuiltinIds.includes(h.id)).map((h) => ({
+        kind: 'builtin' as const,
+        id: h.id,
+      })),
+      ...config.customHabits.map((h) => ({ kind: 'custom' as const, habit: h })),
+    ],
+    [config.hiddenBuiltinIds, config.customHabits],
+  );
+
+  const rowLabels = useMemo(() => {
+    const map = new Map<RowKey, string>();
+    for (const row of rows) {
+      if (row.kind === 'builtin') {
+        const template = BUILTIN_HABITS.find((h) => h.id === row.id)!;
+        const override = config.builtinOverrides[row.id];
+        const title = override?.title ?? template.title;
+        map.set(rowKey(row), `${template.icon} ${title}`);
+      } else {
+        map.set(rowKey(row), `${row.habit.icon} ${row.habit.title}`);
+      }
+    }
+    return map;
+  }, [rows, config.builtinOverrides]);
+
+  useEffect(() => {
+    if (rows.length === 0) {
+      setSelectedKey('');
+      return;
+    }
+    const keys = rows.map(rowKey);
+    if (!selectedKey || !keys.includes(selectedKey as RowKey)) {
+      setSelectedKey(keys[0]!);
+    }
+  }, [rows, selectedKey]);
+
+  const selectedRow = rows.find((r) => rowKey(r) === selectedKey);
 
   const hideBuiltin = (id: BuiltinHabitId) => {
     update({
@@ -57,6 +96,7 @@ export function HabitsEditor({ settings, onChange }: HabitsEditorProps) {
     update({
       hiddenBuiltinIds: config.hiddenBuiltinIds.filter((x) => x !== id),
     });
+    setSelectedKey(`builtin:${id}`);
   };
 
   const updateBuiltinOverride = (
@@ -92,6 +132,7 @@ export function HabitsEditor({ settings, onChange }: HabitsEditorProps) {
       points: 10,
     };
     update({ customHabits: [...config.customHabits, habit] });
+    setSelectedKey(`custom:${habit.id}`);
   };
 
   const hiddenBuiltins = BUILTIN_HABITS.filter((h) => config.hiddenBuiltinIds.includes(h.id));
@@ -99,9 +140,42 @@ export function HabitsEditor({ settings, onChange }: HabitsEditorProps) {
   return (
     <div className="space-y-4">
       <p className="text-sm text-[var(--app-text-muted)]">
-        Настрой средние и бонусные квесты: переименуй, выбери иконку и цвет карточки, скрой
-        стандартные или добавь свои (например, Йога вместо Хобби).
+        Выбери цель из списка, чтобы изменить название, иконку, цвет и XP. Стандартные можно скрыть,
+        свои — добавить.
       </p>
+
+      {rows.length > 0 && (
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="min-w-0 flex-1">
+            <span className="mb-1 block text-sm font-medium text-[var(--app-text)]">
+              Редактируемая цель
+            </span>
+            <select
+              value={selectedKey}
+              onChange={(e) => setSelectedKey(e.target.value as RowKey)}
+              className="w-full rounded-xl border border-[var(--app-border)] bg-[var(--app-card-strong)] px-3 py-2.5 text-[var(--app-text)]"
+            >
+              {rows.map((row) => {
+                const key = rowKey(row);
+                const isCustom = row.kind === 'custom';
+                return (
+                  <option key={key} value={key}>
+                    {rowLabels.get(key)}
+                    {isCustom ? ' (своя)' : ' (стандартная)'}
+                  </option>
+                );
+              })}
+            </select>
+          </label>
+          <button
+            type="button"
+            onClick={addCustom}
+            className="shrink-0 rounded-xl border border-dashed border-[var(--app-border)] px-4 py-2.5 text-sm font-medium text-[var(--app-primary)] hover:bg-[var(--app-bg-soft)] sm:mt-6"
+          >
+            + Своя цель
+          </button>
+        </div>
+      )}
 
       {rows.length === 0 && (
         <p className="rounded-xl border border-dashed border-[var(--app-border)] px-4 py-3 text-sm text-[var(--app-text-muted)]">
@@ -109,69 +183,60 @@ export function HabitsEditor({ settings, onChange }: HabitsEditorProps) {
         </p>
       )}
 
-      {rows.map((row) => {
-        if (row.kind === 'builtin') {
-          const template = BUILTIN_HABITS.find((h) => h.id === row.id)!;
-          const override = config.builtinOverrides[row.id] ?? {};
-          const title = override.title ?? template.title;
-          const description = override.description ?? template.description;
-          const icon = override.icon ?? template.icon;
-          const cardColor = override.cardColor ?? template.cardColor;
-          const points = override.points ?? settings.pointSettings[template.pointKey];
-
-          return (
-            <HabitRowEditor
-              key={row.id}
-              badge="Стандартная"
-              title={title}
-              description={description}
-              icon={icon}
-              cardColor={cardColor}
-              points={points}
-              category={template.category}
-              onTitle={(v) => updateBuiltinOverride(row.id, { title: v })}
-              onDescription={(v) => updateBuiltinOverride(row.id, { description: v })}
-              onIcon={(v) => updateBuiltinOverride(row.id, { icon: v })}
-              onColor={(v) => updateBuiltinOverride(row.id, { cardColor: v })}
-              onPoints={(v) => updateBuiltinOverride(row.id, { points: v })}
-              onCategory={() => {}}
-              categoryLocked
-              onRemove={() => hideBuiltin(row.id)}
-              removeLabel="Скрыть"
-            />
-          );
-        }
-
-        const { habit } = row;
+      {selectedRow?.kind === 'builtin' && (() => {
+        const template = BUILTIN_HABITS.find((h) => h.id === selectedRow.id)!;
+        const override = config.builtinOverrides[selectedRow.id] ?? {};
         return (
           <HabitRowEditor
-            key={habit.id}
-            badge="Своя"
-            title={habit.title}
-            description={habit.description}
-            icon={habit.icon}
-            cardColor={habit.cardColor}
-            points={habit.points}
-            category={habit.category}
-            onTitle={(v) => updateCustom(habit.id, { title: v })}
-            onDescription={(v) => updateCustom(habit.id, { description: v })}
-            onIcon={(v) => updateCustom(habit.id, { icon: v })}
-            onColor={(v) => updateCustom(habit.id, { cardColor: v })}
-            onPoints={(v) => updateCustom(habit.id, { points: v })}
-            onCategory={(v) => updateCustom(habit.id, { category: v })}
-            onRemove={() => removeCustom(habit.id)}
-            removeLabel="Удалить"
+            badge="Стандартная"
+            title={override.title ?? template.title}
+            description={override.description ?? template.description}
+            icon={override.icon ?? template.icon}
+            cardColor={override.cardColor ?? template.cardColor}
+            points={override.points ?? settings.pointSettings[template.pointKey]}
+            category={template.category}
+            onTitle={(v) => updateBuiltinOverride(selectedRow.id, { title: v })}
+            onDescription={(v) => updateBuiltinOverride(selectedRow.id, { description: v })}
+            onIcon={(v) => updateBuiltinOverride(selectedRow.id, { icon: v })}
+            onColor={(v) => updateBuiltinOverride(selectedRow.id, { cardColor: v })}
+            onPoints={(v) => updateBuiltinOverride(selectedRow.id, { points: v })}
+            onCategory={() => {}}
+            categoryLocked
+            onRemove={() => hideBuiltin(selectedRow.id)}
+            removeLabel="Скрыть"
           />
         );
-      })}
+      })()}
 
-      <button
-        type="button"
-        onClick={addCustom}
-        className="w-full rounded-xl border border-dashed border-[var(--app-border)] px-4 py-3 text-sm font-medium text-[var(--app-primary)] hover:bg-[var(--app-bg-soft)]"
-      >
-        + Добавить свою цель
-      </button>
+      {selectedRow?.kind === 'custom' && (
+        <HabitRowEditor
+          badge="Своя"
+          title={selectedRow.habit.title}
+          description={selectedRow.habit.description}
+          icon={selectedRow.habit.icon}
+          cardColor={selectedRow.habit.cardColor}
+          points={selectedRow.habit.points}
+          category={selectedRow.habit.category}
+          onTitle={(v) => updateCustom(selectedRow.habit.id, { title: v })}
+          onDescription={(v) => updateCustom(selectedRow.habit.id, { description: v })}
+          onIcon={(v) => updateCustom(selectedRow.habit.id, { icon: v })}
+          onColor={(v) => updateCustom(selectedRow.habit.id, { cardColor: v })}
+          onPoints={(v) => updateCustom(selectedRow.habit.id, { points: v })}
+          onCategory={(v) => updateCustom(selectedRow.habit.id, { category: v })}
+          onRemove={() => removeCustom(selectedRow.habit.id)}
+          removeLabel="Удалить"
+        />
+      )}
+
+      {rows.length === 0 && (
+        <button
+          type="button"
+          onClick={addCustom}
+          className="w-full rounded-xl border border-dashed border-[var(--app-border)] px-4 py-3 text-sm font-medium text-[var(--app-primary)] hover:bg-[var(--app-bg-soft)]"
+        >
+          + Добавить свою цель
+        </button>
+      )}
 
       {hiddenBuiltins.length > 0 && (
         <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-bg-soft)] p-3">
@@ -268,6 +333,20 @@ function HabitRowEditor({
           />
         </label>
         <NumberInput label="XP за выполнение" value={points} onChange={(v) => onPoints(v ?? 0)} />
+        <label className="block">
+          <span className="mb-1 block text-sm font-medium text-[var(--app-text)]">Иконка</span>
+          <select
+            value={icon}
+            onChange={(e) => onIcon(e.target.value)}
+            className="w-full rounded-xl border border-[var(--app-border)] bg-[var(--app-card-strong)] px-3 py-2 text-lg text-[var(--app-text)]"
+          >
+            {HABIT_ICON_OPTIONS.map((emoji) => (
+              <option key={emoji} value={emoji}>
+                {emoji}
+              </option>
+            ))}
+          </select>
+        </label>
         {!categoryLocked && (
           <label className="block">
             <span className="mb-1 block text-sm font-medium text-[var(--app-text)]">Раздел</span>
@@ -281,48 +360,31 @@ function HabitRowEditor({
             </select>
           </label>
         )}
+        <label className={`block ${categoryLocked ? 'sm:col-span-2' : ''}`}>
+          <span className="mb-1 block text-sm font-medium text-[var(--app-text)]">Цвет карточки</span>
+          <select
+            value={cardColor}
+            onChange={(e) => onColor(e.target.value as HabitCardColorId)}
+            className="w-full rounded-xl border border-[var(--app-border)] bg-[var(--app-card-strong)] px-3 py-2 text-[var(--app-text)]"
+          >
+            {HABIT_COLOR_OPTIONS.map((opt) => (
+              <option key={opt.id} value={opt.id}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
-      <div className="mt-3">
-        <span className="mb-2 block text-sm font-medium text-[var(--app-text)]">Иконка</span>
-        <div className="flex flex-wrap gap-1.5">
-          {HABIT_ICON_OPTIONS.map((emoji) => (
-            <button
-              key={emoji}
-              type="button"
-              onClick={() => onIcon(emoji)}
-              className={`flex h-9 w-9 items-center justify-center rounded-lg border text-lg ${
-                icon === emoji
-                  ? 'border-[var(--app-primary)] bg-[var(--app-primary-soft)]'
-                  : 'border-[var(--app-border)] bg-[var(--app-card-strong)]'
-              }`}
-            >
-              {emoji}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-3">
-        <span className="mb-2 block text-sm font-medium text-[var(--app-text)]">Цвет карточки</span>
-        <div className="flex flex-wrap gap-2">
-          {HABIT_COLOR_OPTIONS.map((opt) => (
-            <button
-              key={opt.id}
-              type="button"
-              title={opt.label}
-              onClick={() => onColor(opt.id)}
-              className={`flex items-center gap-2 rounded-lg border px-2 py-1.5 text-xs ${
-                cardColor === opt.id
-                  ? 'border-[var(--app-primary)] bg-[var(--app-primary-soft)]'
-                  : 'border-[var(--app-border)] bg-[var(--app-card-strong)]'
-              }`}
-            >
-              <span className={`h-4 w-4 rounded-full ${getHabitColorSwatchClass(opt.id)}`} />
-              {opt.label}
-            </button>
-          ))}
-        </div>
+      <div className="mt-3 flex items-center gap-2 text-sm text-[var(--app-text-muted)]">
+        <span>Превью:</span>
+        <span
+          className={`inline-flex items-center gap-2 rounded-xl border border-[var(--app-border)] px-3 py-1.5 ${getHabitCardColorClass(cardColor)}`}
+        >
+          <span className="text-lg">{icon}</span>
+          <span className="font-medium text-[var(--app-text)]">{title || '—'}</span>
+          <span className={`h-3 w-3 rounded-full ${getHabitColorSwatchClass(cardColor)}`} />
+        </span>
       </div>
     </div>
   );

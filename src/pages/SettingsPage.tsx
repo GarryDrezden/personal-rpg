@@ -14,6 +14,7 @@ import {
 import { Card } from '../components/ui/Card';
 import { NumberInput } from '../components/ui/NumberInput';
 import { ThemeSelector } from '../components/settings/ThemeSelector';
+import { SettingsToc } from '../components/settings/SettingsToc';
 import { HabitsEditor } from '../components/settings/HabitsEditor';
 import { useAppTheme } from '../hooks/useAppTheme';
 import { DEFAULT_HABIT_CONFIG } from '../utils/habitConfig';
@@ -149,7 +150,9 @@ export function SettingsPage() {
         </button>
       </header>
 
-      <Card>
+      <SettingsToc />
+
+      <Card id="settings-theme" className="scroll-mt-28">
         <h2 className="mb-2 font-semibold text-[var(--app-text)]">Внешний вид</h2>
         <p className="mb-4 text-sm text-[var(--app-text-muted)]">
           Выберите визуальную тему интерфейса. Настройка сохраняется автоматически.
@@ -157,7 +160,7 @@ export function SettingsPage() {
         <ThemeSelector value={themeId} onChange={setThemeId} />
       </Card>
 
-      <Card>
+      <Card id="settings-weight" className="scroll-mt-28">
         <h2 className="font-semibold mb-4">Персонаж прогресса</h2>
         <div className="space-y-4">
           <NumberInput
@@ -172,7 +175,7 @@ export function SettingsPage() {
         </div>
       </Card>
 
-      <Card>
+      <Card id="settings-avatar" className="scroll-mt-28">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
           <h2 className="font-semibold">Аватар</h2>
           <button onClick={handleResetAvatar} className="text-sm text-rpg-muted">
@@ -279,7 +282,7 @@ export function SettingsPage() {
         </div>
       </Card>
 
-      <Card>
+      <Card id="settings-defaults" className="scroll-mt-28">
         <h2 className="font-semibold mb-4">Цели по умолчанию</h2>
         <div className="grid grid-cols-2 gap-3">
           <NumberInput label="Калории/день" value={local.defaultCaloriesLimit} onChange={(v) => setLocal({ ...local, defaultCaloriesLimit: v ?? 2500 })} />
@@ -289,7 +292,7 @@ export function SettingsPage() {
         </div>
       </Card>
 
-      <Card>
+      <Card id="settings-weeks" className="scroll-mt-28">
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-semibold">Цели по неделям</h2>
           <button onClick={addWeek} className="text-sm text-gold font-medium">+ Неделя</button>
@@ -313,7 +316,7 @@ export function SettingsPage() {
         ))}
       </Card>
 
-      <Card>
+      <Card id="settings-coins" className="scroll-mt-28">
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-semibold">Монеты 🪙</h2>
           <button onClick={handleResetCoins} className="text-sm text-rpg-muted">
@@ -335,7 +338,7 @@ export function SettingsPage() {
         </div>
       </Card>
 
-      <Card>
+      <Card id="settings-xp" className="scroll-mt-28">
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-semibold">Баллы (XP)</h2>
           <button onClick={handleReset} className="text-sm text-rpg-muted">Сбросить</button>
@@ -352,7 +355,7 @@ export function SettingsPage() {
         </div>
       </Card>
 
-      <Card>
+      <Card id="settings-habits" className="scroll-mt-28">
         <h2 className="mb-4 font-semibold text-[var(--app-text)]">Второстепенные цели</h2>
         <HabitsEditor
           settings={local}
@@ -365,7 +368,7 @@ export function SettingsPage() {
         />
       </Card>
 
-      <Card>
+      <Card id="settings-backup" className="scroll-mt-28">
         <h2 className="font-semibold mb-2">Бэкап</h2>
         <a
           href="/api/backup"

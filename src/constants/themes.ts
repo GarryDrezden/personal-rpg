@@ -3,13 +3,13 @@ import type { AppTheme, AppThemeId } from '../types/theme';
 export const APP_THEMES: AppTheme[] = [
   {
     id: 'cozy',
-    title: 'Cozy Idle',
-    description: 'Светлая, мягкая и дружелюбная тема с уютным idle-game настроением.',
+    title: 'Светлая уютная',
+    description: 'Светлая, мягкая и дружелюбная тема с уютным настроением idle-игры.',
     previewEmoji: '🌤️',
   },
   {
     id: 'darkFantasy',
-    title: 'Dark Fantasy',
+    title: 'Тёмное фэнтези',
     description: 'Тёмная RPG-тема с фиолетовыми, золотыми и магическими акцентами.',
     previewEmoji: '🌙',
   },

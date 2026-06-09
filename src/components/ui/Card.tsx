@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 
 interface CardProps {
   children: ReactNode;
+  id?: string;
   className?: string;
   style?: React.CSSProperties;
   onClick?: () => void;
@@ -17,9 +18,17 @@ const variants = {
   neutral: 'bg-[var(--app-bg-soft)] border-[var(--app-border)]',
 };
 
-export function Card({ children, className = '', style, onClick, variant = 'default' }: CardProps) {
+export function Card({
+  children,
+  id,
+  className = '',
+  style,
+  onClick,
+  variant = 'default',
+}: CardProps) {
   return (
     <div
+      id={id}
       className={`rounded-xl border p-4 shadow-[var(--app-shadow)] backdrop-blur-sm ${variants[variant]} ${onClick ? 'cursor-pointer transition-shadow hover:brightness-[1.02]' : ''} ${className}`}
       style={style}
       onClick={onClick}
