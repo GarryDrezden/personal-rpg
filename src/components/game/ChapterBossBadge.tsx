@@ -28,7 +28,7 @@ export function ChapterBossBadge({
       data-testid="chapter-boss-badge"
       className="flex items-center gap-3 rounded-xl border border-violet-500/25 bg-[color-mix(in_srgb,#7c3aed_8%,var(--app-card))] p-3"
     >
-      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-[color-mix(in_srgb,#7c3aed_10%,var(--app-bg-soft))]">
+      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-black/25">
         <GameAssetImage
           variant="boss"
           src={meta.image}

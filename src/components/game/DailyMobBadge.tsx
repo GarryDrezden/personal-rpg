@@ -15,7 +15,7 @@ export function DailyMobBadge({ mobId }: DailyMobBadgeProps) {
       data-testid="daily-mob-badge"
       className="flex items-center gap-3 rounded-xl border border-rose-500/20 bg-[color-mix(in_srgb,#f43f5e_6%,var(--app-card))] p-3"
     >
-      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-[color-mix(in_srgb,var(--app-primary)_6%,var(--app-bg-soft))]">
+      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-black/20">
         <GameAssetImage
           variant="mob"
           src={meta.image}

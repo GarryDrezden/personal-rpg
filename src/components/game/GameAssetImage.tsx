@@ -15,6 +15,8 @@ type GameAssetImageProps = {
   fallbackCandidates?: string[];
   className?: string;
   imageClassName?: string;
+  /** hero/companion fill more of the frame; no UI background behind image */
+  fit?: 'default' | 'hero' | 'companion';
 };
 
 export function GameAssetImage({
@@ -25,6 +27,7 @@ export function GameAssetImage({
   fallbackCandidates = [],
   className = '',
   imageClassName = '',
+  fit = 'default',
 }: GameAssetImageProps) {
   const candidates = useMemo(
     () => [src, ...fallbackCandidates].filter((value): value is string => Boolean(value)),
@@ -42,6 +45,13 @@ export function GameAssetImage({
   const locked = status === 'locked';
   const current = status === 'current';
   const activeSrc = candidates[candidateIndex];
+
+  const fitClass =
+    fit === 'hero'
+      ? 'h-full w-full max-h-[112%] object-contain object-bottom origin-bottom scale-[1.14]'
+      : fit === 'companion'
+        ? 'h-full w-full max-h-[112%] object-contain object-bottom origin-bottom scale-[1.08]'
+        : 'h-full w-full object-contain';
 
   if (candidates.length === 0 || exhausted) {
     return (
@@ -62,9 +72,9 @@ export function GameAssetImage({
 
   return (
     <div
-      className={`relative flex items-center justify-center overflow-hidden ${className} ${
+      className={`relative flex items-end justify-center bg-transparent ${className} ${
         locked ? 'opacity-55 grayscale' : ''
-      } ${current ? 'ring-2 ring-[var(--app-primary)] ring-offset-2 ring-offset-[var(--app-card)]' : ''}`}
+      } ${current ? 'ring-2 ring-[var(--app-primary)] ring-offset-2 ring-offset-transparent' : ''}`}
     >
       <img
         src={activeSrc}
@@ -78,7 +88,7 @@ export function GameAssetImage({
           }
           setExhausted(true);
         }}
-        className={`h-full w-full select-none object-contain pointer-events-none ${imageClassName} ${
+        className={`select-none pointer-events-none bg-transparent ${fitClass} ${imageClassName} ${
           locked ? 'blur-[1px]' : ''
         }`}
       />
