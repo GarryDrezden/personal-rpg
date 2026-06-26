@@ -32,6 +32,8 @@ import { WeekDayPicker } from '../components/quests/WeekDayPicker';
 import { CARD_ACCENT } from '../constants/cardTheme';
 import { Card } from '../components/ui/Card';
 import { ProgressBar } from '../components/ui/ProgressBar';
+import { DailyMobCard } from '../components/game/DailyMobCard';
+import { getOrCreateDailyMob } from '../game/dailyMobEngine';
 
 export function TodayPage() {
   const { dailyEntries, settings, updateDaily, deleteDaily } = useAppStore();
@@ -211,6 +213,7 @@ export function TodayPage() {
   const mainQuests = quests.filter((q) => q.category === 'main');
   const mediumQuests = quests.filter((q) => q.category === 'medium');
   const bonusQuests = quests.filter((q) => q.category === 'bonus');
+  const dailyMobId = isEditingToday ? getOrCreateDailyMob(today) : null;
 
   const patch = (partial: Partial<DailyEntry>) => {
     setEntry((prev) => ({ ...prev, ...partial, date: selectedDate }));
@@ -277,6 +280,8 @@ export function TodayPage() {
           )}
         </div>
       </header>
+
+      {dailyMobId ? <DailyMobCard mobId={dailyMobId} compact /> : null}
 
       <Card>
         <p className="mb-3 text-sm font-medium text-[var(--app-text)]">День недели</p>
