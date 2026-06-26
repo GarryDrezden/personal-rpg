@@ -53,7 +53,7 @@ export function DailyQuestsCard({
   const weekly = getWeeklySettingsForDate(date, settings);
 
   return (
-    <Card>
+    <Card data-testid="dashboard-daily-quests">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Swords className="text-[var(--app-primary)]" size={22} />

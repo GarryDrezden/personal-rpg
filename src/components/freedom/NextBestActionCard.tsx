@@ -18,7 +18,10 @@ export function NextBestActionCard({ action, onNavigate }: NextBestActionCardPro
   };
 
   return (
-    <Card className="border-[color-mix(in_srgb,var(--app-primary)_35%,var(--app-border))] bg-[color-mix(in_srgb,var(--app-primary)_8%,var(--app-card))]">
+    <Card
+      data-testid="dashboard-next-best-action"
+      className="border-[color-mix(in_srgb,var(--app-primary)_35%,var(--app-border))] bg-[color-mix(in_srgb,var(--app-primary)_8%,var(--app-card))]"
+    >
       <p className="text-xs font-semibold uppercase tracking-widest text-[var(--app-primary)]">
         Следующий лучший шаг
       </p>
