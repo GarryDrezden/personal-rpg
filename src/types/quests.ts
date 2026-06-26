@@ -12,6 +12,7 @@ export type QuestStatus =
   | 'partial';
 
 import type { HabitCardColorId } from './habits';
+import type { StepsStatusInfo } from './steps';
 
 export type DailyQuest = {
   id: string;
@@ -29,6 +30,7 @@ export type DailyQuest = {
   actionLabel?: string;
   cardColor?: HabitCardColorId;
   isCustom?: boolean;
+  stepsInfo?: StepsStatusInfo;
 };
 
 export const QUEST_STATUS_LABELS: Record<QuestStatus, string> = {

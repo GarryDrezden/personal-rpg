@@ -185,6 +185,9 @@ if ($uri === '/settings' && $method === 'PUT') {
         'UPDATE app_settings SET
            default_calories_limit = :dcl,
            default_steps_goal = :dsg,
+           default_steps_minimum = :dsmin,
+           default_steps_normal = :dsnorm,
+           default_steps_excellent = :dsex,
            default_gym_target = :dgt,
            default_weekly_points_goal = :dwpg,
            point_settings = :ps,
@@ -197,7 +200,10 @@ if ($uri === '/settings' && $method === 'PUT') {
          WHERE id = 1'
     )->execute([
         'dcl' => $body['defaultCaloriesLimit'],
-        'dsg' => $body['defaultStepsGoal'],
+        'dsg' => $body['defaultStepsNormal'] ?? $body['defaultStepsGoal'],
+        'dsmin' => $body['defaultStepsMinimum'] ?? 7000,
+        'dsnorm' => $body['defaultStepsNormal'] ?? $body['defaultStepsGoal'],
+        'dsex' => $body['defaultStepsExcellent'] ?? 14000,
         'dgt' => $body['defaultGymTarget'],
         'dwpg' => $body['defaultWeeklyPointsGoal'],
         'ps' => json_encode($body['pointSettings']),
@@ -216,13 +222,16 @@ if ($uri === '/settings' && $method === 'PUT') {
     $pdo->exec('DELETE FROM weekly_settings');
     foreach ($body['weeklySettings'] ?? [] as $w) {
         $pdo->prepare(
-            'INSERT INTO weekly_settings (id, week_start, calories_limit, steps_goal, gym_target, weekly_points_goal)
-             VALUES (:id, :ws, :cl, :sg, :gt, :wpg)'
+            'INSERT INTO weekly_settings (id, week_start, calories_limit, steps_goal, steps_minimum, steps_normal, steps_excellent, gym_target, weekly_points_goal)
+             VALUES (:id, :ws, :cl, :sg, :smin, :snorm, :sex, :gt, :wpg)'
         )->execute([
             'id' => $w['id'] ?? $db->uuid(),
             'ws' => $w['weekStart'],
             'cl' => $w['caloriesLimit'],
-            'sg' => $w['stepsGoal'],
+            'sg' => $w['stepsNormal'] ?? $w['stepsGoal'],
+            'smin' => $w['stepsMinimum'] ?? null,
+            'snorm' => $w['stepsNormal'] ?? $w['stepsGoal'],
+            'sex' => $w['stepsExcellent'] ?? null,
             'gt' => $w['gymTarget'],
             'wpg' => $w['weeklyPointsGoal'],
         ]);

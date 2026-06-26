@@ -1,4 +1,5 @@
 import { StatTile } from '../ui/StatTile';
+import { Card } from '../ui/Card';
 
 type QuickStatsCardProps = {
   streaks: {
@@ -21,18 +22,18 @@ export function QuickStatsCard({
   waist,
 }: QuickStatsCardProps) {
   return (
-    <section>
-      <h2 className="mb-3 text-lg font-semibold">Быстрая статистика</h2>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <Card className="h-full">
+      <h2 className="mb-3 text-lg font-semibold text-[var(--app-text)]">Быстрая статистика</h2>
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-2">
         <StatTile label="Калории/нед" value={`${caloriesOkDays}/7`} sub={`серия ${streaks.caloriesOk} дн.`} />
         <StatTile label="Без алкоголя" value={`${noAlcoholDays}/7`} sub={`серия ${streaks.noAlcohol} дн.`} />
-        <StatTile label="Шаги" value={`${streaks.stepsOk} дн.`} sub="текущая серия" />
+        <StatTile label="Шаги (норма)" value={`${streaks.stepsOk} дн.`} sub="серия 11500+" />
         <StatTile
           label="Вес"
           value={weight}
           sub={waist != null ? `талия ${waist}` : undefined}
         />
       </div>
-    </section>
+    </Card>
   );
 }

@@ -13,6 +13,7 @@ import {
   isStepsGoalDone,
 } from './achievementEngine';
 import { isMinimalDayCompleted } from './recoveryEngine';
+import { getDayMode, isStepsExcellentDone } from './stepsEngine';
 
 export function calculateCoinBalance(transactions: CoinTransaction[]): number {
   return Math.max(0, transactions.reduce((sum, tx) => sum + tx.amount, 0));
@@ -76,23 +77,62 @@ export function getCoinTransactionsFromDailyEntries(params: {
       parts.push('железный день');
     }
 
-    if (isMinimalDayCompleted({ todayEntry: entry, settings })) {
-      amount += cs.minimalDayCoins;
-      parts.push('минимальный день');
+    if (amount > 0) {
+      txs.push({
+        id: `gen-daily-${entry.date}`,
+        type: 'earned',
+        source: 'daily',
+        amount,
+        title: 'Монеты за день',
+        description: parts.join(' · '),
+        date: entry.date,
+        relatedId: `daily_${entry.date}`,
+      });
     }
 
-    if (amount <= 0) continue;
+    if (isStepsExcellentDone(entry.steps, settings, entry.date)) {
+      txs.push({
+        id: `gen-steps-excellent-${entry.date}`,
+        type: 'earned',
+        source: 'daily',
+        amount: 1,
+        title: 'Отличные шаги',
+        description: '14000+ шагов за день',
+        date: entry.date,
+        relatedId: `steps_excellent_${entry.date}`,
+      });
+    }
 
-    txs.push({
-      id: `gen-daily-${entry.date}`,
-      type: 'earned',
-      source: 'daily',
-      amount,
-      title: 'Монеты за день',
-      description: parts.join(' · '),
-      date: entry.date,
-      relatedId: `daily_${entry.date}`,
-    });
+    const mode = getDayMode(entry.dayMode);
+    if (
+      mode === 'recovery' &&
+      entry.calories !== null &&
+      entry.alcohol === 'none'
+    ) {
+      txs.push({
+        id: `gen-recovery-day-${entry.date}`,
+        type: 'earned',
+        source: 'daily',
+        amount: 1,
+        title: 'День восстановления',
+        description: 'Калории внесены, без алкоголя',
+        date: entry.date,
+        relatedId: `recovery_day_${entry.date}`,
+      });
+    }
+
+    if (isMinimalDayCompleted({ todayEntry: entry, settings })) {
+      txs.push({
+        id: `gen-minimal-day-${entry.date}`,
+        type: 'earned',
+        source: 'daily',
+        amount: cs.minimalDayCoins,
+        title: 'Минимальный день',
+        description: 'Режим удержан',
+        date: entry.date,
+        relatedId: `minimal_day_${entry.date}`,
+      });
+    }
   }
 
   return txs;

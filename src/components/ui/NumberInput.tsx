@@ -4,15 +4,30 @@ interface NumberInputProps {
   onChange: (v: number | null) => void;
   placeholder?: string;
   disabled?: boolean;
+  min?: number;
+  max?: number;
+  step?: number;
 }
 
-export function NumberInput({ label, value, onChange, placeholder, disabled }: NumberInputProps) {
+export function NumberInput({
+  label,
+  value,
+  onChange,
+  placeholder,
+  disabled,
+  min,
+  max,
+  step,
+}: NumberInputProps) {
   return (
     <label className="block">
       <span className="mb-1 block text-sm font-medium text-[var(--app-text)]">{label}</span>
       <input
         type="number"
         value={value ?? ''}
+        min={min}
+        max={max}
+        step={step}
         onChange={(e) => {
           const v = e.target.value;
           onChange(v === '' ? null : Number(v));

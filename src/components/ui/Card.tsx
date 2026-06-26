@@ -7,6 +7,7 @@ interface CardProps {
   style?: React.CSSProperties;
   onClick?: () => void;
   variant?: 'default' | 'success' | 'danger' | 'neutral';
+  'data-testid'?: string;
 }
 
 const variants = {
@@ -25,10 +26,12 @@ export function Card({
   style,
   onClick,
   variant = 'default',
+  'data-testid': dataTestId,
 }: CardProps) {
   return (
     <div
       id={id}
+      data-testid={dataTestId}
       className={`rounded-xl border p-4 shadow-[var(--app-shadow)] backdrop-blur-sm ${variants[variant]} ${onClick ? 'cursor-pointer transition-shadow hover:brightness-[1.02]' : ''} ${className}`}
       style={style}
       onClick={onClick}

@@ -49,7 +49,9 @@ npm run build
 
 ## Шаг 4. Включить автозапуск
 
-PowerShell **от имени администратора**:
+**Проще всего:** двойной клик по `install-autostart.bat` в корне проекта (запросит права администратора).
+
+Или PowerShell **от имени администратора**:
 
 ```powershell
 cd E:\Работа\OSPanel\domains\personal-rpg
@@ -57,9 +59,11 @@ cd E:\Работа\OSPanel\domains\personal-rpg
 ```
 
 Скрипт:
-- создаёт задачу `PersonalRpgAutostart` в Планировщике
-- запускает сайт при **каждом входе** в Windows
-- процессы работают **без окон** (скрыто)
+- создаёт задачу `PersonalRpgAutostart` в Планировщике (запуск через `cmd.exe` + `PersonalRPG-Autostart.bat`, задержка 30 сек после входа)
+- добавляет ярлык **Personal RPG** в папку «Автозагрузка» (тихий запуск через VBS)
+- пишет лог: `server\runtime\autostart-install.log`
+
+Удалить автозапуск: `uninstall-autostart.bat` или `.\scripts\uninstall-autostart.ps1`
 
 ## Шаг 5. Перезагрузка
 
@@ -92,6 +96,10 @@ npm run build
 
 ## Удалить автозапуск
 
+Двойной клик: `uninstall-autostart.bat`
+
+Или PowerShell:
+
 ```powershell
 Unregister-ScheduledTask -TaskName "PersonalRpgAutostart" -Confirm:$false
 ```
@@ -111,7 +119,8 @@ nginx не умеет пути с русскими буквами. Скрипт 
 
 | Симптом | Решение |
 |---------|---------|
-| 8080 не открывается | `.\scripts\start-all.ps1` вручную, смотреть `server\runtime\nginx\logs\` |
+| 8080 не открывается | `.\scripts\start-all.ps1` вручную; лог автозапуска: `server\runtime\autostart.log` |
+| Автозапуск не сработал | Переустановите `install-autostart.bat`; смотрите `server\runtime\autostart-install.log` |
 | Пустая страница | `npm run build` |
 | API 502 | PHP-CGI не запущен — проверить `php-cgi.exe` |
 | Порт занят | `.\scripts\stop-all.ps1` или закрыть другую программу на 8080 |

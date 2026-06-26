@@ -1,0 +1,110 @@
+import { useMemo, useState } from 'react';
+import { useAppStore } from '../store/appStore';
+import { useAppTheme } from '../hooks/useAppTheme';
+import {
+  getAllJourneyStageProgress,
+  getJourneyMapSummary,
+  hasAnyJourneyData,
+  hasMinimalJourneyData,
+} from '../utils/journeyMapEngine';
+import { JourneyHeroCard } from '../components/journey/JourneyHeroCard';
+import { CurrentJourneyStageCard } from '../components/journey/CurrentJourneyStageCard';
+import { JourneyPath } from '../components/journey/JourneyPath';
+import { JourneyConditionRow } from '../components/journey/JourneyConditionRow';
+import { resolveJourneyStageText } from '../types/journeyMap';
+
+export function JourneyMapPage() {
+  const { dailyEntries, measurements, settings } = useAppStore();
+  const { themeId } = useAppTheme();
+
+  const engineParams = useMemo(
+    () => ({ dailyEntries, measurements, settings }),
+    [dailyEntries, measurements, settings],
+  );
+
+  const summary = useMemo(() => getJourneyMapSummary(engineParams), [engineParams]);
+  const stages = useMemo(() => getAllJourneyStageProgress(engineParams), [engineParams]);
+
+  const hasData = hasAnyJourneyData({ dailyEntries, measurements });
+  const hasMinimalData = hasMinimalJourneyData({ dailyEntries, measurements });
+
+  const defaultSelected =
+    summary.currentStage?.stage.id ?? stages[0]?.stage.id ?? undefined;
+  const [selectedStageId, setSelectedStageId] = useState<string | undefined>(undefined);
+
+  const activeStageId = selectedStageId ?? defaultSelected;
+  const selectedStage = stages.find((s) => s.stage.id === activeStageId) ?? summary.currentStage;
+
+  return (
+    <div className="space-y-8 pb-4">
+      <header>
+        <h1 className="text-2xl font-bold text-[var(--app-text)]">Карта возвращения тела</h1>
+        <p className="mt-2 max-w-2xl text-sm text-[var(--app-text-muted)]">
+          Это не просто путь к меньшему весу. Это маршрут возвращения движения, контроля и
+          устойчивости.
+        </p>
+      </header>
+
+      {!hasData ? (
+        <p className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-6 text-center text-sm text-[var(--app-text-muted)]">
+          Карта пути пока спит. Внеси первый вес, калории или шаги — и первая глава откроется.
+        </p>
+      ) : !hasMinimalData ? (
+        <p className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-4 text-center text-sm text-[var(--app-text-muted)]">
+          Путь уже начался. Чем больше данных ты вносишь, тем точнее карта показывает следующую
+          главу.
+        </p>
+      ) : null}
+
+      <JourneyHeroCard summary={summary} themeId={themeId} />
+
+      {summary.currentStage && summary.currentStage.status !== 'locked' ? (
+        <CurrentJourneyStageCard progress={summary.currentStage} themeId={themeId} />
+      ) : null}
+
+      <section>
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
+          Маршрут
+        </h2>
+        <JourneyPath
+          stages={stages}
+          selectedStageId={activeStageId}
+          onSelectStage={setSelectedStageId}
+          themeId={themeId}
+        />
+      </section>
+
+      {selectedStage ? (
+        <section>
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
+            Детали главы {selectedStage.stage.order}
+          </h2>
+          <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)] p-4">
+            {(() => {
+              const text = resolveJourneyStageText(selectedStage.stage, themeId);
+              return (
+                <>
+                  <div className="mb-4 flex items-start gap-3">
+                    <span className="text-3xl">{selectedStage.stage.icon}</span>
+                    <div>
+                      <h3 className="font-semibold text-[var(--app-text)]">{text.title}</h3>
+                      <p className="text-sm text-[var(--app-text-muted)]">{text.description}</p>
+                      {selectedStage.status === 'completed' ? (
+                        <p className="mt-2 text-sm text-emerald-500">{text.completedText}</p>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {selectedStage.conditions.map((cp) => (
+                      <JourneyConditionRow key={cp.condition.id} conditionProgress={cp} />
+                    ))}
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+        </section>
+      ) : null}
+    </div>
+  );
+}

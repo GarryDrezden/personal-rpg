@@ -3,6 +3,7 @@ import { useAppStore } from '../store/appStore';
 import { useCoinStore } from '../store/coinStore';
 import { useAchievementStore } from '../store/achievementStore';
 import { WeeklyReportCard } from '../components/reports/WeeklyReportCard';
+import { WeeklyStoryHistory } from '../components/weekly/WeeklyStoryHistory';
 import { Card } from '../components/ui/Card';
 import { FILTER_ACTIVE_GOLD, FILTER_IDLE } from '../constants/cardTheme';
 import {
@@ -10,6 +11,7 @@ import {
   generateWeeklyReport,
   previousWeekStart,
 } from '../utils/weeklyReportEngine';
+import { getWeeklyStoryHistory } from '../utils/weeklyStoryHistoryEngine';
 import { formatDateRu, isMonday, todayISO, weekDays, weekStart } from '../utils/dates';
 import { FileText } from 'lucide-react';
 
@@ -67,6 +69,17 @@ export function WeeklyReportsPage() {
     return fromReports;
   }, [reports, selectedWeek]);
 
+  const weeklyStoryHistory = useMemo(
+    () =>
+      getWeeklyStoryHistory({
+        dailyEntries,
+        measurements,
+        settings,
+        limit: 12,
+      }),
+    [dailyEntries, measurements, settings],
+  );
+
   return (
     <div className="space-y-6 pb-8">
       <header>
@@ -82,6 +95,8 @@ export function WeeklyReportsPage() {
           </div>
         </div>
       </header>
+
+      <WeeklyStoryHistory reports={weeklyStoryHistory} />
 
       {reports.length === 0 ? (
         <Card className="border-dashed text-center">

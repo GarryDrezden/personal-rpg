@@ -53,6 +53,10 @@ function rowToDaily(array $row): array
         'customCompletions' => isset($row['custom_completions']) && $row['custom_completions']
             ? json_decode($row['custom_completions'], true) ?? []
             : [],
+        'dayMode' => $row['day_mode'] ?? 'normal',
+        'energyLevel' => isset($row['energy_level']) && $row['energy_level'] !== null
+            ? (int) $row['energy_level']
+            : null,
     ];
 }
 
@@ -105,6 +109,15 @@ function rowToWeekly(array $row): array
         'weekStart' => $row['week_start'],
         'caloriesLimit' => (int) $row['calories_limit'],
         'stepsGoal' => (int) $row['steps_goal'],
+        'stepsMinimum' => isset($row['steps_minimum']) && $row['steps_minimum'] !== null
+            ? (int) $row['steps_minimum']
+            : null,
+        'stepsNormal' => isset($row['steps_normal']) && $row['steps_normal'] !== null
+            ? (int) $row['steps_normal']
+            : null,
+        'stepsExcellent' => isset($row['steps_excellent']) && $row['steps_excellent'] !== null
+            ? (int) $row['steps_excellent']
+            : null,
         'gymTarget' => (int) $row['gym_target'],
         'weeklyPointsGoal' => (int) $row['weekly_points_goal'],
     ];
@@ -120,6 +133,15 @@ function getAppSettings(PDO $pdo): array
     return [
         'defaultCaloriesLimit' => (int) $row['default_calories_limit'],
         'defaultStepsGoal' => (int) $row['default_steps_goal'],
+        'defaultStepsMinimum' => isset($row['default_steps_minimum']) && $row['default_steps_minimum'] !== null
+            ? (int) $row['default_steps_minimum']
+            : 7000,
+        'defaultStepsNormal' => isset($row['default_steps_normal']) && $row['default_steps_normal'] !== null
+            ? (int) $row['default_steps_normal']
+            : (int) $row['default_steps_goal'],
+        'defaultStepsExcellent' => isset($row['default_steps_excellent']) && $row['default_steps_excellent'] !== null
+            ? (int) $row['default_steps_excellent']
+            : 14000,
         'defaultGymTarget' => (int) $row['default_gym_target'],
         'defaultWeeklyPointsGoal' => (int) $row['default_weekly_points_goal'],
         'pointSettings' => json_decode($row['point_settings'], true),

@@ -20,7 +20,23 @@ import {
   getBossHistory,
   maxBossDefeatStreak,
 } from './bossEngine';
+import {
+  getConsecutiveBalancedWeeks,
+  getMaxRecoveryDaysWithoutBreakingTracking,
+} from './achievementHelpers';
 import { isMinimalDayCompleted } from './recoveryEngine';
+import {
+  isStepsMinimumDone,
+  isStepsNormalDone,
+  isStepsExcellentDone,
+  getDayMode,
+} from './stepsEngine';
+import {
+  buildMomentumAchievementMetrics,
+  calculateMomentumHistory,
+  calcMomentumBonusXp,
+} from './momentumEngine';
+import { getBonusXpTotal } from './xpTransactionStorage';
 
 export type AchievementEngineParams = {
   dailyEntries: DailyEntry[];
@@ -37,9 +53,15 @@ export function isCaloriesInLimit(entry: DailyEntry, settings: AppSettings): boo
 }
 
 export function isStepsGoalDone(entry: DailyEntry, settings: AppSettings): boolean {
-  if (entry.steps === null) return false;
-  const weekly = getWeeklySettingsForDate(entry.date, settings);
-  return entry.steps >= weekly.stepsGoal;
+  return isStepsNormalDone(entry.steps, settings, entry.date);
+}
+
+export function isStepsMinimumGoalDone(entry: DailyEntry, settings: AppSettings): boolean {
+  return isStepsMinimumDone(entry.steps, settings, entry.date);
+}
+
+export function isStepsExcellentGoalDone(entry: DailyEntry, settings: AppSettings): boolean {
+  return isStepsExcellentDone(entry.steps, settings, entry.date);
 }
 
 export function isNoAlcohol(entry: DailyEntry): boolean {
@@ -300,6 +322,9 @@ function buildMetrics(params: AchievementEngineParams): AchievementMetrics {
   const perfectBaseWeeks = weeks.filter((ws) => weekPerfectBase(ws, entries, settings)).length;
   const gymWeeksMet = weeks.filter((ws) => weekGymMet(ws, entries, settings)).length;
   const bossHistory = getBossHistory(entries, settings, measurements);
+  const momentumMetrics = buildMomentumAchievementMetrics(
+    calculateMomentumHistory({ dailyEntries: entries, settings }),
+  );
 
   const m: AchievementMetrics = {
     hasAnyEntry: entries.some((e) => hasDayData(e)),
@@ -324,6 +349,33 @@ function buildMetrics(params: AchievementEngineParams): AchievementMetrics {
     maxNoAlcoholStreak: getMaxStreak(entries, (e) => !!e && isNoAlcohol(e)),
     maxCaloriesStreak: getMaxStreak(entries, (e) => !!e && isCaloriesInLimit(e, settings)),
     maxStepsStreak: getMaxStreak(entries, (e) => !!e && isStepsGoalDone(e, settings)),
+    maxStepsMinimumStreak: getMaxStreak(
+      entries,
+      (e) => !!e && isStepsMinimumGoalDone(e, settings),
+    ),
+    maxStepsNormalStreak: getMaxStreak(
+      entries,
+      (e) => !!e && isStepsGoalDone(e, settings),
+    ),
+    hasStepsExcellent: entries.some((e) => isStepsExcellentGoalDone(e, settings)),
+    hasHeardBody: entries.some((e) => e.energyLevel === 1 || e.energyLevel === 2),
+    hasRecoverySmart: entries.some((e) => {
+      const mode = getDayMode(e.dayMode);
+      return (
+        (mode === 'recovery' || mode === 'minimal') &&
+        e.calories !== null &&
+        isNoAlcohol(e)
+      );
+    }),
+    stepsNormalDaysBestWeek: Math.max(
+      0,
+      ...weeks.map((ws) =>
+        weekDays(ws).filter((d) => {
+          const e = entries.find((x) => x.date === d);
+          return e && isStepsGoalDone(e, settings);
+        }).length,
+      ),
+    ),
     maxGymWeekStreak: maxGymWeekStreak(entries, measurements, settings),
     hasCaloriesFirst: entries.some((e) => e.calories !== null),
     hasCaloriesOk: entries.some((e) => isCaloriesInLimit(e, settings)),
@@ -365,6 +417,13 @@ function buildMetrics(params: AchievementEngineParams): AchievementMetrics {
       isMinimalDayCompleted({ todayEntry: e, settings }),
     ),
     hasRecoveryAfterBadWeek: hasRecoveryAfterBadWeek(entries, measurements, settings),
+    maxBalancedWeeksStreak: getConsecutiveBalancedWeeks(entries),
+    maxRecoveryDaysInTracking: getMaxRecoveryDaysWithoutBreakingTracking(entries),
+    momentumExitedNegative: momentumMetrics.hasExitedNegative,
+    momentumReachedStable: momentumMetrics.hasReachedStable,
+    momentumReachedBoost: momentumMetrics.hasReachedBoost,
+    momentumReachedFlow: momentumMetrics.hasReachedFlow,
+    momentumReturnedFromLostSpeed: momentumMetrics.hasReturnedFromLostSpeed,
   };
 
   return m;
@@ -381,6 +440,9 @@ function evaluateAchievement(achievement: Achievement, m: AchievementMetrics): {
     calories_first_ok: !!m.hasCaloriesOk,
     steps_first: !!m.hasStepsFirst,
     steps_first_goal: !!m.hasStepsGoal,
+    steps_excellent_first: !!m.hasStepsExcellent,
+    recovery_heard_body: !!m.hasHeardBody,
+    recovery_smart: !!m.hasRecoverySmart,
     steps_20k_day: (m.maxStepsDay as number) >= 20000,
     steps_30k_day: (m.maxStepsDay as number) >= 30000,
     exercise_first: (m.totalMorningExercise as number) >= 1,
@@ -409,6 +471,11 @@ function evaluateAchievement(achievement: Achievement, m: AchievementMetrics): {
     boss_perfect_win: (m.perfectBosses as number) >= 1,
     recovery_minimal_day: !!m.hasMinimalDay,
     recovery_not_robot: !!m.hasRecoveryAfterBadWeek,
+    momentum_first_positive: !!m.momentumExitedNegative,
+    momentum_stable: !!m.momentumReachedStable,
+    momentum_boost: !!m.momentumReachedBoost,
+    momentum_flow: !!m.momentumReachedFlow,
+    momentum_return: !!m.momentumReturnedFromLostSpeed,
   };
 
   if (achievement.conditionType === 'instant' || achievement.conditionType === 'combo') {
@@ -436,9 +503,12 @@ function evaluateAchievement(achievement: Achievement, m: AchievementMetrics): {
     calories_7_streak: m.maxCaloriesStreak as number,
     calories_14_streak: m.maxCaloriesStreak as number,
     calories_30_streak: m.maxCaloriesStreak as number,
-    steps_7_streak: m.maxStepsStreak as number,
-    steps_15_streak: m.maxStepsStreak as number,
-    steps_30_streak: m.maxStepsStreak as number,
+    steps_7_streak: m.maxStepsNormalStreak as number,
+    steps_15_streak: m.maxStepsNormalStreak as number,
+    steps_30_streak: m.maxStepsNormalStreak as number,
+    steps_minimum_7_streak: m.maxStepsMinimumStreak as number,
+    steps_normal_7_streak: m.maxStepsNormalStreak as number,
+    steps_normal_5_week: m.stepsNormalDaysBestWeek as number,
     steps_100k_total: m.totalSteps as number,
     steps_500k_total: m.totalSteps as number,
     steps_1m_total: m.totalSteps as number,
@@ -471,6 +541,8 @@ function evaluateAchievement(achievement: Achievement, m: AchievementMetrics): {
     xp_100000: m.totalXp as number,
     boss_3_streak: m.maxBossDefeatStreak as number,
     boss_4_streak: m.maxBossDefeatStreak as number,
+    recovery_not_a_robot: m.maxRecoveryDaysInTracking as number,
+    recovery_balance_of_strength: m.maxBalancedWeeksStreak as number,
   };
 
   const current = metricMap[achievement.id] ?? 0;
@@ -482,7 +554,10 @@ function evaluateAchievement(achievement: Achievement, m: AchievementMetrics): {
 }
 
 function buildParamsWithXp(params: AchievementEngineParams): AchievementEngineParams {
-  const totalXp = calcTotalEarnedXP(params.dailyEntries, params.measurements, params.settings);
+  const totalXp =
+    calcTotalEarnedXP(params.dailyEntries, params.measurements, params.settings) +
+    calcMomentumBonusXp(params.dailyEntries, params.settings) +
+    getBonusXpTotal();
   return { ...params, totalXp };
 }
 

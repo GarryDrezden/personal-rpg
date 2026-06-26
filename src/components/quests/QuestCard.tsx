@@ -4,12 +4,20 @@ import type { DailyQuest } from '../../types/quests';
 import { QUEST_STATUS_LABELS } from '../../types/quests';
 import { getHabitCardColorClass } from '../../constants/habitColors';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import { useAppStore } from '../../store/appStore';
 import { getQuestStatusStyles } from '../../utils/questTheme';
 import { isBuiltinHabitId } from '../../utils/habitConfig';
+import {
+  getDayMode,
+  getStepsBarColor,
+  getStepsProgressPercent,
+  getStepsThresholds,
+} from '../../utils/stepsEngine';
+import { RECOVERY_STEPS_THRESHOLDS, MINIMAL_DAY_STEPS_THRESHOLD } from '../../constants/steps';
 import { Card } from '../ui/Card';
-import { ProgressBar } from '../ui/ProgressBar';
 import { NumberInput } from '../ui/NumberInput';
 import { SegmentedControl } from '../ui/SegmentedControl';
+import { StepsProgressBar } from '../steps/StepsProgressBar';
 
 type QuestCardProps = {
   quest: DailyQuest;
@@ -37,6 +45,7 @@ function toggleHabit(
 
 export function QuestCard({ quest, entry, weekly, onPatch, compact = false }: QuestCardProps) {
   const { themeId } = useAppTheme();
+  const { settings } = useAppStore();
   const style = getQuestStatusStyles(quest.status, themeId);
   const accentClass = quest.cardColor ? getHabitCardColorClass(quest.cardColor) : '';
 
@@ -64,24 +73,63 @@ export function QuestCard({ quest, entry, weekly, onPatch, compact = false }: Qu
           />
         );
       case 'steps': {
-        const steps = entry.steps ?? 0;
-        const pct =
-          weekly.stepsGoal > 0
-            ? Math.min(100, Math.round((steps / weekly.stepsGoal) * 100))
-            : 0;
+        const dayMode = getDayMode(entry.dayMode);
+        const thresholds = getStepsThresholds(settings, entry.date);
+        const stepsInfo = quest.stepsInfo;
+        const pct = getStepsProgressPercent(entry.steps, settings, entry.date, dayMode);
+        const barColor = getStepsBarColor(
+          stepsInfo?.status ?? 'none',
+          entry.steps,
+          settings,
+          entry.date,
+          dayMode,
+        );
+
+        const goalLabel =
+          dayMode === 'minimal'
+            ? `мин. ${MINIMAL_DAY_STEPS_THRESHOLD.toLocaleString('ru')}`
+            : dayMode === 'recovery'
+              ? `восст. ${RECOVERY_STEPS_THRESHOLDS.normal.toLocaleString('ru')}`
+              : `норма ${thresholds.normal.toLocaleString('ru')} · отлично ${thresholds.excellent.toLocaleString('ru')}`;
+
+        const markers =
+          dayMode === 'normal'
+            ? [
+                {
+                  percent: (thresholds.minimum / thresholds.excellent) * 100,
+                  label: '7k',
+                },
+                {
+                  percent: (thresholds.normal / thresholds.excellent) * 100,
+                  label: '11.5k',
+                },
+                { percent: 100, label: '14k+' },
+              ]
+            : undefined;
+
         return (
           <div className="space-y-2">
             <NumberInput
-              label={`Шаги (цель ${weekly.stepsGoal.toLocaleString('ru')})`}
+              label={`Шаги (${goalLabel})`}
               value={entry.steps}
               onChange={(v) => onPatch({ steps: v })}
             />
-            {entry.steps !== null && (
-              <ProgressBar
-                value={pct}
-                color={quest.status === 'done' ? 'success' : 'gold'}
-                className="h-2"
-              />
+            {entry.steps !== null && stepsInfo && (
+              <>
+                <p className="text-sm font-medium text-[var(--app-text)]">{stepsInfo.title}</p>
+                {stepsInfo.stepsToNextTarget != null && stepsInfo.stepsToNextTarget > 0 && (
+                  <p className="text-xs text-[var(--app-text-muted)]">
+                    До {stepsInfo.nextTargetLabel} осталось{' '}
+                    {stepsInfo.stepsToNextTarget.toLocaleString('ru')}
+                  </p>
+                )}
+                {stepsInfo.status === 'excellent' && (
+                  <p className="text-xs text-[var(--app-success)]">
+                    Максимальный бонус получен
+                  </p>
+                )}
+                <StepsProgressBar value={pct} color={barColor} markers={markers} />
+              </>
             )}
           </div>
         );

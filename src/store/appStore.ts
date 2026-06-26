@@ -9,6 +9,11 @@ import type {
 } from '../types';
 import { apiRepository } from './apiRepository';
 import { syncAchievementsFromData } from '../utils/achievementSync';
+import {
+  rebuildAndSaveMomentumHistory,
+  rebuildMomentumHistoryFromDate,
+} from '../utils/momentumStorage';
+import { resolveMomentumRebuildOnSettingsChange } from '../utils/momentumSettingsImpact';
 import { useAchievementStore } from './achievementStore';
 import { useCoinStore } from './coinStore';
 import { buildCoinWalletSummary } from '../utils/coinEngine';
@@ -31,6 +36,8 @@ function emptyDaily(date: string): DailyEntry {
     hobby: false,
     comment: '',
     customCompletions: {},
+    dayMode: 'normal',
+    energyLevel: null,
   };
 }
 
@@ -81,6 +88,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     weeklySettings: [],
     gender: 'male',
     weightGoal: 100,
+    enableSleepTracking: false,
   },
   loading: true,
   error: null,
@@ -102,6 +110,7 @@ export const useAppStore = create<AppState>((set, get) => ({
             data.settings.themeId ?? getStoredThemeId(),
           ),
           habitConfig: data.settings.habitConfig,
+          enableSleepTracking: data.settings.enableSleepTracking ?? false,
         },
         loading: false,
       });
@@ -113,6 +122,10 @@ export const useAppStore = create<AppState>((set, get) => ({
         get().measurements,
         get().settings,
       );
+      rebuildAndSaveMomentumHistory({
+        dailyEntries: get().dailyEntries,
+        settings: get().settings,
+      });
     } catch (e) {
       set({
         loading: false,
@@ -127,12 +140,22 @@ export const useAppStore = create<AppState>((set, get) => ({
     const dailyEntries = [...entries, saved].sort((a, b) => a.date.localeCompare(b.date));
     set({ dailyEntries });
     syncAchievementsFromData(dailyEntries, get().measurements, get().settings);
+    rebuildMomentumHistoryFromDate({
+      changedDate: saved.date,
+      dailyEntries,
+      settings: get().settings,
+    });
   },
 
   deleteDaily: async (date) => {
     await apiRepository.deleteDaily(date);
-    set({
-      dailyEntries: get().dailyEntries.filter((e) => e.date !== date),
+    const dailyEntries = get().dailyEntries.filter((e) => e.date !== date);
+    set({ dailyEntries });
+    syncAchievementsFromData(dailyEntries, get().measurements, get().settings);
+    rebuildMomentumHistoryFromDate({
+      changedDate: date,
+      dailyEntries,
+      settings: get().settings,
     });
   },
 
@@ -202,8 +225,26 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   saveSettings: async (settings) => {
-    const saved = await apiRepository.saveSettings(settings);
+    const prev = get().settings;
+    const saved = await apiRepository.saveSettings({
+      ...settings,
+      enableSleepTracking: settings.enableSleepTracking ?? false,
+    });
     set({ settings: saved });
+
+    const strategy = resolveMomentumRebuildOnSettingsChange(prev, saved);
+    if (strategy.type === 'full') {
+      rebuildAndSaveMomentumHistory({
+        dailyEntries: get().dailyEntries,
+        settings: saved,
+      });
+    } else if (strategy.type === 'fromDate') {
+      rebuildMomentumHistoryFromDate({
+        changedDate: strategy.date,
+        dailyEntries: get().dailyEntries,
+        settings: saved,
+      });
+    }
   },
 }));
 

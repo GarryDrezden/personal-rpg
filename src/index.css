@@ -12,6 +12,7 @@
 
   --app-primary: #f59e0b;
   --app-primary-soft: #fef3c7;
+  --app-primary-contrast: #0f172a;
   --app-secondary: #8b5cf6;
   --app-success: #10b981;
   --app-danger: #f43f5e;
@@ -22,6 +23,12 @@
   --app-nav-active-bg: #fffbeb;
   --app-nav-active-text: #92400e;
   --app-progress-track: #e7e5e4;
+
+  --chart-1: #f59e0b;
+  --chart-2: #8b5cf6;
+  --chart-3: #10b981;
+  --chart-4: #3b82f6;
+  --chart-5: #f43f5e;
 }
 
 [data-theme='darkFantasy'] {
@@ -35,6 +42,7 @@
 
   --app-primary: #facc15;
   --app-primary-soft: rgba(250, 204, 21, 0.14);
+  --app-primary-contrast: #0f172a;
   --app-secondary: #a78bfa;
   --app-success: #34d399;
   --app-danger: #fb7185;
@@ -45,6 +53,12 @@
   --app-nav-active-bg: rgba(124, 58, 237, 0.22);
   --app-nav-active-text: #fde68a;
   --app-progress-track: rgba(148, 163, 184, 0.18);
+
+  --chart-1: #facc15;
+  --chart-2: #a78bfa;
+  --chart-3: #34d399;
+  --chart-4: #60a5fa;
+  --chart-5: #fb7185;
 }
 
 @theme {
@@ -65,6 +79,15 @@ body {
 
 #root {
   @apply min-h-screen;
+}
+
+.btn-primary {
+  background: var(--app-primary);
+  color: var(--app-primary-contrast) !important;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
 }
 
 .nav-link-active {

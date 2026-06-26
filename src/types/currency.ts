@@ -11,7 +11,9 @@ export type CoinTransactionSource =
   | 'achievement'
   | 'measurement'
   | 'reward'
-  | 'manual';
+  | 'manual'
+  | 'freedom_level'
+  | 'momentum';
 
 export type CoinTransaction = {
   id: string;

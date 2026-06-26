@@ -19,7 +19,7 @@ export function RecentAchievements({ unlocked, totalCount }: RecentAchievementsP
   const percent = totalCount > 0 ? Math.round((unlockedCount / totalCount) * 100) : 0;
 
   return (
-    <Card>
+    <Card className="h-full">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-[var(--app-text)]">Достижения</h2>
         <Link to="/achievements" className="text-sm font-medium text-[var(--app-primary)] hover:underline">

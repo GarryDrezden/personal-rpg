@@ -11,6 +11,7 @@ import {
   getWeeklySettingsForDate,
 } from './points';
 import { weekDays, weekStart } from './dates';
+import { isStepsNormalDone } from './stepsEngine';
 
 function isCaloriesInLimit(entry: DailyEntry, settings: AppSettings): boolean {
   if (entry.calories === null) return false;
@@ -19,9 +20,7 @@ function isCaloriesInLimit(entry: DailyEntry, settings: AppSettings): boolean {
 }
 
 function isStepsGoalDone(entry: DailyEntry, settings: AppSettings): boolean {
-  if (entry.steps === null) return false;
-  const weekly = getWeeklySettingsForDate(entry.date, settings);
-  return entry.steps >= weekly.stepsGoal;
+  return isStepsNormalDone(entry.steps, settings, entry.date);
 }
 
 function isNoAlcohol(entry: DailyEntry): boolean {
@@ -183,10 +182,13 @@ export function getWeeklyBoss(params: {
   return {
     id: `boss-${ws}`,
     weekStart: ws,
+    templateId: template.id,
     title: template.title,
     subtitle: template.subtitle,
     description: template.description,
     avatarEmoji: template.avatarEmoji,
+    imagePath: template.imagePath,
+    accent: template.accent,
     status,
     hpPercent: perfect || status === 'defeated' ? 0 : hpPercent,
     conditions,

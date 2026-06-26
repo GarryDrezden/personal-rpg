@@ -1,5 +1,6 @@
 import type { AppSettings, DailyEntry, MeasurementEntry, WeeklySettings } from '../types';
 import { isMonday, weekDays, weekStart } from './dates';
+import { getStepsStatus } from './stepsEngine';
 
 export function getWeeklySettingsForDate(
   date: string,
@@ -13,6 +14,9 @@ export function getWeeklySettingsForDate(
     weekStart: ws,
     caloriesLimit: settings.defaultCaloriesLimit,
     stepsGoal: settings.defaultStepsGoal,
+    stepsMinimum: settings.defaultStepsMinimum,
+    stepsNormal: settings.defaultStepsNormal ?? settings.defaultStepsGoal,
+    stepsExcellent: settings.defaultStepsExcellent,
     gymTarget: settings.defaultGymTarget,
     weeklyPointsGoal: settings.defaultWeeklyPointsGoal,
   };
@@ -27,9 +31,14 @@ export function calcDailyPoints(entry: DailyEntry, settings: AppSettings): numbe
   if (entry.calories !== null && entry.calories <= weekly.caloriesLimit) {
     total += p.caloriesOk;
   }
-  if (entry.steps !== null && entry.steps >= weekly.stepsGoal) {
-    total += p.stepsOk;
-  }
+
+  const stepsInfo = getStepsStatus({
+    steps: entry.steps,
+    settings,
+    date: entry.date,
+    dayMode: entry.dayMode ?? 'normal',
+  });
+  total += stepsInfo.points;
   if (entry.alcohol === 'none') total += p.noAlcohol;
   else if (entry.alcohol === 'moderate') total += p.alcoholModerate;
   else if (entry.alcohol === 'heavy') total += p.alcoholHeavy;

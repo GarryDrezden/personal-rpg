@@ -107,6 +107,36 @@ class Database
         if (!in_array('custom_completions', $dailyCols, true)) {
             $this->pdo->exec("ALTER TABLE daily_entries ADD COLUMN custom_completions TEXT NOT NULL DEFAULT '{}'");
         }
+        if (!in_array('day_mode', $dailyCols, true)) {
+            $this->pdo->exec("ALTER TABLE daily_entries ADD COLUMN day_mode TEXT NOT NULL DEFAULT 'normal'");
+        }
+        if (!in_array('energy_level', $dailyCols, true)) {
+            $this->pdo->exec('ALTER TABLE daily_entries ADD COLUMN energy_level INTEGER');
+        }
+
+        $weeklyCols = array_column(
+            $this->pdo->query('PRAGMA table_info(weekly_settings)')->fetchAll(),
+            'name',
+        );
+        if (!in_array('steps_minimum', $weeklyCols, true)) {
+            $this->pdo->exec('ALTER TABLE weekly_settings ADD COLUMN steps_minimum INTEGER');
+        }
+        if (!in_array('steps_normal', $weeklyCols, true)) {
+            $this->pdo->exec('ALTER TABLE weekly_settings ADD COLUMN steps_normal INTEGER');
+        }
+        if (!in_array('steps_excellent', $weeklyCols, true)) {
+            $this->pdo->exec('ALTER TABLE weekly_settings ADD COLUMN steps_excellent INTEGER');
+        }
+
+        if (!in_array('default_steps_minimum', $appCols, true)) {
+            $this->pdo->exec('ALTER TABLE app_settings ADD COLUMN default_steps_minimum INTEGER');
+        }
+        if (!in_array('default_steps_normal', $appCols, true)) {
+            $this->pdo->exec('ALTER TABLE app_settings ADD COLUMN default_steps_normal INTEGER');
+        }
+        if (!in_array('default_steps_excellent', $appCols, true)) {
+            $this->pdo->exec('ALTER TABLE app_settings ADD COLUMN default_steps_excellent INTEGER');
+        }
     }
 
     private function seedIfEmpty(): void
@@ -200,11 +230,12 @@ class Database
     {
         $this->pdo->prepare(
             'INSERT OR REPLACE INTO daily_entries
-             (id, date, calories, steps, alcohol, morning_exercise, gym, journal, cooking, repair, plants, hobby, comment, custom_completions)
+             (id, date, calories, steps, alcohol, morning_exercise, gym, journal, cooking, repair, plants, hobby, comment, custom_completions, day_mode, energy_level)
              VALUES (
                COALESCE((SELECT id FROM daily_entries WHERE date = :date), :new_id),
                :date, :calories, :steps, :alcohol,
-               :morning_exercise, :gym, :journal, :cooking, :repair, :plants, :hobby, :comment, :custom_completions
+               :morning_exercise, :gym, :journal, :cooking, :repair, :plants, :hobby, :comment, :custom_completions,
+               :day_mode, :energy_level
              )'
         )->execute([
             'new_id' => $this->uuid(),
@@ -221,6 +252,8 @@ class Database
             'hobby' => !empty($d['hobby']) ? 1 : 0,
             'comment' => $d['comment'] ?? '',
             'custom_completions' => json_encode($d['customCompletions'] ?? [], JSON_UNESCAPED_UNICODE),
+            'day_mode' => $d['dayMode'] ?? 'normal',
+            'energy_level' => isset($d['energyLevel']) ? (int) $d['energyLevel'] : null,
         ]);
     }
 

@@ -4,6 +4,7 @@ import { BUILTIN_HABITS } from '../constants/builtinHabits';
 import { SKILL_XP_AWARDS } from '../constants/skills';
 import { resolveHabitConfig } from './habitConfig';
 import { getWeeklySettingsForDate } from './points';
+import { getDayMode, getStepsStatus } from './stepsEngine';
 import { weekDays, weekStart } from './dates';
 
 function getEntryForDate(
@@ -59,25 +60,51 @@ export function getDailyQuests(params: {
   });
 
   let stepsStatus: QuestStatus = 'pending';
+  const dayMode = getDayMode(entry?.dayMode);
+  const stepsInfo = getStepsStatus({
+    steps: entry?.steps,
+    settings,
+    date,
+    dayMode,
+  });
+
   if (entry?.steps !== null && entry?.steps !== undefined) {
-    stepsStatus =
-      entry.steps >= weekly.stepsGoal
-        ? 'done'
-        : entry.steps > 0
-          ? 'partial'
-          : 'pending';
+    if (stepsInfo.status === 'excellent' || stepsInfo.status === 'normal') {
+      stepsStatus = 'done';
+    } else if (stepsInfo.status === 'minimum') {
+      stepsStatus = 'partial';
+    } else if (stepsInfo.status === 'low') {
+      stepsStatus = 'partial';
+    }
   }
+
+  const stepsDescription =
+    dayMode !== 'normal'
+      ? `${stepsInfo.description || stepsInfo.title} · облегчённый порог`
+      : stepsInfo.stepsToNextTarget && stepsInfo.stepsToNextTarget > 0
+        ? `${stepsInfo.title}. До ${stepsInfo.nextTargetLabel} осталось ${stepsInfo.stepsToNextTarget.toLocaleString('ru')}.`
+        : stepsInfo.description || stepsInfo.title;
+
+  const stepsSkillXp =
+    stepsInfo.status === 'excellent'
+      ? SKILL_XP_AWARDS.stepsExcellent
+      : stepsInfo.status === 'normal'
+        ? SKILL_XP_AWARDS.stepsNormal
+        : stepsInfo.status === 'minimum'
+          ? SKILL_XP_AWARDS.stepsMinimum
+          : 0;
 
   quests.push({
     id: 'steps',
-    title: 'Шаги выполнены',
-    description: `Цель ${weekly.stepsGoal.toLocaleString('ru')} шагов`,
+    title: 'Шаги',
+    description: stepsDescription,
     category: 'main',
     status: stepsStatus,
     icon: '👟',
-    points: p.stepsOk,
-    skillXp: skillXp('body', SKILL_XP_AWARDS.stepsGoal),
+    points: stepsInfo.points,
+    skillXp: stepsSkillXp > 0 ? skillXp('body', stepsSkillXp) : undefined,
     actionLabel: 'Внести шаги',
+    stepsInfo,
   });
 
   let alcoholStatus: QuestStatus = 'pending';

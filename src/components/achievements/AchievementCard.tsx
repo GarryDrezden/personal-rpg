@@ -74,9 +74,17 @@ export function AchievementCard({ achievement, unlocked, progress }: Achievement
           {!isUnlocked && progress && progress.target > 1 && (
             <div className="mt-3">
               <div className="mb-1 flex justify-between text-xs text-[var(--app-text-muted)]">
-                <span>Прогресс</span>
+                <span>
+                  {achievement.id === 'recovery_balance_of_strength'
+                    ? 'Недель'
+                    : achievement.id === 'recovery_not_a_robot'
+                      ? 'Дней'
+                      : 'Прогресс'}
+                </span>
                 <span>
                   {progress.current} / {progress.target}
+                  {achievement.id === 'recovery_balance_of_strength' ? ' недель' : ''}
+                  {achievement.id === 'recovery_not_a_robot' ? ' дней' : ''}
                 </span>
               </div>
               <ProgressBar value={progress.percent} color="gold" />

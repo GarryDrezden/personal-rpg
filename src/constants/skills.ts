@@ -61,6 +61,12 @@ export const SKILL_BY_ID = Object.fromEntries(
 /** XP навыков — отдельно от очков приложения */
 export const SKILL_XP_AWARDS = {
   stepsGoal: 35,
+  stepsMinimum: 15,
+  stepsNormal: 30,
+  stepsExcellent: 45,
+  recoveryClarity: 20,
+  minimalControl: 20,
+  recoveryControl: 10,
   gym: 40,
   morningExercise: 20,
   caloriesLogged: 10,

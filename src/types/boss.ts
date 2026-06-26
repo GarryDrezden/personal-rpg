@@ -22,13 +22,18 @@ export type WeeklyBossCondition = {
   icon: string;
 };
 
+import type { BossTemplateId } from '../constants/bosses';
+
 export type WeeklyBoss = {
   id: string;
   weekStart: string;
+  templateId: BossTemplateId;
   title: string;
   subtitle: string;
   description: string;
   avatarEmoji: string;
+  imagePath: string;
+  accent: string;
   status: WeeklyBossStatus;
   hpPercent: number;
   conditions: WeeklyBossCondition[];

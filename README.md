@@ -423,9 +423,9 @@ npm run dev
 2. nginx в `server/runtime/nginx/` — см. [server/AUTOSTART.md](server/AUTOSTART.md)
 3. `npm run build`
 4. Проверка: `.\scripts\start-all.ps1` → **http://127.0.0.1:8080**
-5. Автозапуск (PowerShell **от администратора**): `.\scripts\install-autostart.ps1`
+5. Автозапуск: двойной клик **`install-autostart.bat`** (или PowerShell от администратора: `.\scripts\install-autostart.ps1`)
 
-**Без PowerShell:** `PersonalRPG.bat` (старт) / `PersonalRPG-Stop.bat` (стоп).
+**Без PowerShell вручную:** `PersonalRPG.bat` (старт + браузер) / `PersonalRPG-Stop.bat` (стоп) / `PersonalRPG-Autostart.bat` (только сервер, для автозапуска)
 
 **Порты:** 8080 (сайт), 9000 (PHP-CGI).
 

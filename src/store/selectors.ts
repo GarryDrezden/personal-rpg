@@ -11,6 +11,8 @@ import { weekStart, weekDays } from '../utils/dates';
 import { getLevelInfo } from '../utils/levels';
 import { calcStreaks } from '../utils/streaks';
 import { getDelta, getLatestMeasurement } from '../utils/measurements';
+import { getBonusXpTotal } from '../utils/xpTransactionStorage';
+import { calcMomentumBonusXp, getMomentumAdjustedDailyPoints } from '../utils/momentumEngine';
 
 export function useDerivedStats(
   dailyEntries: DailyEntry[],
@@ -26,7 +28,11 @@ export function useDerivedStats(
   );
 
   const todayEntry = dailyEntries.find((e) => e.date === today);
-  const todayPoints = todayEntry ? calcDailyPoints(todayEntry, settings) : 0;
+  const todayPointsRaw = todayEntry ? calcDailyPoints(todayEntry, settings) : 0;
+  const todayMomentum = todayEntry
+    ? getMomentumAdjustedDailyPoints(todayEntry, settings, dailyEntries)
+    : { base: 0, adjusted: 0, multiplier: 1 };
+  const todayPoints = todayEntry ? todayMomentum.adjusted : 0;
   const weekDailyPoints = weekEntries.reduce((sum, e) => {
     if (!e) return sum;
     return sum + calcDailyPoints(e, settings);
@@ -38,7 +44,10 @@ export function useDerivedStats(
     ? Math.round((weekTotal / weekly.weeklyPointsGoal) * 100)
     : 0;
 
-  const totalXP = calcTotalEarnedXP(dailyEntries, measurements, settings);
+  const totalXP =
+    calcTotalEarnedXP(dailyEntries, measurements, settings) +
+    getBonusXpTotal() +
+    calcMomentumBonusXp(dailyEntries, settings);
   const level = getLevelInfo(totalXP);
   const coins = buildCoinWalletSummary(
     dailyEntries,
@@ -61,6 +70,8 @@ export function useDerivedStats(
 
   return {
     todayPoints,
+    todayPointsRaw,
+    todayMomentumMultiplier: todayMomentum.multiplier,
     weekTotal,
     weekPercent,
     weekly,

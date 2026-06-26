@@ -1,6 +1,7 @@
 import type { AppSettings, PointSettings } from '../types';
 import { DEFAULT_COIN_SETTINGS } from './coins';
 import { DEFAULT_AVATAR_SETTINGS } from './avatar';
+import { DEFAULT_STEPS_THRESHOLDS } from './steps';
 
 export const DEFAULT_POINT_SETTINGS: PointSettings = {
   caloriesOk: 40,
@@ -25,7 +26,10 @@ export const DEFAULT_WEIGHT_GOAL_KG = 100;
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
   defaultCaloriesLimit: 2650,
-  defaultStepsGoal: 11500,
+  defaultStepsGoal: DEFAULT_STEPS_THRESHOLDS.normal,
+  defaultStepsMinimum: DEFAULT_STEPS_THRESHOLDS.minimum,
+  defaultStepsNormal: DEFAULT_STEPS_THRESHOLDS.normal,
+  defaultStepsExcellent: DEFAULT_STEPS_THRESHOLDS.excellent,
   defaultGymTarget: 2,
   defaultWeeklyPointsGoal: 500,
   weightGoal: DEFAULT_WEIGHT_GOAL_KG,
@@ -35,6 +39,9 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   gender: 'male',
   avatarSettings: DEFAULT_AVATAR_SETTINGS,
   themeId: 'cozy',
+  enableSleepTracking: false,
+  transformationMode: 'weight_loss',
+  activeCompanionId: 'golden_chinchilla_cat',
 };
 
 export const DAY_STATUS_THRESHOLDS = [

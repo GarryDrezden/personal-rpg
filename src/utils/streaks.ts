@@ -1,6 +1,7 @@
 import { subDays, format } from 'date-fns';
 import type { AppSettings, DailyEntry } from '../types';
 import { getWeeklySettingsForDate } from './points';
+import { isStepsMinimumDone, isStepsNormalDone } from './stepsEngine';
 
 function countStreak(
   entries: DailyEntry[],
@@ -28,6 +29,7 @@ export interface Streaks {
   noAlcohol: number;
   caloriesOk: number;
   stepsOk: number;
+  stepsMinimum: number;
   journal: number;
 }
 
@@ -44,8 +46,11 @@ export function calcStreaks(
     }),
     stepsOk: countStreak(entries, settings, (e, s, d) => {
       if (!e || e.steps === null) return false;
-      const weekly = getWeeklySettingsForDate(d, s);
-      return e.steps >= weekly.stepsGoal;
+      return isStepsNormalDone(e.steps, s, d);
+    }),
+    stepsMinimum: countStreak(entries, settings, (e, s, d) => {
+      if (!e || e.steps === null) return false;
+      return isStepsMinimumDone(e.steps, s, d);
     }),
     journal: countStreak(entries, settings, (e) => e?.journal === true),
   };

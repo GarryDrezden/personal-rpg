@@ -302,7 +302,7 @@ export function RewardsPage() {
 
                   disabled={!canBuy}
 
-                  className="mt-3 w-full min-h-10 rounded-xl bg-gold text-white font-medium disabled:opacity-40 hover:bg-amber-600"
+                  className="mt-3 w-full min-h-10 rounded-xl bg-gold text-slate-950 font-medium disabled:opacity-40 hover:bg-amber-600"
 
                 >
 
@@ -718,7 +718,7 @@ export function RewardsPage() {
 
             </div>
 
-            <button type="submit" className="w-full min-h-12 rounded-xl bg-gold text-white font-semibold">
+            <button type="submit" className="w-full min-h-12 rounded-xl bg-gold text-slate-950 font-semibold">
 
               Добавить награду
 

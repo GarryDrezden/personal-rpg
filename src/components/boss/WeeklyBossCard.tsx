@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { WeeklyBoss } from '../../types/boss';
 import { BOSS_STATUS_LABELS } from '../../types/boss';
+import { BossPortrait } from './BossPortrait';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
 import { Badge } from '../ui/Badge';
@@ -85,13 +86,20 @@ export function WeeklyBossCard({ boss, variant = 'compact' }: WeeklyBossCardProp
   return (
     <Card className={cardGlow(boss.status)}>
       <div className={`flex gap-4 ${isFull ? 'flex-col sm:flex-row sm:items-start' : ''}`}>
-        <div
-          className={`flex shrink-0 items-center justify-center rounded-2xl bg-[var(--app-bg-soft)] ${
-            isFull ? 'h-28 w-28 text-6xl' : 'h-16 w-16 text-4xl'
-          }`}
-        >
-          {boss.avatarEmoji}
-        </div>
+        <BossPortrait
+          imagePath={boss.imagePath}
+          emoji={boss.avatarEmoji}
+          title={boss.title}
+          accent={boss.accent}
+          size={isFull ? 'xl' : 'md'}
+          catalogStatus={
+            boss.status === 'perfect'
+              ? 'perfect'
+              : boss.status === 'defeated'
+                ? 'defeated'
+                : undefined
+          }
+        />
 
         <div className="min-w-0 flex-1">
           <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
@@ -109,12 +117,20 @@ export function WeeklyBossCard({ boss, variant = 'compact' }: WeeklyBossCardProp
               <p className="text-sm text-[var(--app-text-muted)]">{boss.subtitle}</p>
             </div>
             {!isFull && (
-              <Link
-                to="/week"
-                className="shrink-0 text-sm font-medium text-[var(--app-primary)] hover:underline"
-              >
-                Открыть неделю →
-              </Link>
+              <div className="flex shrink-0 flex-col items-end gap-1">
+                <Link
+                  to="/week"
+                  className="text-sm font-medium text-[var(--app-primary)] hover:underline"
+                >
+                  Неделя →
+                </Link>
+                <Link
+                  to="/bosses"
+                  className="text-xs text-[var(--app-text-muted)] hover:text-[var(--app-primary)] hover:underline"
+                >
+                  Все боссы
+                </Link>
+              </div>
             )}
           </div>
 

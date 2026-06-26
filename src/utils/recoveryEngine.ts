@@ -289,6 +289,8 @@ export function shouldShowRecoveryCard(params: {
     params.todayEntry,
   );
 
+  if (todayResolved?.dayMode && todayResolved.dayMode !== 'normal') return true;
+
   if (state !== 'normal') return true;
   return isMinimalDayCompleted({
     todayEntry: todayResolved,

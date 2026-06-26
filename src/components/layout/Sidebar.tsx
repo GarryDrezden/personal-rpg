@@ -12,19 +12,32 @@ import {
   Map,
   FileText,
   Lightbulb,
+  Dna,
+  Route,
+  Feather,
+  Gauge,
+  HelpCircle,
+  BookOpen,
 } from 'lucide-react';
 
 const links = [
   { to: '/', icon: Home, label: 'Главная' },
   { to: '/today', icon: Calendar, label: 'Сегодня' },
   { to: '/week', icon: CalendarDays, label: 'Неделя' },
+  { to: '/bosses', icon: Swords, label: 'Боссы' },
   { to: '/reports', icon: FileText, label: 'Отчёты' },
   { to: '/measurements', icon: Ruler, label: 'Замеры' },
   { to: '/skills', icon: Sparkles, label: 'Навыки' },
+  { to: '/abilities', icon: Dna, label: 'Способности' },
+  { to: '/journey', icon: Route, label: 'Путь' },
+  { to: '/freedom', icon: Feather, label: 'Свобода' },
+  { to: '/momentum', icon: Gauge, label: 'Инерция' },
   { to: '/map', icon: Map, label: 'Карта' },
   { to: '/insights', icon: Lightbulb, label: 'Аналитика' },
   { to: '/rewards', icon: Gift, label: 'Награды' },
   { to: '/achievements', icon: Trophy, label: 'Достижения' },
+  { to: '/codex', icon: BookOpen, label: 'Кодекс' },
+  { to: '/faq', icon: HelpCircle, label: 'FAQ' },
   { to: '/settings', icon: Settings, label: 'Настройки' },
 ];
 

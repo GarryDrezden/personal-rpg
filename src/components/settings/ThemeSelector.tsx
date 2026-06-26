@@ -6,7 +6,6 @@ type ThemeSelectorProps = {
   value: AppThemeId;
   onChange: (themeId: AppThemeId) => void;
 };
-
 function ThemePreview({ themeId }: { themeId: AppThemeId }) {
   if (themeId === 'cozy') {
     return (
@@ -37,14 +36,14 @@ function ThemePreview({ themeId }: { themeId: AppThemeId }) {
 
 export function ThemeSelector({ value, onChange }: ThemeSelectorProps) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid gap-4 sm:grid-cols-2" data-testid="theme-toggle">
       {APP_THEMES.map((theme) => {
         const active = value === theme.id;
         return (
           <div
             key={theme.id}
-            className={`rounded-3xl border p-4 transition-shadow ${
-              active
+            data-testid={`theme-option-${theme.id}`}
+            className={`rounded-3xl border p-4 transition-shadow ${              active
                 ? 'border-[var(--app-primary)] bg-[var(--app-primary-soft)] shadow-[var(--app-shadow)]'
                 : 'border-[var(--app-border)] bg-[var(--app-card)]'
             }`}

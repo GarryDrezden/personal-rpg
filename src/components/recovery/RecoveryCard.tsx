@@ -64,7 +64,7 @@ export function RecoveryCard({
     state === 'recovered' ? RECOVERY_STATE_MESSAGES.recovered : RECOVERY_STATE_MESSAGES[state];
 
   return (
-    <Card className={stateAccent(state)}>
+    <Card className={`h-full ${stateAccent(state)}`}>
       <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
         <div className="flex items-start gap-2">
           {state === 'recovered' ? (

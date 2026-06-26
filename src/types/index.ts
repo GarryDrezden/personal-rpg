@@ -1,5 +1,9 @@
 export type AlcoholStatus = 'none' | 'moderate' | 'heavy';
 
+export type DayMode = 'normal' | 'recovery' | 'minimal';
+
+export type EnergyLevel = 1 | 2 | 3 | 4 | 5;
+
 export interface DailyEntry {
   id: string;
   date: string;
@@ -16,6 +20,13 @@ export interface DailyEntry {
   comment: string;
   /** Выполнение пользовательских целей: questId → done */
   customCompletions?: Record<string, boolean>;
+  /** Режим дня: обычный / восстановление / минимальный */
+  dayMode?: DayMode;
+  /** Ресурс дня: 5 — полный, 1 — восстановление */
+  energyLevel?: EnergyLevel | null;
+  /** Опционально — учёт сна (future-ready) */
+  sleepHours?: number | null;
+  sleepQuality?: 1 | 2 | 3 | 4 | 5 | null;
 }
 
 export interface MeasurementEntry {
@@ -35,7 +46,11 @@ export interface WeeklySettings {
   id: string;
   weekStart: string;
   caloriesLimit: number;
+  /** @deprecated legacy — используйте stepsNormal */
   stepsGoal: number;
+  stepsMinimum?: number;
+  stepsNormal?: number;
+  stepsExcellent?: number;
   gymTarget: number;
   weeklyPointsGoal: number;
 }
@@ -104,7 +119,11 @@ export type { HabitConfig, CustomHabitDefinition, BuiltinHabitId, HabitCardColor
 
 export interface AppSettings {
   defaultCaloriesLimit: number;
+  /** @deprecated legacy — используйте defaultStepsNormal */
   defaultStepsGoal: number;
+  defaultStepsMinimum?: number;
+  defaultStepsNormal?: number;
+  defaultStepsExcellent?: number;
   defaultGymTarget: number;
   defaultWeeklyPointsGoal: number;
   /** Целевой вес (кг) — конец пути персонажа */
@@ -116,6 +135,13 @@ export interface AppSettings {
   avatarSettings?: AvatarSettings;
   themeId?: AppThemeId;
   habitConfig?: HabitConfig;
+  /** Экспериментально: показывать поля сна на TodayPage */
+  enableSleepTracking?: boolean;
+  /** Пол героя в игровой системе (fallback: gender) */
+  heroGender?: import('./gameAssets').HeroGender;
+  transformationMode?: import('./gameAssets').TransformationMode;
+  targetWeight?: number | null;
+  activeCompanionId?: import('./gameAssets').CompanionId;
 }
 
 export interface AppData {

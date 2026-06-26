@@ -11,6 +11,7 @@ export type AchievementCategory =
   | 'combo'
   | 'boss'
   | 'recovery'
+  | 'momentum'
   | 'xp';
 
 export type AchievementTier =

@@ -136,7 +136,7 @@ foreach ($s in $scripts) {
 
 
 
-foreach ($launcher in @("PersonalRPG.bat", "PersonalRPG-Stop.bat")) {
+foreach ($launcher in @("PersonalRPG.bat", "PersonalRPG-Stop.bat", "PersonalRPG-Autostart.bat", "PersonalRPG-Autostart.vbs", "install-autostart.bat", "uninstall-autostart.bat")) {
 
     Copy-Item (Join-Path $ProjectRoot $launcher) (Join-Path $Staging $launcher) -Force
 
