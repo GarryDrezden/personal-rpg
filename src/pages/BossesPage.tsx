@@ -40,9 +40,9 @@ export function BossesPage() {
             <Skull size={26} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-[var(--app-text)]">Бестиарий боссов</h1>
+            <h1 className="text-2xl font-bold text-[var(--app-text)]">Испытания недели</h1>
             <p className="text-[var(--app-text-muted)]">
-              Все недельные противники — кого уже победили и кого ждёт впереди
+              Архив недельных вызовов — не путать с боссами глав в кодексе
             </p>
           </div>
         </div>

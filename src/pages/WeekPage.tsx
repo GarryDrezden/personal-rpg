@@ -114,7 +114,7 @@ export function WeekPage() {
           to="/bosses"
           className="text-sm font-medium text-[var(--app-primary)] hover:underline"
         >
-          Бестиарий боссов →
+          Испытания недели →
         </Link>
       </header>
 

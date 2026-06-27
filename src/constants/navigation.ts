@@ -75,7 +75,7 @@ export const navGroups: NavGroup[] = [
       { to: '/abilities', icon: Dna, label: 'Способности' },
       { to: '/rewards', icon: Gift, label: 'Награды' },
       { to: '/achievements', icon: Trophy, label: 'Достижения' },
-      { to: '/bosses', icon: Swords, label: 'Боссы недели' },
+      { to: '/bosses', icon: Swords, label: 'Испытания недели' },
     ],
   },
   {

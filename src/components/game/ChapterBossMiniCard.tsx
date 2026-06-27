@@ -9,9 +9,9 @@ type ChapterBossMiniCardProps = {
 };
 
 const statusBadgeLabel = {
-  locked: 'Босс',
+  locked: 'Босс главы',
   active: 'Текущий босс',
-  defeated: 'Босс',
+  defeated: 'Босс главы',
 } as const;
 
 const statusBadgeClass = {
@@ -34,6 +34,7 @@ export function ChapterBossMiniCard({
       variant="boss"
       imageSrc={meta.image}
       imageAlt={meta.title}
+      href="/today"
       borderClassName="border-violet-500/40"
       backdropClassName="from-violet-950/95 via-[#14101f] to-[#090812]"
       badge={
@@ -45,6 +46,7 @@ export function ChapterBossMiniCard({
       }
       title={meta.title}
       subtitle={`Гл. ${chapter}${reward ? ` · ${reward}` : ''}`}
+      accent="Квесты дня приближают победу над боссом главы →"
     />
   );
 }

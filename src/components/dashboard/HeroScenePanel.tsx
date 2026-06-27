@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { Coins, Flame } from 'lucide-react';
-import { HERO_STAGE_COUNT } from '../../types/gameAssets';
 import { getChapterMeta } from '../../constants/gameChapters';
 import { getCompanionMeta, getHeroStageMeta } from '../../game/assetRegistry';
 import {
@@ -8,7 +7,9 @@ import {
   getHeroStageImageCandidates,
 } from '../../game/assetPaths';
 import { useGameHeroState } from '../../hooks/useGameHeroState';
+import { useAppStore } from '../../store/appStore';
 import { getDayMoodPhrase, getLevelFromXp, getLevelRankTitle } from '../../utils/dashboard';
+import { getPathSetupState } from '../../utils/dashboardPathSetup';
 import { getDayStatus } from '../../utils/points';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import { GameAssetImage } from '../game/GameAssetImage';
@@ -16,6 +17,8 @@ import { DailyMobMiniCard } from '../game/DailyMobMiniCard';
 import { ChapterBossMiniCard } from '../game/ChapterBossMiniCard';
 import { ProgressBar } from '../ui/ProgressBar';
 import { Badge } from '../ui/Badge';
+import { HeroMilestoneTrack } from './HeroMilestoneTrack';
+import { DashboardPathEmptyState } from './DashboardPathEmptyState';
 
 type HeroScenePanelProps = {
   level: number;
@@ -34,6 +37,8 @@ export function HeroScenePanel({
 }: HeroScenePanelProps) {
   const { isDarkFantasy } = useAppTheme();
   const game = useGameHeroState();
+  const { measurements, settings } = useAppStore();
+  const pathSetup = getPathSetupState(measurements, settings.targetWeight);
   const chapter = getChapterMeta(game.chapter);
   const stageMeta = getHeroStageMeta(game.profile.heroGender, game.stage);
   const companionMeta = getCompanionMeta(game.profile.activeCompanionId);
@@ -47,6 +52,8 @@ export function HeroScenePanel({
   const nextStagePercent = game.hasWeightPath
     ? Math.round(game.stageProgress.progressToNextStage)
     : 0;
+
+  const showMilestones = pathSetup.kind === 'ready';
 
   const shellClass = isDarkFantasy
     ? 'overflow-hidden rounded-2xl border border-[var(--app-border)] bg-gradient-to-br from-[#171329] via-[#111022] to-[#090812] shadow-[var(--app-shadow)] hero-glow'
@@ -81,9 +88,6 @@ export function HeroScenePanel({
           <h1 className="min-w-0 text-lg font-bold leading-tight text-[var(--app-text)] sm:text-xl">
             {stageMeta.title}
           </h1>
-          <span className="shrink-0 rounded-md bg-[var(--app-bg-soft)] px-2 py-0.5 text-xs font-semibold tabular-nums text-[var(--app-text-muted)]">
-            {game.stage}/{HERO_STAGE_COUNT}
-          </span>
         </div>
 
         <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[var(--app-text-muted)]">
@@ -98,28 +102,23 @@ export function HeroScenePanel({
           {stageMeta.description}
         </p>
 
-        {game.hasWeightPath ? (
-          <div className="mt-3 rounded-xl bg-[var(--app-bg-soft)] px-3 py-2.5">
-            <div className="mb-1.5 flex justify-between gap-3 text-xs text-[var(--app-text-muted)]">
-              <span>
-                Путь{' '}
-                <span className="font-semibold tabular-nums text-[var(--app-text)]">
-                  {Math.round(game.progressPercent)}%
-                </span>
-              </span>
-              {game.stage < HERO_STAGE_COUNT ? (
-                <span>
-                  До стадии {game.stage + 1}:{' '}
-                  <span className="font-semibold tabular-nums text-[var(--app-primary)]">
-                    {nextStagePercent}%
-                  </span>
-                </span>
-              ) : (
-                <span className="font-semibold text-emerald-400">Финал</span>
-              )}
-            </div>
-            <ProgressBar value={game.progressPercent} color="gold" className="h-1.5" />
-          </div>
+        {pathSetup.kind !== 'ready' ? (
+          <DashboardPathEmptyState state={pathSetup} />
+        ) : showMilestones ? (
+          <HeroMilestoneTrack
+            gender={game.profile.heroGender}
+            currentStage={game.stage}
+            progressPercent={game.progressPercent}
+          />
+        ) : null}
+
+        {showMilestones && game.stage < 20 ? (
+          <p className="mt-2 text-[11px] text-[var(--app-text-muted)]">
+            До следующей стадии:{' '}
+            <span className="font-semibold tabular-nums text-[var(--app-primary)]">
+              {nextStagePercent}%
+            </span>
+          </p>
         ) : null}
       </div>
 
@@ -188,6 +187,12 @@ export function HeroScenePanel({
               <p className="mt-1 max-w-full truncate px-0.5 text-center text-[11px] font-semibold leading-tight text-amber-200/95">
                 {companionMeta.title}
               </p>
+              <Link
+                to="/today"
+                className="mt-0.5 max-w-full truncate px-0.5 text-center text-[10px] font-medium text-amber-300/85 hover:text-amber-200 hover:underline"
+              >
+                Помогает в квестах дня →
+              </Link>
             </div>
           </div>
         </div>
@@ -240,12 +245,6 @@ export function HeroScenePanel({
           <Badge variant={badgeVariant} className="shrink-0 text-xs">
             {dayStatus}
           </Badge>
-          <Link
-            to="/today"
-            className="inline-flex items-center justify-center rounded-lg bg-[var(--app-primary)] px-3 py-1.5 text-sm font-semibold text-slate-950 transition hover:brightness-105 sm:ml-auto"
-          >
-            Квесты дня →
-          </Link>
         </div>
       </div>
     </section>

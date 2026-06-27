@@ -128,7 +128,7 @@ export function WeeklyBossCard({ boss, variant = 'compact' }: WeeklyBossCardProp
                   to="/bosses"
                   className="text-xs text-[var(--app-text-muted)] hover:text-[var(--app-primary)] hover:underline"
                 >
-                  Все боссы
+                  Все испытания
                 </Link>
               </div>
             )}
