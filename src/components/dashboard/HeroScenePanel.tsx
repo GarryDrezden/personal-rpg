@@ -1,0 +1,233 @@
+import { Link } from 'react-router-dom';
+import { Coins, Flame } from 'lucide-react';
+import { HERO_STAGE_COUNT } from '../../types/gameAssets';
+import { getChapterMeta } from '../../constants/gameChapters';
+import { getCompanionMeta, getHeroStageMeta } from '../../game/assetRegistry';
+import {
+  getCompanionImageCandidates,
+  getHeroStageImageCandidates,
+} from '../../game/assetPaths';
+import { useGameHeroState } from '../../hooks/useGameHeroState';
+import { getDayMoodPhrase, getLevelFromXp, getLevelRankTitle } from '../../utils/dashboard';
+import { getDayStatus } from '../../utils/points';
+import { useAppTheme } from '../../hooks/useAppTheme';
+import { GameAssetImage } from '../game/GameAssetImage';
+import { DailyMobMiniCard } from '../game/DailyMobMiniCard';
+import { ChapterBossMiniCard } from '../game/ChapterBossMiniCard';
+import { ProgressBar } from '../ui/ProgressBar';
+import { Badge } from '../ui/Badge';
+
+type HeroScenePanelProps = {
+  level: number;
+  totalXp: number;
+  todayPoints: number;
+  todayCoins: number;
+  availableCoins: number;
+};
+
+export function HeroScenePanel({
+  level,
+  totalXp,
+  todayPoints,
+  todayCoins,
+  availableCoins,
+}: HeroScenePanelProps) {
+  const { isDarkFantasy } = useAppTheme();
+  const game = useGameHeroState();
+  const chapter = getChapterMeta(game.chapter);
+  const stageMeta = getHeroStageMeta(game.profile.heroGender, game.stage);
+  const companionMeta = getCompanionMeta(game.profile.activeCompanionId);
+  const mood = getDayMoodPhrase(todayPoints);
+  const rank = getLevelRankTitle(level);
+  const xp = getLevelFromXp(totalXp);
+  const dayStatus = getDayStatus(todayPoints);
+  const displayXp = Math.max(0, todayPoints);
+  const badgeVariant = displayXp >= 70 ? 'success' : displayXp >= 40 ? 'default' : 'danger';
+
+  const nextStagePercent = game.hasWeightPath
+    ? Math.round(game.stageProgress.progressToNextStage)
+    : 0;
+
+  const shellClass = isDarkFantasy
+    ? 'overflow-hidden rounded-2xl border border-[var(--app-border)] bg-gradient-to-br from-[#171329] via-[#111022] to-[#090812] shadow-[var(--app-shadow)] hero-glow'
+    : 'overflow-hidden rounded-2xl border border-amber-200/60 bg-gradient-to-br from-amber-50 via-white to-orange-50 shadow-md';
+
+  const sceneBg = isDarkFantasy
+    ? 'bg-gradient-to-b from-[#12101c] via-[#161422] to-[color-mix(in_srgb,var(--app-primary)_12%,#0c0b12)]'
+    : 'bg-gradient-to-b from-[color-mix(in_srgb,var(--app-primary)_6%,#1a1520)] via-[#1e1a28] to-[#14121c]';
+
+  return (
+    <section
+      data-testid="dashboard-hero-scene-panel"
+      className={shellClass}
+    >
+      {/* Journey context — верхняя полоса */}
+      <div className="flex flex-col gap-1.5 border-b border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] p-2.5 sm:p-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--app-primary)]">
+              Глава {chapter.chapter} · {chapter.title}
+            </p>
+            <h1 className="mt-0.5 text-base font-bold leading-snug text-[var(--app-text)] sm:text-lg">
+              {stageMeta.title}
+            </h1>
+            <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">
+              {mood} · {rank}
+            </p>
+          </div>
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[var(--app-primary-soft)] px-2 py-0.5 text-[11px] font-semibold text-[var(--app-primary)]">
+            <Coins size={12} />
+            {availableCoins.toLocaleString('ru')}
+          </span>
+        </div>
+
+        <p className="line-clamp-2 text-xs leading-snug text-[var(--app-text-muted)]">
+          {stageMeta.description}
+        </p>
+
+        {game.hasWeightPath ? (
+          <div className="space-y-0.5">
+            <div className="flex justify-between gap-2 text-[11px] text-[var(--app-text-muted)]">
+              <span>Путь {Math.round(game.progressPercent)}%</span>
+              {game.stage < 20 ? (
+                <span>До стадии {game.stage + 1}: {nextStagePercent}%</span>
+              ) : (
+                <span>Финал</span>
+              )}
+            </div>
+            <ProgressBar value={game.progressPercent} color="gold" className="h-1" />
+          </div>
+        ) : null}
+      </div>
+
+      {/*
+        Герой — минимум половина ширины на desktop; баннеры босса и моба — правая колонка.
+      */}
+      <div className="grid min-h-[22.5rem] grid-cols-1 lg:min-h-[26rem] lg:grid-cols-2">
+        {/* Hero + compact companion overlay */}
+        <div
+          className={`relative min-h-[22.5rem] lg:min-h-[26rem] ${sceneBg}`}
+        >
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_92%,color-mix(in_srgb,var(--app-primary)_22%,transparent),transparent_55%)]" />
+
+          <div className="absolute left-2 top-2 z-20 rounded-full border border-[var(--app-border)] bg-black/45 px-2.5 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm">
+            Ур. {level}
+          </div>
+          <div className="absolute right-2 top-2 z-20 rounded-full border border-[var(--app-border)] bg-black/45 px-2.5 py-0.5 text-xs font-semibold text-[var(--app-text)] backdrop-blur-sm">
+            {game.stage}/{HERO_STAGE_COUNT}
+          </div>
+
+          <div className="relative flex h-full min-h-[22.5rem] items-end justify-center px-2 pb-2 pt-8 lg:min-h-[26rem] lg:px-4 lg:pb-3 lg:pt-9">
+            <div className="pointer-events-none absolute inset-x-[10%] bottom-3 h-3.5 rounded-[100%] bg-black/35 blur-md" />
+            <div className="pointer-events-none absolute inset-x-[16%] bottom-2.5 h-1 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_28%,transparent)] opacity-55" />
+
+            <div
+              data-testid="hero-scene-character"
+              className="relative z-10 flex h-[90%] w-full max-w-full items-end justify-center bg-transparent lg:h-[92%]"
+            >
+              <GameAssetImage
+                variant="hero"
+                src={stageMeta.image}
+                alt={stageMeta.title}
+                fallbackCandidates={getHeroStageImageCandidates(
+                  game.profile.heroGender,
+                  game.stage,
+                ).slice(1)}
+                status="unlocked"
+                fit="hero"
+                className="h-full w-full items-end bg-transparent"
+              />
+            </div>
+
+            {/* Компактный спутник — у пояса героя, как на макете */}
+            <div
+              data-testid="hero-scene-companion"
+              className="absolute bottom-6 right-2 z-20 flex w-[5.25rem] flex-col items-center sm:bottom-8 sm:right-3 sm:w-[5.75rem]"
+            >
+              <div className="w-full overflow-hidden rounded-lg border border-amber-400/40 bg-[color-mix(in_srgb,#000_45%,transparent)] backdrop-blur-sm">
+                <div className="flex h-[4.25rem] items-center justify-center p-1 sm:h-[4.75rem]">
+                  <GameAssetImage
+                    variant="companion"
+                    src={companionMeta.image}
+                    alt={companionMeta.title}
+                    fallbackCandidates={getCompanionImageCandidates(
+                      game.profile.activeCompanionId,
+                    ).slice(1)}
+                    status="unlocked"
+                    fit="companion"
+                    className="h-full w-full bg-transparent"
+                    imageClassName="scale-[1.05] sm:scale-[1.08]"
+                  />
+                </div>
+                <div className="border-t border-amber-400/25 bg-black/55 px-1 py-0.5 text-center">
+                  <p className="text-[9px] font-semibold uppercase tracking-wide text-amber-200/90">
+                    Спутник
+                  </p>
+                </div>
+              </div>
+              <p className="mt-1 max-w-full truncate px-0.5 text-center text-[10px] font-semibold leading-tight text-amber-200/95">
+                {companionMeta.title}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Boss + Mob — правая колонка (≤ половины ширины) */}
+        <div className="flex flex-col justify-center gap-2.5 border-t border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] p-2.5 sm:p-3 lg:border-t-0 lg:border-l lg:p-3">
+          <ChapterBossMiniCard
+            bossId={game.bossId}
+            chapter={game.chapter}
+            status={game.bossStatus}
+          />
+          <DailyMobMiniCard mobId={game.dailyMobId} />
+        </div>
+      </div>
+
+      {/* Game HUD — unchanged weight */}
+      <div
+        className={`flex flex-col gap-2 border-t px-3 py-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2 sm:px-4 ${
+          isDarkFantasy
+            ? 'border-[color-mix(in_srgb,var(--app-border)_50%,transparent)] bg-black/25'
+            : 'border-amber-200/60 bg-amber-50/50'
+        }`}
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-xs uppercase tracking-wide text-[var(--app-text-muted)]">Уровень</span>
+          <span className="text-2xl font-bold tabular-nums leading-none text-[var(--app-primary)]">
+            {level}
+          </span>
+          <span className="hidden items-center gap-1 rounded-lg bg-black/20 px-2 py-1 text-xs font-semibold tabular-nums sm:inline-flex">
+            <Flame size={14} className="text-[var(--app-warning)]" />
+            {totalXp.toLocaleString('ru')} XP
+          </span>
+        </div>
+
+        <div className="min-w-[10rem] flex-1">
+          <div className="mb-0.5 flex justify-between text-[10px] text-[var(--app-text-muted)] sm:text-xs">
+            <span>До ур. {level + 1}</span>
+            <span className="tabular-nums">
+              {xp.currentLevelXp.toLocaleString('ru')} / {xp.nextLevelXp.toLocaleString('ru')}
+            </span>
+          </div>
+          <ProgressBar value={xp.progressToNextLevel} color="gold" className="h-1.5 sm:h-2" />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="text-sm">
+            <span className="font-bold tabular-nums text-[var(--app-primary)]">+{displayXp} XP</span>
+            <span className="ml-1.5 text-xs text-[var(--app-text-muted)]">· +{todayCoins} 🪙</span>
+          </div>
+          <Badge variant={badgeVariant} className="shrink-0 text-xs">
+            {dayStatus}
+          </Badge>
+          <Link
+            to="/today"
+            className="inline-flex items-center justify-center rounded-lg bg-[var(--app-primary)] px-3 py-1.5 text-sm font-semibold text-slate-950 transition hover:brightness-105 sm:ml-auto"
+          >
+            Квесты дня →
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
