@@ -93,6 +93,7 @@ body {
 .nav-link-active {
   background: var(--app-nav-active-bg);
   color: var(--app-nav-active-text);
+  font-weight: 600;
 }
 
 .achievement-legendary-glow {

@@ -7,7 +7,7 @@ export function AppShell() {
   return (
     <ThemeShell>
       <Sidebar />
-      <main className="md:ml-56 pb-20 md:pb-8">
+      <main className="md:ml-64 pb-[4.75rem] md:pb-8">
         <div className="mx-auto max-w-6xl px-4 py-6">
           <Outlet />
         </div>
