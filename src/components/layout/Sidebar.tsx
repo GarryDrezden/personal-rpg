@@ -1,4 +1,3 @@
-import { Swords } from 'lucide-react';
 import { navGroups } from '../../constants/navigation';
 import { NavItemLink } from './NavItemLink';
 
@@ -14,8 +13,15 @@ export function Sidebar() {
       className={`hidden md:flex ${SIDEBAR_WIDTH} md:flex-col md:fixed md:inset-y-0 border-r border-[var(--app-border)] bg-[var(--app-card-strong)] backdrop-blur-md`}
     >
       <div className="flex shrink-0 items-center gap-2.5 border-b border-[var(--app-border)] px-4 py-2.5">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[color-mix(in_srgb,var(--app-primary)_18%,var(--app-bg-soft))] text-[var(--app-primary)]">
-          <Swords size={20} strokeWidth={2.25} />
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center">
+          <img
+            src="/logo.png"
+            alt=""
+            width={36}
+            height={36}
+            className="h-9 w-9 object-contain"
+            draggable={false}
+          />
         </span>
         <div className="min-w-0">
           <p className="truncate text-sm font-bold leading-tight text-[var(--app-text)]">
