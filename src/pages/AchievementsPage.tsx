@@ -16,7 +16,7 @@ import { getAchievementProgress } from '../utils/achievementEngine';
 import type { AchievementCategory, AchievementTier } from '../types/achievements';
 import { formatDateRu } from '../utils/dates';
 
-export function AchievementsPage() {
+export function AchievementsPage({ embedded = false }: { embedded?: boolean }) {
   const { dailyEntries, measurements, settings } = useAppStore();
   const unlockedAchievements = useAchievementStore((s) => s.unlockedAchievements);
 
@@ -65,12 +65,14 @@ export function AchievementsPage() {
 
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold">Достижения</h1>
-        <p className="mt-1 text-sm text-rpg-muted">
-          Коллекция наград за привычки, прогресс и возвращение в игру
-        </p>
-      </header>
+      {!embedded ? (
+        <header>
+          <h1 className="text-2xl font-bold">Достижения</h1>
+          <p className="mt-1 text-sm text-rpg-muted">
+            Коллекция наград за привычки, прогресс и возвращение в игру
+          </p>
+        </header>
+      ) : null}
 
       <Card className={CARD_ACCENT.primary}>
         <div className="mb-3 flex flex-wrap items-end justify-between gap-3">

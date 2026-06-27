@@ -28,7 +28,7 @@ export function SkillsOverviewCard({ skills }: SkillsOverviewCardProps) {
             </p>
           </div>
         </div>
-        <Link to="/skills" className="shrink-0 text-sm font-medium text-[var(--app-primary)] hover:underline">
+        <Link to="/growth/skills" className="shrink-0 text-sm font-medium text-[var(--app-primary)] hover:underline">
           Все навыки →
         </Link>
       </div>

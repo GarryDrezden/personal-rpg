@@ -125,7 +125,7 @@ export function WeeklyBossCard({ boss, variant = 'compact' }: WeeklyBossCardProp
                   Неделя →
                 </Link>
                 <Link
-                  to="/bosses"
+                  to="/growth/trials"
                   className="text-xs text-[var(--app-text-muted)] hover:text-[var(--app-primary)] hover:underline"
                 >
                   Все испытания

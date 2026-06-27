@@ -111,7 +111,7 @@ export function WeekPage() {
           </p>
         </div>
         <Link
-          to="/bosses"
+          to="/growth/trials"
           className="text-sm font-medium text-[var(--app-primary)] hover:underline"
         >
           Испытания недели →

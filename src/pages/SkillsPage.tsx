@@ -5,7 +5,7 @@ import { SKILLS, SKILL_LEVEL_HOW_TO } from '../constants/skills';
 import { SkillCard } from '../components/skills/SkillCard';
 import { Card } from '../components/ui/Card';
 
-export function SkillsPage() {
+export function SkillsPage({ embedded = false }: { embedded?: boolean }) {
   const { dailyEntries, measurements, settings } = useAppStore();
 
   const skills = useMemo(
@@ -18,12 +18,14 @@ export function SkillsPage() {
 
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold text-[var(--app-text)]">Навыки персонажа</h1>
-        <p className="mt-1 text-sm text-[var(--app-text-muted)]">
-          Каждое действие прокачивает одну из сторон режима.
-        </p>
-      </header>
+      {!embedded ? (
+        <header>
+          <h1 className="text-2xl font-bold text-[var(--app-text)]">Навыки персонажа</h1>
+          <p className="mt-1 text-sm text-[var(--app-text-muted)]">
+            Каждое действие прокачивает одну из сторон режима.
+          </p>
+        </header>
+      ) : null}
 
       <Card className="bg-[color-mix(in_srgb,var(--app-primary)_8%,var(--app-card))]">
         <div className="grid gap-4 sm:grid-cols-3">

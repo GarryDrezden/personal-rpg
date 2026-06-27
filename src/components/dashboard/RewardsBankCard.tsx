@@ -42,7 +42,7 @@ export function RewardsBankCard({
             </div>
           </div>
           <Link
-            to="/rewards"
+            to="/growth/rewards"
             className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card-strong)] px-3 py-1.5 text-sm font-medium text-[var(--app-primary)] hover:brightness-[1.03]"
           >
             Магазин →

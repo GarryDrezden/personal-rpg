@@ -3,11 +3,9 @@ import {
   BookOpen,
   Calendar,
   CalendarDays,
-  Dna,
   Feather,
   FileText,
   Gauge,
-  Gift,
   HelpCircle,
   Home,
   Lightbulb,
@@ -15,10 +13,9 @@ import {
   Route,
   Ruler,
   Settings,
-  Sparkles,
-  Swords,
-  Trophy,
+  TrendingUp,
 } from 'lucide-react';
+import { isGrowthHubPath } from './growthHub';
 
 export type NavItem = {
   to: string;
@@ -69,14 +66,8 @@ export const navGroups: NavGroup[] = [
   {
     id: 'growth',
     title: 'Рост героя',
-    hint: 'Награды и сила',
-    items: [
-      { to: '/skills', icon: Sparkles, label: 'Навыки' },
-      { to: '/abilities', icon: Dna, label: 'Способности' },
-      { to: '/rewards', icon: Gift, label: 'Награды' },
-      { to: '/achievements', icon: Trophy, label: 'Достижения' },
-      { to: '/bosses', icon: Swords, label: 'Испытания недели' },
-    ],
+    hint: 'Сила, награды, испытания',
+    items: [{ to: '/growth', icon: TrendingUp, label: 'Рост героя' }],
   },
   {
     id: 'data',
@@ -138,5 +129,6 @@ export const secondaryNavPaths = secondaryNav.map((item) => item.to);
 
 export function isNavPathActive(pathname: string, to: string): boolean {
   if (to === '/') return pathname === '/';
+  if (to === '/growth') return isGrowthHubPath(pathname);
   return pathname === to || pathname.startsWith(`${to}/`);
 }

@@ -203,7 +203,7 @@ export function getNextBestAction(params: {
       title: 'Дожать ближайшую способность',
       description: `Ты близко к «${closeAbility.ability.title}». Осталось совсем немного.`,
       actionLabel: 'Способности',
-      targetRoute: '/abilities',
+      targetRoute: '/growth/abilities',
       icon: closeAbility.ability.icon,
     };
   }

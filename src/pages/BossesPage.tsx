@@ -7,7 +7,7 @@ import { BossCatalogCard } from '../components/boss/BossCatalogCard';
 import { Card } from '../components/ui/Card';
 import { Skull } from 'lucide-react';
 
-export function BossesPage() {
+export function BossesPage({ embedded = false }: { embedded?: boolean }) {
   const { dailyEntries, measurements, settings } = useAppStore();
   const today = todayISO();
 
@@ -34,19 +34,26 @@ export function BossesPage() {
 
   return (
     <div className="space-y-6 pb-8">
-      <header>
-        <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--app-danger)_15%,var(--app-card))] text-[var(--app-danger)]">
-            <Skull size={26} />
+      {!embedded ? (
+        <header>
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--app-danger)_15%,var(--app-card))] text-[var(--app-danger)]">
+              <Skull size={26} />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-[var(--app-text)]">Испытания недели</h1>
+              <p className="text-[var(--app-text-muted)]">
+                Архив недельных вызовов — не путать с боссами глав в кодексе
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-[var(--app-text)]">Испытания недели</h1>
-            <p className="text-[var(--app-text-muted)]">
-              Архив недельных вызовов — не путать с боссами глав в кодексе
-            </p>
-          </div>
-        </div>
-      </header>
+        </header>
+      ) : (
+        <p className="text-sm text-[var(--app-text-muted)]">
+          Архив недельных вызовов — не путать с боссами глав в кодексе. Текущее испытание смотри на
+          странице «Неделя».
+        </p>
+      )}
 
       <Card className="bg-[color-mix(in_srgb,var(--app-danger)_8%,var(--app-card))]">
         <div className="grid gap-4 sm:grid-cols-3">

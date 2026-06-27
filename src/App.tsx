@@ -1,6 +1,6 @@
 import { useEffect, lazy, Suspense } from 'react';
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import { AppShell } from './components/layout/AppShell';
 
@@ -22,6 +22,12 @@ import { useAppStore } from './store/appStore';
 
 
 
+const GrowthHubPage = lazy(() =>
+
+  import('./pages/GrowthHubPage').then((m) => ({ default: m.GrowthHubPage })),
+
+);
+
 const WeekPage = lazy(() =>
 
   import('./pages/WeekPage').then((m) => ({ default: m.WeekPage })),
@@ -34,27 +40,9 @@ const MeasurementsPage = lazy(() =>
 
 );
 
-const RewardsPage = lazy(() =>
-
-  import('./pages/RewardsPage').then((m) => ({ default: m.RewardsPage })),
-
-);
-
 const SettingsPage = lazy(() =>
 
   import('./pages/SettingsPage').then((m) => ({ default: m.SettingsPage })),
-
-);
-
-const AchievementsPage = lazy(() =>
-
-  import('./pages/AchievementsPage').then((m) => ({ default: m.AchievementsPage })),
-
-);
-
-const SkillsPage = lazy(() =>
-
-  import('./pages/SkillsPage').then((m) => ({ default: m.SkillsPage })),
 
 );
 
@@ -73,18 +61,6 @@ const WeeklyReportsPage = lazy(() =>
 const InsightsPage = lazy(() =>
 
   import('./pages/InsightsPage').then((m) => ({ default: m.InsightsPage })),
-
-);
-
-const BossesPage = lazy(() =>
-
-  import('./pages/BossesPage').then((m) => ({ default: m.BossesPage })),
-
-);
-
-const BodyAbilitiesPage = lazy(() =>
-
-  import('./pages/BodyAbilitiesPage').then((m) => ({ default: m.BodyAbilitiesPage })),
 
 );
 
@@ -198,17 +174,15 @@ export default function App() {
 
             <Route path="/week" element={<WeekPage />} />
 
-            <Route path="/bosses" element={<BossesPage />} />
+            <Route path="/growth" element={<Navigate to="/growth/skills" replace />} />
+            <Route path="/growth/:tab" element={<GrowthHubPage />} />
+            <Route path="/skills" element={<Navigate to="/growth/skills" replace />} />
+            <Route path="/abilities" element={<Navigate to="/growth/abilities" replace />} />
+            <Route path="/rewards" element={<Navigate to="/growth/rewards" replace />} />
+            <Route path="/achievements" element={<Navigate to="/growth/achievements" replace />} />
+            <Route path="/bosses" element={<Navigate to="/growth/trials" replace />} />
 
             <Route path="/measurements" element={<MeasurementsPage />} />
-
-            <Route path="/rewards" element={<RewardsPage />} />
-
-            <Route path="/achievements" element={<AchievementsPage />} />
-
-            <Route path="/skills" element={<SkillsPage />} />
-
-            <Route path="/abilities" element={<BodyAbilitiesPage />} />
 
             <Route path="/journey" element={<JourneyMapPage />} />
 

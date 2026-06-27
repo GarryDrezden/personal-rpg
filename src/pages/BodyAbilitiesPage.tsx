@@ -13,7 +13,7 @@ import {
 } from '../utils/bodyAbilityEngine';
 import type { BodyAbilityBranch } from '../types/bodyAbilities';
 
-export function BodyAbilitiesPage() {
+export function BodyAbilitiesPage({ embedded = false }: { embedded?: boolean }) {
   const { dailyEntries, measurements, settings } = useAppStore();
   const { themeId } = useAppTheme();
 
@@ -51,16 +51,22 @@ export function BodyAbilitiesPage() {
 
   return (
     <div className="space-y-8 pb-4">
-      <header>
-        <h1 className="text-2xl font-bold text-[var(--app-text)]">Способности тела</h1>
-        <p className="mt-2 max-w-2xl text-sm text-[var(--app-text-muted)]">
-          Это не просто цифры. Каждый устойчивый шаг возвращает персонажу движение, контроль и
-          ясность.
-        </p>
-        <p className="mt-2 text-sm font-medium text-[var(--app-primary)]">
+      {!embedded ? (
+        <header>
+          <h1 className="text-2xl font-bold text-[var(--app-text)]">Способности тела</h1>
+          <p className="mt-2 max-w-2xl text-sm text-[var(--app-text-muted)]">
+            Это не просто цифры. Каждый устойчивый шаг возвращает персонажу движение, контроль и
+            ясность.
+          </p>
+          <p className="mt-2 text-sm font-medium text-[var(--app-primary)]">
+            Открыто способностей: {stats.unlocked} / {stats.total}
+          </p>
+        </header>
+      ) : (
+        <p className="text-sm font-medium text-[var(--app-primary)]">
           Открыто способностей: {stats.unlocked} / {stats.total}
         </p>
-      </header>
+      )}
 
       {!hasData ? (
         <p className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-6 text-center text-sm text-[var(--app-text-muted)]">

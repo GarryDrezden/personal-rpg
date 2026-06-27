@@ -22,7 +22,7 @@ export function RecentAchievements({ unlocked, totalCount }: RecentAchievementsP
     <Card className="h-full">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-[var(--app-text)]">Достижения</h2>
-        <Link to="/achievements" className="text-sm font-medium text-[var(--app-primary)] hover:underline">
+        <Link to="/growth/achievements" className="text-sm font-medium text-[var(--app-primary)] hover:underline">
           Все →
         </Link>
       </div>

@@ -12,26 +12,20 @@ export function Sidebar() {
     <aside
       className={`hidden md:flex ${SIDEBAR_WIDTH} md:flex-col md:fixed md:inset-y-0 border-r border-[var(--app-border)] bg-[var(--app-card-strong)] backdrop-blur-md`}
     >
-      <div className="flex shrink-0 items-center gap-3 border-b border-[var(--app-border)] px-4 py-3">
-        <span className="flex h-[50px] w-[50px] shrink-0 items-center justify-center">
-          <img
-            src="/logo.png"
-            alt=""
-            width={50}
-            height={50}
-            className="h-[50px] w-[50px] object-contain"
-            draggable={false}
-          />
-        </span>
-        <div className="min-w-0">
-          <p className="truncate text-sm font-bold leading-tight text-[var(--app-text)]">
-            Личная RPG
-          </p>
-          <p className="truncate text-[11px] text-[var(--app-text-muted)]">Твой путь героя</p>
-        </div>
+      <div className="flex shrink-0 flex-col items-center border-b border-[var(--app-border)] px-4 py-4 text-center">
+        <img
+          src="/logo.png"
+          alt=""
+          width={120}
+          height={120}
+          className="h-[120px] w-[120px] object-contain"
+          draggable={false}
+        />
+        <p className="mt-2 text-sm font-bold leading-tight text-[var(--app-text)]">Личная RPG</p>
+        <p className="mt-0.5 text-[11px] text-[var(--app-text-muted)]">Твой путь героя</p>
       </div>
 
-      <nav className="flex min-h-0 flex-1 flex-col overflow-hidden px-2.5 py-2">
+      <nav className="flex min-h-0 flex-1 flex-col overflow-y-auto px-2.5 py-2">
         {scrollGroups.map((group, index) => (
           <section
             key={group.id}

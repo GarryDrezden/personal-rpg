@@ -20,7 +20,7 @@ type Tab = 'available' | 'purchased' | 'coins' | 'bank' | 'add';
 
 
 
-export function RewardsPage() {
+export function RewardsPage({ embedded = false }: { embedded?: boolean }) {
 
   const {
 
@@ -166,33 +166,29 @@ export function RewardsPage() {
 
     <div className="space-y-6">
 
-      <header className="flex flex-wrap items-center justify-between gap-3">
-
-        <h1 className="text-2xl font-bold">Награды</h1>
-
-        <div className="flex flex-col items-end gap-1">
-
-          <Badge variant="gold">
-
-            {stats.coins.available.toLocaleString('ru')} 🪙 монет
-
-          </Badge>
-
-          <span className="text-xs text-rpg-muted">
-
-            за неделю +{stats.coins.weekEarned} · потрачено {stats.coins.totalSpent}
-
-          </span>
-
-          <span className="text-sm text-rpg-muted flex items-center gap-1">
-
+      {!embedded ? (
+        <header className="flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-2xl font-bold">Награды</h1>
+          <div className="flex flex-col items-end gap-1">
+            <Badge variant="gold">
+              {stats.coins.available.toLocaleString('ru')} 🪙 монет
+            </Badge>
+            <span className="text-xs text-rpg-muted">
+              за неделю +{stats.coins.weekEarned} · потрачено {stats.coins.totalSpent}
+            </span>
+            <span className="text-sm text-rpg-muted flex items-center gap-1">
+              <PiggyBank size={14} /> {bankBalance.toLocaleString('ru')} ₽ в копилке
+            </span>
+          </div>
+        </header>
+      ) : (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--app-border)] bg-[var(--app-bg-soft)] px-3 py-2.5">
+          <Badge variant="gold">{stats.coins.available.toLocaleString('ru')} 🪙 монет</Badge>
+          <span className="text-xs text-rpg-muted flex items-center gap-1">
             <PiggyBank size={14} /> {bankBalance.toLocaleString('ru')} ₽ в копилке
-
           </span>
-
         </div>
-
-      </header>
+      )}
 
 
 

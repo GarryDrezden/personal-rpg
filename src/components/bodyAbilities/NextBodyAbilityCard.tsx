@@ -41,7 +41,7 @@ export function NextBodyAbilityCard({
           </div>
         </div>
         <Link
-          to="/abilities"
+          to="/growth/abilities"
           className="shrink-0 text-sm font-medium text-[var(--app-primary)] hover:underline"
         >
           Все способности →
