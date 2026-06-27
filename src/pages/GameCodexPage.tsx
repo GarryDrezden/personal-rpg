@@ -5,6 +5,7 @@ import { useAppStore } from '../store/appStore';
 import { setActiveCompanionId } from '../game/gameAssetStorage';
 import type { CompanionId } from '../types/gameAssets';
 import { Card } from '../components/ui/Card';
+import { CodexHeroProgressionScene } from '../components/game/CodexHeroProgressionScene';
 import { HeroStageTrack } from '../components/game/HeroStageTrack';
 import { CompanionSelector } from '../components/game/CompanionSelector';
 import { DailyMobCard } from '../components/game/DailyMobCard';
@@ -38,10 +39,17 @@ export function GameCodexPage() {
         </p>
       </header>
 
+      <CodexHeroProgressionScene
+        gender={game.profile.heroGender}
+        currentStage={game.stage}
+        progressPercent={game.progressPercent}
+        progressToNextStage={game.stageProgress.progressToNextStage}
+      />
+
       <section className="space-y-4">
-        <h2 className="text-lg font-semibold text-[var(--app-text)]">Герой и стадии</h2>
+        <h2 className="text-lg font-semibold text-[var(--app-text)]">Все стадии</h2>
         <p className="text-sm text-[var(--app-text-muted)]">
-          Текущая стадия: {game.stage}/20 · {Math.round(game.progressPercent)}% пути
+          Каталог всех 20 форм героя — от старта до финала.
         </p>
         <HeroStageTrack gender={game.profile.heroGender} currentStage={game.stage} />
       </section>
