@@ -12,14 +12,14 @@ export function Sidebar() {
     <aside
       className={`hidden md:flex ${SIDEBAR_WIDTH} md:flex-col md:fixed md:inset-y-0 border-r border-[var(--app-border)] bg-[var(--app-card-strong)] backdrop-blur-md`}
     >
-      <div className="flex shrink-0 items-center gap-2.5 border-b border-[var(--app-border)] px-4 py-2.5">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center">
+      <div className="flex shrink-0 items-center gap-3 border-b border-[var(--app-border)] px-4 py-3">
+        <span className="flex h-[50px] w-[50px] shrink-0 items-center justify-center">
           <img
             src="/logo.png"
             alt=""
-            width={36}
-            height={36}
-            className="h-9 w-9 object-contain"
+            width={50}
+            height={50}
+            className="h-[50px] w-[50px] object-contain"
             draggable={false}
           />
         </span>
