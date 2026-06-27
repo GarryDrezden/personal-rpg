@@ -61,41 +61,64 @@ export function HeroScenePanel({
       data-testid="dashboard-hero-scene-panel"
       className={shellClass}
     >
-      {/* Journey context — верхняя полоса */}
-      <div className="flex flex-col gap-1.5 border-b border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] p-2.5 sm:p-3">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--app-primary)]">
-              Глава {chapter.chapter} · {chapter.title}
-            </p>
-            <h1 className="mt-0.5 text-base font-bold leading-snug text-[var(--app-text)] sm:text-lg">
-              {stageMeta.title}
-            </h1>
-            <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">
-              {mood} · {rank}
-            </p>
-          </div>
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[var(--app-primary-soft)] px-2 py-0.5 text-[11px] font-semibold text-[var(--app-primary)]">
-            <Coins size={12} />
+      {/* Journey context — верхний блок */}
+      <div className="border-b border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] px-3 py-3 sm:px-4 sm:py-3.5">
+        <div className="flex items-center justify-between gap-3">
+          <span className="inline-flex shrink-0 items-center rounded-md bg-[var(--app-primary-soft)] px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-[var(--app-primary)]">
+            Глава {chapter.chapter}
+          </span>
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[color-mix(in_srgb,var(--app-border)_60%,transparent)] bg-black/20 px-2.5 py-1 text-xs font-semibold tabular-nums text-[var(--app-primary)]">
+            <Coins size={13} />
             {availableCoins.toLocaleString('ru')}
           </span>
         </div>
 
-        <p className="line-clamp-2 text-xs leading-snug text-[var(--app-text-muted)]">
+        <p className="mt-2 text-xs font-medium uppercase tracking-wider text-[var(--app-text-muted)]">
+          {chapter.title}
+        </p>
+
+        <div className="mt-1 flex items-start justify-between gap-3">
+          <h1 className="min-w-0 text-lg font-bold leading-tight text-[var(--app-text)] sm:text-xl">
+            {stageMeta.title}
+          </h1>
+          <span className="shrink-0 rounded-md bg-[var(--app-bg-soft)] px-2 py-0.5 text-xs font-semibold tabular-nums text-[var(--app-text-muted)]">
+            {game.stage}/{HERO_STAGE_COUNT}
+          </span>
+        </div>
+
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[var(--app-text-muted)]">
+          <span>{mood}</span>
+          <span className="text-[var(--app-border)]" aria-hidden>
+            ·
+          </span>
+          <span className="font-medium text-[var(--app-text)]">{rank}</span>
+        </div>
+
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-[var(--app-text-muted)]">
           {stageMeta.description}
         </p>
 
         {game.hasWeightPath ? (
-          <div className="space-y-0.5">
-            <div className="flex justify-between gap-2 text-[11px] text-[var(--app-text-muted)]">
-              <span>Путь {Math.round(game.progressPercent)}%</span>
-              {game.stage < 20 ? (
-                <span>До стадии {game.stage + 1}: {nextStagePercent}%</span>
+          <div className="mt-3 rounded-xl bg-[var(--app-bg-soft)] px-3 py-2.5">
+            <div className="mb-1.5 flex justify-between gap-3 text-xs text-[var(--app-text-muted)]">
+              <span>
+                Путь{' '}
+                <span className="font-semibold tabular-nums text-[var(--app-text)]">
+                  {Math.round(game.progressPercent)}%
+                </span>
+              </span>
+              {game.stage < HERO_STAGE_COUNT ? (
+                <span>
+                  До стадии {game.stage + 1}:{' '}
+                  <span className="font-semibold tabular-nums text-[var(--app-primary)]">
+                    {nextStagePercent}%
+                  </span>
+                </span>
               ) : (
-                <span>Финал</span>
+                <span className="font-semibold text-emerald-400">Финал</span>
               )}
             </div>
-            <ProgressBar value={game.progressPercent} color="gold" className="h-1" />
+            <ProgressBar value={game.progressPercent} color="gold" className="h-1.5" />
           </div>
         ) : null}
       </div>
@@ -113,11 +136,8 @@ export function HeroScenePanel({
           <div className="absolute left-2 top-2 z-20 rounded-full border border-[var(--app-border)] bg-black/45 px-2.5 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm">
             Ур. {level}
           </div>
-          <div className="absolute right-2 top-2 z-20 rounded-full border border-[var(--app-border)] bg-black/45 px-2.5 py-0.5 text-xs font-semibold text-[var(--app-text)] backdrop-blur-sm">
-            {game.stage}/{HERO_STAGE_COUNT}
-          </div>
 
-          <div className="relative flex h-full min-h-[22.5rem] items-end justify-center px-2 pb-2 pt-8 lg:min-h-[26rem] lg:px-4 lg:pb-3 lg:pt-9">
+          <div className="relative flex h-full min-h-[22.5rem] items-end justify-center px-2 pb-2 pt-6 lg:min-h-[26rem] lg:px-4 lg:pb-3 lg:pt-7">
             <div className="pointer-events-none absolute inset-x-[10%] bottom-3 h-3.5 rounded-[100%] bg-black/35 blur-md" />
             <div className="pointer-events-none absolute inset-x-[16%] bottom-2.5 h-1 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_28%,transparent)] opacity-55" />
 
@@ -142,10 +162,10 @@ export function HeroScenePanel({
             {/* Компактный спутник — у пояса героя, как на макете */}
             <div
               data-testid="hero-scene-companion"
-              className="absolute bottom-6 right-2 z-20 flex w-[5.25rem] flex-col items-center sm:bottom-8 sm:right-3 sm:w-[5.75rem]"
+              className="absolute bottom-6 right-2 z-20 flex w-[6.25rem] flex-col items-center sm:bottom-8 sm:right-3 sm:w-[7rem]"
             >
-              <div className="w-full overflow-hidden rounded-lg border border-amber-400/40 bg-[color-mix(in_srgb,#000_45%,transparent)] backdrop-blur-sm">
-                <div className="flex h-[4.25rem] items-center justify-center p-1 sm:h-[4.75rem]">
+              <div className="w-full overflow-hidden rounded-xl border border-amber-400/45 bg-[color-mix(in_srgb,#000_45%,transparent)] backdrop-blur-sm">
+                <div className="flex h-[5.25rem] items-center justify-center p-1.5 sm:h-[5.75rem]">
                   <GameAssetImage
                     variant="companion"
                     src={companionMeta.image}
@@ -156,16 +176,16 @@ export function HeroScenePanel({
                     status="unlocked"
                     fit="companion"
                     className="h-full w-full bg-transparent"
-                    imageClassName="scale-[1.05] sm:scale-[1.08]"
+                    imageClassName="scale-[1.1] sm:scale-[1.14]"
                   />
                 </div>
                 <div className="border-t border-amber-400/25 bg-black/55 px-1 py-0.5 text-center">
-                  <p className="text-[9px] font-semibold uppercase tracking-wide text-amber-200/90">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-amber-200/90">
                     Спутник
                   </p>
                 </div>
               </div>
-              <p className="mt-1 max-w-full truncate px-0.5 text-center text-[10px] font-semibold leading-tight text-amber-200/95">
+              <p className="mt-1 max-w-full truncate px-0.5 text-center text-[11px] font-semibold leading-tight text-amber-200/95">
                 {companionMeta.title}
               </p>
             </div>
