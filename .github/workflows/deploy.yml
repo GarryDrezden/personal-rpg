@@ -27,26 +27,15 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Prepare API bundle
+      - name: Prepare deploy bundle
         run: |
           rm -rf .deploy-staging
           mkdir -p .deploy-staging/api
+          cp -r dist/. .deploy-staging/
           cp -r api/. .deploy-staging/api/
+          cp .htaccess .deploy-staging/
 
-      - name: Deploy frontend (dist)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: ${{ env.FTP_SERVER_DIR }}
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-
-      - name: Deploy API
+      - name: Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -54,14 +43,9 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./.deploy-staging/
           server-dir: ${{ env.FTP_SERVER_DIR }}
-
-      - name: Deploy .htaccess
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: ${{ env.FTP_SERVER_DIR }}
-          include: |
-            .htaccess
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            data/**
+            **/*.sqlite
