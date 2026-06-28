@@ -12,10 +12,11 @@ function dispatchAccountsApi(string $method, string $route): bool
         return false;
     }
 
-    require_once __DIR__ . '/config/database.php';
-    require_once __DIR__ . '/lib/request.php';
-    require_once __DIR__ . '/lib/response.php';
-    require_once __DIR__ . '/controllers/AuthController.php';
+require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/lib/request.php';
+require_once __DIR__ . '/lib/response.php';
+require_once __DIR__ . '/lib/session.php';
+require_once __DIR__ . '/controllers/AuthController.php';
     require_once __DIR__ . '/controllers/DataController.php';
     require_once __DIR__ . '/controllers/ProfileController.php';
     require_once __DIR__ . '/controllers/SettingsController.php';
@@ -46,6 +47,13 @@ function dispatchAccountsApi(string $method, string $route): bool
     }
     if ($route === '/auth/me' && $method === 'GET') {
         (new AuthController($pdo))->me();
+    }
+    if ($route === '/auth/debug' && $method === 'GET') {
+        $cfg = appConfig();
+        if (empty($cfg['app']['debug'])) {
+            jsonError('Not found', 404);
+        }
+        jsonResponse(authDebugInfo($pdo));
     }
 
     $data = new DataController($pdo);

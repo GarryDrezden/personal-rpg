@@ -72,6 +72,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (loginName: string, password: string) => {
       const payload = await authApi.login(loginName, password);
       applyAuthPayload(payload);
+      const confirmed = await authApi.me();
+      applyAuthPayload(confirmed);
     },
     [applyAuthPayload],
   );
@@ -80,6 +82,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (loginName: string, password: string) => {
       const payload = await authApi.register(loginName, password);
       applyAuthPayload(payload);
+      const confirmed = await authApi.me();
+      applyAuthPayload(confirmed);
     },
     [applyAuthPayload],
   );

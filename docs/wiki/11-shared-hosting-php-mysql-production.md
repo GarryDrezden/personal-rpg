@@ -160,6 +160,13 @@ RewriteRule . /index.html [L]
 
 На одном домене CORS не нужен. Frontend использует `/api` + `credentials: 'include'`.
 
+### Cookie после register (401 fix)
+
+1. Network → `POST /api/auth/register` → header `Set-Cookie: pr_session=...; Path=/`
+2. Следующий запрос → `Cookie: pr_session=...`
+3. При `debug: true`: `GET /api/auth/debug` — статус сессии
+4. HTTPS за proxy: PHP учитывает `X-Forwarded-Proto` для `Secure`
+
 ### Белый экран
 
 - Ошибка в frontend build — смотри консоль браузера

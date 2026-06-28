@@ -1,6 +1,6 @@
 import { useEffect, lazy, Suspense } from 'react';
 
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 
 import { AuthProvider } from './auth/AuthProvider';
 
@@ -29,6 +29,8 @@ import { PageLoader } from './components/ui/PageLoader';
 import { SaveStatusIndicator } from './components/auth/SaveStatusIndicator';
 
 import { useAppStore } from './store/appStore';
+
+import { useAuth } from './auth/useAuth';
 
 
 
@@ -128,17 +130,22 @@ function ErrorScreen({ message }: { message: string }) {
 
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[var(--app-bg)] p-6 text-center text-[var(--app-text)]">
 
-      <p className="font-medium text-[var(--app-danger)]">Не удалось загрузить данные</p>
+      <p className="font-medium text-[var(--app-danger)]">Не удалось получить данные аккаунта</p>
 
       <p className="text-sm text-[var(--app-text-muted)]">{message}</p>
 
       <p className="max-w-md text-sm text-[var(--app-text-muted)]">
 
-        Убедитесь, что backend запущен:{' '}
-
-        <code className="rounded bg-[var(--app-card-strong)] px-1">npm run dev:server</code>
+        API недоступен или сессия истекла. Попробуйте обновить страницу или войти снова.
 
       </p>
+
+      <Link
+        to="/login"
+        className="btn-primary rounded-lg px-4 py-2 text-sm font-semibold"
+      >
+        Войти снова
+      </Link>
 
     </div>
 
@@ -150,15 +157,23 @@ function ErrorScreen({ message }: { message: string }) {
 
 function AuthenticatedApp() {
 
+  const { refreshUser } = useAuth();
+
   const { init, loading, error } = useAppStore();
 
 
 
   useEffect(() => {
 
-    void init();
+    void (async () => {
 
-  }, [init]);
+      await refreshUser();
+
+      await init();
+
+    })();
+
+  }, [init, refreshUser]);
 
 
 

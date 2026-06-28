@@ -15,6 +15,24 @@ function cookieName(): string
     return authConfig()['cookie_name'] ?? 'pr_session';
 }
 
+function isSecureConnection(): bool
+{
+    $cfg = authConfig();
+    if (!empty($cfg['secure_cookie'])) {
+        return true;
+    }
+    if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+        return true;
+    }
+    if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+        return true;
+    }
+    if (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') {
+        return true;
+    }
+    return false;
+}
+
 function createSessionToken(): string
 {
     return bin2hex(random_bytes(32));
@@ -25,31 +43,50 @@ function hashSessionToken(string $token): string
     return hash('sha256', $token);
 }
 
+/**
+ * Set session cookie via explicit Set-Cookie header (reliable on shared hosting / LSAPI).
+ */
 function setSessionCookie(string $token, DateTimeImmutable $expiresAt): void
 {
-    $cfg = authConfig();
-    $secure = !empty($cfg['secure_cookie']);
-    $sameSite = $cfg['same_site'] ?? 'Lax';
+    $name = cookieName();
+    $maxAge = max(1, sessionDays() * 86400);
+    $secure = isSecureConnection();
+    $sameSite = authConfig()['same_site'] ?? 'Lax';
 
-    setcookie(cookieName(), $token, [
-        'expires' => $expiresAt->getTimestamp(),
-        'path' => '/',
-        'secure' => $secure,
-        'httponly' => true,
-        'samesite' => $sameSite,
-    ]);
+    $parts = [
+        $name . '=' . rawurlencode($token),
+        'Path=/',
+        'Max-Age=' . $maxAge,
+        'Expires=' . gmdate('D, d M Y H:i:s', $expiresAt->getTimestamp()) . ' GMT',
+        'HttpOnly',
+        'SameSite=' . $sameSite,
+    ];
+    if ($secure) {
+        $parts[] = 'Secure';
+    }
+
+    header('Set-Cookie: ' . implode('; ', $parts), false);
 }
 
 function clearSessionCookie(): void
 {
-    $cfg = authConfig();
-    setcookie(cookieName(), '', [
-        'expires' => time() - 3600,
-        'path' => '/',
-        'secure' => !empty($cfg['secure_cookie']),
-        'httponly' => true,
-        'samesite' => $cfg['same_site'] ?? 'Lax',
-    ]);
+    $name = cookieName();
+    $secure = isSecureConnection();
+    $sameSite = authConfig()['same_site'] ?? 'Lax';
+
+    $parts = [
+        $name . '=',
+        'Path=/',
+        'Max-Age=0',
+        'Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+        'HttpOnly',
+        'SameSite=' . $sameSite,
+    ];
+    if ($secure) {
+        $parts[] = 'Secure';
+    }
+
+    header('Set-Cookie: ' . implode('; ', $parts), false);
 }
 
 function readSessionTokenFromCookie(): ?string
@@ -111,4 +148,24 @@ function requireAuthenticatedUserId(PDO $pdo): int
         jsonError('Unauthorized', 401);
     }
     return $userId;
+}
+
+function authDebugInfo(PDO $pdo): array
+{
+    $token = readSessionTokenFromCookie();
+    $info = [
+        'cookiePresent' => $token !== null,
+        'cookieName' => cookieName(),
+        'secureConnection' => isSecureConnection(),
+    ];
+    if ($token === null) {
+        $info['sessionValid'] = false;
+        return $info;
+    }
+    $hash = hashSessionToken($token);
+    $repo = new AuthSessionRepository($pdo);
+    $session = $repo->findValidByTokenHash($hash);
+    $info['sessionValid'] = $session !== null;
+    $info['userId'] = $session ? (int) $session['user_id'] : null;
+    return $info;
 }

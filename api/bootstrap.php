@@ -5,16 +5,22 @@ require_once __DIR__ . '/lib/request.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
-$allowedOrigin = '*';
+$requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowedOrigin = '';
 if (is_file(__DIR__ . '/config/config.php')) {
     $cfg = require __DIR__ . '/config/config.php';
     if (is_array($cfg) && !empty($cfg['app']['allowed_origin'])) {
-        $allowedOrigin = $cfg['app']['allowed_origin'];
+        $allowedOrigin = (string) $cfg['app']['allowed_origin'];
     }
 }
 
-header('Access-Control-Allow-Origin: ' . $allowedOrigin);
-header('Access-Control-Allow-Credentials: true');
+// Credentialed CORS: never use * with Allow-Credentials.
+if ($requestOrigin !== '' && $allowedOrigin !== '' && $requestOrigin === $allowedOrigin) {
+    header('Access-Control-Allow-Origin: ' . $allowedOrigin);
+    header('Access-Control-Allow-Credentials: true');
+    header('Vary: Origin');
+}
+
 header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 

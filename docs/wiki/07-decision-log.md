@@ -4,6 +4,26 @@
 
 ---
 
+## 2026-06-06 — PHP auth session stabilization
+
+### Контекст
+
+После перехода production backend на PHP + MySQL при создании героя появлялась ошибка Unauthorized. Frontend показывал устаревшую подсказку про Node backend.
+
+### Решение
+
+Стабилизировать PHP cookie-session flow: явный `Set-Cookie` header с `Path=/`, auto-detect HTTPS, register/login подтверждают сессию через `/api/auth/me` до загрузки данных.
+
+### Почему
+
+На shared hosting `setcookie()` может работать ненадёжно; frontend не должен зависеть от Node.
+
+### Последствия
+
+Создание героя и вход работают через PHP + MySQL; debug endpoint доступен при `debug: true`.
+
+---
+
 ## 2026-06-06 — Production backend switched to PHP + MySQL for shared hosting
 
 ### Контекст
