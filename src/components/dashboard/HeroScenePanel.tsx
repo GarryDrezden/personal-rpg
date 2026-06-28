@@ -20,6 +20,9 @@ import { Badge } from '../ui/Badge';
 import { HeroMilestoneTrack } from './HeroMilestoneTrack';
 import { DashboardPathEmptyState } from './DashboardPathEmptyState';
 
+/** ≈ 3× GameSceneBannerCard min-h (7.25rem) + 2× gap между карточками справа */
+const DASHBOARD_HERO_HEIGHT = '23rem';
+
 type HeroScenePanelProps = {
   level: number;
   totalXp: number;
@@ -126,24 +129,23 @@ export function HeroScenePanel({
       {/*
         Герой — минимум половина ширины на desktop; баннеры босса и моба — правая колонка.
       */}
-      <div className="grid min-h-[22.5rem] grid-cols-1 lg:min-h-[26rem] lg:grid-cols-2">
+      <div className="grid min-h-0 grid-cols-1 lg:grid-cols-2">
         {/* Hero + compact companion overlay */}
-        <div
-          className={`relative min-h-[22.5rem] lg:min-h-[26rem] ${sceneBg}`}
-        >
+        <div className={`relative min-h-[24rem] lg:min-h-[25rem] ${sceneBg}`}>
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_92%,color-mix(in_srgb,var(--app-primary)_22%,transparent),transparent_55%)]" />
 
           <div className="absolute left-2 top-2 z-20 rounded-full border border-[var(--app-border)] bg-black/45 px-2.5 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm">
             Ур. {level}
           </div>
 
-          <div className="relative flex h-full min-h-[22.5rem] items-end justify-center px-2 pb-2 pt-6 lg:min-h-[26rem] lg:px-4 lg:pb-3 lg:pt-7">
-            <div className="pointer-events-none absolute inset-x-[10%] bottom-3 h-3.5 rounded-[100%] bg-black/35 blur-md" />
-            <div className="pointer-events-none absolute inset-x-[16%] bottom-2.5 h-1 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_28%,transparent)] opacity-55" />
+          <div className="relative flex h-full min-h-[24rem] items-end justify-center px-2 pb-2 pt-4 lg:min-h-[25rem] lg:px-4 lg:pb-3 lg:pt-5">
+            <div className="pointer-events-none absolute inset-x-[18%] bottom-3 h-3 rounded-[100%] bg-black/35 blur-md" />
+            <div className="pointer-events-none absolute inset-x-[22%] bottom-2.5 h-1 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_28%,transparent)] opacity-55" />
 
             <div
               data-testid="hero-scene-character"
-              className="relative z-10 flex h-[90%] w-full max-w-full items-end justify-center bg-transparent lg:h-[92%]"
+              className="relative z-10 flex w-full max-w-[12rem] items-end justify-center bg-transparent sm:max-w-[13rem] lg:max-w-[14rem]"
+              style={{ height: DASHBOARD_HERO_HEIGHT, maxHeight: 'calc(100% - 1.5rem)' }}
             >
               <GameAssetImage
                 variant="hero"
