@@ -11,7 +11,7 @@ import type {
 export const GAME_ASSET_BASE_PATH = '/game-assets';
 
 /** Bump when replacing PNGs so browsers reload public assets */
-export const GAME_ASSET_VERSION = '17';
+export const GAME_ASSET_VERSION = '18';
 
 export function gameAsset(path: string): string {
   return `${GAME_ASSET_BASE_PATH}/${path}?v=${GAME_ASSET_VERSION}`;
