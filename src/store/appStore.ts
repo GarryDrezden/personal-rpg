@@ -7,7 +7,8 @@ import type {
   Reward,
   BankDeposit,
 } from '../types';
-import { apiRepository } from './apiRepository';
+import { getRepository } from '../storage/storageClient';
+import { hydrateLocalSidecarsFromRemote } from '../storage/sidecarSync';
 import { syncAchievementsFromData } from '../utils/achievementSync';
 import {
   rebuildAndSaveMomentumHistory,
@@ -99,7 +100,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   init: async () => {
     try {
       set({ loading: true, error: null });
-      const data = await apiRepository.loadAll();
+      const data = await getRepository().loadAll();
+      await hydrateLocalSidecarsFromRemote();
       const migratedSettings = migrateNutritionSettings(data.settings, data.dailyEntries);
       set({
         ...data,
@@ -136,7 +138,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   updateDaily: async (entry) => {
-    const saved = await apiRepository.upsertDaily(entry);
+    const saved = await getRepository().upsertDaily(entry);
     const entries = get().dailyEntries.filter((e) => e.date !== saved.date);
     const dailyEntries = [...entries, saved].sort((a, b) => a.date.localeCompare(b.date));
     set({ dailyEntries });
@@ -149,7 +151,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   deleteDaily: async (date) => {
-    await apiRepository.deleteDaily(date);
+    await getRepository().deleteDaily(date);
     const dailyEntries = get().dailyEntries.filter((e) => e.date !== date);
     set({ dailyEntries });
     syncAchievementsFromData(dailyEntries, get().measurements, get().settings);
@@ -161,26 +163,26 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   addMeasurement: async (entry) => {
-    const saved = await apiRepository.addMeasurement(entry);
+    const saved = await getRepository().addMeasurement(entry);
     const measurements = [...get().measurements, saved].sort((a, b) => a.date.localeCompare(b.date));
     set({ measurements });
     syncAchievementsFromData(get().dailyEntries, measurements, get().settings);
   },
 
   addReward: async (reward) => {
-    const saved = await apiRepository.addReward(reward);
+    const saved = await getRepository().addReward(reward);
     set({ rewards: [...get().rewards, saved] });
   },
 
   updateReward: async (id, patch) => {
-    const saved = await apiRepository.updateReward(id, patch);
+    const saved = await getRepository().updateReward(id, patch);
     set({
       rewards: get().rewards.map((r) => (r.id === id ? saved : r)),
     });
   },
 
   deleteReward: async (id) => {
-    await apiRepository.deleteReward(id);
+    await getRepository().deleteReward(id);
     set({
       rewards: get().rewards.filter((r) => r.id !== id),
     });
@@ -203,14 +205,14 @@ export const useAppStore = create<AppState>((set, get) => ({
     }
 
     useCoinStore.getState().addSpentForReward(reward);
-    const saved = await apiRepository.purchaseReward(id);
+    const saved = await getRepository().purchaseReward(id);
     set({
       rewards: get().rewards.map((r) => (r.id === id ? saved : r)),
     });
   },
 
   addBankDeposit: async (entry) => {
-    const saved = await apiRepository.addBankDeposit(entry);
+    const saved = await getRepository().addBankDeposit(entry);
     set({
       bankDeposits: [saved, ...get().bankDeposits].sort((a, b) =>
         b.date.localeCompare(a.date),
@@ -219,7 +221,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   deleteBankDeposit: async (id) => {
-    await apiRepository.deleteBankDeposit(id);
+    await getRepository().deleteBankDeposit(id);
     set({
       bankDeposits: get().bankDeposits.filter((d) => d.id !== id),
     });
@@ -228,7 +230,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   saveSettings: async (settings) => {
     const prev = get().settings;
     const payload = normalizeAppSettings(settings, prev);
-    const saved = await apiRepository.saveSettings({
+    const saved = await getRepository().saveSettings({
       ...payload,
       weightGoal: payload.weightGoal,
       enableSleepTracking: payload.enableSleepTracking ?? false,

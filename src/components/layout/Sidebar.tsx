@@ -1,10 +1,14 @@
 import { navGroups } from '../../constants/navigation';
 import { NavItemLink } from './NavItemLink';
+import { useAuth } from '../../auth/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const SIDEBAR_WIDTH = 'md:w-[356px]';
 const SIDEBAR_MARGIN = 'md:ml-[356px]';
 
 export function Sidebar() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const systemGroup = navGroups.find((group) => group.id === 'system');
   const scrollGroups = navGroups.filter((group) => group.id !== 'system');
 
@@ -50,6 +54,20 @@ export function Sidebar() {
               <NavItemLink key={item.to} {...item} />
             ))}
           </div>
+          {user ? (
+            <div className="mt-2 border-t border-[var(--app-border)] pt-2 px-2">
+              <p className="truncate text-xs text-[var(--app-text-muted)]">{user.login}</p>
+              <button
+                type="button"
+                className="mt-1 text-xs text-[var(--app-gold)] hover:underline"
+                onClick={() => {
+                  void logout().then(() => navigate('/login'));
+                }}
+              >
+                Выйти
+              </button>
+            </div>
+          ) : null}
         </div>
       ) : null}
     </aside>

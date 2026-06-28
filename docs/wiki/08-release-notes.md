@@ -4,6 +4,12 @@
 
 ### Added
 
+- Accounts/auth foundation (register, login, logout, `/api/auth/me`)
+- MySQL storage via Prisma (`backend/`)
+- User profile and settings tables
+- Protected routes (`ProtectedRoute`, Login/Register pages)
+- Remote storage layer (`remoteStorageClient`) + legacy import (SQLite script + browser banner)
+- `docs/wiki/10-accounts-and-storage.md`
 - Project wiki structure (`docs/wiki/`, `docs/brandbook/`, `docs/prompts/`)
 - Asset gallery manifest (`docs/assets/manifest.json`)
 - Privacy plan (`docs/wiki/09-privacy-plan.md`)

@@ -24,16 +24,26 @@
 | Слой | Технологии |
 |------|------------|
 | Frontend | React 19, TypeScript, Vite 6, Tailwind CSS 4, Zustand, React Router |
-| Backend (local/hosting) | PHP 8.2, SQLite (`data/personal-rpg.sqlite`) |
-| Dev server | Vite + PHP API на `:8080` |
-| Hosting | Shared hosting + GitHub Actions FTP deploy |
-| Game assets | `public/game-assets/`, версия кэша `GAME_ASSET_VERSION=18` |
+| Backend (accounts) | Node.js, Express, Prisma, MySQL (`backend/`, порт 3001) |
+| Backend (legacy) | PHP 8.2, SQLite (`api/`, `data/personal-rpg.sqlite`) |
+| Dev server | Vite proxy `/api` → Node `:3001` |
+| Hosting | Shared hosting + GitHub Actions FTP deploy (static + PHP legacy) |
+| Game assets | `public/game-assets/`, версия кэша `GAME_ASSET_VERSION=19` |
 
 ## Текущая версия
 
 - **README:** v1.4 (пользовательская документация)
 - **package.json:** 1.0.0
-- **GAME_ASSET_VERSION:** 18
+- **GAME_ASSET_VERSION:** 19
+
+## Sprint 1 — Accounts & Storage Foundation (2026-06-06)
+
+- Регистрация / вход / выход (httpOnly cookie sessions)
+- MySQL + Prisma: `User`, `UserProfile`, `UserSettings`, `UserData`, `AuthSession`
+- API: `/api/auth/*`, `/api/data/*`, `/api/profile`, `/api/settings`
+- Frontend: AuthProvider, ProtectedRoute, Login/Register pages
+- Remote storage layer + legacy import (SQLite script + localStorage banner)
+- Подробнее: [`10-accounts-and-storage.md`](10-accounts-and-storage.md)
 
 ## Уже реализовано
 
@@ -83,14 +93,15 @@
 
 - Догенерация male hero stages 4–18 (dark fantasy линейка)
 - Консистентность hero stages между male/female
-- UserData API (миграция localStorage → server по userId) — запланировано
+- Полный remote sync sidecar-данных (achievements, coins, momentum) — частично через localStorage
+- Production deploy Node backend (сейчас dev + отдельный VPS TODO)
 - Полировка journey map и codex showcase
 
 ## Следующий приоритет
 
-**Спринт 1:** пользователи и хранение данных (регистрация, MySQL, профиль, перенос данных, защита роутов).
+**Спринт 2:** Onboarding + Asset Registry 2.0 (выбор пола, темы, целей, связь ассетов с профилем).
 
-Графика и hero stages — **Спринт 3**, после устойчивого backend. Подробнее: [`01-roadmap.md`](01-roadmap.md).
+Графика и hero stages — **Спринт 3**. Подробнее: [`01-roadmap.md`](01-roadmap.md).
 
 ## Технические риски
 
@@ -98,7 +109,7 @@
 - дублирование навигации (legacy routes `/skills`, `/bosses` → redirects);
 - рассинхрон ассетов (manifest vs `public/game-assets/` vs `GAME_ASSET_VERSION`);
 - приватные данные в публичной вики;
-- миграция localStorage / SQLite → accounts + DB;
+- миграция localStorage / SQLite → accounts + DB — **MVP готов**, sidecar sync частичный;
 - consistency hero stages (male incomplete);
 - FTP deploy не заливает `data/` — база на хостинге отдельно.
 

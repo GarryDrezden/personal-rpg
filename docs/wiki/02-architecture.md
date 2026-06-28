@@ -1,15 +1,22 @@
 # Architecture
 
-## Current architecture
+## Current architecture (Sprint 1)
 
 ```
 Browser (React SPA)
     │
     ├── Vite build → dist/ (static)
     │
-    └── /api/* → PHP (api/index.php)
+    └── /api/* → Node backend (backend/, port 3001)
                     │
-                    └── SQLite (data/personal-rpg.sqlite)
+                    ├── Prisma ORM
+                    └── MySQL (users, profiles, settings, user_data, sessions)
+```
+
+**Legacy (still in repo):**
+
+```
+/api/* (PHP) → SQLite (data/personal-rpg.sqlite)   ← import source, not used when authenticated
 ```
 
 ### Frontend
@@ -17,6 +24,8 @@ Browser (React SPA)
 | Область | Путь | Описание |
 |---------|------|----------|
 | Pages | `src/pages/` | Экраны приложения |
+| Auth | `src/auth/`, `src/api/` | AuthProvider, HTTP client |
+| Storage | `src/storage/` | remote + legacy repositories |
 | Components | `src/components/` | UI, game, journey, dashboard |
 | Constants | `src/constants/` | Достижения, боссы, стадии, темы |
 | Utils / engines | `src/utils/*Engine.ts` | Игровая логика (pure functions) |
@@ -24,54 +33,50 @@ Browser (React SPA)
 | Store | `src/store/` | Zustand state |
 | Types | `src/types/` | TypeScript models |
 
-**Routing:** `src/App.tsx` — React Router v7.
+**Routing:** `src/App.tsx` — React Router v7, protected routes via `ProtectedRoute`.
 
 Legacy redirects: `/skills` → `/growth/skills`, `/bosses` → `/growth/trials`.
 
-### Storage (current)
+### Storage (Sprint 1)
 
-| Данные | Где |
-|--------|-----|
-| Daily entries, measurements, settings | SQLite via PHP API |
-| Theme, часть UI prefs | localStorage |
-| Coins, achievements, game progress (частично) | localStorage + SQLite mix |
+| Данные | Где (authenticated) |
+|--------|---------------------|
+| Auth, profile, settings | MySQL `User`, `UserProfile`, `UserSettings` |
+| Daily, measurements, rewards, bank | MySQL `UserData` JSON (`dailyEntries`, …) |
+| Full AppSettings backup | `UserData.customSettingsBackup` |
+| Achievements, coins, momentum (MVP) | `UserData` + localStorage sidecar sync |
+| Theme UI pref (legacy) | localStorage (TODO: full remote) |
 | Game assets | Static files `public/game-assets/` |
 
-**API endpoints** (`api/index.php`):
+**Node API endpoints** (`backend/src/routes/`):
 
-- `GET/PUT/DELETE /daily/{date}`
-- `GET/POST/DELETE /measurements`
-- `GET/PUT /settings`
-- `GET/POST/DELETE /week-goals`
-- `GET/POST/DELETE /rewards`
-- `GET /health` (`health.php`)
+- `POST /api/auth/register|login|logout`, `GET /api/auth/me`
+- `GET/PUT /api/data`, `GET/PUT /api/data/:type`
+- `PATCH /api/profile`, `PATCH /api/settings`
+
+**Legacy PHP API** (`api/index.php`): daily, measurements, settings, rewards — для импорта и старого deploy.
 
 ### Server (Windows local)
 
-- `server/` — nginx + PHP-CGI runtime, autostart scripts
+- `backend/` — Node API (`npm run dev:server`)
+- `server/` — nginx + PHP-CGI runtime (legacy local stack)
 - `scripts/` — dev-api, build-release, autostart installers
 
 ### Hosting (production)
 
-- Shared hosting, PHP 8.2+
-- GitHub Actions: `npm run build` → FTP upload `dist/`, `api/`, `.htaccess`
-- `data/` **не** деплоится через CI — SQLite создаётся на сервере
+- Shared hosting, PHP 8.2+ — **static frontend + legacy PHP** via FTP
+- Node/MySQL backend — **отдельный хост** (VPS/Railway) — TODO for prod accounts
+- `data/` **не** деплоится через CI
 
-## Planned architecture
+Подробнее: [`10-accounts-and-storage.md`](10-accounts-and-storage.md)
+
+## Previous architecture (pre-Sprint 1)
 
 ```
-Browser
-    │
-    └── API (PHP or Node — TBD)
-            │
-            ├── PostgreSQL (or selected DB)
-            └── user_data table by userId
+Browser → Vite → /api/* → PHP → SQLite
 ```
 
-- User accounts (registration / login)
-- Server-side storage per user
-- Migration tool: local SQLite + localStorage → account
-- Sync between devices
+## Planned (Sprint 2+)
 
 ## Asset architecture
 
@@ -109,5 +114,7 @@ src/game/assetPaths.ts               ← runtime paths + GAME_ASSET_VERSION
 | Новая игровая механика | `src/utils/*Engine.ts`, `src/constants/` |
 | Новый экран | `src/pages/`, `src/App.tsx` |
 | Ассеты | `src/game/assetPaths.ts`, `docs/assets/manifest.json` |
-| API | `api/index.php`, `api/Database.php` |
+| API (accounts) | `backend/src/`, `backend/prisma/` |
+| API (legacy) | `api/index.php`, `api/Database.php` |
+| Auth / storage | `docs/wiki/10-accounts-and-storage.md` |
 | Deploy | `.github/workflows/deploy.yml` |

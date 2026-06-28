@@ -14,6 +14,7 @@
 - [`wiki/07-decision-log.md`](wiki/07-decision-log.md) — журнал решений
 - [`wiki/08-release-notes.md`](wiki/08-release-notes.md) — release notes
 - [`wiki/09-privacy-plan.md`](wiki/09-privacy-plan.md) — правила приватности
+- [`wiki/10-accounts-and-storage.md`](wiki/10-accounts-and-storage.md) — аккаунты, MySQL, auth (Sprint 1)
 
 ## Legacy-документы
 

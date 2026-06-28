@@ -29,7 +29,9 @@ GitHub Actions secrets (FTP) хранятся только в GitHub Settings, �
 - approved public game assets (stylized 3D characters);
 - anonymized asset descriptions;
 - manifest entries без private photos;
-- generic hosting notes (PHP 8.2, SQLite, без credentials).
+- generic hosting notes (PHP 8.2, MySQL, без credentials);
+- `.env.example` без реальных secrets;
+- bcrypt password hashes в БД (не в repo).
 
 ## Future plan
 

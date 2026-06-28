@@ -16,18 +16,21 @@
 
 ---
 
-## Спринт 1: Пользователи и хранение данных
+## Спринт 1: Пользователи и хранение данных ✅
 
 **Цель:** игра становится многопользовательской, данные живут на сервере, роуты защищены.
 
-- [ ] Регистрация / логин
-- [ ] MySQL (миграция с SQLite / legacy local)
-- [ ] Профиль пользователя
-- [ ] Настройки (серверные, per user)
-- [ ] Перенос данных (localStorage + SQLite → account)
-- [ ] Защита роутов (auth middleware, private API)
+- [x] Регистрация / логин / logout
+- [x] MySQL + Prisma (`backend/`)
+- [x] Профиль пользователя (`UserProfile`)
+- [x] Настройки per user (`UserSettings`)
+- [x] JSON `UserData` для игровых payload
+- [x] Перенос данных (SQLite script + localStorage banner)
+- [x] Защита роутов (ProtectedRoute, auth API)
 
-**Критерий готовности:** пользователь входит с другого устройства и видит свои данные; без логина — только публичные экраны.
+**Критерий готовности:** пользователь входит с другого устройства и видит свои данные; без логина — только `/login` и `/register`.
+
+См. [`10-accounts-and-storage.md`](10-accounts-and-storage.md).
 
 ---
 
@@ -72,12 +75,13 @@
 
 ---
 
-## Ближайшие задачи (до Спринта 1)
+## Ближайшие задачи
 
-- [ ] Спроектировать схему MySQL + auth API
-- [ ] `UserData` / migration plan (см. `02-architecture.md`)
+- [ ] Onboarding flow (Sprint 2)
+- [ ] Asset registry 2.0 — gender/theme/profile binding
 - [ ] Mobile navigation: Today в центре
 - [ ] Growth hub / Data hub polish
+- [ ] Production Node backend hosting
 
 ---
 
@@ -114,6 +118,7 @@
 
 ## Завершено (недавно)
 
+- **Sprint 1:** accounts, MySQL, auth, user_data, protected routes, legacy import
 - Journey development map UI
 - Nutrition modes (disabled / simple / precise)
 - Freedom Score + Momentum systems

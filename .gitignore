@@ -7,6 +7,10 @@ test-results/
 installer/staging/
 tsconfig.tsbuildinfo
 data/*.sqlite
+*.sqlite
+*.db
+backend/node_modules/
+backend/dist/
 server/runtime/
 server/logs/
 

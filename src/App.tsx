@@ -2,11 +2,19 @@ import { useEffect, lazy, Suspense } from 'react';
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
+import { AuthProvider } from './auth/AuthProvider';
+
+import { ProtectedRoute, GuestRoute } from './auth/ProtectedRoute';
+
 import { AppShell } from './components/layout/AppShell';
 
 import { DashboardPage } from './pages/DashboardPage';
 
 import { TodayPage } from './pages/TodayPage';
+
+import { LoginPage } from './pages/LoginPage';
+
+import { RegisterPage } from './pages/RegisterPage';
 
 import { AchievementToastHost } from './components/achievements/AchievementToastHost';
 
@@ -17,6 +25,8 @@ import { FreedomLevelUnlockHost } from './components/freedom/FreedomLevelUnlockH
 import { MomentumCoinHost } from './components/momentum/MomentumCoinHost';
 
 import { PageLoader } from './components/ui/PageLoader';
+
+import { SaveStatusIndicator } from './components/auth/SaveStatusIndicator';
 
 import { useAppStore } from './store/appStore';
 
@@ -118,15 +128,15 @@ function ErrorScreen({ message }: { message: string }) {
 
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[var(--app-bg)] p-6 text-center text-[var(--app-text)]">
 
-      <p className="font-medium text-[var(--app-danger)]">Не удалось подключиться к API</p>
+      <p className="font-medium text-[var(--app-danger)]">Не удалось загрузить данные</p>
 
       <p className="text-sm text-[var(--app-text-muted)]">{message}</p>
 
       <p className="max-w-md text-sm text-[var(--app-text-muted)]">
 
-        Убедитесь, что nginx и PHP запущены на порту 8080, или используйте{' '}
+        Убедитесь, что backend запущен:{' '}
 
-        <code className="rounded bg-[var(--app-card-strong)] px-1">npm run dev</code> с работающим API.
+        <code className="rounded bg-[var(--app-card-strong)] px-1">npm run dev:server</code>
 
       </p>
 
@@ -138,7 +148,7 @@ function ErrorScreen({ message }: { message: string }) {
 
 
 
-export default function App() {
+function AuthenticatedApp() {
 
   const { init, loading, error } = useAppStore();
 
@@ -160,53 +170,57 @@ export default function App() {
 
   return (
 
-    <BrowserRouter>
+    <Suspense fallback={<PageLoader />}>
 
-      <Suspense fallback={<PageLoader />}>
+      <Routes>
 
-        <Routes>
+        <Route element={<AppShell />}>
 
-          <Route element={<AppShell />}>
+          <Route path="/" element={<DashboardPage />} />
 
-            <Route path="/" element={<DashboardPage />} />
+          <Route path="/today" element={<TodayPage />} />
 
-            <Route path="/today" element={<TodayPage />} />
+          <Route path="/week" element={<WeekPage />} />
 
-            <Route path="/week" element={<WeekPage />} />
+          <Route path="/growth" element={<Navigate to="/growth/skills" replace />} />
 
-            <Route path="/growth" element={<Navigate to="/growth/skills" replace />} />
-            <Route path="/growth/:tab" element={<GrowthHubPage />} />
-            <Route path="/skills" element={<Navigate to="/growth/skills" replace />} />
-            <Route path="/abilities" element={<Navigate to="/growth/abilities" replace />} />
-            <Route path="/rewards" element={<Navigate to="/growth/rewards" replace />} />
-            <Route path="/achievements" element={<Navigate to="/growth/achievements" replace />} />
-            <Route path="/bosses" element={<Navigate to="/growth/trials" replace />} />
+          <Route path="/growth/:tab" element={<GrowthHubPage />} />
 
-            <Route path="/measurements" element={<MeasurementsPage />} />
+          <Route path="/skills" element={<Navigate to="/growth/skills" replace />} />
 
-            <Route path="/journey" element={<JourneyMapPage />} />
+          <Route path="/abilities" element={<Navigate to="/growth/abilities" replace />} />
 
-            <Route path="/freedom" element={<FreedomPage />} />
+          <Route path="/rewards" element={<Navigate to="/growth/rewards" replace />} />
 
-            <Route path="/momentum" element={<MomentumPage />} />
+          <Route path="/achievements" element={<Navigate to="/growth/achievements" replace />} />
 
-            <Route path="/map" element={<ProgressMapPage />} />
+          <Route path="/bosses" element={<Navigate to="/growth/trials" replace />} />
 
-            <Route path="/reports" element={<WeeklyReportsPage />} />
+          <Route path="/measurements" element={<MeasurementsPage />} />
 
-            <Route path="/insights" element={<InsightsPage />} />
+          <Route path="/journey" element={<JourneyMapPage />} />
 
-            <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/freedom" element={<FreedomPage />} />
 
-            <Route path="/faq" element={<FaqPage />} />
+          <Route path="/momentum" element={<MomentumPage />} />
 
-            <Route path="/codex" element={<GameCodexPage />} />
+          <Route path="/map" element={<ProgressMapPage />} />
 
-          </Route>
+          <Route path="/reports" element={<WeeklyReportsPage />} />
 
-        </Routes>
+          <Route path="/insights" element={<InsightsPage />} />
 
-      </Suspense>
+          <Route path="/settings" element={<SettingsPage />} />
+
+          <Route path="/faq" element={<FaqPage />} />
+
+          <Route path="/codex" element={<GameCodexPage />} />
+
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+
+      </Routes>
 
       <AchievementToastHost />
 
@@ -216,10 +230,47 @@ export default function App() {
 
       <MomentumCoinHost />
 
-    </BrowserRouter>
+      <SaveStatusIndicator />
+
+    </Suspense>
 
   );
 
 }
 
+
+
+export default function App() {
+
+  return (
+
+    <AuthProvider>
+
+      <BrowserRouter>
+
+        <Routes>
+
+          <Route element={<GuestRoute />}>
+
+            <Route path="/login" element={<LoginPage />} />
+
+            <Route path="/register" element={<RegisterPage />} />
+
+          </Route>
+
+          <Route element={<ProtectedRoute />}>
+
+            <Route path="/*" element={<AuthenticatedApp />} />
+
+          </Route>
+
+        </Routes>
+
+      </BrowserRouter>
+
+    </AuthProvider>
+
+  );
+
+}
 
