@@ -35,6 +35,14 @@ jobs:
           cp -r api/. .deploy-staging/api/
           cp .htaccess .deploy-staging/
 
+      - name: Verify deploy bundle (no repo source on server)
+        run: |
+          test ! -d .deploy-staging/src
+          test ! -f .deploy-staging/package.json
+          test ! -d .deploy-staging/docs
+          echo "Bundle OK:"
+          ls -la .deploy-staging | head -20
+
       - name: Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
