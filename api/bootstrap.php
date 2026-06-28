@@ -1,8 +1,21 @@
 <?php
 
+require_once __DIR__ . '/lib/response.php';
+require_once __DIR__ . '/lib/request.php';
+
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+
+$allowedOrigin = '*';
+if (is_file(__DIR__ . '/config/config.php')) {
+    $cfg = require __DIR__ . '/config/config.php';
+    if (is_array($cfg) && !empty($cfg['app']['allowed_origin'])) {
+        $allowedOrigin = $cfg['app']['allowed_origin'];
+    }
+}
+
+header('Access-Control-Allow-Origin: ' . $allowedOrigin);
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -12,36 +25,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once __DIR__ . '/Database.php';
 
-function jsonResponse(mixed $data, int $code = 200): void
-{
-    http_response_code($code);
-    echo json_encode($data, JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
-function jsonError(string $message, int $code = 400): void
-{
-    jsonResponse(['error' => $message], $code);
-}
-
 function handleApiFatal(string $message): void
 {
     jsonError($message, 500);
 }
 
 set_exception_handler(static function (Throwable $e): void {
-    handleApiFatal($e->getMessage());
-});
-
-function getJsonBody(): array
-{
-    $raw = file_get_contents('php://input');
-    if (!$raw) {
-        return [];
+    $debug = false;
+    if (is_file(__DIR__ . '/config/config.php')) {
+        $cfg = require __DIR__ . '/config/config.php';
+        $debug = is_array($cfg) && !empty($cfg['app']['debug']);
     }
-    $data = json_decode($raw, true);
-    return is_array($data) ? $data : [];
-}
+    handleApiFatal($debug ? $e->getMessage() : 'Internal server error');
+});
 
 function rowToDaily(array $row): array
 {

@@ -9,11 +9,7 @@ export default defineConfig({
     exclude: ['**/node_modules/**', '**/dist/**', 'e2e/**'],
   },
   server: {
-    proxy: {
-      '/api': {
-        target: 'http://127.0.0.1:3001',
-        changeOrigin: true,
-      },
-    },
+    // Production & OSPanel: /api → PHP via .htaccess (same origin).
+    // No Node proxy — backend/ is VPS-only.
   },
 });

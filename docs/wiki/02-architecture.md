@@ -1,23 +1,19 @@
 # Architecture
 
-## Current architecture (Sprint 1)
+## Current architecture (production)
 
 ```
-Browser (React SPA)
+Browser (React SPA, dist/)
     │
-    ├── Vite build → dist/ (static)
-    │
-    └── /api/* → Node backend (backend/, port 3001)
+    └── /api/* → api/index.php (PHP 8.2 LSAPI)
                     │
-                    ├── Prisma ORM
-                    └── MySQL (users, profiles, settings, user_data, sessions)
+                    ├── router-accounts.php → MySQL (auth, user_data)
+                    └── legacy SQLite routes (dev fallback, optional)
 ```
 
-**Legacy (still in repo):**
+**Deploy (GitHub Actions → FTP):** `dist/` + `api/` + `.htaccess` — без `backend/`.
 
-```
-/api/* (PHP) → SQLite (data/personal-rpg.sqlite)   ← import source, not used when authenticated
-```
+**Experimental (not production):** `backend/` Node + Prisma — VPS-only.
 
 ### Frontend
 
@@ -48,13 +44,17 @@ Legacy redirects: `/skills` → `/growth/skills`, `/bosses` → `/growth/trials`
 | Theme UI pref (legacy) | localStorage (TODO: full remote) |
 | Game assets | Static files `public/game-assets/` |
 
-**Node API endpoints** (`backend/src/routes/`):
+**PHP API endpoints** (`api/router-accounts.php`, MySQL):
 
 - `POST /api/auth/register|login|logout`, `GET /api/auth/me`
 - `GET/PUT /api/data`, `GET/PUT /api/data/:type`
 - `PATCH /api/profile`, `PATCH /api/settings`
 
-**Legacy PHP API** (`api/index.php`): daily, measurements, settings, rewards — для импорта и старого deploy.
+Конфиг: `api/config/config.php` (на сервере, не в Git).
+
+**Legacy PHP API** (`api/index.php`, SQLite): `/daily`, `/measurements`, … — dev fallback.
+
+Подробнее: [`11-shared-hosting-php-mysql-production.md`](11-shared-hosting-php-mysql-production.md)
 
 ### Server (Windows local)
 
@@ -64,8 +64,9 @@ Legacy redirects: `/skills` → `/growth/skills`, `/bosses` → `/growth/trials`
 
 ### Hosting (production)
 
-- Shared hosting, PHP 8.2+ — **static frontend + legacy PHP** via FTP
-- Node/MySQL backend — **отдельный хост** (VPS/Railway) — TODO for prod accounts
+- Shared hosting, PHP 8.2+ — static + PHP API via FTP
+- MySQL на хостинге (ispmanager) — `api/config/config.php` вручную
+- Node/MySQL `backend/` — **не** в production deploy
 - `data/` **не** деплоится через CI
 
 Подробнее: [`10-accounts-and-storage.md`](10-accounts-and-storage.md)
@@ -114,7 +115,7 @@ src/game/assetPaths.ts               ← runtime paths + GAME_ASSET_VERSION
 | Новая игровая механика | `src/utils/*Engine.ts`, `src/constants/` |
 | Новый экран | `src/pages/`, `src/App.tsx` |
 | Ассеты | `src/game/assetPaths.ts`, `docs/assets/manifest.json` |
-| API (accounts) | `backend/src/`, `backend/prisma/` |
-| API (legacy) | `api/index.php`, `api/Database.php` |
+| API (production) | `api/`, `api/config/config.example.php`, `api/migrations/` |
+| API (VPS-only) | `backend/` |
 | Auth / storage | `docs/wiki/10-accounts-and-storage.md` |
 | Deploy | `.github/workflows/deploy.yml` |

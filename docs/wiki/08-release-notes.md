@@ -4,8 +4,11 @@
 
 ### Added
 
+- PHP + MySQL production auth API in `api/` (shared hosting)
+- SQL migration `api/migrations/001_create_accounts_tables.sql`
+- `api/config/config.example.php` (real config on server only)
+- Production guide [`11-shared-hosting-php-mysql-production.md`](wiki/11-shared-hosting-php-mysql-production.md)
 - Accounts/auth foundation (register, login, logout, `/api/auth/me`)
-- MySQL storage via Prisma (`backend/`)
 - User profile and settings tables
 - Protected routes (`ProtectedRoute`, Login/Register pages)
 - Remote storage layer (`remoteStorageClient`) + legacy import (SQLite script + browser banner)

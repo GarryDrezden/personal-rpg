@@ -58,5 +58,6 @@ jobs:
             **/node_modules/**
             data/**
             **/*.sqlite
+            api/config/config.php
             .deploy-staging/**
             deploy-bundle/**

@@ -14,7 +14,8 @@
 - [`wiki/07-decision-log.md`](wiki/07-decision-log.md) — журнал решений
 - [`wiki/08-release-notes.md`](wiki/08-release-notes.md) — release notes
 - [`wiki/09-privacy-plan.md`](wiki/09-privacy-plan.md) — правила приватности
-- [`wiki/10-accounts-and-storage.md`](wiki/10-accounts-and-storage.md) — аккаунты, MySQL, auth (Sprint 1)
+- [`wiki/10-accounts-and-storage.md`](wiki/10-accounts-and-storage.md) — аккаунты, auth, user_data
+- [`wiki/11-shared-hosting-php-mysql-production.md`](wiki/11-shared-hosting-php-mysql-production.md) — PHP + MySQL на shared hosting
 
 ## Legacy-документы
 

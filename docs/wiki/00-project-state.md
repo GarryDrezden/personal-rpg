@@ -24,10 +24,9 @@
 | Слой | Технологии |
 |------|------------|
 | Frontend | React 19, TypeScript, Vite 6, Tailwind CSS 4, Zustand, React Router |
-| Backend (accounts) | Node.js, Express, Prisma, MySQL (`backend/`, порт 3001) |
-| Backend (legacy) | PHP 8.2, SQLite (`api/`, `data/personal-rpg.sqlite`) |
-| Dev server | Vite proxy `/api` → Node `:3001` |
-| Hosting | Shared hosting + GitHub Actions FTP deploy (static + PHP legacy) |
+| Backend (production) | PHP 8.2 LSAPI + PDO + MySQL в `api/` |
+| Backend (experimental) | Node/Express/Prisma в `backend/` — VPS-only, не в production |
+| Dev / deploy | GitHub Actions FTP: `dist/` + `api/` + `.htaccess` |
 | Game assets | `public/game-assets/`, версия кэша `GAME_ASSET_VERSION=19` |
 
 ## Текущая версия
@@ -36,14 +35,14 @@
 - **package.json:** 1.0.0
 - **GAME_ASSET_VERSION:** 19
 
-## Sprint 1 — Accounts & Storage Foundation (2026-06-06)
+## Sprint 1 — Accounts & Storage (production: PHP + MySQL)
 
-- Регистрация / вход / выход (httpOnly cookie sessions)
-- MySQL + Prisma: `User`, `UserProfile`, `UserSettings`, `UserData`, `AuthSession`
-- API: `/api/auth/*`, `/api/data/*`, `/api/profile`, `/api/settings`
-- Frontend: AuthProvider, ProtectedRoute, Login/Register pages
-- Remote storage layer + legacy import (SQLite script + localStorage banner)
-- Подробнее: [`10-accounts-and-storage.md`](10-accounts-and-storage.md)
+- Auth: register / login / logout / me через **PHP API** (`api/`)
+- MySQL: `users`, `user_profiles`, `user_settings`, `user_data`, `auth_sessions`
+- Frontend auth layer без переписывания игры
+- Legacy import (localStorage banner)
+- Node `backend/` — archived / VPS-only
+- Подробнее: [`10-accounts-and-storage.md`](10-accounts-and-storage.md), [`11-shared-hosting-php-mysql-production.md`](11-shared-hosting-php-mysql-production.md)
 
 ## Уже реализовано
 

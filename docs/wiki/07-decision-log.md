@@ -4,6 +4,26 @@
 
 ---
 
+## 2026-06-06 — Production backend switched to PHP + MySQL for shared hosting
+
+### Контекст
+
+Sprint 1 был реализован через Node/Express/Prisma/MySQL, но production — shared hosting с ispmanager, PHP LSAPI, MySQL и FTP. Node-процесс на хостинге недоступен, VPS по бюджету нет.
+
+### Решение
+
+Production backend на **PHP + PDO + MySQL** в `api/`, те же URL `/api/auth/*`, `/api/data/*`. Frontend auth/storage слой сохранён.
+
+### Почему
+
+Регистрация и user storage работают на текущем хостинге без VPS.
+
+### Последствия
+
+`backend/` — VPS-only эксперимент. Deploy: `dist/` + `api/` + `.htaccess`.
+
+---
+
 ## 2026-06-06 — Accounts & Storage Foundation
 
 ### Контекст

@@ -22,6 +22,7 @@ docs/private/
 .env
 .env.*
 !.env.example
+api/config/config.php
 
 # raw private references
 *.psd

@@ -2,13 +2,17 @@
 
 > Обновлено: 2026-06-06
 
+## Production backend
+
+**Shared hosting:** PHP API в `api/` + MySQL + cookie sessions.
+
+**Не production:** Node `backend/` (VPS-only).
+
+Пошаговая настройка хостинга: [`11-shared-hosting-php-mysql-production.md`](11-shared-hosting-php-mysql-production.md)
+
+---
+
 ## Обзор
-
-Sprint 1 добавляет многопользовательское хранение: регистрация, вход, сессии, MySQL и JSON-хранилище игровых данных per user.
-
-**Backend:** Node.js + Express + Prisma + MySQL в каталоге `backend/` (порт `3001`).
-
-**Legacy:** PHP API + SQLite (`api/`, `data/personal-rpg.sqlite`) остаётся в репозитории для совместимости и импорта, но frontend в dev/prod с auth использует Node API.
 
 ---
 

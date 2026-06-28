@@ -63,7 +63,11 @@
 
 ---
 
-## Сейчас (между спринтами / параллельно)
+## Сейчас
+
+- [x] PHP + MySQL production auth/storage (shared hosting)
+- [ ] Production smoke test на fit-rpg.ru
+- [ ] Stabilize remote autosave (sidecar sync)
 
 - [x] Проектная вики и брендбук
 - [x] Галерея ассетов (`docs/assets/manifest.json`)
