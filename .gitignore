@@ -23,6 +23,9 @@ docs/private/
 .env.*
 !.env.example
 api/config/config.php
+api/sessions/*
+!api/sessions/.htaccess
+!api/sessions/.gitkeep
 
 # raw private references
 *.psd

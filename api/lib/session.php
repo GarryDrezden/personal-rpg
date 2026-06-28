@@ -3,24 +3,25 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../repositories/AuthSessionRepository.php';
 
 function authConfig(): array
 {
+    if (!is_file(__DIR__ . '/../config/config.php')) {
+        return [];
+    }
     return appConfig()['auth'] ?? [];
 }
 
 function cookieName(): string
 {
-    return authConfig()['cookie_name'] ?? 'pr_session';
+    if (is_file(__DIR__ . '/../config/config.php')) {
+        return authConfig()['cookie_name'] ?? 'pr_session';
+    }
+    return 'pr_session';
 }
 
 function isSecureConnection(): bool
 {
-    $cfg = authConfig();
-    if (!empty($cfg['secure_cookie'])) {
-        return true;
-    }
     if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
         return true;
     }
@@ -30,115 +31,98 @@ function isSecureConnection(): bool
     if (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') {
         return true;
     }
+    if (is_file(__DIR__ . '/../config/config.php')) {
+        $cfg = authConfig();
+        if (!empty($cfg['secure_cookie'])) {
+            return true;
+        }
+    }
     return false;
-}
-
-function createSessionToken(): string
-{
-    return bin2hex(random_bytes(32));
-}
-
-function hashSessionToken(string $token): string
-{
-    return hash('sha256', $token);
-}
-
-/**
- * Set session cookie via explicit Set-Cookie header (reliable on shared hosting / LSAPI).
- */
-function setSessionCookie(string $token, DateTimeImmutable $expiresAt): void
-{
-    $name = cookieName();
-    $maxAge = max(1, sessionDays() * 86400);
-    $secure = isSecureConnection();
-    $sameSite = authConfig()['same_site'] ?? 'Lax';
-
-    $parts = [
-        $name . '=' . rawurlencode($token),
-        'Path=/',
-        'Max-Age=' . $maxAge,
-        'Expires=' . gmdate('D, d M Y H:i:s', $expiresAt->getTimestamp()) . ' GMT',
-        'HttpOnly',
-        'SameSite=' . $sameSite,
-    ];
-    if ($secure) {
-        $parts[] = 'Secure';
-    }
-
-    header('Set-Cookie: ' . implode('; ', $parts), false);
-}
-
-function clearSessionCookie(): void
-{
-    $name = cookieName();
-    $secure = isSecureConnection();
-    $sameSite = authConfig()['same_site'] ?? 'Lax';
-
-    $parts = [
-        $name . '=',
-        'Path=/',
-        'Max-Age=0',
-        'Expires=Thu, 01 Jan 1970 00:00:00 GMT',
-        'HttpOnly',
-        'SameSite=' . $sameSite,
-    ];
-    if ($secure) {
-        $parts[] = 'Secure';
-    }
-
-    header('Set-Cookie: ' . implode('; ', $parts), false);
-}
-
-function readSessionTokenFromCookie(): ?string
-{
-    $name = cookieName();
-    return isset($_COOKIE[$name]) && is_string($_COOKIE[$name]) && $_COOKIE[$name] !== ''
-        ? $_COOKIE[$name]
-        : null;
 }
 
 function sessionDays(): int
 {
-    return (int) (authConfig()['session_days'] ?? 30);
+    if (is_file(__DIR__ . '/../config/config.php')) {
+        return (int) (authConfig()['session_days'] ?? 30);
+    }
+    return 30;
 }
 
-function createAuthSession(PDO $pdo, int $userId): string
+/**
+ * Start PHP native session (reliable on shared hosting / LSAPI).
+ * Must run before any response headers.
+ */
+function sessionSavePath(): string
 {
-    $repo = new AuthSessionRepository($pdo);
-    $repo->deleteExpired();
+    $path = __DIR__ . '/../sessions';
+    if (!is_dir($path)) {
+        mkdir($path, 0700, true);
+    }
+    return $path;
+}
 
-    $token = createSessionToken();
-    $expiresAt = (new DateTimeImmutable('+' . sessionDays() . ' days'));
-    $repo->create($userId, hashSessionToken($token), $expiresAt);
-    setSessionCookie($token, $expiresAt);
+function authSessionStart(): void
+{
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        return;
+    }
 
-    return $token;
+    $name = cookieName();
+    $lifetime = sessionDays() * 86400;
+    $secure = isSecureConnection();
+    $sameSite = 'Lax';
+    if (is_file(__DIR__ . '/../config/config.php')) {
+        $sameSite = authConfig()['same_site'] ?? 'Lax';
+    }
+
+    session_save_path(sessionSavePath());
+    session_name($name);
+    session_set_cookie_params([
+        'lifetime' => $lifetime,
+        'path' => '/',
+        'secure' => $secure,
+        'httponly' => true,
+        'samesite' => $sameSite,
+    ]);
+    ini_set('session.use_strict_mode', '1');
+    ini_set('session.use_only_cookies', '1');
+    session_start();
+}
+
+function createAuthSession(PDO $pdo, int $userId): void
+{
+    authSessionStart();
+    session_regenerate_id(true);
+    $_SESSION['user_id'] = $userId;
+    $_SESSION['auth_at'] = time();
 }
 
 function destroyCurrentSession(PDO $pdo): void
 {
-    $token = readSessionTokenFromCookie();
-    if ($token !== null) {
-        $repo = new AuthSessionRepository($pdo);
-        $repo->deleteByTokenHash(hashSessionToken($token));
+    authSessionStart();
+    $_SESSION = [];
+    if (ini_get('session.use_cookies')) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', [
+            'expires' => time() - 42000,
+            'path' => $params['path'] ?: '/',
+            'domain' => $params['domain'] ?? '',
+            'secure' => (bool) ($params['secure'] ?? false),
+            'httponly' => (bool) ($params['httponly'] ?? true),
+            'samesite' => $params['samesite'] ?? 'Lax',
+        ]);
     }
-    clearSessionCookie();
+    session_destroy();
 }
 
 function resolveAuthenticatedUserId(PDO $pdo): ?int
 {
-    $token = readSessionTokenFromCookie();
-    if ($token === null) {
+    authSessionStart();
+    if (!isset($_SESSION['user_id'])) {
         return null;
     }
-
-    $repo = new AuthSessionRepository($pdo);
-    $session = $repo->findValidByTokenHash(hashSessionToken($token));
-    if ($session === null) {
-        return null;
-    }
-
-    return (int) $session['user_id'];
+    $userId = (int) $_SESSION['user_id'];
+    return $userId > 0 ? $userId : null;
 }
 
 function requireAuthenticatedUserId(PDO $pdo): int
@@ -152,20 +136,14 @@ function requireAuthenticatedUserId(PDO $pdo): int
 
 function authDebugInfo(PDO $pdo): array
 {
-    $token = readSessionTokenFromCookie();
-    $info = [
-        'cookiePresent' => $token !== null,
+    authSessionStart();
+    return [
+        'sessionActive' => session_status() === PHP_SESSION_ACTIVE,
+        'sessionName' => session_name(),
+        'sessionIdPresent' => session_id() !== '',
         'cookieName' => cookieName(),
+        'cookieInRequest' => isset($_COOKIE[cookieName()]),
+        'userId' => $_SESSION['user_id'] ?? null,
         'secureConnection' => isSecureConnection(),
     ];
-    if ($token === null) {
-        $info['sessionValid'] = false;
-        return $info;
-    }
-    $hash = hashSessionToken($token);
-    $repo = new AuthSessionRepository($pdo);
-    $session = $repo->findValidByTokenHash($hash);
-    $info['sessionValid'] = $session !== null;
-    $info['userId'] = $session ? (int) $session['user_id'] : null;
-    return $info;
 }

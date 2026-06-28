@@ -18,7 +18,7 @@ interface AuthContextValue {
   login: (login: string, password: string) => Promise<void>;
   register: (login: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  refreshUser: () => Promise<void>;
+  refreshUser: () => Promise<boolean>;
   applyAuthPayload: (payload: AuthPayload) => void;
 }
 
@@ -37,17 +37,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setStorageMode('remote');
   }, []);
 
-  const refreshUser = useCallback(async () => {
+  const refreshUser = useCallback(async (): Promise<boolean> => {
     try {
       const payload = await authApi.me();
       applyAuthPayload(payload);
+      return true;
     } catch (e) {
       if (e instanceof ApiError && e.status === 401) {
         setUser(null);
         setProfile(null);
         setSettings(null);
         setStorageMode('legacy');
-        return;
+        return false;
       }
       throw e;
     }
@@ -70,8 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(
     async (loginName: string, password: string) => {
-      const payload = await authApi.login(loginName, password);
-      applyAuthPayload(payload);
+      await authApi.login(loginName, password);
       const confirmed = await authApi.me();
       applyAuthPayload(confirmed);
     },
@@ -80,8 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = useCallback(
     async (loginName: string, password: string) => {
-      const payload = await authApi.register(loginName, password);
-      applyAuthPayload(payload);
+      await authApi.register(loginName, password);
       const confirmed = await authApi.me();
       applyAuthPayload(confirmed);
     },

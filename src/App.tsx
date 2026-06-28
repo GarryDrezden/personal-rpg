@@ -1,4 +1,4 @@
-import { useEffect, lazy, Suspense } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 
@@ -157,9 +157,11 @@ function ErrorScreen({ message }: { message: string }) {
 
 function AuthenticatedApp() {
 
-  const { refreshUser } = useAuth();
+  const { authenticated, refreshUser } = useAuth();
 
   const { init, loading, error } = useAppStore();
+
+  const [sessionReady, setSessionReady] = useState(false);
 
 
 
@@ -167,9 +169,19 @@ function AuthenticatedApp() {
 
     void (async () => {
 
-      await refreshUser();
+      setSessionReady(false);
+
+      const ok = await refreshUser();
+
+      if (!ok) {
+
+        return;
+
+      }
 
       await init();
+
+      setSessionReady(true);
 
     })();
 
@@ -177,7 +189,13 @@ function AuthenticatedApp() {
 
 
 
-  if (loading) return <LoadingScreen />;
+  if (!authenticated) {
+
+    return null;
+
+  }
+
+  if (!sessionReady || loading) return <LoadingScreen />;
 
   if (error) return <ErrorScreen message={error} />;
 

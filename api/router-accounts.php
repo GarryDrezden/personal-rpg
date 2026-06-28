@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/lib/routes.php';
+
 /**
  * Dispatch auth/data/profile/settings routes (MySQL production API).
- * Returns true if handled, false to fall through to legacy SQLite routes.
  */
 function dispatchAccountsApi(string $method, string $route): bool
 {
@@ -12,11 +13,11 @@ function dispatchAccountsApi(string $method, string $route): bool
         return false;
     }
 
-require_once __DIR__ . '/config/database.php';
-require_once __DIR__ . '/lib/request.php';
-require_once __DIR__ . '/lib/response.php';
-require_once __DIR__ . '/lib/session.php';
-require_once __DIR__ . '/controllers/AuthController.php';
+    require_once __DIR__ . '/config/database.php';
+    require_once __DIR__ . '/lib/request.php';
+    require_once __DIR__ . '/lib/response.php';
+    require_once __DIR__ . '/lib/session.php';
+    require_once __DIR__ . '/controllers/AuthController.php';
     require_once __DIR__ . '/controllers/DataController.php';
     require_once __DIR__ . '/controllers/ProfileController.php';
     require_once __DIR__ . '/controllers/SettingsController.php';
@@ -35,7 +36,6 @@ require_once __DIR__ . '/controllers/AuthController.php';
 
     $body = getJsonBody();
 
-    // Auth
     if ($route === '/auth/register' && $method === 'POST') {
         (new AuthController($pdo))->register($body);
     }
@@ -83,18 +83,4 @@ require_once __DIR__ . '/controllers/AuthController.php';
     }
 
     jsonError('Not found', 404);
-}
-
-function isAccountsApiRoute(string $route): bool
-{
-    if (str_starts_with($route, '/auth/')) {
-        return true;
-    }
-    if ($route === '/data' || str_starts_with($route, '/data/')) {
-        return true;
-    }
-    if ($route === '/profile' || $route === '/settings') {
-        return true;
-    }
-    return false;
 }
