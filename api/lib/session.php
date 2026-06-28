@@ -54,11 +54,21 @@ function sessionDays(): int
  */
 function sessionSavePath(): string
 {
-    $path = __DIR__ . '/../sessions';
-    if (!is_dir($path)) {
-        mkdir($path, 0700, true);
+    $candidates = [
+        __DIR__ . '/../sessions',
+        rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . '/fit-rpg-sessions',
+    ];
+
+    foreach ($candidates as $path) {
+        if (!is_dir($path)) {
+            @mkdir($path, 0755, true);
+        }
+        if (is_dir($path) && is_writable($path)) {
+            return $path;
+        }
     }
-    return $path;
+
+    return $candidates[0];
 }
 
 function authSessionStart(): void
@@ -145,5 +155,7 @@ function authDebugInfo(PDO $pdo): array
         'cookieInRequest' => isset($_COOKIE[cookieName()]),
         'userId' => $_SESSION['user_id'] ?? null,
         'secureConnection' => isSecureConnection(),
+        'sessionSavePath' => session_save_path(),
+        'sessionSavePathWritable' => is_writable(session_save_path()),
     ];
 }

@@ -33,10 +33,20 @@ foreach ($required as $file) {
     $checks['apiFiles'][$file] = is_file(__DIR__ . '/' . $file);
 }
 
+$sessionsDir = __DIR__ . '/sessions';
+$checks['sessionsDirExists'] = is_dir($sessionsDir);
+$checks['sessionsDirWritable'] = $checks['sessionsDirExists'] && is_writable($sessionsDir);
+if (!$checks['sessionsDirExists']) {
+    @mkdir($sessionsDir, 0755, true);
+    $checks['sessionsDirExists'] = is_dir($sessionsDir);
+    $checks['sessionsDirWritable'] = $checks['sessionsDirExists'] && is_writable($sessionsDir);
+}
+
 $checks['ok'] = ($checks['pdo_mysql'] ?? false)
     && ($checks['mysqlConfigExists'] ?? false)
     && ($checks['mysqlConnect'] ?? false)
     && ($checks['usersTable'] ?? false)
+    && ($checks['sessionsDirWritable'] ?? false)
     && !in_array(false, $checks['apiFiles'], true);
 
 if (!$checks['ok']) {

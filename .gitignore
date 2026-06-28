@@ -26,6 +26,7 @@ api/config/config.php
 api/sessions/*
 !api/sessions/.htaccess
 !api/sessions/.gitkeep
+!api/sessions/index.php
 
 # raw private references
 *.psd
