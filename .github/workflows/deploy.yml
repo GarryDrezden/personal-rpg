@@ -29,19 +29,19 @@ jobs:
 
       - name: Prepare deploy bundle
         run: |
-          rm -rf .deploy-staging
-          mkdir -p .deploy-staging/api
-          cp -r dist/. .deploy-staging/
-          cp -r api/. .deploy-staging/api/
-          cp .htaccess .deploy-staging/
+          rm -rf deploy-bundle
+          mkdir -p deploy-bundle/api
+          cp -r dist/. deploy-bundle/
+          cp -r api/. deploy-bundle/api/
+          cp .htaccess deploy-bundle/
 
       - name: Verify deploy bundle (no repo source on server)
         run: |
-          test ! -d .deploy-staging/src
-          test ! -f .deploy-staging/package.json
-          test ! -d .deploy-staging/docs
+          test ! -d deploy-bundle/src
+          test ! -f deploy-bundle/package.json
+          test ! -d deploy-bundle/docs
           echo "Bundle OK:"
-          ls -la .deploy-staging | head -20
+          ls -la deploy-bundle | head -20
 
       - name: Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -49,11 +49,14 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./.deploy-staging/
+          local-dir: ./deploy-bundle/
           server-dir: ${{ env.FTP_SERVER_DIR }}
+          state-name: .ftp-deploy-sync-state-v2.json
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
             data/**
             **/*.sqlite
+            .deploy-staging/**
+            deploy-bundle/**
