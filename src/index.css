@@ -13,6 +13,7 @@
   --app-primary: #f59e0b;
   --app-primary-soft: #fef3c7;
   --app-primary-contrast: #0f172a;
+  --app-gold: var(--app-primary);
   --app-secondary: #8b5cf6;
   --app-success: #10b981;
   --app-danger: #f43f5e;
@@ -43,6 +44,7 @@
   --app-primary: #facc15;
   --app-primary-soft: rgba(250, 204, 21, 0.14);
   --app-primary-contrast: #0f172a;
+  --app-gold: var(--app-primary);
   --app-secondary: #a78bfa;
   --app-success: #34d399;
   --app-danger: #fb7185;

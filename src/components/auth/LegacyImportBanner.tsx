@@ -54,7 +54,7 @@ export function LegacyImportBanner() {
           type="button"
           disabled={busy}
           onClick={() => void onImport()}
-          className="rounded-lg bg-[var(--app-gold)] px-3 py-1.5 text-sm font-medium text-[var(--app-bg)]"
+          className="btn-primary rounded-lg px-3 py-1.5 text-sm font-semibold"
         >
           {busy ? 'Переносим…' : 'Перенести'}
         </button>

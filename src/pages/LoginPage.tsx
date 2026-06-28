@@ -68,7 +68,7 @@ export function LoginPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full rounded-lg bg-[var(--app-gold)] px-4 py-2.5 font-medium text-[var(--app-bg)] transition hover:opacity-90 disabled:opacity-60"
+            className="btn-primary w-full rounded-lg px-4 py-2.5 font-semibold transition hover:opacity-90 disabled:opacity-60"
           >
             {submitting ? 'Входим…' : 'Продолжить путь'}
           </button>
