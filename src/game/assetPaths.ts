@@ -1,3 +1,4 @@
+import type { AppThemeId } from '../types/theme';
 import type {
   ArtifactId,
   BossId,
@@ -11,7 +12,10 @@ import type {
 export const GAME_ASSET_BASE_PATH = '/game-assets';
 
 /** Bump when replacing PNGs so browsers reload public assets */
-export const GAME_ASSET_VERSION = '18';
+export const GAME_ASSET_VERSION = '19';
+
+/** Folder names under heroes/{gender}/variants/ */
+export type HeroAssetVariantFolder = 'dark-fantasy' | 'light';
 
 export function gameAsset(path: string): string {
   return `${GAME_ASSET_BASE_PATH}/${path}?v=${GAME_ASSET_VERSION}`;
@@ -26,9 +30,35 @@ export function warnMissingGameAsset(src: string): void {
   console.warn(`Missing game asset: ${src}`);
 }
 
-export function getGameHeroStagePublicPath(gender: HeroGender, stage: HeroStageNumber): string {
+export function resolveHeroAssetVariant(themeId: AppThemeId): HeroAssetVariantFolder {
+  return themeId === 'cozy' ? 'light' : 'dark-fantasy';
+}
+
+export function getGameHeroStageVariantPath(
+  gender: HeroGender,
+  stage: HeroStageNumber,
+  variant: HeroAssetVariantFolder,
+): string {
+  const n = String(stage).padStart(2, '0');
+  return gameAsset(`heroes/${gender}/variants/${variant}/stage-${n}.png`);
+}
+
+/** Legacy root path — existing approved PNGs (unchanged on disk) */
+export function getGameHeroStageLegacyPath(gender: HeroGender, stage: HeroStageNumber): string {
   const n = String(stage).padStart(2, '0');
   return gameAsset(`heroes/${gender}/stage-${n}.png`);
+}
+
+/** @deprecated Use getGameHeroStageLegacyPath or themed variant paths */
+export function getGameHeroStagePublicPath(
+  gender: HeroGender,
+  stage: HeroStageNumber,
+  themeId?: AppThemeId,
+): string {
+  if (themeId) {
+    return getGameHeroStageVariantPath(gender, stage, resolveHeroAssetVariant(themeId));
+  }
+  return getGameHeroStageLegacyPath(gender, stage);
 }
 
 /** Legacy male avatars from earlier generation */
@@ -106,25 +136,79 @@ export function getArtifactPublicPath(id: ArtifactId): string {
   return gameAsset(`artifacts/${fileMap[id]}`);
 }
 
+const HERO_STAGE_ANCHORS: HeroStageNumber[] = [1, 2, 19, 20];
+
+function uniquePaths(paths: string[]): string[] {
+  const seen = new Set<string>();
+  return paths.filter((path) => {
+    if (seen.has(path)) return false;
+    seen.add(path);
+    return true;
+  });
+}
+
+function buildHeroStagePathsForStage(
+  gender: HeroGender,
+  stage: HeroStageNumber,
+  themeId: AppThemeId,
+): string[] {
+  const variant = resolveHeroAssetVariant(themeId);
+  const otherVariant: HeroAssetVariantFolder = variant === 'light' ? 'dark-fantasy' : 'light';
+
+  const paths: string[] = [
+    getGameHeroStageVariantPath(gender, stage, variant),
+    getGameHeroStageLegacyPath(gender, stage),
+    getGameHeroStageVariantPath(gender, stage, otherVariant),
+  ];
+
+  return uniquePaths(paths);
+}
+
 export function getHeroStageImageCandidates(
   gender: HeroGender,
   stage: HeroStageNumber,
+  themeId: AppThemeId = 'darkFantasy',
 ): string[] {
-  const primary = getGameHeroStagePublicPath(gender, stage);
-  // Пока не все 20 PNG готовы — подставляем ближайший якорь, чтобы не показывать старый кэш/placeholder
-  const anchors: HeroStageNumber[] = [1, 2, 19, 20];
-  const fallbacks = anchors
-    .filter((s) => s !== stage)
+  const primaryPaths = buildHeroStagePathsForStage(gender, stage, themeId);
+
+  const anchorPaths = HERO_STAGE_ANCHORS.filter((s) => s !== stage)
     .sort((a, b) => Math.abs(a - stage) - Math.abs(b - stage))
-    .map((s) => getGameHeroStagePublicPath(gender, s));
-  return [primary, ...fallbacks];
+    .flatMap((anchor) => buildHeroStagePathsForStage(gender, anchor, themeId));
+
+  return uniquePaths([...primaryPaths, ...anchorPaths]);
+}
+
+export function getHeroStageImageSrc(
+  gender: HeroGender,
+  stage: HeroStageNumber,
+  themeId: AppThemeId = 'darkFantasy',
+): string {
+  return getHeroStageImageCandidates(gender, stage, themeId)[0];
+}
+
+function buildHeroDeathPaths(gender: HeroGender, themeId: AppThemeId): string[] {
+  const variant = resolveHeroAssetVariant(themeId);
+  const otherVariant: HeroAssetVariantFolder = variant === 'light' ? 'dark-fantasy' : 'light';
+
+  return uniquePaths([
+    gameAsset(`heroes/${gender}/variants/${variant}/death.png`),
+    gameAsset(`heroes/${gender}/death.png`),
+    gameAsset(`heroes/${gender}/variants/${otherVariant}/death.png`),
+  ]);
 }
 
 /** Силуэт «Смерти» (200 кг) — фигура в чёрной мантии с косой. */
-export function getHeroDeathPublicPath(gender: HeroGender): string {
+export function getHeroDeathPublicPath(gender: HeroGender, themeId?: AppThemeId): string {
+  if (themeId) {
+    const variant = resolveHeroAssetVariant(themeId);
+    return gameAsset(`heroes/${gender}/variants/${variant}/death.png`);
+  }
   return gameAsset(`heroes/${gender}/death.png`);
 }
 
-export function getHeroDeathImageCandidates(gender: HeroGender): string[] {
-  return [getHeroDeathPublicPath(gender)];
+export function getHeroDeathImageCandidates(
+  gender: HeroGender,
+  themeId: AppThemeId = 'darkFantasy',
+): string[] {
+  return buildHeroDeathPaths(gender, themeId);
 }

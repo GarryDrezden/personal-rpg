@@ -1,13 +1,11 @@
 import type { ReactNode } from 'react';
 import type { CompanionId, HeroGender, HeroStageNumber } from '../../types/gameAssets';
 import { HERO_STAGE_COUNT } from '../../types/gameAssets';
-import {
-  getCompanionImageCandidates,
-  getHeroStageImageCandidates,
-} from '../../game/assetPaths';
+import { getCompanionImageCandidates } from '../../game/assetPaths';
 import { getCompanionMeta, getHeroStageMeta } from '../../game/assetRegistry';
 import { GameAssetImage } from '../game/GameAssetImage';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import { useHeroStageAssets } from '../../hooks/useHeroStageAssets';
 
 type HeroVisualAreaProps = {
   gender: HeroGender;
@@ -29,6 +27,7 @@ export function HeroVisualArea({
 }: HeroVisualAreaProps) {
   const { isDarkFantasy } = useAppTheme();
   const stageMeta = getHeroStageMeta(gender, stage);
+  const heroAssets = useHeroStageAssets(gender, stage);
   const companionMeta = getCompanionMeta(companionId);
   const isFocus = layout === 'focus';
 
@@ -57,9 +56,9 @@ export function HeroVisualArea({
             <div className="pointer-events-none absolute inset-x-[8%] bottom-0 h-3 rounded-[100%] bg-black/30 blur-md" />
             <GameAssetImage
               variant="hero"
-              src={stageMeta.image}
+              src={heroAssets.src}
               alt={stageMeta.title}
-              fallbackCandidates={getHeroStageImageCandidates(gender, stage).slice(1)}
+              fallbackCandidates={heroAssets.fallbackCandidates}
               status="unlocked"
               fit="hero"
               className="h-[11.5rem] w-full sm:h-[12.5rem] lg:h-[13.5rem]"
@@ -139,9 +138,9 @@ export function HeroVisualArea({
           <div className="pointer-events-none absolute inset-x-[10%] bottom-0 h-3 rounded-[100%] bg-black/30 blur-md" />
           <GameAssetImage
             variant="hero"
-            src={stageMeta.image}
+            src={heroAssets.src}
             alt={stageMeta.title}
-            fallbackCandidates={getHeroStageImageCandidates(gender, stage).slice(1)}
+            fallbackCandidates={heroAssets.fallbackCandidates}
             status="unlocked"
             fit="hero"
             className="h-[14.5rem] w-full max-w-[11.5rem] sm:h-[15.5rem] sm:max-w-[13rem]"

@@ -4,9 +4,9 @@ import { getChapterMeta } from '../../constants/gameChapters';
 import { getCompanionMeta, getHeroStageMeta } from '../../game/assetRegistry';
 import {
   getCompanionImageCandidates,
-  getHeroStageImageCandidates,
 } from '../../game/assetPaths';
 import { useGameHeroState } from '../../hooks/useGameHeroState';
+import { useHeroStageAssets } from '../../hooks/useHeroStageAssets';
 import { useAppStore } from '../../store/appStore';
 import { getDayMoodPhrase, getLevelFromXp, getLevelRankTitle } from '../../utils/dashboard';
 import { getPathSetupState } from '../../utils/dashboardPathSetup';
@@ -41,6 +41,7 @@ export function HeroScenePanel({
   const pathSetup = getPathSetupState(measurements, settings);
   const chapter = getChapterMeta(game.chapter);
   const stageMeta = getHeroStageMeta(game.profile.heroGender, game.stage);
+  const heroAssets = useHeroStageAssets(game.profile.heroGender, game.stage);
   const companionMeta = getCompanionMeta(game.profile.activeCompanionId);
   const mood = getDayMoodPhrase(todayPoints);
   const rank = getLevelRankTitle(level);
@@ -146,12 +147,9 @@ export function HeroScenePanel({
             >
               <GameAssetImage
                 variant="hero"
-                src={stageMeta.image}
+                src={heroAssets.src}
                 alt={stageMeta.title}
-                fallbackCandidates={getHeroStageImageCandidates(
-                  game.profile.heroGender,
-                  game.stage,
-                ).slice(1)}
+                fallbackCandidates={heroAssets.fallbackCandidates}
                 status="unlocked"
                 fit="hero"
                 className="h-full w-full items-end bg-transparent"

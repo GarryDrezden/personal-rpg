@@ -1,10 +1,7 @@
 import type { HeroGender, HeroStageNumber } from '../../types/gameAssets';
 import { HERO_STAGE_COUNT } from '../../types/gameAssets';
-import {
-  getHeroDeathImageCandidates,
-  getHeroStageImageCandidates,
-} from '../../game/assetPaths';
 import { getHeroStageMeta } from '../../game/assetRegistry';
+import { useHeroDeathAssets, useHeroStageAssets } from '../../hooks/useHeroStageAssets';
 import { GameAssetImage } from './GameAssetImage';
 
 type CodexHeroProgressionSceneProps = {
@@ -48,6 +45,8 @@ type HeroSilhouetteProps = {
 
 function HeroSilhouette({ gender, stage, playerStage, variant }: HeroSilhouetteProps) {
   const meta = getHeroStageMeta(gender, stage);
+  const heroAssets = useHeroStageAssets(gender, stage);
+  const deathAssets = useHeroDeathAssets(gender);
   const status =
     variant === 'current'
       ? 'current'
@@ -82,18 +81,14 @@ function HeroSilhouette({ gender, stage, playerStage, variant }: HeroSilhouetteP
           ? 'codex-hero-current'
           : 'codex-hero-right';
 
-  const deathCandidates = variant === 'death' ? getHeroDeathImageCandidates(gender) : undefined;
-
   return (
     <div data-testid={testId} className={wrapperClass}>
         <GameAssetImage
           variant="hero"
-          src={variant === 'death' ? deathCandidates?.[0] : meta.image}
+          src={variant === 'death' ? deathAssets.src : heroAssets.src}
           alt={variant === 'death' ? 'Смерть — предел 200 кг' : meta.title}
           fallbackCandidates={
-            variant === 'death'
-              ? deathCandidates?.slice(1)
-              : getHeroStageImageCandidates(gender, stage).slice(1)
+            variant === 'death' ? deathAssets.fallbackCandidates : heroAssets.fallbackCandidates
           }
           status={variant === 'current' ? 'current' : status}
           fit="hero"

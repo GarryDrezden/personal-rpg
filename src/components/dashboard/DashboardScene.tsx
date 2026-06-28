@@ -1,14 +1,12 @@
 import type { BossId, CompanionId, HeroGender, HeroStageNumber, MobId, ChapterNumber } from '../../types/gameAssets';
 import { HERO_STAGE_COUNT } from '../../types/gameAssets';
-import {
-  getCompanionImageCandidates,
-  getHeroStageImageCandidates,
-} from '../../game/assetPaths';
 import { getCompanionMeta, getHeroStageMeta } from '../../game/assetRegistry';
+import { getCompanionImageCandidates } from '../../game/assetPaths';
 import { GameAssetImage } from '../game/GameAssetImage';
 import { DailyMobBadge } from '../game/DailyMobBadge';
 import { ChapterBossBadge } from '../game/ChapterBossBadge';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import { useHeroStageAssets } from '../../hooks/useHeroStageAssets';
 
 type DashboardSceneProps = {
   gender: HeroGender;
@@ -33,6 +31,7 @@ export function DashboardScene({
 }: DashboardSceneProps) {
   const { isDarkFantasy } = useAppTheme();
   const stageMeta = getHeroStageMeta(gender, stage);
+  const heroAssets = useHeroStageAssets(gender, stage);
   const companionMeta = getCompanionMeta(companionId);
 
   const avatarBg = isDarkFantasy
@@ -67,9 +66,9 @@ export function DashboardScene({
             <div className="pointer-events-none absolute inset-x-[6%] bottom-0.5 h-3.5 rounded-[100%] bg-black/30 blur-md" />
             <GameAssetImage
               variant="hero"
-              src={stageMeta.image}
+              src={heroAssets.src}
               alt={stageMeta.title}
-              fallbackCandidates={getHeroStageImageCandidates(gender, stage).slice(1)}
+              fallbackCandidates={heroAssets.fallbackCandidates}
               status="unlocked"
               fit="hero"
               className="h-full w-full min-h-[15rem] max-h-[19rem] sm:min-h-[16rem] lg:min-h-[17.5rem] lg:max-h-[20rem]"

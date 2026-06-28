@@ -14,7 +14,7 @@ import {
   getArtifactPublicPath,
   getBossPublicPath,
   getCompanionPublicPath,
-  getGameHeroStagePublicPath,
+  getGameHeroStageLegacyPath,
   getMobPublicPath,
 } from './assetPaths';
 import { getChapterFromStage } from './heroProgressEngine';
@@ -28,7 +28,7 @@ function buildHeroStages(gender: HeroGender): HeroStageMeta[] {
       description: HERO_STAGE_DESCRIPTIONS[stage],
       progressPercent: row.progressPercent,
       chapter: getChapterFromStage(stage),
-      image: getGameHeroStagePublicPath(gender, stage),
+      image: getGameHeroStageLegacyPath(gender, stage),
     };
   });
 }

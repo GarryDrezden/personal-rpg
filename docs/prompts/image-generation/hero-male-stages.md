@@ -1,6 +1,21 @@
 # Hero Male Stages — Image Prompts
 
-## Export path
+## Export paths (theme variants)
+
+```
+public/game-assets/heroes/{male,female}/variants/dark-fantasy/stage-01.png … stage-20.png, death.png
+public/game-assets/heroes/{male,female}/variants/light/stage-01.png … stage-20.png, death.png
+```
+
+Legacy approved PNGs remain at `heroes/{gender}/stage-XX.png` — used as fallback for dark theme until variant file exists.
+
+Generate placeholders (dev):
+
+```powershell
+python local/tools/generate_hero_placeholders.py
+```
+
+## Export path (legacy root)
 
 ```
 public/game-assets/heroes/male/stage-01.png … stage-20.png

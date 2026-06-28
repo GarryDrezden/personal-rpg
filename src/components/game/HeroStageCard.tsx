@@ -1,8 +1,8 @@
 import type { HeroGender, HeroStageNumber } from '../../types/gameAssets';
 import { HERO_STAGE_COUNT } from '../../types/gameAssets';
 import { getChapterMeta } from '../../constants/gameChapters';
-import { getHeroStageImageCandidates } from '../../game/assetPaths';
 import { getHeroStageMeta } from '../../game/assetRegistry';
+import { useHeroStageAssets } from '../../hooks/useHeroStageAssets';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
 import { GameAssetImage } from './GameAssetImage';
@@ -25,6 +25,7 @@ export function HeroStageCard({
   hasWeightPath = true,
 }: HeroStageCardProps) {
   const meta = getHeroStageMeta(gender, stage);
+  const heroAssets = useHeroStageAssets(gender, stage);
   const chapter = getChapterMeta(meta.chapter);
 
   return (
@@ -37,9 +38,9 @@ export function HeroStageCard({
         >
           <GameAssetImage
             variant="hero"
-            src={meta.image}
+            src={heroAssets.src}
             alt={meta.title}
-            fallbackCandidates={getHeroStageImageCandidates(gender, stage).slice(1)}
+            fallbackCandidates={heroAssets.fallbackCandidates}
             status="current"
             className="h-full w-full"
             imageClassName="object-contain object-bottom"

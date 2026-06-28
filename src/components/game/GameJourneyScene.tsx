@@ -1,6 +1,7 @@
 import type { CompanionId, HeroGender, HeroStageNumber } from '../../types/gameAssets';
-import { getCompanionImageCandidates, getHeroStageImageCandidates } from '../../game/assetPaths';
+import { getCompanionImageCandidates } from '../../game/assetPaths';
 import { getCompanionMeta, getHeroStageMeta } from '../../game/assetRegistry';
+import { useHeroStageAssets } from '../../hooks/useHeroStageAssets';
 import { GameAssetImage } from './GameAssetImage';
 
 type GameJourneySceneProps = {
@@ -17,6 +18,7 @@ export function GameJourneyScene({
   className = '',
 }: GameJourneySceneProps) {
   const heroMeta = getHeroStageMeta(gender, stage);
+  const heroAssets = useHeroStageAssets(gender, stage);
   const companionMeta = getCompanionMeta(companionId);
 
   return (
@@ -32,9 +34,9 @@ export function GameJourneyScene({
       <div className="absolute bottom-0 left-1/2 z-10 h-[82%] w-[50%] -translate-x-1/2">
         <GameAssetImage
           variant="hero"
-          src={heroMeta.image}
+          src={heroAssets.src}
           alt={heroMeta.title}
-          fallbackCandidates={getHeroStageImageCandidates(gender, stage).slice(1)}
+          fallbackCandidates={heroAssets.fallbackCandidates}
           status="current"
           className="h-full w-full"
           imageClassName="object-contain object-bottom"

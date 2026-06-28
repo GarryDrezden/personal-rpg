@@ -4,12 +4,9 @@ import type { HeroGender, HeroStageMeta, HeroStageNumber } from '../../types/gam
 import { HERO_STAGE_COUNT } from '../../types/gameAssets';
 import { HERO_MILESTONE_STAGES } from '../../constants/heroMilestones';
 import { getChapterMeta } from '../../constants/gameChapters';
-import {
-  getHeroDeathImageCandidates,
-  getHeroStageImageCandidates,
-} from '../../game/assetPaths';
 import { getHeroStageMeta } from '../../game/assetRegistry';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import { useHeroDeathAssets, useHeroStageAssets } from '../../hooks/useHeroStageAssets';
 import {
   isStageUnlocked,
   resolveMilestoneFlankStages,
@@ -81,6 +78,7 @@ type FlankFigureProps = {
 
 function FlankFigure({ gender, stage, side, playerStage, variant }: FlankFigureProps) {
   const meta = getHeroStageMeta(gender, stage);
+  const heroAssets = useHeroStageAssets(gender, stage);
   const locked = stage > playerStage;
   const testId =
     side === 'left' ? 'hero-transformation-left-ghost' : 'hero-transformation-right-ghost';
@@ -118,9 +116,9 @@ function FlankFigure({ gender, stage, side, playerStage, variant }: FlankFigureP
       <div className={`relative z-[1] h-full w-full ${opacity}`}>
         <GameAssetImage
           variant="hero"
-          src={meta.image}
+          src={heroAssets.src}
           alt={meta.title}
-          fallbackCandidates={getHeroStageImageCandidates(gender, stage).slice(1)}
+          fallbackCandidates={heroAssets.fallbackCandidates}
           status={locked ? 'locked' : 'unlocked'}
           fit="hero"
           className="h-full w-full bg-transparent"
@@ -147,7 +145,7 @@ type DeathEntityProps = {
 };
 
 function DeathEntity({ gender }: DeathEntityProps) {
-  const candidates = getHeroDeathImageCandidates(gender);
+  const deathAssets = useHeroDeathAssets(gender);
 
   return (
     <div
@@ -160,7 +158,7 @@ function DeathEntity({ gender }: DeathEntityProps) {
       <div className="pointer-events-none absolute bottom-1 left-1/2 z-0 h-4 w-[76%] -translate-x-1/2 rounded-[50%] border border-stone-700/40 bg-black/50" />
 
       <div className="relative z-[1] isolate h-full w-full opacity-[0.52]">
-        <DeathFigureImage src={candidates[0]} alt="Смерть — предел 200 кг" />
+        <DeathFigureImage src={deathAssets.src} alt="Смерть — предел 200 кг" />
       </div>
 
       <span className={DEATH_BADGE_CLASS}>
@@ -336,6 +334,32 @@ function StageTimeline({
   );
 }
 
+type MobileGhostHeroProps = {
+  gender: HeroGender;
+  stage: HeroStageNumber;
+  brightness: string;
+};
+
+function MobileGhostHero({ gender, stage, brightness }: MobileGhostHeroProps) {
+  const heroAssets = useHeroStageAssets(gender, stage);
+
+  return (
+    <GameAssetImage
+      variant="hero"
+      src={heroAssets.src}
+      alt=""
+      fallbackCandidates={heroAssets.fallbackCandidates}
+      fit="hero"
+      className="h-full w-full"
+      imageClassName={
+        brightness === '0.55'
+          ? 'object-contain object-bottom brightness-[0.55]'
+          : 'object-contain object-bottom brightness-[0.65]'
+      }
+    />
+  );
+}
+
 export function HeroTransformationShowcase({
   gender,
   currentStage,
@@ -350,6 +374,8 @@ export function HeroTransformationShowcase({
   const [lockedHint, setLockedHint] = useState<string | null>(null);
 
   const displayStage = browseStage ?? previewStage ?? currentStage;
+  const displayHeroAssets = useHeroStageAssets(gender, displayStage);
+  const deathAssets = useHeroDeathAssets(gender);
   const displayMeta = useMemo(
     () => stages.find((s) => s.stage === displayStage) ?? getHeroStageMeta(gender, displayStage),
     [stages, displayStage, gender],
@@ -468,9 +494,9 @@ export function HeroTransformationShowcase({
         >
           <GameAssetImage
             variant="hero"
-            src={displayMeta.image}
+            src={displayHeroAssets.src}
             alt={displayMeta.title}
-            fallbackCandidates={getHeroStageImageCandidates(gender, displayStage).slice(1)}
+            fallbackCandidates={displayHeroAssets.fallbackCandidates}
             status={displayUnlocked ? 'current' : 'locked'}
             fit="hero"
             className="h-full w-full bg-transparent drop-shadow-[0_10px_32px_rgba(0,0,0,0.5)]"
@@ -491,7 +517,7 @@ export function HeroTransformationShowcase({
             aria-hidden
           >
             <DeathFigureImage
-              src={getHeroDeathImageCandidates(gender)[0]}
+              src={deathAssets.src}
               alt=""
               className="brightness-[0.75]"
             />
@@ -502,14 +528,7 @@ export function HeroTransformationShowcase({
             style={{ height: MOBILE_FLANK_H }}
             aria-hidden
           >
-            <GameAssetImage
-              variant="hero"
-              src={getHeroStageMeta(gender, flanks.left).image}
-              alt=""
-              fit="hero"
-              className="h-full w-full"
-              imageClassName="object-contain object-bottom brightness-[0.55]"
-            />
+            <MobileGhostHero gender={gender} stage={flanks.left} brightness="0.55" />
           </div>
         ) : null}
         {flanks.right ? (
@@ -518,14 +537,7 @@ export function HeroTransformationShowcase({
             style={{ height: MOBILE_FLANK_H }}
             aria-hidden
           >
-            <GameAssetImage
-              variant="hero"
-              src={getHeroStageMeta(gender, flanks.right).image}
-              alt=""
-              fit="hero"
-              className="h-full w-full"
-              imageClassName="object-contain object-bottom brightness-[0.65]"
-            />
+            <MobileGhostHero gender={gender} stage={flanks.right} brightness="0.65" />
           </div>
         ) : null}
       </div>
