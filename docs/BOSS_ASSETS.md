@@ -1,5 +1,10 @@
 # Ассеты боссов и аватара
 
+> **Legacy / archived.** Актуальная документация:
+> - [`brandbook/mobs-and-bosses.md`](brandbook/mobs-and-bosses.md)
+> - [`assets/manifest.json`](assets/manifest.json)
+> - Chapter bosses: `public/game-assets/bosses/`
+
 ## Боссы
 
 Каждый недельный босс имеет стабильный `id` и путь к картинке в `public/bosses/`.

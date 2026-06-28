@@ -1,5 +1,10 @@
 # Hero Stage Prompts V2 — «Личная RPG»
 
+> **Legacy reference (full prompt library).** Актуальный индекс:
+> - [`prompts/image-generation/README.md`](prompts/image-generation/README.md)
+> - [`prompts/image-generation/hero-male-stages.md`](prompts/image-generation/hero-male-stages.md)
+> - [`prompts/image-generation/hero-female-stages.md`](prompts/image-generation/hero-female-stages.md)
+
 > **Важно:** старые PNG в `public/avatars/`, `public/game-assets/heroes/` и любые предыдущие генерации — **удалить и не использовать как reference**. Работать только с промптами ниже.
 
 **Пути для экспорта:**

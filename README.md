@@ -491,10 +491,29 @@ personal-rpg/
 
 | Документ | Содержание |
 |----------|------------|
+| [**docs/** — Project Wiki](docs/README.md) | Внутренняя вики: state, roadmap, brandbook, prompts |
+| [docs/wiki/00-project-state.md](docs/wiki/00-project-state.md) | Текущее состояние проекта |
+| [docs/wiki/01-roadmap.md](docs/wiki/01-roadmap.md) | Дорожная карта |
+| [docs/wiki/04-brandbook.md](docs/wiki/04-brandbook.md) | Брендбук |
+| [docs/wiki/06-assets-gallery.md](docs/wiki/06-assets-gallery.md) | Галерея ассетов |
+| [docs/wiki/09-privacy-plan.md](docs/wiki/09-privacy-plan.md) | Правила приватности |
 | [server/AUTOSTART.md](server/AUTOSTART.md) | Автозапуск nginx и PHP |
 | [server/README-server.md](server/README-server.md) | Серверная инфраструктура |
 | [installer/README.md](installer/README.md) | Сборка установщика |
-| [docs/AVATAR_ASSETS.md](docs/AVATAR_ASSETS.md) | Ассеты аватара |
+
+## Project Wiki
+
+Внутренняя проектная вики находится в [`docs/`](docs/README.md).
+
+Главные файлы:
+
+- [`docs/wiki/00-project-state.md`](docs/wiki/00-project-state.md)
+- [`docs/wiki/01-roadmap.md`](docs/wiki/01-roadmap.md)
+- [`docs/wiki/04-brandbook.md`](docs/wiki/04-brandbook.md)
+- [`docs/wiki/06-assets-gallery.md`](docs/wiki/06-assets-gallery.md)
+- [`docs/wiki/09-privacy-plan.md`](docs/wiki/09-privacy-plan.md)
+
+Вики сейчас считается **публичной**, поэтому приватные материалы в неё не добавляются.
 
 ---
 

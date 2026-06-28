@@ -1,5 +1,11 @@
 # TODO: ассеты аватара (v1.0)
 
+> **Legacy / archived.** Актуальная документация:
+> - [`README.md`](README.md) — вход в вики
+> - [`wiki/06-assets-gallery.md`](wiki/06-assets-gallery.md) — галерея
+> - [`brandbook/characters.md`](brandbook/characters.md) — герои
+> - Ассеты: `public/game-assets/heroes/` (не `public/avatars/`)
+
 Сейчас в репозитории **нет PNG** персонажа. `AvatarDisplay` пробует загрузить картинки в таком порядке:
 
 1. **Новый формат (v1.0)** — `public/avatars/{gender}/`

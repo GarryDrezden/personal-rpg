@@ -7,7 +7,20 @@ tsconfig.tsbuildinfo
 data/*.sqlite
 server/runtime/
 server/logs/
+
+# private project materials
+private-assets/
+docs/private/
+
+# env
 .env
+.env.*
+!.env.example
+
+# raw private references
+*.psd
+*.kra
+
 .cursor/
 scripts/__pycache__/
 local/**/__pycache__/

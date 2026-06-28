@@ -1,6 +1,10 @@
 # Промпт для генерации male-аватаров (стадии 1–20)
 
-> **Текущий статус ассетов (male):** `stage-01.png`, `stage-02.png`, `stage-19.png`, `stage-20.png`, `death.png`. Стадии 3–18 пока отсутствуют — при просмотре подставляется ближайший якорь (1/2/19/20).
+> **Legacy reference.** Актуальный индекс:
+> - [`prompts/image-generation/hero-male-stages.md`](prompts/image-generation/hero-male-stages.md)
+> - [`wiki/05-ai-prompts.md`](wiki/05-ai-prompts.md)
+
+> **Текущий статус ассетов (male):** `stage-01.png`, `stage-02.png`, `stage-03.png`, `stage-19.png`, `stage-20.png`, `death.png`. Стадии 4–18 пока отсутствуют — при просмотре подставляется ближайший якорь (1/2/19/20).
 
 ## Быстрый старт
 
