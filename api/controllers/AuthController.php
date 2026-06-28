@@ -42,8 +42,10 @@ class AuthController
         $profile = $profiles->createDefaults($userId);
         $userSettings = $settings->createDefaults($userId);
 
-        createAuthSession($this->pdo, $userId);
-        jsonResponse(serializeAuthPayload($user, $profile, $userSettings), 201);
+        $token = createAuthSession($this->pdo, $userId);
+        $payload = serializeAuthPayload($user, $profile, $userSettings);
+        $payload['authToken'] = $token;
+        jsonResponse($payload, 201);
     }
 
     public function login(array $body): never
@@ -65,12 +67,14 @@ class AuthController
         $profiles = new UserProfileRepository($this->pdo);
         $settings = new UserSettingsRepository($this->pdo);
 
-        createAuthSession($this->pdo, $userId);
-        jsonResponse(serializeAuthPayload(
+        $token = createAuthSession($this->pdo, $userId);
+        $payload = serializeAuthPayload(
             $user,
             $profiles->findByUserId($userId),
             $settings->findByUserId($userId),
-        ));
+        );
+        $payload['authToken'] = $token;
+        jsonResponse($payload);
     }
 
     public function logout(): never

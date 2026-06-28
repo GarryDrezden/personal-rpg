@@ -34,6 +34,7 @@ export interface AuthPayload {
   user: AuthUser;
   profile: UserProfile;
   settings: UserSettings;
+  authToken?: string;
 }
 
 export const authApi = {

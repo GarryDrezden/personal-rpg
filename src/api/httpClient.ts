@@ -1,3 +1,5 @@
+import { getAuthToken } from './authToken';
+
 const baseUrl = import.meta.env.VITE_API_BASE_URL ?? '';
 
 export class ApiError extends Error {
@@ -15,10 +17,12 @@ export async function httpClient<T>(
   options: RequestInit = {},
 ): Promise<T> {
   const url = `${baseUrl}${path}`;
+  const token = getAuthToken();
   const res = await fetch(url, {
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.headers ?? {}),
     },
     ...options,

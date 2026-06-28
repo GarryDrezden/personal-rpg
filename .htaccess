@@ -1,4 +1,7 @@
 RewriteEngine On
+# Pass Authorization header to PHP (Apache / LSAPI)
+RewriteCond %{HTTP:Authorization} .
+RewriteRule ^api/.* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 # API → PHP
 RewriteRule ^api(/.*)?$ api/index.php [L,QSA]
 # SPA: все остальное → index.html

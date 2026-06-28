@@ -36,17 +36,21 @@ foreach ($required as $file) {
 $sessionsDir = __DIR__ . '/sessions';
 $checks['sessionsDirExists'] = is_dir($sessionsDir);
 $checks['sessionsDirWritable'] = $checks['sessionsDirExists'] && is_writable($sessionsDir);
-if (!$checks['sessionsDirExists']) {
-    @mkdir($sessionsDir, 0755, true);
-    $checks['sessionsDirExists'] = is_dir($sessionsDir);
-    $checks['sessionsDirWritable'] = $checks['sessionsDirExists'] && is_writable($sessionsDir);
+
+if ($checks['mysqlConnect'] ?? false) {
+    try {
+        $authTable = $pdo->query("SHOW TABLES LIKE 'auth_sessions'")->fetch();
+        $checks['authSessionsTable'] = (bool) $authTable;
+    } catch (Throwable) {
+        $checks['authSessionsTable'] = false;
+    }
 }
 
 $checks['ok'] = ($checks['pdo_mysql'] ?? false)
     && ($checks['mysqlConfigExists'] ?? false)
     && ($checks['mysqlConnect'] ?? false)
     && ($checks['usersTable'] ?? false)
-    && ($checks['sessionsDirWritable'] ?? false)
+    && ($checks['authSessionsTable'] ?? false)
     && !in_array(false, $checks['apiFiles'], true);
 
 if (!$checks['ok']) {

@@ -7,6 +7,7 @@ import {
   type UserSettings,
 } from '../api/authApi';
 import { ApiError } from '../api/httpClient';
+import { initAuthToken, setAuthToken } from '../api/authToken';
 import { setStorageMode } from '../storage/storageClient';
 
 interface AuthContextValue {
@@ -47,6 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
         setProfile(null);
         setSettings(null);
+        setAuthToken(null);
         setStorageMode('legacy');
         return false;
       }
@@ -55,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [applyAuthPayload]);
 
   useEffect(() => {
+    initAuthToken();
     void (async () => {
       try {
         await refreshUser();
@@ -62,6 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
         setProfile(null);
         setSettings(null);
+        setAuthToken(null);
         setStorageMode('legacy');
       } finally {
         setLoading(false);
@@ -69,22 +73,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })();
   }, [refreshUser]);
 
+  const applyLoginPayload = useCallback((payload: AuthPayload) => {
+    if (payload.authToken) {
+      setAuthToken(payload.authToken);
+    }
+    applyAuthPayload(payload);
+  }, [applyAuthPayload]);
+
   const login = useCallback(
     async (loginName: string, password: string) => {
-      await authApi.login(loginName, password);
-      const confirmed = await authApi.me();
-      applyAuthPayload(confirmed);
+      const payload = await authApi.login(loginName, password);
+      applyLoginPayload(payload);
+      if (!payload.authToken) {
+        const confirmed = await authApi.me();
+        applyLoginPayload(confirmed);
+      }
     },
-    [applyAuthPayload],
+    [applyLoginPayload],
   );
 
   const register = useCallback(
     async (loginName: string, password: string) => {
-      await authApi.register(loginName, password);
-      const confirmed = await authApi.me();
-      applyAuthPayload(confirmed);
+      const payload = await authApi.register(loginName, password);
+      applyLoginPayload(payload);
+      if (!payload.authToken) {
+        const confirmed = await authApi.me();
+        applyLoginPayload(confirmed);
+      }
     },
-    [applyAuthPayload],
+    [applyLoginPayload],
   );
 
   const logout = useCallback(async () => {
@@ -92,6 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     setProfile(null);
     setSettings(null);
+    setAuthToken(null);
     setStorageMode('legacy');
   }, []);
 
