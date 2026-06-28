@@ -1,62 +1,67 @@
-name: Deploy to hosting
-
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: npm
-
-      - name: Prepare FTP paths
-        run: |
-          DIR="${{ secrets.FTP_SERVER_DIR }}"
-          if [[ "$DIR" != */ ]]; then
-            DIR="${DIR}/"
-          fi
-          echo "FTP_SERVER_DIR=$DIR" >> "$GITHUB_ENV"
-
-      - run: npm ci
-      - run: npm run build
-
-      - name: Deploy frontend (dist)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: ${{ env.FTP_SERVER_DIR }}
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-
-      - name: Deploy API
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./api/
-          server-dir: ${{ env.FTP_SERVER_DIR }}api/
-
-      - name: Deploy .htaccess
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: ${{ env.FTP_SERVER_DIR }}
-          include: |
-            .htaccess
-
+name: Deploy to hosting
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Prepare FTP paths
+        run: |
+          DIR="${{ secrets.FTP_SERVER_DIR }}"
+          if [[ "$DIR" != */ ]]; then
+            DIR="${DIR}/"
+          fi
+          echo "FTP_SERVER_DIR=$DIR" >> "$GITHUB_ENV"
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Prepare API bundle
+        run: |
+          rm -rf .deploy-staging
+          mkdir -p .deploy-staging/api
+          cp -r api/. .deploy-staging/api/
+
+      - name: Deploy frontend (dist)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ${{ env.FTP_SERVER_DIR }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+
+      - name: Deploy API
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./.deploy-staging/
+          server-dir: ${{ env.FTP_SERVER_DIR }}
+
+      - name: Deploy .htaccess
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: ${{ env.FTP_SERVER_DIR }}
+          include: |
+            .htaccess
