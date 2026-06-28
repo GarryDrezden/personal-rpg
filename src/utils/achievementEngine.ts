@@ -46,10 +46,15 @@ export type AchievementEngineParams = {
   unlockedAchievements: UnlockedAchievement[];
 };
 
+import {
+  getNutritionStatus,
+  isNutritionTrackingEnabled,
+} from './nutritionEngine';
+
 export function isCaloriesInLimit(entry: DailyEntry, settings: AppSettings): boolean {
-  if (entry.calories === null) return false;
-  const weekly = getWeeklySettingsForDate(entry.date, settings);
-  return entry.calories <= weekly.caloriesLimit;
+  if (!isNutritionTrackingEnabled(settings)) return true;
+  const status = getNutritionStatus({ entry, settings });
+  return status === 'light' || status === 'precise_in_limit';
 }
 
 export function isStepsGoalDone(entry: DailyEntry, settings: AppSettings): boolean {

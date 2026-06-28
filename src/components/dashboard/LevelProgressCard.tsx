@@ -5,7 +5,7 @@ import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
 
 const INTEGRATED_PANEL =
-  'flex min-h-[11rem] flex-1 flex-col justify-center px-4 py-3 sm:px-5 md:min-h-[12rem]';
+  'flex min-h-[8.5rem] flex-1 flex-col justify-center px-3 py-2 sm:px-4 md:min-h-[9rem]';
 
 type LevelProgressCardProps = {
   totalXp: number;
@@ -27,7 +27,7 @@ export function LevelProgressCard({ totalXp, integrated }: LevelProgressCardProp
         <div className={integrated ? 'min-w-0' : undefined}>
           <p
             className={`uppercase tracking-wide text-[var(--app-text-muted)] ${
-              integrated ? 'whitespace-nowrap text-xs' : 'text-[10px] opacity-60'
+              integrated ? 'whitespace-nowrap text-xs' : 'text-xs opacity-80'
             }`}
           >
             Уровень
@@ -61,10 +61,10 @@ export function LevelProgressCard({ totalXp, integrated }: LevelProgressCardProp
         </div>
       </div>
 
-      <div className={integrated ? 'mt-5' : 'mt-4'}>
+      <div className={integrated ? 'mt-3' : 'mt-4'}>
         <div
           className={`mb-1.5 flex justify-between gap-2 text-[var(--app-text-muted)] ${
-            integrated ? 'whitespace-nowrap text-xs' : 'text-[10px] opacity-60'
+            integrated ? 'whitespace-nowrap text-sm' : 'text-xs opacity-80'
           }`}
         >
           <span className="shrink-0">До ур. {level + 1}</span>

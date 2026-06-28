@@ -1,4 +1,5 @@
-import type { MeasurementEntry } from '../types';
+import type { AppSettings, MeasurementEntry } from '../types';
+import { resolveTargetWeight } from '../game/gameProfile';
 import { getStartWeight } from '../game/heroProgressEngine';
 
 export type PathSetupState =
@@ -20,8 +21,13 @@ export type PathSetupState =
 
 export function getPathSetupState(
   measurements: MeasurementEntry[],
-  targetWeight: number | null | undefined,
+  targetWeightOrSettings: number | null | undefined | AppSettings,
 ): PathSetupState {
+  const targetWeight =
+    typeof targetWeightOrSettings === 'object' && targetWeightOrSettings !== null
+      ? resolveTargetWeight(targetWeightOrSettings)
+      : targetWeightOrSettings;
+
   const startWeight = getStartWeight(measurements);
 
   if (startWeight === null) {
@@ -35,7 +41,12 @@ export function getPathSetupState(
     };
   }
 
-  if (targetWeight === null || targetWeight === undefined) {
+  if (
+    targetWeight === null ||
+    targetWeight === undefined ||
+    !Number.isFinite(targetWeight) ||
+    targetWeight <= 0
+  ) {
     return {
       kind: 'no_target',
       title: 'Задай цель веса',

@@ -5,6 +5,7 @@ import { DEFAULT_POINT_SETTINGS } from '../constants/defaults';
 import { DEFAULT_COIN_SETTINGS } from '../constants/coins';
 import { DEFAULT_AVATAR_SETTINGS, resolveAvatarSettings } from '../constants/avatar';
 import type { CoinSettings, PointSettings, WeeklySettings } from '../types';
+import type { NutritionTrackingMode } from '../types/nutrition';
 import type { AvatarMode, AvatarStage } from '../types/avatar';
 import type { AppThemeId } from '../types/theme';
 import { AvatarDisplay } from '../components/avatar/AvatarDisplay';
@@ -428,6 +429,66 @@ export function SettingsPage() {
             ))}
           </div>
         </div>
+      </Card>
+
+      <Card id="settings-nutrition" className="scroll-mt-28">
+        <h2 className="mb-2 font-semibold text-[var(--app-text)]">Учёт питания</h2>
+        <p className="mb-4 text-xs text-[var(--app-text-muted)]">
+          Можно вести систему без точных цифр. Честность важнее идеальности.
+        </p>
+        <div className="grid gap-2 sm:grid-cols-3">
+          {(
+            [
+              {
+                mode: 'disabled' as NutritionTrackingMode,
+                title: 'Выключен',
+                description: 'Питание не будет участвовать в квестах, очках и инерции.',
+              },
+              {
+                mode: 'simple' as NutritionTrackingMode,
+                title: 'Упрощённый',
+                description: 'Отмечай день как лёгкий, средний или тяжёлый без точных цифр.',
+              },
+              {
+                mode: 'precise' as NutritionTrackingMode,
+                title: 'Точный',
+                description:
+                  'Вводи калории и лимит. Подходит, когда готов к более строгому контролю.',
+              },
+            ] as const
+          ).map((opt) => {
+            const active = (local.nutritionTrackingMode ?? 'simple') === opt.mode;
+            return (
+              <button
+                key={opt.mode}
+                type="button"
+                onClick={() => setLocal({ ...local, nutritionTrackingMode: opt.mode })}
+                className={`rounded-xl border px-3 py-3 text-left transition ${
+                  active
+                    ? 'border-[var(--app-primary)] bg-[var(--app-primary-soft)]'
+                    : 'border-[var(--app-border)] bg-[var(--app-card-strong)] hover:brightness-[1.03]'
+                }`}
+              >
+                <p className="text-sm font-semibold text-[var(--app-text)]">{opt.title}</p>
+                <p className="mt-1 text-xs text-[var(--app-text-muted)]">{opt.description}</p>
+              </button>
+            );
+          })}
+        </div>
+        {(local.nutritionTrackingMode ?? 'simple') === 'precise' ? (
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <NumberInput
+              label="Дневной лимит калорий"
+              value={local.dailyCalorieLimit ?? local.defaultCaloriesLimit}
+              onChange={(v) =>
+                setLocal({
+                  ...local,
+                  dailyCalorieLimit: v ?? local.defaultCaloriesLimit,
+                })
+              }
+            />
+          </div>
+        ) : null}
       </Card>
 
       <Card id="settings-defaults" className="scroll-mt-28">

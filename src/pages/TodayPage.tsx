@@ -34,6 +34,9 @@ import { Card } from '../components/ui/Card';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { DailyMobCard } from '../components/game/DailyMobCard';
 import { getOrCreateDailyMob } from '../game/dailyMobEngine';
+import { NutritionDayCard } from '../components/nutrition/NutritionDayCard';
+import { NutritionRecoverySuggestionCard } from '../components/nutrition/NutritionRecoverySuggestionCard';
+import { shouldSuggestNutritionRecovery, isNutritionTrackingEnabled } from '../utils/nutritionEngine';
 
 export function TodayPage() {
   const { dailyEntries, settings, updateDaily, deleteDaily } = useAppStore();
@@ -52,6 +55,9 @@ export function TodayPage() {
   const [recoveryToast, setRecoveryToast] = useState<string | null>(null);
   const [suggestionDismissed, setSuggestionDismissed] = useState(() =>
     isRecoverySuggestionDismissed(today),
+  );
+  const [nutritionHelpDismissed, setNutritionHelpDismissed] = useState(() =>
+    localStorage.getItem(`nutrition-recovery-dismiss-${today}`) === '1',
   );
   const [momentumHelpDismissed, setMomentumHelpDismissed] = useState(() =>
     isMomentumHelpDismissed(today),
@@ -137,9 +143,21 @@ export function TodayPage() {
     getDayMode(entry.dayMode) === 'normal' &&
     !suggestionDismissed;
 
+  const showNutritionRecovery =
+    isEditingToday &&
+    isNutritionTrackingEnabled(settings) &&
+    !nutritionHelpDismissed &&
+    getDayMode(entry.dayMode) === 'normal' &&
+    shouldSuggestNutritionRecovery({
+      today,
+      dailyEntries: entriesForQuests,
+      settings,
+    });
+
   const showMomentumHelp =
     isEditingToday &&
     !momentumHelpDismissed &&
+    !showNutritionRecovery &&
     getDayMode(entry.dayMode) === 'normal' &&
     (momentumSummary.recoverySuggested || momentumSummary.minimalModeSuggested);
 
@@ -210,7 +228,12 @@ export function TodayPage() {
     setMomentumHelpDismissed(true);
   };
 
-  const mainQuests = quests.filter((q) => q.category === 'main');
+  const handleDismissNutritionHelp = () => {
+    localStorage.setItem(`nutrition-recovery-dismiss-${today}`, '1');
+    setNutritionHelpDismissed(true);
+  };
+
+  const mainQuests = quests.filter((q) => q.category === 'main' && q.id !== 'nutrition');
   const mediumQuests = quests.filter((q) => q.category === 'medium');
   const bonusQuests = quests.filter((q) => q.category === 'bonus');
   const dailyMobId = isEditingToday ? getOrCreateDailyMob(today) : null;
@@ -310,6 +333,14 @@ export function TodayPage() {
         />
       )}
 
+      {showNutritionRecovery ? (
+        <NutritionRecoverySuggestionCard
+          onAcceptRecovery={() => void acceptMomentumRecovery()}
+          onAcceptMinimal={() => void acceptMomentumMinimal()}
+          onDismiss={handleDismissNutritionHelp}
+        />
+      ) : null}
+
       {showMomentumHelp && (
         <MomentumHelpCard
           summary={momentumSummary}
@@ -391,7 +422,7 @@ export function TodayPage() {
 
       {dayEmpty && isEditingToday && recoveryState === 'normal' && (
         <p className="rounded-2xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-4 text-center text-sm text-[var(--app-text-muted)]">
-          День ещё пустой. Начни с одного квеста — калории, шаги или день без алкоголя.
+          День ещё пустой. Начни с одного квеста — питание, шаги или день без алкоголя.
         </p>
       )}
 
@@ -400,6 +431,13 @@ export function TodayPage() {
           Редактируешь записи за выбранный день. Не забудь нажать «Сохранить день».
         </p>
       )}
+
+      <NutritionDayCard
+        entry={entry}
+        settings={settings}
+        date={selectedDate}
+        onPatch={patch}
+      />
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">

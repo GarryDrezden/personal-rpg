@@ -3,6 +3,7 @@ const SECTIONS = [
   { id: 'settings-weight', label: 'Персонаж' },
   { id: 'settings-game-hero', label: 'Герой RPG' },
   { id: 'settings-avatar', label: 'Аватар' },
+  { id: 'settings-nutrition', label: 'Питание' },
   { id: 'settings-defaults', label: 'Цели' },
   { id: 'settings-weeks', label: 'Недели' },
   { id: 'settings-coins', label: 'Монеты' },

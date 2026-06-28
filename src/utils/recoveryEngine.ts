@@ -2,11 +2,17 @@ import { addDays, differenceInCalendarDays, format, parseISO } from 'date-fns';
 import type { AppSettings, DailyEntry } from '../types';
 import type { RecoveryQuest, RecoveryState } from '../types/recovery';
 import { calcDailyPoints, getWeeklySettingsForDate } from './points';
+import {
+  isNutritionHeavyDay,
+  isNutritionLogged,
+  isNutritionTrackingEnabled,
+} from './nutritionEngine';
 
 function hasDayData(entry: DailyEntry | undefined): boolean {
   if (!entry) return false;
   return (
     entry.calories !== null ||
+    entry.nutritionLevel != null ||
     entry.steps !== null ||
     entry.alcohol !== null ||
     entry.morningExercise ||
@@ -31,7 +37,9 @@ export function isBadDay(entry: DailyEntry, settings: AppSettings): boolean {
   if (points < BAD_DAY_POINTS_THRESHOLD) return true;
   if (entry.alcohol === 'heavy') return true;
 
-  if (entry.calories !== null) {
+  if (isNutritionTrackingEnabled(settings)) {
+    if (isNutritionHeavyDay({ entry, settings })) return true;
+  } else if (entry.calories !== null) {
     const weekly = getWeeklySettingsForDate(entry.date, settings);
     if (entry.calories > weekly.caloriesLimit + CALORIE_OVER_LIMIT_MARGIN) return true;
   }
@@ -46,13 +54,13 @@ export function isMinimalDayCompleted(params: {
   const { todayEntry } = params;
   if (!todayEntry) return false;
 
-  const hasCalories = todayEntry.calories !== null;
+  const hasNutrition = isNutritionLogged({ entry: todayEntry, settings: params.settings });
   const hasSteps = (todayEntry.steps ?? 0) >= MINIMAL_DAY_STEPS;
   const sober = todayEntry.alcohol === 'none';
   const hasJournal =
     todayEntry.journal || todayEntry.comment.trim().length > 0;
 
-  return hasCalories && hasSteps && sober && hasJournal;
+  return hasNutrition && hasSteps && sober && hasJournal;
 }
 
 function resolveTodayEntry(

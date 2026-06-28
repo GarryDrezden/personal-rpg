@@ -5,7 +5,7 @@ import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 
 const INTEGRATED_PANEL =
-  'flex min-h-[11rem] flex-1 flex-col justify-center px-4 py-3 sm:px-5 md:min-h-[12rem]';
+  'flex min-h-[8.5rem] flex-1 flex-col justify-center px-3 py-2 sm:px-4 md:min-h-[9rem]';
 
 type TodayStatusCardProps = {
   todayPoints: number;
@@ -22,7 +22,7 @@ export function TodayStatusCard({ todayPoints, todayCoins, integrated }: TodaySt
     <Link
       to="/today"
       className={`inline-flex w-full items-center justify-center whitespace-nowrap rounded-xl bg-[var(--app-primary)] font-semibold text-slate-950 transition hover:brightness-105 ${
-        integrated ? 'mt-5 px-4 py-3 text-sm md:text-base' : 'mt-4 px-4 py-2.5 text-sm'
+        integrated ? 'mt-3 px-3 py-2 text-sm' : 'mt-4 px-4 py-2.5 text-sm'
       }`}
     >
       Открыть квесты дня →
@@ -38,7 +38,7 @@ export function TodayStatusCard({ todayPoints, todayCoins, integrated }: TodaySt
             {status}
           </Badge>
         </div>
-        <p className="mt-1 whitespace-nowrap text-3xl font-bold tabular-nums text-[var(--app-primary)] md:text-4xl">
+        <p className="mt-1 whitespace-nowrap text-2xl font-bold tabular-nums text-[var(--app-primary)] md:text-3xl">
           +{displayXp} XP
         </p>
         <p className="mt-1 whitespace-nowrap text-sm text-[var(--app-text-muted)]">

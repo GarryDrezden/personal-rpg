@@ -43,7 +43,7 @@ function toggleHabit(
   }
 }
 
-export function QuestCard({ quest, entry, weekly, onPatch, compact = false }: QuestCardProps) {
+export function QuestCard({ quest, entry, onPatch, compact = false }: QuestCardProps) {
   const { themeId } = useAppTheme();
   const { settings } = useAppStore();
   const style = getQuestStatusStyles(quest.status, themeId);
@@ -64,14 +64,10 @@ export function QuestCard({ quest, entry, weekly, onPatch, compact = false }: Qu
 
   const inputBlock = () => {
     switch (quest.id) {
+      case 'nutrition':
+        return null;
       case 'calories':
-        return (
-          <NumberInput
-            label={`Калории (лимит ${weekly.caloriesLimit})`}
-            value={entry.calories}
-            onChange={(v) => onPatch({ calories: v })}
-          />
-        );
+        return null;
       case 'steps': {
         const dayMode = getDayMode(entry.dayMode);
         const thresholds = getStepsThresholds(settings, entry.date);

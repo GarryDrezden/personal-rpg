@@ -8,12 +8,18 @@ import {
 } from './points';
 import { isMonday, weekDays, weekStart } from './dates';
 import {
-  isCaloriesInLimit,
   isNoAlcohol,
   isStepsGoalDone,
 } from './achievementEngine';
 import { isMinimalDayCompleted } from './recoveryEngine';
 import { getDayMode, isStepsExcellentDone } from './stepsEngine';
+import {
+  getNutritionCoinEligible,
+  getTrackingMode,
+  isNutritionGoodForWeekBonus,
+  isNutritionLogged,
+  isNutritionTrackingEnabled,
+} from './nutritionEngine';
 
 export function calculateCoinBalance(transactions: CoinTransaction[]): number {
   return Math.max(0, transactions.reduce((sum, tx) => sum + tx.amount, 0));
@@ -36,9 +42,12 @@ function weekPerfectBase(ws: string, entries: DailyEntry[], settings: AppSetting
   const days = weekDays(ws);
   const weekEntries = days.map((d) => entries.find((e) => e.date === d));
   if (weekEntries.some((e) => !e)) return false;
-  return weekEntries.every(
-    (e) => e && isNoAlcohol(e) && isStepsGoalDone(e, settings) && isCaloriesInLimit(e, settings),
-  );
+  return weekEntries.every((e) => {
+    if (!e) return false;
+    const nutritionOk =
+      !isNutritionTrackingEnabled(settings) || getNutritionCoinEligible({ entry: e, settings });
+    return isNoAlcohol(e) && isStepsGoalDone(e, settings) && nutritionOk;
+  });
 }
 
 export function getCoinTransactionsFromDailyEntries(params: {
@@ -62,8 +71,11 @@ export function getCoinTransactionsFromDailyEntries(params: {
       parts.push('хороший день');
     }
 
+    const nutritionOk =
+      !isNutritionTrackingEnabled(settings) ||
+      getNutritionCoinEligible({ entry, settings });
     const heroDay =
-      isCaloriesInLimit(entry, settings) &&
+      nutritionOk &&
       isStepsGoalDone(entry, settings) &&
       isNoAlcohol(entry);
     const ironDay = heroDay && entry.gym;
@@ -106,7 +118,7 @@ export function getCoinTransactionsFromDailyEntries(params: {
     const mode = getDayMode(entry.dayMode);
     if (
       mode === 'recovery' &&
-      entry.calories !== null &&
+      isNutritionLogged({ entry, settings }) &&
       entry.alcohol === 'none'
     ) {
       txs.push({
@@ -115,7 +127,7 @@ export function getCoinTransactionsFromDailyEntries(params: {
         source: 'daily',
         amount: 1,
         title: 'День восстановления',
-        description: 'Калории внесены, без алкоголя',
+        description: 'Питание отмечено, без алкоголя',
         date: entry.date,
         relatedId: `recovery_day_${entry.date}`,
       });
@@ -186,12 +198,16 @@ export function getCoinTransactionsFromWeeks(params: {
       parts.push('норма зала');
     }
 
+    const nutritionMode = getTrackingMode(settings);
     if (
+      nutritionMode !== 'disabled' &&
       allDaysLogged &&
-      weekEntries.every((e) => e && e.calories !== null && isCaloriesInLimit(e, settings))
+      weekEntries.every(
+        (e) => e && isNutritionGoodForWeekBonus({ entry: e, settings }),
+      )
     ) {
       amount += cs.caloriesWeekCoins;
-      parts.push('7 дней калории в лимите');
+      parts.push('7 дней питание в норме');
     }
 
     if (weekPerfectBase(ws, dailyEntries, settings)) {

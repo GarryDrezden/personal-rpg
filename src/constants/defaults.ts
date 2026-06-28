@@ -42,6 +42,10 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   enableSleepTracking: false,
   transformationMode: 'weight_loss',
   activeCompanionId: 'golden_chinchilla_cat',
+  nutritionTrackingMode: 'simple',
+  dailyCalorieLimit: null,
+  nutritionMediumOverThreshold: 300,
+  nutritionHeavyOverThreshold: 700,
 };
 
 export const DAY_STATUS_THRESHOLDS = [

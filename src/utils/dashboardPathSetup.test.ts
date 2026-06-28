@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { getPathSetupState } from './dashboardPathSetup';
 import type { MeasurementEntry } from '../types';
+import { DEFAULT_APP_SETTINGS } from '../constants/defaults';
 
-describe('getPathSetupState', () => {
-  it('returns no_weight when there are no weight measurements', () => {
+describe('getPathSetupState', () => {  it('returns no_weight when there are no weight measurements', () => {
     const state = getPathSetupState([], 80);
     expect(state.kind).toBe('no_weight');
     if (state.kind === 'no_weight') {
@@ -49,5 +49,28 @@ describe('getPathSetupState', () => {
       },
     ];
     expect(getPathSetupState(measurements, 80).kind).toBe('ready');
+  });
+
+  it('returns ready when only weightGoal is set in settings', () => {
+    const measurements: MeasurementEntry[] = [
+      {
+        id: '1',
+        date: '2026-01-01',
+        weight: 95,
+        chest: null,
+        waist: null,
+        belly: null,
+        hips: null,
+        thigh: null,
+        biceps: null,
+        comment: '',
+      },
+    ];
+    const state = getPathSetupState(measurements, {
+      ...DEFAULT_APP_SETTINGS,
+      weightGoal: 100,
+      targetWeight: undefined,
+    });
+    expect(state.kind).toBe('ready');
   });
 });

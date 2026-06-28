@@ -4,7 +4,13 @@ import type { SkillId, SkillProgress } from '../types/skills';
 
 import { SKILLS, SKILL_XP_AWARDS } from '../constants/skills';
 
-import { isCaloriesInLimit, isNoAlcohol } from './achievementEngine';
+import { isNoAlcohol } from './achievementEngine';
+import {
+  getNutritionCoinEligible,
+  getNutritionQuestCompleted,
+  isNutritionLogged,
+  isNutritionTrackingEnabled,
+} from './nutritionEngine';
 
 import { isMinimalDayCompleted } from './recoveryEngine';
 
@@ -152,9 +158,14 @@ export function calcSkillXpFromDailyEntry(
 
 
 
-  if (entry.calories !== null) xp.control += a.caloriesLogged;
-
-  if (isCaloriesInLimit(entry, settings)) xp.control += a.caloriesOk;
+  if (isNutritionTrackingEnabled(settings)) {
+    if (getNutritionQuestCompleted({ entry, settings })) {
+      xp.control += a.caloriesLogged;
+    }
+    if (getNutritionCoinEligible({ entry, settings })) {
+      xp.control += a.caloriesOk;
+    }
+  }
 
 
 
@@ -178,7 +189,7 @@ export function calcSkillXpFromDailyEntry(
 
     xp.control += a.minimalControl;
 
-  } else if (mode === 'recovery' && entry.calories !== null && isNoAlcohol(entry)) {
+  } else if (mode === 'recovery' && isNutritionLogged({ entry, settings: settings }) && isNoAlcohol(entry)) {
 
     xp.control += a.recoveryControl;
 

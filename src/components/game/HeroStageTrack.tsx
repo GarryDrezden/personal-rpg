@@ -28,7 +28,7 @@ export function HeroStageTrack({ gender, currentStage }: HeroStageTrackProps) {
                 : 'border-[var(--app-border)] bg-[var(--app-card)]'
             }`}
           >
-            <div className="relative mx-auto h-36 w-24 overflow-hidden rounded-xl border border-[var(--app-border)] bg-[var(--app-bg-soft)]">
+            <div className="relative mx-auto h-48 w-[7.8rem] overflow-hidden rounded-xl border border-[var(--app-border)] bg-[var(--app-bg-soft)]">
               <GameAssetImage
                 variant="hero"
                 src={meta.image}

@@ -16,8 +16,14 @@ import {
   MOMENTUM_XP_MULTIPLIERS,
 } from '../constants/momentum';
 import { hasAnyDailyData } from './achievementHelpers';
-import { isCaloriesInLimit } from './achievementEngine';
-import { getWeeklySettingsForDate, calcDailyPoints } from './points';
+import { calcDailyPoints } from './points';
+import {
+  getNutritionMomentumDelta,
+  getNutritionMomentumLabel,
+  getNutritionStatus,
+  isNutritionLogged,
+  isNutritionTrackingEnabled,
+} from './nutritionEngine';
 import {
   getDayMode,
   isStepsExcellentDone,
@@ -96,16 +102,16 @@ function isLowMovement(entry: DailyEntry | null): boolean {
   return entry.steps < 3000;
 }
 
-function isRecoveryMinimalBaseHeld(entry: DailyEntry): boolean {
+function isRecoveryMinimalBaseHeld(entry: DailyEntry, settings: AppSettings): boolean {
   const mode = getDayMode(entry.dayMode);
   if (mode !== 'recovery' && mode !== 'minimal') return false;
 
-  const hasCalories = entry.calories !== null && entry.calories !== undefined;
+  const hasNutrition = isNutritionLogged({ entry, settings });
   const hasSteps = (entry.steps ?? 0) >= MINIMAL_DAY_STEPS;
   const sober = entry.alcohol === 'none';
   const hasJournal = entry.journal || entry.comment.trim().length > 0;
 
-  return hasCalories && hasSteps && sober && hasJournal;
+  return hasNutrition && hasSteps && sober && hasJournal;
 }
 
 function buildDailyFactors(
@@ -131,19 +137,13 @@ function buildDailyFactors(
 
   factors.push(factor('any_data', 'День не потерян', 2));
 
-  const weekly = getWeeklySettingsForDate(date, settings);
-  const limit = weekly.caloriesLimit;
-
-  if (entry!.calories !== null && entry!.calories !== undefined) {
-    const cal = entry!.calories;
-    if (cal <= limit) {
-      factors.push(factor('calories_in_limit', 'Калории в лимите', 5));
-    } else if (cal > limit + 700) {
-      factors.push(factor('calories_over_700', 'Сильный перебор калорий', -15));
-    } else if (cal > limit + 300) {
-      factors.push(factor('calories_over_300', 'Перебор калорий', -8));
-    } else {
-      factors.push(factor('calories_logged', 'Калории внесены', 3));
+  if (isNutritionTrackingEnabled(settings)) {
+    const nutritionStatus = getNutritionStatus({ entry: entry!, settings });
+    const nutritionDelta = getNutritionMomentumDelta({ entry: entry!, settings });
+    if (nutritionDelta !== 0 || nutritionStatus !== 'missing') {
+      factors.push(
+        factor('nutrition', getNutritionMomentumLabel(nutritionStatus), nutritionDelta),
+      );
     }
   }
 
@@ -181,7 +181,7 @@ function buildDailyFactors(
     factors.push(factor('journal', 'Дневник', 3));
   }
 
-  if (isRecoveryMinimalBaseHeld(entry!)) {
+  if (isRecoveryMinimalBaseHeld(entry!, settings)) {
     factors.push(factor('recovery_held', 'Режим удержан без героизма', 5));
   }
 
@@ -338,8 +338,12 @@ function getStartOfDayMomentum(history: MomentumDayResult[], date: string): numb
 }
 
 export function isStrongMomentumDay(entry: DailyEntry, settings: AppSettings): boolean {
+  const nutritionOk =
+    !isNutritionTrackingEnabled(settings) ||
+    getNutritionStatus({ entry, settings }) === 'light' ||
+    getNutritionStatus({ entry, settings }) === 'precise_in_limit';
   return (
-    isCaloriesInLimit(entry, settings) &&
+    nutritionOk &&
     isStepsNormalDone(entry.steps, settings, entry.date) &&
     entry.alcohol === 'none'
   );
@@ -347,8 +351,7 @@ export function isStrongMomentumDay(entry: DailyEntry, settings: AppSettings): b
 
 export function isBaseMomentumDay(entry: DailyEntry, settings: AppSettings): boolean {
   return (
-    entry.calories !== null &&
-    entry.calories !== undefined &&
+    isNutritionLogged({ entry, settings }) &&
     isStepsMinimumDone(entry.steps, settings, entry.date) &&
     entry.alcohol === 'none'
   );

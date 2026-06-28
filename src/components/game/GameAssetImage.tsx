@@ -15,9 +15,33 @@ type GameAssetImageProps = {
   fallbackCandidates?: string[];
   className?: string;
   imageClassName?: string;
-  /** hero/companion fill more of the frame; no UI background behind image */
-  fit?: 'default' | 'hero' | 'companion';
+  fit?: 'default' | 'hero' | 'companion' | 'mob' | 'boss';
 };
+
+const FIT_CLASS: Record<NonNullable<GameAssetImageProps['fit']>, string> = {
+  default: 'h-full w-full max-h-full max-w-full object-contain',
+  hero: 'h-full w-full max-h-full max-w-full object-contain object-bottom',
+  companion: 'h-full w-full max-h-full max-w-full object-contain object-center',
+  mob: 'h-full w-full max-h-full max-w-full object-contain object-center',
+  boss: 'h-full w-full max-h-full max-w-full object-contain object-center',
+};
+
+const VARIANT_SCALE: Partial<Record<GameAssetVariant, string>> = {
+  mob: 'scale-[1.15]',
+  boss: 'scale-[1.2]',
+};
+
+function resolveFit(
+  fit: GameAssetImageProps['fit'],
+  variant: GameAssetVariant,
+): NonNullable<GameAssetImageProps['fit']> {
+  if (fit && fit !== 'default') return fit;
+  if (variant === 'hero') return 'hero';
+  if (variant === 'companion') return 'companion';
+  if (variant === 'mob') return 'mob';
+  if (variant === 'boss') return 'boss';
+  return 'default';
+}
 
 export function GameAssetImage({
   src,
@@ -45,19 +69,18 @@ export function GameAssetImage({
   const locked = status === 'locked';
   const current = status === 'current';
   const activeSrc = candidates[candidateIndex];
-
-  const fitClass =
-    fit === 'hero'
-      ? 'h-full w-full max-h-[112%] object-contain object-bottom origin-bottom scale-[1.14]'
-      : fit === 'companion'
-        ? 'h-full w-full max-h-[112%] object-contain object-bottom origin-bottom scale-[1.08]'
-        : 'h-full w-full object-contain';
+  const resolvedFit = resolveFit(fit, variant);
+  const showHighlight = current && resolvedFit === 'default';
+  const fitClass = FIT_CLASS[resolvedFit];
+  const variantScale = VARIANT_SCALE[variant] ?? '';
+  const alignClass = resolvedFit === 'hero' ? 'items-end' : 'items-center';
+  const overflowClass = resolvedFit === 'hero' ? 'overflow-visible' : 'overflow-hidden';
 
   if (candidates.length === 0 || exhausted) {
     return (
       <div
-        className={`relative ${className} ${locked ? 'opacity-55' : ''} ${
-          current ? 'ring-2 ring-[var(--app-primary)] ring-offset-2 ring-offset-[var(--app-card)]' : ''
+        className={`relative bg-transparent ${className} ${locked ? 'opacity-55' : ''} ${
+          showHighlight ? 'ring-2 ring-[var(--app-primary)] ring-inset' : ''
         }`}
       >
         <GameAssetPlaceholder variant={variant} status={status} label={alt} className="h-full w-full" />
@@ -72,9 +95,9 @@ export function GameAssetImage({
 
   return (
     <div
-      className={`relative flex items-end justify-center bg-transparent ${className} ${
+      className={`relative flex h-full w-full ${alignClass} justify-center ${overflowClass} bg-transparent ${className} ${
         locked ? 'opacity-55 grayscale' : ''
-      } ${current ? 'ring-2 ring-[var(--app-primary)] ring-offset-2 ring-offset-transparent' : ''}`}
+      } ${showHighlight ? 'ring-2 ring-[var(--app-primary)] ring-inset' : ''}`}
     >
       <img
         src={activeSrc}
@@ -88,7 +111,7 @@ export function GameAssetImage({
           }
           setExhausted(true);
         }}
-        className={`select-none pointer-events-none bg-transparent ${fitClass} ${imageClassName} ${
+        className={`select-none pointer-events-none bg-transparent ${fitClass} ${variantScale} ${imageClassName} ${
           locked ? 'blur-[1px]' : ''
         }`}
       />

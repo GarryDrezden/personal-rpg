@@ -9,7 +9,7 @@ import {
 } from '../utils/journeyMapEngine';
 import { JourneyHeroCard } from '../components/journey/JourneyHeroCard';
 import { CurrentJourneyStageCard } from '../components/journey/CurrentJourneyStageCard';
-import { JourneyPath } from '../components/journey/JourneyPath';
+import { JourneyDevelopmentMap } from '../components/journey/JourneyDevelopmentMap';
 import { JourneyConditionRow } from '../components/journey/JourneyConditionRow';
 import { resolveJourneyStageText } from '../types/journeyMap';
 
@@ -35,8 +35,11 @@ export function JourneyMapPage() {
   const activeStageId = selectedStageId ?? defaultSelected;
   const selectedStage = stages.find((s) => s.stage.id === activeStageId) ?? summary.currentStage;
 
+  const showCurrentStageCard =
+    summary.currentStage && summary.currentStage.status !== 'locked';
+
   return (
-    <div className="space-y-8 pb-4">
+    <div className="journey-page space-y-8 pb-4">
       <header>
         <h1 className="text-2xl font-bold text-[var(--app-text)]">Карта возвращения тела</h1>
         <p className="mt-2 max-w-2xl text-sm text-[var(--app-text-muted)]">
@@ -56,26 +59,26 @@ export function JourneyMapPage() {
         </p>
       ) : null}
 
-      <JourneyHeroCard summary={summary} themeId={themeId} />
-
-      {summary.currentStage && summary.currentStage.status !== 'locked' ? (
-        <CurrentJourneyStageCard progress={summary.currentStage} themeId={themeId} />
-      ) : null}
-
-      <section>
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
-          Маршрут
-        </h2>
-        <JourneyPath
+      <section className="journey-map-fullwidth">
+        <JourneyDevelopmentMap
           stages={stages}
           selectedStageId={activeStageId}
           onSelectStage={setSelectedStageId}
-          themeId={themeId}
         />
       </section>
 
+      <div className="journey-page__below grid gap-6 md:grid-cols-2">
+        <JourneyHeroCard summary={summary} themeId={themeId} />
+
+        {showCurrentStageCard ? (
+          <CurrentJourneyStageCard progress={summary.currentStage!} themeId={themeId} />
+        ) : (
+          <div className="hidden md:block" aria-hidden />
+        )}
+      </div>
+
       {selectedStage ? (
-        <section>
+        <section className="journey-page__details">
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
             Детали главы {selectedStage.stage.order}
           </h2>

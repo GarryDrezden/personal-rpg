@@ -38,7 +38,7 @@ export function HeroScenePanel({
   const { isDarkFantasy } = useAppTheme();
   const game = useGameHeroState();
   const { measurements, settings } = useAppStore();
-  const pathSetup = getPathSetupState(measurements, settings.targetWeight);
+  const pathSetup = getPathSetupState(measurements, settings);
   const chapter = getChapterMeta(game.chapter);
   const stageMeta = getHeroStageMeta(game.profile.heroGender, game.stage);
   const companionMeta = getCompanionMeta(game.profile.activeCompanionId);

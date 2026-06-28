@@ -1,6 +1,7 @@
 import type { MobId } from '../../types/gameAssets';
 import { getMobMeta } from '../../game/assetRegistry';
 import { getMobWeaknessText } from '../../game/dailyMobEngine';
+import { useAppStore } from '../../store/appStore';
 import { Card } from '../ui/Card';
 import { GameAssetImage } from './GameAssetImage';
 
@@ -11,6 +12,7 @@ type DailyMobCardProps = {
 
 export function DailyMobCard({ mobId, compact = false }: DailyMobCardProps) {
   const meta = getMobMeta(mobId);
+  const settings = useAppStore((s) => s.settings);
 
   return (
     <Card data-testid="daily-mob-card" className={compact ? 'p-4' : ''}>
@@ -38,7 +40,7 @@ export function DailyMobCard({ mobId, compact = false }: DailyMobCardProps) {
             <p className="mt-1 text-sm text-[var(--app-text-muted)]">{meta.description}</p>
           )}
           <p className="mt-2 text-xs font-medium text-[var(--app-text)]">
-            {getMobWeaknessText(meta.weakness)}
+            {getMobWeaknessText(meta.weakness, { settings, mobId })}
           </p>
         </div>
       </div>

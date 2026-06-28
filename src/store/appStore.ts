@@ -19,6 +19,8 @@ import { useCoinStore } from './coinStore';
 import { buildCoinWalletSummary } from '../utils/coinEngine';
 import { resolveThemeId } from '../constants/themes';
 import { getStoredThemeId } from '../utils/themeApply';
+import { migrateNutritionSettings } from '../utils/nutritionEngine';
+import { normalizeAppSettings } from '../utils/settingsNormalize';
 
 function emptyDaily(date: string): DailyEntry {
   return {
@@ -38,6 +40,7 @@ function emptyDaily(date: string): DailyEntry {
     customCompletions: {},
     dayMode: 'normal',
     energyLevel: null,
+    nutritionLevel: null,
   };
 }
 
@@ -97,21 +100,19 @@ export const useAppStore = create<AppState>((set, get) => ({
     try {
       set({ loading: true, error: null });
       const data = await apiRepository.loadAll();
+      const migratedSettings = migrateNutritionSettings(data.settings, data.dailyEntries);
       set({
         ...data,
         bankDeposits: data.bankDeposits ?? [],
-        settings: {
-          ...data.settings,
-          gender: data.settings.gender ?? 'male',
-          weightGoal: data.settings.weightGoal ?? 100,
-          coinSettings: data.settings.coinSettings,
-          avatarSettings: data.settings.avatarSettings,
+        settings: normalizeAppSettings({
+          ...migratedSettings,
+          coinSettings: migratedSettings.coinSettings,
+          avatarSettings: migratedSettings.avatarSettings,
           themeId: resolveThemeId(
-            data.settings.themeId ?? getStoredThemeId(),
+            migratedSettings.themeId ?? getStoredThemeId(),
           ),
-          habitConfig: data.settings.habitConfig,
-          enableSleepTracking: data.settings.enableSleepTracking ?? false,
-        },
+          habitConfig: migratedSettings.habitConfig,
+        }),
         loading: false,
       });
       useAchievementStore.getState().hydrate();
@@ -226,11 +227,13 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   saveSettings: async (settings) => {
     const prev = get().settings;
+    const payload = normalizeAppSettings(settings, prev);
     const saved = await apiRepository.saveSettings({
-      ...settings,
-      enableSleepTracking: settings.enableSleepTracking ?? false,
+      ...payload,
+      weightGoal: payload.weightGoal,
+      enableSleepTracking: payload.enableSleepTracking ?? false,
     });
-    set({ settings: saved });
+    set({ settings: normalizeAppSettings(saved, payload) });
 
     const strategy = resolveMomentumRebuildOnSettingsChange(prev, saved);
     if (strategy.type === 'full') {

@@ -9,11 +9,20 @@ export type GameProfile = {
   activeCompanionId: CompanionId;
 };
 
+export function resolveTargetWeight(
+  settings: Pick<AppSettings, 'targetWeight' | 'weightGoal'>,
+): number | null {
+  const raw = settings.targetWeight ?? settings.weightGoal;
+  if (raw === null || raw === undefined) return null;
+  if (typeof raw !== 'number' || !Number.isFinite(raw) || raw <= 0) return null;
+  return raw;
+}
+
 export function resolveGameProfile(settings: AppSettings): GameProfile {
   return {
     heroGender: settings.heroGender ?? settings.gender,
     transformationMode: settings.transformationMode ?? 'weight_loss',
-    targetWeight: settings.targetWeight ?? settings.weightGoal ?? null,
+    targetWeight: resolveTargetWeight(settings),
     activeCompanionId: settings.activeCompanionId ?? getActiveCompanionId(),
   };
 }

@@ -4,10 +4,16 @@ export type DayMode = 'normal' | 'recovery' | 'minimal';
 
 export type EnergyLevel = 1 | 2 | 3 | 4 | 5;
 
+export type { NutritionLevel, NutritionStatus, NutritionTrackingMode } from './nutrition';
+
+import type { NutritionLevel, NutritionTrackingMode } from './nutrition';
+
 export interface DailyEntry {
   id: string;
   date: string;
   calories: number | null;
+  /** Упрощённая отметка питания (simple mode) */
+  nutritionLevel?: NutritionLevel | null;
   steps: number | null;
   alcohol: AlcoholStatus | null;
   morningExercise: boolean;
@@ -142,6 +148,12 @@ export interface AppSettings {
   transformationMode?: import('./gameAssets').TransformationMode;
   targetWeight?: number | null;
   activeCompanionId?: import('./gameAssets').CompanionId;
+  /** Режим учёта питания */
+  nutritionTrackingMode?: NutritionTrackingMode;
+  /** Лимит калорий для precise mode */
+  dailyCalorieLimit?: number | null;
+  nutritionMediumOverThreshold?: number;
+  nutritionHeavyOverThreshold?: number;
 }
 
 export interface AppData {

@@ -6,6 +6,15 @@ import { resolveHabitConfig } from './habitConfig';
 import { getWeeklySettingsForDate } from './points';
 import { getDayMode, getStepsStatus } from './stepsEngine';
 import { weekDays, weekStart } from './dates';
+import {
+  getEffectiveCalorieLimit,
+  getNutritionPoints,
+  getNutritionQuestCompleted,
+  getNutritionStatus,
+  getNutritionStatusLabel,
+  getTrackingMode,
+  isNutritionTrackingEnabled,
+} from './nutritionEngine';
 
 function getEntryForDate(
   date: string,
@@ -41,23 +50,40 @@ export function getDailyQuests(params: {
   const customCompletions = getCustomCompletions(entry);
   const quests: DailyQuest[] = [];
 
-  let caloriesStatus: QuestStatus = 'pending';
-  if (entry?.calories !== null && entry?.calories !== undefined) {
-    caloriesStatus =
-      entry.calories <= weekly.caloriesLimit ? 'done' : 'failed';
-  }
+  if (isNutritionTrackingEnabled(settings)) {
+    const mode = getTrackingMode(settings);
+    const nutritionStatus = getNutritionStatus({ entry, settings });
+    let nutritionQuestStatus: QuestStatus = 'pending';
 
-  quests.push({
-    id: 'calories',
-    title: 'Калории в лимите',
-    description: `Лимит ${weekly.caloriesLimit} ккал`,
-    category: 'main',
-    status: caloriesStatus,
-    icon: '🍽️',
-    points: p.caloriesOk,
-    skillXp: skillXp('control', SKILL_XP_AWARDS.caloriesLogged + SKILL_XP_AWARDS.caloriesOk),
-    actionLabel: 'Внести калории',
-  });
+    if (getNutritionQuestCompleted({ entry, settings })) {
+      if (
+        nutritionStatus === 'medium' ||
+        nutritionStatus === 'precise_medium_over'
+      ) {
+        nutritionQuestStatus = 'partial';
+      } else {
+        nutritionQuestStatus = 'done';
+      }
+    }
+
+    const limit = getEffectiveCalorieLimit(settings, date);
+    quests.push({
+      id: 'nutrition',
+      title: mode === 'precise' ? 'Калории внесены' : 'Питание отмечено',
+      description:
+        mode === 'precise'
+          ? limit
+            ? `Лимит ${limit} ккал · ${getNutritionStatusLabel(nutritionStatus)}`
+            : 'Задай лимит в настройках'
+          : 'Отметь питание без точных цифр. Честность важнее идеальности.',
+      category: 'main',
+      status: nutritionQuestStatus,
+      icon: '🍽️',
+      points: getNutritionPoints({ entry, settings }),
+      skillXp: skillXp('control', SKILL_XP_AWARDS.caloriesLogged),
+      actionLabel: mode === 'precise' ? 'Внести калории' : 'Отметить питание',
+    });
+  }
 
   let stepsStatus: QuestStatus = 'pending';
   const dayMode = getDayMode(entry?.dayMode);
@@ -191,6 +217,7 @@ export function isDayEmpty(entry: DailyEntry | undefined, settings?: AppSettings
 
   return (
     entry.calories === null &&
+    entry.nutritionLevel == null &&
     entry.steps === null &&
     entry.alcohol === null &&
     !entry.morningExercise &&

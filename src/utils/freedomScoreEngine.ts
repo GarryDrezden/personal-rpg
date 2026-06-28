@@ -6,13 +6,17 @@ import type {
   FreedomScoreResult,
 } from '../types/freedomScore';
 import { FREEDOM_SCORE_LEVELS } from '../constants/freedomScore';
-import { isCaloriesInLimit } from './achievementEngine';
 import {
   getWeightLossKg,
   getWaistLossCm,
   getAllBodyAbilityProgress,
 } from './bodyAbilityEngine';
 import { isStepsMinimumDone, isStepsNormalDone, getDayMode } from './stepsEngine';
+import {
+  getNutritionFreedomDayScore,
+  getNutritionQuestCompleted,
+  getTrackingMode,
+} from './nutritionEngine';
 import {
   calculateMomentumHistory,
   getAverageMomentumLastDays,
@@ -70,10 +74,14 @@ export function calculateFreedomScore(params: {
   const stepsNormalDays = dailyEntries.filter((e) =>
     isStepsNormalDone(e.steps, settings, e.date),
   ).length;
-  const calorieTrackingDays = dailyEntries.filter(
-    (e) => e.calories !== null && e.calories !== undefined,
+  const nutritionMode = getTrackingMode(settings);
+  const nutritionLoggedDays = dailyEntries.filter((e) =>
+    getNutritionQuestCompleted({ entry: e, settings }),
   ).length;
-  const calorieLimitDays = dailyEntries.filter((e) => isCaloriesInLimit(e, settings)).length;
+  const nutritionQualityDays = dailyEntries.filter((e) => {
+    const score = getNutritionFreedomDayScore({ entry: e, settings });
+    return score >= 1;
+  }).length;
   const noAlcoholDays = dailyEntries.filter((e) => e.alcohol === 'none').length;
   const gymDays = dailyEntries.filter((e) => e.gym).length;
   const recoveryDays = dailyEntries.filter((e) => {
@@ -115,22 +123,26 @@ export function calculateFreedomScore(params: {
       30,
       8,
     ),
-    buildBreakdownItem(
-      'calorie_tracking',
-      'Учёт калорий',
-      'Дни с внесёнными калориями',
-      calorieTrackingDays,
-      60,
-      10,
-    ),
-    buildBreakdownItem(
-      'calorie_limit',
-      'Дни в лимите',
-      'Дни в рамках калорийного лимита',
-      calorieLimitDays,
-      30,
-      8,
-    ),
+    ...(nutritionMode !== 'disabled'
+      ? [
+          buildBreakdownItem(
+            'nutrition_tracking',
+            'Учёт питания',
+            'Дни с честной отметкой питания',
+            nutritionLoggedDays,
+            60,
+            10,
+          ),
+          buildBreakdownItem(
+            'nutrition_quality',
+            'Качество питания',
+            'Дни с лёгким питанием или удержанием лимита',
+            nutritionQualityDays,
+            30,
+            8,
+          ),
+        ]
+      : []),
     buildBreakdownItem(
       'clarity',
       'Ясность',
@@ -203,7 +215,7 @@ export function hasFreedomScoreData(params: {
 }): boolean {
   const { dailyEntries, measurements } = params;
   if (measurements.some((m) => m.weight !== null && m.weight > 0)) return true;
-  if (dailyEntries.some((e) => e.calories !== null || (e.steps ?? 0) > 0)) return true;
+  if (dailyEntries.some((e) => e.calories !== null || e.nutritionLevel != null || (e.steps ?? 0) > 0)) return true;
   return false;
 }
 

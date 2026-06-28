@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { MOB_IDS } from '../types/gameAssets';
 import { useGameHeroState } from '../hooks/useGameHeroState';
@@ -5,18 +6,27 @@ import { useAppStore } from '../store/appStore';
 import { setActiveCompanionId } from '../game/gameAssetStorage';
 import type { CompanionId } from '../types/gameAssets';
 import { Card } from '../components/ui/Card';
-import { CodexHeroProgressionScene } from '../components/game/CodexHeroProgressionScene';
-import { HeroStageTrack } from '../components/game/HeroStageTrack';
+import { HeroTransformationShowcase } from '../components/game/HeroTransformationShowcase';
 import { CompanionSelector } from '../components/game/CompanionSelector';
 import { DailyMobCard } from '../components/game/DailyMobCard';
 import { ChapterBossCard } from '../components/game/ChapterBossCard';
 import { ArtifactGrid } from '../components/game/ArtifactGrid';
 import { GAME_CHAPTERS } from '../constants/gameChapters';
-import { getBossMeta, getMobMeta } from '../game/assetRegistry';
+import { GAME_ASSET_REGISTRY, getBossMeta, getMobMeta } from '../game/assetRegistry';
+import { calcWeightJourney } from '../utils/weightJourney';
 
 export function GameCodexPage() {
-  const { saveSettings, settings } = useAppStore();
+  const { saveSettings, settings, measurements } = useAppStore();
   const game = useGameHeroState();
+
+  const weightJourney = useMemo(
+    () =>
+      calcWeightJourney(
+        measurements,
+        game.profile.targetWeight ?? settings.weightGoal ?? settings.targetWeight ?? undefined,
+      ),
+    [measurements, game.profile.targetWeight, settings.weightGoal, settings.targetWeight],
+  );
 
   const handleCompanionChange = async (id: CompanionId) => {
     setActiveCompanionId(id);
@@ -27,11 +37,6 @@ export function GameCodexPage() {
     <div className="space-y-8 pb-6" data-testid="game-codex-page">
       <header>
         <h1 className="text-2xl font-bold text-[var(--app-text)]">Кодекс пути</h1>
-        <p className="mt-2 max-w-2xl text-sm text-[var(--app-text-muted)]">
-          Герой, спутники, мобы, боссы глав и артефакты. Положи PNG/WebP в{' '}
-          <code className="rounded bg-[var(--app-bg-soft)] px-1">public/game-assets/</code> — они
-          подхватятся автоматически.
-        </p>
         <p className="mt-2 text-sm">
           <Link to="/" className="font-medium text-[var(--app-primary)] hover:underline">
             ← На главную
@@ -39,19 +44,20 @@ export function GameCodexPage() {
         </p>
       </header>
 
-      <CodexHeroProgressionScene
-        gender={game.profile.heroGender}
-        currentStage={game.stage}
-        progressPercent={game.progressPercent}
-        progressToNextStage={game.stageProgress.progressToNextStage}
-      />
-
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold text-[var(--app-text)]">Все стадии</h2>
-        <p className="text-sm text-[var(--app-text-muted)]">
-          Каталог всех 20 форм героя — от старта до финала.
-        </p>
-        <HeroStageTrack gender={game.profile.heroGender} currentStage={game.stage} />
+      <section className="space-y-3">
+        <div>
+          <h2 className="text-lg font-semibold text-[var(--app-text)]">Сцена трансформации</h2>
+          <p className="mt-1 text-sm text-[var(--app-text-muted)]">
+            Путь формы — cinematic-экран прогресса героя.
+          </p>
+        </div>
+        <HeroTransformationShowcase
+          gender={game.profile.heroGender}
+          currentStage={game.stage}
+          stages={GAME_ASSET_REGISTRY.heroStages[game.profile.heroGender]}
+          progressPercent={game.progressPercent}
+          currentWeightKg={weightJourney.currentWeight}
+        />
       </section>
 
       <section className="space-y-4">

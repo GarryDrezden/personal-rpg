@@ -196,7 +196,8 @@ if ($uri === '/settings' && $method === 'PUT') {
            gender = :gender,
            weight_goal = :weight_goal,
            theme_id = :theme_id,
-           habit_config = :habit_config
+           habit_config = :habit_config,
+           nutrition_settings = :nutrition_settings
          WHERE id = 1'
     )->execute([
         'dcl' => $body['defaultCaloriesLimit'],
@@ -212,11 +213,19 @@ if ($uri === '/settings' && $method === 'PUT') {
         'gender' => in_array($body['gender'] ?? 'male', ['male', 'female'], true)
             ? $body['gender']
             : 'male',
-        'weight_goal' => isset($body['weightGoal']) ? (float) $body['weightGoal'] : 100.0,
+        'weight_goal' => isset($body['weightGoal'])
+            ? (float) $body['weightGoal']
+            : (isset($body['targetWeight']) ? (float) $body['targetWeight'] : 100.0),
         'theme_id' => in_array($body['themeId'] ?? 'cozy', ['cozy', 'darkFantasy'], true)
             ? $body['themeId']
             : 'cozy',
         'habit_config' => json_encode($body['habitConfig'] ?? null, JSON_UNESCAPED_UNICODE),
+        'nutrition_settings' => json_encode([
+            'nutritionTrackingMode' => $body['nutritionTrackingMode'] ?? 'simple',
+            'dailyCalorieLimit' => $body['dailyCalorieLimit'] ?? null,
+            'nutritionMediumOverThreshold' => $body['nutritionMediumOverThreshold'] ?? 300,
+            'nutritionHeavyOverThreshold' => $body['nutritionHeavyOverThreshold'] ?? 700,
+        ], JSON_UNESCAPED_UNICODE),
     ]);
 
     $pdo->exec('DELETE FROM weekly_settings');

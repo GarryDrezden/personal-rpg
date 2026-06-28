@@ -6,6 +6,7 @@ import { weekDays, weekStart } from './dates';
 export function hasAnyDailyData(entry: DailyEntry | undefined | null): boolean {
   if (!entry) return false;
   if (entry.calories !== null && entry.calories !== undefined) return true;
+  if (entry.nutritionLevel != null) return true;
   if (entry.steps !== null && entry.steps !== undefined) return true;
   if (entry.alcohol !== null && entry.alcohol !== undefined) return true;
   if (entry.morningExercise) return true;

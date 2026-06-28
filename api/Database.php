@@ -40,7 +40,7 @@ class Database
     private function migrateBank(): void
     {
         $hasBank = $this->pdo->query(
-            "SELECT name FROM sqlite_master WHERE type='table' AND name='bank_deposits'",
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='bank_deposits'"
         )->fetch();
         if ($hasBank) {
             return;
@@ -56,7 +56,7 @@ class Database
         );
 
         $hasOld = $this->pdo->query(
-            "SELECT name FROM sqlite_master WHERE type='table' AND name='reward_savings'",
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='reward_savings'"
         )->fetch();
         if ($hasOld) {
             $this->pdo->exec(
@@ -99,6 +99,9 @@ class Database
         if (!in_array('habit_config', $appCols, true)) {
             $this->pdo->exec('ALTER TABLE app_settings ADD COLUMN habit_config TEXT');
         }
+        if (!in_array('nutrition_settings', $appCols, true)) {
+            $this->pdo->exec('ALTER TABLE app_settings ADD COLUMN nutrition_settings TEXT');
+        }
 
         $dailyCols = array_column(
             $this->pdo->query('PRAGMA table_info(daily_entries)')->fetchAll(),
@@ -112,6 +115,9 @@ class Database
         }
         if (!in_array('energy_level', $dailyCols, true)) {
             $this->pdo->exec('ALTER TABLE daily_entries ADD COLUMN energy_level INTEGER');
+        }
+        if (!in_array('nutrition_level', $dailyCols, true)) {
+            $this->pdo->exec('ALTER TABLE daily_entries ADD COLUMN nutrition_level TEXT');
         }
 
         $weeklyCols = array_column(
@@ -230,12 +236,12 @@ class Database
     {
         $this->pdo->prepare(
             'INSERT OR REPLACE INTO daily_entries
-             (id, date, calories, steps, alcohol, morning_exercise, gym, journal, cooking, repair, plants, hobby, comment, custom_completions, day_mode, energy_level)
+             (id, date, calories, steps, alcohol, morning_exercise, gym, journal, cooking, repair, plants, hobby, comment, custom_completions, day_mode, energy_level, nutrition_level)
              VALUES (
                COALESCE((SELECT id FROM daily_entries WHERE date = :date), :new_id),
                :date, :calories, :steps, :alcohol,
                :morning_exercise, :gym, :journal, :cooking, :repair, :plants, :hobby, :comment, :custom_completions,
-               :day_mode, :energy_level
+               :day_mode, :energy_level, :nutrition_level
              )'
         )->execute([
             'new_id' => $this->uuid(),
@@ -254,6 +260,7 @@ class Database
             'custom_completions' => json_encode($d['customCompletions'] ?? [], JSON_UNESCAPED_UNICODE),
             'day_mode' => $d['dayMode'] ?? 'normal',
             'energy_level' => isset($d['energyLevel']) ? (int) $d['energyLevel'] : null,
+            'nutrition_level' => $d['nutritionLevel'] ?? null,
         ]);
     }
 

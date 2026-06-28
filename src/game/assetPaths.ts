@@ -10,8 +10,11 @@ import type {
 /** Base path for drop-in game assets (no code changes needed) */
 export const GAME_ASSET_BASE_PATH = '/game-assets';
 
+/** Bump when replacing PNGs so browsers reload public assets */
+export const GAME_ASSET_VERSION = '17';
+
 export function gameAsset(path: string): string {
-  return `${GAME_ASSET_BASE_PATH}/${path}`;
+  return `${GAME_ASSET_BASE_PATH}/${path}?v=${GAME_ASSET_VERSION}`;
 }
 
 const warnedMissingAssets = new Set<string>();
@@ -107,5 +110,21 @@ export function getHeroStageImageCandidates(
   gender: HeroGender,
   stage: HeroStageNumber,
 ): string[] {
-  return [getGameHeroStagePublicPath(gender, stage), getLegacyHeroStagePublicPath(gender, stage)];
+  const primary = getGameHeroStagePublicPath(gender, stage);
+  // Пока не все 20 PNG готовы — подставляем ближайший якорь, чтобы не показывать старый кэш/placeholder
+  const anchors: HeroStageNumber[] = [1, 2, 19, 20];
+  const fallbacks = anchors
+    .filter((s) => s !== stage)
+    .sort((a, b) => Math.abs(a - stage) - Math.abs(b - stage))
+    .map((s) => getGameHeroStagePublicPath(gender, s));
+  return [primary, ...fallbacks];
+}
+
+/** Силуэт «Смерти» (200 кг) — фигура в чёрной мантии с косой. */
+export function getHeroDeathPublicPath(gender: HeroGender): string {
+  return gameAsset(`heroes/${gender}/death.png`);
+}
+
+export function getHeroDeathImageCandidates(gender: HeroGender): string[] {
+  return [getHeroDeathPublicPath(gender)];
 }

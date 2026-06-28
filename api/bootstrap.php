@@ -24,6 +24,15 @@ function jsonError(string $message, int $code = 400): void
     jsonResponse(['error' => $message], $code);
 }
 
+function handleApiFatal(string $message): void
+{
+    jsonError($message, 500);
+}
+
+set_exception_handler(static function (Throwable $e): void {
+    handleApiFatal($e->getMessage());
+});
+
 function getJsonBody(): array
 {
     $raw = file_get_contents('php://input');
@@ -57,6 +66,7 @@ function rowToDaily(array $row): array
         'energyLevel' => isset($row['energy_level']) && $row['energy_level'] !== null
             ? (int) $row['energy_level']
             : null,
+        'nutritionLevel' => $row['nutrition_level'] ?? null,
     ];
 }
 
@@ -130,6 +140,9 @@ function getAppSettings(PDO $pdo): array
         jsonError('Settings not found', 500);
     }
     $weekly = $pdo->query('SELECT * FROM weekly_settings ORDER BY week_start')->fetchAll();
+    $nutrition = isset($row['nutrition_settings']) && $row['nutrition_settings']
+        ? json_decode($row['nutrition_settings'], true)
+        : [];
     return [
         'defaultCaloriesLimit' => (int) $row['default_calories_limit'],
         'defaultStepsGoal' => (int) $row['default_steps_goal'],
@@ -152,6 +165,9 @@ function getAppSettings(PDO $pdo): array
         'weightGoal' => isset($row['weight_goal']) && $row['weight_goal'] !== null
             ? (float) $row['weight_goal']
             : 100.0,
+        'targetWeight' => isset($row['weight_goal']) && $row['weight_goal'] !== null
+            ? (float) $row['weight_goal']
+            : 100.0,
         'coinSettings' => isset($row['coin_settings']) && $row['coin_settings']
             ? json_decode($row['coin_settings'], true)
             : null,
@@ -164,5 +180,9 @@ function getAppSettings(PDO $pdo): array
         'habitConfig' => isset($row['habit_config']) && $row['habit_config']
             ? json_decode($row['habit_config'], true)
             : null,
+        'nutritionTrackingMode' => $nutrition['nutritionTrackingMode'] ?? 'simple',
+        'dailyCalorieLimit' => $nutrition['dailyCalorieLimit'] ?? null,
+        'nutritionMediumOverThreshold' => $nutrition['nutritionMediumOverThreshold'] ?? 300,
+        'nutritionHeavyOverThreshold' => $nutrition['nutritionHeavyOverThreshold'] ?? 700,
     ];
 }

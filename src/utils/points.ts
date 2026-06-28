@@ -1,6 +1,12 @@
 import type { AppSettings, DailyEntry, MeasurementEntry, WeeklySettings } from '../types';
 import { isMonday, weekDays, weekStart } from './dates';
 import { getStepsStatus } from './stepsEngine';
+import {
+  getNutritionPoints,
+  getTrackingMode,
+  isNutritionGoodForWeekBonus,
+  isNutritionTrackingEnabled,
+} from './nutritionEngine';
 
 export function getWeeklySettingsForDate(
   date: string,
@@ -24,12 +30,11 @@ export function getWeeklySettingsForDate(
 
 /** Реальные очки дня — могут быть отрицательными */
 export function calcDailyPoints(entry: DailyEntry, settings: AppSettings): number {
-  const weekly = getWeeklySettingsForDate(entry.date, settings);
   const p = settings.pointSettings;
   let total = 0;
 
-  if (entry.calories !== null && entry.calories <= weekly.caloriesLimit) {
-    total += p.caloriesOk;
+  if (isNutritionTrackingEnabled(settings)) {
+    total += getNutritionPoints({ entry, settings });
   }
 
   const stepsInfo = getStepsStatus({
@@ -88,13 +93,12 @@ export function calcWeeklyBonuses(
   const allNoAlcohol = weekEntries.every((e) => e?.alcohol === 'none');
   const noAlcoholWeekBonus = allNoAlcohol ? p.noAlcoholWeekBonus : 0;
 
-  const allCaloriesOk = weekEntries.every(
-    (e) =>
-      e !== null &&
-      e.calories !== null &&
-      e.calories <= weekly.caloriesLimit,
+  const nutritionMode = getTrackingMode(settings);
+  const allNutritionOk = weekEntries.every(
+    (e) => e !== null && isNutritionGoodForWeekBonus({ entry: e, settings }),
   );
-  const caloriesWeekBonus = allCaloriesOk ? p.caloriesWeekBonus : 0;
+  const caloriesWeekBonus =
+    nutritionMode !== 'disabled' && allNutritionOk ? p.caloriesWeekBonus : 0;
 
   const mondayMeasurement = measurements.some(
     (m) => m.date === weekStartDate,
