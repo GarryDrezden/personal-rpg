@@ -68,14 +68,14 @@ function mergeRemoteSettings(
 
 let cache: AppData | null = null;
 
-function ensureCache(): AppData {
+async function ensureCache(): Promise<AppData> {
   if (!cache) {
-    throw new Error('Remote storage not initialized');
+    await remoteRepository.loadAll();
   }
-  return cache;
+  return cache!;
 }
 
-function persistType(type: string, payload: unknown, debounce = true) {
+function persistType(type: string, payload: unknown, debounce = false) {
   const save = () => dataApi.putType(type, payload).then(() => undefined);
   if (debounce) {
     debouncedRemoteSave(type, save);
@@ -110,7 +110,7 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
   },
 
   async upsertDaily(entry: DailyEntry): Promise<DailyEntry> {
-    const state = ensureCache();
+    const state = await ensureCache();
     const saved: DailyEntry = {
       ...entry,
       id: entry.id || newId(),
@@ -125,22 +125,22 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
   },
 
   async deleteDaily(date: string): Promise<void> {
-    const state = ensureCache();
+    const state = await ensureCache();
     state.dailyEntries = state.dailyEntries.filter((e) => e.date !== date);
     await persistType('dailyEntries', state.dailyEntries);
   },
 
   async getDaily(from: string, to: string): Promise<DailyEntry[]> {
-    const state = ensureCache();
+    const state = await ensureCache();
     return state.dailyEntries.filter((e) => e.date >= from && e.date <= to);
   },
 
   async getMeasurements(): Promise<MeasurementEntry[]> {
-    return ensureCache().measurements;
+    return (await ensureCache()).measurements;
   },
 
   async addMeasurement(entry: Omit<MeasurementEntry, 'id'>): Promise<MeasurementEntry> {
-    const state = ensureCache();
+    const state = await ensureCache();
     const saved: MeasurementEntry = { ...entry, id: newId() };
     state.measurements = [...state.measurements, saved].sort((a, b) =>
       a.date.localeCompare(b.date),
@@ -150,17 +150,17 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
   },
 
   async deleteMeasurement(id: string): Promise<void> {
-    const state = ensureCache();
+    const state = await ensureCache();
     state.measurements = state.measurements.filter((m) => m.id !== id);
     await persistType('measurements', state.measurements);
   },
 
   async getRewards(): Promise<Reward[]> {
-    return ensureCache().rewards;
+    return (await ensureCache()).rewards;
   },
 
   async addReward(reward: Omit<Reward, 'id' | 'purchasedAt'>): Promise<Reward> {
-    const state = ensureCache();
+    const state = await ensureCache();
     const saved: Reward = { ...reward, id: newId(), purchasedAt: null };
     state.rewards = [...state.rewards, saved];
     await persistType('rewards', state.rewards);
@@ -171,7 +171,7 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
     id: string,
     patch: Partial<Pick<Reward, 'title' | 'description' | 'cost' | 'category' | 'moneyGoal'>>,
   ): Promise<Reward> {
-    const state = ensureCache();
+    const state = await ensureCache();
     const idx = state.rewards.findIndex((r) => r.id === id);
     if (idx < 0) throw new Error('Reward not found');
     const saved = { ...state.rewards[idx], ...patch };
@@ -181,13 +181,13 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
   },
 
   async deleteReward(id: string): Promise<void> {
-    const state = ensureCache();
+    const state = await ensureCache();
     state.rewards = state.rewards.filter((r) => r.id !== id);
     await persistType('rewards', state.rewards);
   },
 
   async purchaseReward(id: string): Promise<Reward> {
-    const state = ensureCache();
+    const state = await ensureCache();
     const idx = state.rewards.findIndex((r) => r.id === id);
     if (idx < 0) throw new Error('Reward not found');
     const saved = {
@@ -200,11 +200,11 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
   },
 
   async getBankDeposits(): Promise<BankDeposit[]> {
-    return ensureCache().bankDeposits;
+    return (await ensureCache()).bankDeposits;
   },
 
   async addBankDeposit(entry: Omit<BankDeposit, 'id'>): Promise<BankDeposit> {
-    const state = ensureCache();
+    const state = await ensureCache();
     const saved: BankDeposit = { ...entry, id: newId() };
     state.bankDeposits = [saved, ...state.bankDeposits].sort((a, b) =>
       b.date.localeCompare(a.date),
@@ -214,17 +214,17 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
   },
 
   async deleteBankDeposit(id: string): Promise<void> {
-    const state = ensureCache();
+    const state = await ensureCache();
     state.bankDeposits = state.bankDeposits.filter((d) => d.id !== id);
     await persistType('bankDeposits', state.bankDeposits);
   },
 
   async getSettings(): Promise<AppSettings> {
-    return ensureCache().settings;
+    return (await ensureCache()).settings;
   },
 
   async saveSettings(settings: AppSettings): Promise<AppSettings> {
-    const state = ensureCache();
+    const state = await ensureCache();
     const saved = normalizeAppSettings(settings);
     state.settings = saved;
     await persistType('customSettingsBackup', saved, false);

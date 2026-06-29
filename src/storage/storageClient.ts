@@ -7,6 +7,9 @@ export type StorageMode = 'remote' | 'legacy';
 let mode: StorageMode = 'legacy';
 
 export function setStorageMode(next: StorageMode) {
+  if (mode === next) {
+    return;
+  }
   mode = next;
   if (next === 'remote') {
     remoteRepository.resetCache();

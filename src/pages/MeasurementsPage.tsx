@@ -59,6 +59,7 @@ export function MeasurementsPage() {
     comment: '',
   });
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     setStoredMeasurementMetric(selectedMetric);
@@ -127,6 +128,7 @@ export function MeasurementsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
+    setSaveError(null);
     try {
       await addMeasurement(form);
       setForm({
@@ -140,6 +142,8 @@ export function MeasurementsPage() {
         biceps: null,
         comment: '',
       });
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Не удалось сохранить замер');
     } finally {
       setSaving(false);
     }
@@ -206,6 +210,9 @@ export function MeasurementsPage() {
             className="w-full rounded-xl border border-rpg-border px-3 py-2"
             rows={2}
           />
+          {saveError && (
+            <p className="text-sm text-[var(--app-danger)]">{saveError}</p>
+          )}
           <button
             type="submit"
             disabled={saving}

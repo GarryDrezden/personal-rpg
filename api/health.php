@@ -21,6 +21,10 @@ if ($checks['mysqlConfigExists']) {
         $checks['mysqlConnect'] = true;
         $tables = $pdo->query("SHOW TABLES LIKE 'users'")->fetch();
         $checks['usersTable'] = (bool) $tables;
+        $authTable = $pdo->query("SHOW TABLES LIKE 'auth_sessions'")->fetch();
+        $checks['authSessionsTable'] = (bool) $authTable;
+        $dataTable = $pdo->query("SHOW TABLES LIKE 'user_data'")->fetch();
+        $checks['userDataTable'] = (bool) $dataTable;
     } catch (Throwable $e) {
         $checks['mysqlConnect'] = false;
         $checks['mysqlError'] = $e->getMessage();
@@ -39,10 +43,17 @@ $checks['sessionsDirWritable'] = $checks['sessionsDirExists'] && is_writable($se
 
 if ($checks['mysqlConnect'] ?? false) {
     try {
-        $authTable = $pdo->query("SHOW TABLES LIKE 'auth_sessions'")->fetch();
-        $checks['authSessionsTable'] = (bool) $authTable;
+        if (!isset($checks['authSessionsTable'])) {
+            $authTable = $pdo->query("SHOW TABLES LIKE 'auth_sessions'")->fetch();
+            $checks['authSessionsTable'] = (bool) $authTable;
+        }
+        if (!isset($checks['userDataTable'])) {
+            $dataTable = $pdo->query("SHOW TABLES LIKE 'user_data'")->fetch();
+            $checks['userDataTable'] = (bool) $dataTable;
+        }
     } catch (Throwable) {
         $checks['authSessionsTable'] = false;
+        $checks['userDataTable'] = false;
     }
 }
 
@@ -51,6 +62,7 @@ $checks['ok'] = ($checks['pdo_mysql'] ?? false)
     && ($checks['mysqlConnect'] ?? false)
     && ($checks['usersTable'] ?? false)
     && ($checks['authSessionsTable'] ?? false)
+    && ($checks['userDataTable'] ?? false)
     && !in_array(false, $checks['apiFiles'], true);
 
 if (!$checks['ok']) {

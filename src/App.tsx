@@ -157,7 +157,7 @@ function ErrorScreen({ message }: { message: string }) {
 
 function AuthenticatedApp() {
 
-  const { authenticated, refreshUser } = useAuth();
+  const { authenticated } = useAuth();
 
   const { init, loading, error } = useAppStore();
 
@@ -171,21 +171,13 @@ function AuthenticatedApp() {
 
       setSessionReady(false);
 
-      const ok = await refreshUser();
-
-      if (!ok) {
-
-        return;
-
-      }
-
       await init();
 
       setSessionReady(true);
 
     })();
 
-  }, [init, refreshUser]);
+  }, [init]);
 
 
 
