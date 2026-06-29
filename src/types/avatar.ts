@@ -1,8 +1,11 @@
+import type { HeroStageNumber } from '../types/gameAssets';
+
 export type AvatarGender = 'male' | 'female';
 
 export type AvatarMode = 'auto' | 'manual';
 
-export type AvatarStage = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+/** Same 20 stages as hero progression (game-assets). */
+export type AvatarStage = HeroStageNumber;
 
 export type AvatarSettings = {
   gender: AvatarGender;

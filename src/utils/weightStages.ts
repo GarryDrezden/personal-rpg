@@ -1,8 +1,9 @@
 import type { CharacterGender } from '../types';
 import type { AvatarStage } from '../types/avatar';
+import { AVATAR_STAGE_COUNT } from '../constants/avatar';
 import { getAvatarImagePath } from './avatarEngine';
 
-export const WEIGHT_STAGE_COUNT = 7;
+export const WEIGHT_STAGE_COUNT = AVATAR_STAGE_COUNT;
 
 export const STAGE_LABELS = ['Старт', '', '', '', '', '', 'Цель'] as const;
 

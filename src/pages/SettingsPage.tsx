@@ -3,7 +3,12 @@ import { Link } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { DEFAULT_POINT_SETTINGS } from '../constants/defaults';
 import { DEFAULT_COIN_SETTINGS } from '../constants/coins';
-import { DEFAULT_AVATAR_SETTINGS, resolveAvatarSettings } from '../constants/avatar';
+import {
+  AVATAR_STAGES,
+  AVATAR_STAGE_COUNT,
+  DEFAULT_AVATAR_SETTINGS,
+  resolveAvatarSettings,
+} from '../constants/avatar';
 import type { CoinSettings, PointSettings, WeeklySettings } from '../types';
 import type { NutritionTrackingMode } from '../types/nutrition';
 import type { AvatarMode, AvatarStage } from '../types/avatar';
@@ -392,9 +397,9 @@ export function SettingsPage() {
 
         {avatarSettings.mode === 'manual' && (
           <div className="mb-4">
-            <p className="mb-2 text-sm font-medium">Ручной этап (1–7)</p>
+            <p className="mb-2 text-sm font-medium">Ручной этап (1–{AVATAR_STAGE_COUNT})</p>
             <div className="flex flex-wrap gap-2">
-              {([1, 2, 3, 4, 5, 6, 7] as AvatarStage[]).map((s) => (
+              {AVATAR_STAGES.map((s) => (
                 <button
                   key={s}
                   type="button"
@@ -418,8 +423,8 @@ export function SettingsPage() {
             В автоматическом режиме выбирается максимальная стадия, где сброс веса ≥ порога.
             Этап 1 всегда начинается с 0 кг.
           </p>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {([1, 2, 3, 4, 5, 6, 7] as AvatarStage[]).map((stage) => (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {AVATAR_STAGES.map((stage) => (
               <NumberInput
                 key={stage}
                 label={`Этап ${stage}`}

@@ -1,15 +1,16 @@
 import type { AppSettings, MeasurementEntry } from '../types';
 import type { AvatarGender, AvatarSettings, AvatarStage, AvatarState } from '../types/avatar';
 import {
-  AVATAR_STAGE_FILES,
+  AVATAR_STAGE_COUNT,
   AVATAR_STAGE_LABELS,
+  getAvatarStageFileName,
   resolveAvatarSettings,
 } from '../constants/avatar';
 import { sortMeasurementsByDate } from './measurements';
 
 /** v1.0: новые PNG в public/avatars/{gender}/ */
 export function getAvatarImagePath(gender: AvatarGender, stage: AvatarStage): string {
-  return `/avatars/${gender}/${AVATAR_STAGE_FILES[stage - 1]}`;
+  return `/avatars/${gender}/${getAvatarStageFileName(stage)}`;
 }
 
 /** Legacy: public/images/weight/{gender}/stage-N.png (до v1.0) */
@@ -62,7 +63,7 @@ export function calcAutoAvatarStage(
 ): AvatarStage {
   let stage: AvatarStage = 1;
 
-  for (let s = 1; s <= 7; s++) {
+  for (let s = 1; s <= AVATAR_STAGE_COUNT; s++) {
     const key = s as AvatarStage;
     if (weightLossKg >= thresholds[key]) {
       stage = key;

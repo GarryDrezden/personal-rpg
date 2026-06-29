@@ -1,44 +1,44 @@
 import type { AppSettings } from '../types';
 import type { AvatarSettings, AvatarStage } from '../types/avatar';
+import { HERO_STAGE_COUNT } from '../types/gameAssets';
+import { HERO_STAGE_TITLES } from './heroStages';
 
-export const AVATAR_STAGE_COUNT = 7;
+export const AVATAR_STAGE_COUNT = HERO_STAGE_COUNT;
 
-export const AVATAR_STAGE_FILES = [
-  '01_stage_heaviest.png',
-  '02_stage_very_overweight.png',
-  '03_stage_overweight.png',
-  '04_stage_mid_progress.png',
-  '05_stage_fit.png',
-  '06_stage_lean.png',
-  '07_stage_athletic.png',
-] as const;
+/** Max kg lost at stage 20 in default thresholds (user can edit in settings). */
+export const DEFAULT_AVATAR_STAGE_MAX_KG = 50;
 
-export const AVATAR_STAGE_LABELS: Record<AvatarStage, string> = {
-  1: 'Старт пути',
-  2: 'Первые изменения',
-  3: 'Тело просыпается',
-  4: 'Середина пути',
-  5: 'Форма возвращается',
-  6: 'Почти герой',
-  7: 'Новая версия',
-};
+export const AVATAR_STAGES = Array.from(
+  { length: AVATAR_STAGE_COUNT },
+  (_, i) => (i + 1) as AvatarStage,
+);
+
+export function getAvatarStageFileName(stage: AvatarStage): string {
+  return `stage-${String(stage).padStart(2, '0')}.png`;
+}
+
+export const AVATAR_STAGE_LABELS = Object.fromEntries(
+  HERO_STAGE_TITLES.map((row) => [row.stage, row.title]),
+) as Record<AvatarStage, string>;
+
+export function buildDefaultAvatarStageThresholdsKg(
+  maxKg = DEFAULT_AVATAR_STAGE_MAX_KG,
+): Record<AvatarStage, number> {
+  const thresholds = {} as Record<AvatarStage, number>;
+  for (const row of HERO_STAGE_TITLES) {
+    const stage = row.stage as AvatarStage;
+    thresholds[stage] =
+      stage === 1 ? 0 : Math.round((row.progressPercent / 100) * maxKg);
+  }
+  return thresholds;
+}
 
 export const DEFAULT_AVATAR_SETTINGS: AvatarSettings = {
   gender: 'male',
   mode: 'auto',
   manualStage: 1,
-  stageThresholdsKg: {
-    1: 0,
-    2: 5,
-    3: 10,
-    4: 20,
-    5: 30,
-    6: 40,
-    7: 50,
-  },
+  stageThresholdsKg: buildDefaultAvatarStageThresholdsKg(),
 };
-
-const STAGES: AvatarStage[] = [1, 2, 3, 4, 5, 6, 7];
 
 export function resolveAvatarSettings(settings: AppSettings): AvatarSettings {
   const merged: AvatarSettings = {
@@ -54,7 +54,7 @@ export function resolveAvatarSettings(settings: AppSettings): AvatarSettings {
     merged.gender = settings.gender;
   }
 
-  for (const stage of STAGES) {
+  for (const stage of AVATAR_STAGES) {
     const value = merged.stageThresholdsKg[stage];
     if (typeof value !== 'number' || Number.isNaN(value)) {
       merged.stageThresholdsKg[stage] = DEFAULT_AVATAR_SETTINGS.stageThresholdsKg[stage];
@@ -63,8 +63,7 @@ export function resolveAvatarSettings(settings: AppSettings): AvatarSettings {
 
   merged.stageThresholdsKg[1] = 0;
 
-  const manual = merged.manualStage;
-  if (manual < 1 || manual > 7) {
+  if (merged.manualStage < 1 || merged.manualStage > AVATAR_STAGE_COUNT) {
     merged.manualStage = 1;
   }
 
