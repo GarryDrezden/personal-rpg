@@ -44,6 +44,7 @@ jobs:
           test ! -f deploy-bundle/package.json
           test ! -d deploy-bundle/docs
           test -f deploy-bundle/api/sessions/index.php
+          php -l deploy-bundle/api/index.php
           echo "Bundle OK:"
           ls -la deploy-bundle/api/sessions
           ls -la deploy-bundle | head -20

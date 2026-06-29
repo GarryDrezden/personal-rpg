@@ -23,7 +23,7 @@ $db = new Database();
 $pdo = $db->getPdo();
 
 // GET /daily?from=&to=
-if ($uri === '/daily' && $method === 'GET') {if ($uri === '/daily' && $method === 'GET') {
+if ($uri === '/daily' && $method === 'GET') {
     $from = $_GET['from'] ?? '2000-01-01';
     $to = $_GET['to'] ?? '2099-12-31';
     $stmt = $pdo->prepare('SELECT * FROM daily_entries WHERE date >= :from AND date <= :to ORDER BY date');

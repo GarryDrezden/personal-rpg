@@ -14,7 +14,7 @@ return [
     'auth' => [
         'cookie_name' => 'pr_session',
         'session_days' => 30,
-        'secure_cookie' => true,
+        'secure_cookie' => false,
         'same_site' => 'Lax',
     ],
     'app' => [

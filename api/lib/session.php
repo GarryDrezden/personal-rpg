@@ -31,8 +31,8 @@ function isSecureConnection(): bool
     }
     if (is_file(__DIR__ . '/../config/config.php')) {
         $cfg = authConfig();
-        if (!empty($cfg['secure_cookie'])) {
-            return true;
+        if (array_key_exists('secure_cookie', $cfg) && $cfg['secure_cookie'] === false) {
+            return false;
         }
     }
     return false;
