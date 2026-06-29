@@ -13,10 +13,7 @@ import { migrateNutritionSettings } from '../utils/nutritionEngine';
 import { resolveThemeId } from '../constants/themes';
 import { debouncedRemoteSave, immediateRemoteSave } from './saveStatusStore';
 import { getActiveCompanionId } from '../game/gameAssetStorage';
-
-function newId(): string {
-  return crypto.randomUUID();
-}
+import { generateId } from '../utils/generateId';
 
 function defaultSettings(): AppSettings {
   return normalizeAppSettings({
@@ -113,7 +110,7 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
     const state = await ensureCache();
     const saved: DailyEntry = {
       ...entry,
-      id: entry.id || newId(),
+      id: entry.id || generateId(),
     };
     const dailyEntries = [
       ...state.dailyEntries.filter((e) => e.date !== saved.date),
@@ -141,7 +138,7 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
 
   async addMeasurement(entry: Omit<MeasurementEntry, 'id'>): Promise<MeasurementEntry> {
     const state = await ensureCache();
-    const saved: MeasurementEntry = { ...entry, id: newId() };
+    const saved: MeasurementEntry = { ...entry, id: generateId() };
     state.measurements = [...state.measurements, saved].sort((a, b) =>
       a.date.localeCompare(b.date),
     );
@@ -161,7 +158,7 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
 
   async addReward(reward: Omit<Reward, 'id' | 'purchasedAt'>): Promise<Reward> {
     const state = await ensureCache();
-    const saved: Reward = { ...reward, id: newId(), purchasedAt: null };
+    const saved: Reward = { ...reward, id: generateId(), purchasedAt: null };
     state.rewards = [...state.rewards, saved];
     await persistType('rewards', state.rewards);
     return saved;
@@ -205,7 +202,7 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
 
   async addBankDeposit(entry: Omit<BankDeposit, 'id'>): Promise<BankDeposit> {
     const state = await ensureCache();
-    const saved: BankDeposit = { ...entry, id: newId() };
+    const saved: BankDeposit = { ...entry, id: generateId() };
     state.bankDeposits = [saved, ...state.bankDeposits].sort((a, b) =>
       b.date.localeCompare(a.date),
     );

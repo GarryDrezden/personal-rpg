@@ -8,6 +8,7 @@ import type { CoinSettings, PointSettings, WeeklySettings } from '../types';
 import type { NutritionTrackingMode } from '../types/nutrition';
 import type { AvatarMode, AvatarStage } from '../types/avatar';
 import type { AppThemeId } from '../types/theme';
+import { generateId } from '../utils/generateId';
 import { AvatarDisplay } from '../components/avatar/AvatarDisplay';
 import {
   calcAutoAvatarStage,
@@ -62,7 +63,7 @@ export function SettingsPage() {
 
   const addWeek = () => {
     const ws: WeeklySettings = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       weekStart: new Date().toISOString().slice(0, 10),
       caloriesLimit: local.defaultCaloriesLimit,
       stepsGoal: local.defaultStepsNormal ?? local.defaultStepsGoal,

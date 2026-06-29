@@ -13,6 +13,7 @@ import {
   getHabitCardColorClass,
   getHabitColorSwatchClass,
 } from '../../constants/habitColors';
+import { generateId } from '../../utils/generateId';
 import { HABIT_ICON_OPTIONS } from '../../constants/habitIcons';
 import { DEFAULT_HABIT_CONFIG, resolveHabitConfig } from '../../utils/habitConfig';
 import { NumberInput } from '../ui/NumberInput';
@@ -123,7 +124,7 @@ export function HabitsEditor({ settings, onChange }: HabitsEditorProps) {
 
   const addCustom = () => {
     const habit: CustomHabitDefinition = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       title: 'Новая цель',
       description: '',
       category: 'bonus',
