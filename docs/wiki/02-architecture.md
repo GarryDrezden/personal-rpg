@@ -58,8 +58,7 @@ Legacy redirects: `/skills` → `/growth/skills`, `/bosses` → `/growth/trials`
 
 ### Server (Windows local)
 
-- `backend/` — Node API (`npm run dev:server`)
-- `server/` — nginx + PHP-CGI runtime (legacy local stack)
+- `npm run dev` — frontend; API: OSPanel или `php -S` в `api/`
 - `scripts/` — dev-api, build-release, autostart installers
 
 ### Hosting (production)

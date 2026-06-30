@@ -79,7 +79,7 @@
 - SQLite schema + migrations в `api/Database.php`
 - `api/health.php` для диагностики на хостинге
 - GitHub Actions: build + FTP deploy (`dist/`, `api/`, `.htaccess`)
-- Windows autostart: nginx + PHP (`server/`)
+- FTP deploy: `dist/` + `api/` + `.htaccess` → fit-rpg.ru
 
 ### Ассеты
 

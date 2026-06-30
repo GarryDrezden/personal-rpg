@@ -393,49 +393,37 @@ XP начисляется за:
 
 ## Установка и запуск
 
-### Разработка
+### Разработка (локально)
 
-**Требования:** Node.js 18+, PHP 8+, npm.
+**Требования:** Node.js 18+, npm. Для API — PHP 8+ (OSPanel или системный).
 
 ```powershell
-cd E:\Работа\OSPanel\domains\personal-rpg
+cd personal-rpg
 npm install
-npm run build
-
-# Терминал 1 — API
-.\scripts\dev-api.ps1
-
-# Терминал 2 — фронт с hot reload
 npm run dev
 ```
 
-Откройте **http://localhost:5173** (прокси `/api` → `:8080`).
+Фронт: **http://localhost:5173**
+
+**API локально (опционально):**
+
+```powershell
+cd api
+php -S 127.0.0.1:8080 router-dev.php
+```
+
+Или положить проект в OSPanel (`domains/...`) и открыть через виртуальный хост.
 
 | Команда | Описание |
 |---------|----------|
 | `npm run dev` | Dev-сервер Vite |
-| `npm run build` | Проверка TypeScript + сборка в `dist/` |
+| `npm run build` | TypeScript + сборка в `dist/` |
 | `npm run preview` | Просмотр production-сборки |
 
-### Продакшен на Windows
+### Продакшен (fit-rpg.ru)
 
-1. PHP в `server/runtime/php/`
-2. nginx в `server/runtime/nginx/` — см. [server/AUTOSTART.md](server/AUTOSTART.md)
-3. `npm run build`
-4. Проверка: `.\scripts\start-all.ps1` → **http://127.0.0.1:8080**
-5. Автозапуск: двойной клик **`install-autostart.bat`** (или PowerShell от администратора: `.\scripts\install-autostart.ps1`)
-
-**Без PowerShell вручную:** `PersonalRPG.bat` (старт + браузер) / `PersonalRPG-Stop.bat` (стоп) / `PersonalRPG-Autostart.bat` (только сервер, для автозапуска)
-
-**Порты:** 8080 (сайт), 9000 (PHP-CGI).
-
-### Установщик для другого ПК
-
-1. На машине разработчика: `.\scripts\build-release.ps1`
-2. Собрать `installer/personal-rpg.iss` в [Inno Setup](https://jrsoftware.org/isinfo.php)
-3. Получить `release/PersonalRPG-Setup.exe`
-
-**Node.js на целевом ПК не нужен.** Подробнее: [installer/README.md](installer/README.md).
+Деплой через GitHub Actions → FTP: `dist/` + `api/` + `.htaccess`.  
+Подробнее: [docs/wiki/11-shared-hosting-php-mysql-production.md](docs/wiki/11-shared-hosting-php-mysql-production.md).
 
 ---
 
@@ -456,23 +444,12 @@ npm run dev
 
 ```
 personal-rpg/
-├── api/                 # PHP API + SQLite
-│   ├── index.php        # REST-эндпоинты
-│   ├── Database.php     # Схема и миграции
-│   └── bootstrap.php    # Хелперы, маппинг строк БД
-├── data/                # SQLite (не в git)
+├── api/                 # PHP API (production + legacy SQLite)
 ├── dist/                # Собранный фронт (после npm run build)
-├── public/avatars/      # Картинки аватара
-├── scripts/             # PowerShell: dev, автозапуск, релиз
-├── server/              # nginx, PHP runtime, автозапуск
-├── src/
-│   ├── pages/           # Экраны приложения
-│   ├── components/      # UI-компоненты
-│   ├── constants/       # Достижения, навыки, темы, привычки
-│   ├── utils/           # Движки: квесты, XP, боссы, инсайты…
-│   ├── store/           # Zustand-стор
-│   └── types/           # TypeScript-типы
-└── README.md
+├── public/              # Статика, game-assets
+├── scripts/             # Утилиты (импорт замеров и т.д.)
+├── src/                 # React-приложение
+└── docs/                # Project wiki
 ```
 
 ---
@@ -482,8 +459,8 @@ personal-rpg/
 | Слой | Стек |
 |------|------|
 | **Frontend** | React 19, TypeScript, Vite 6, Tailwind CSS 4, Zustand, React Router, Recharts, Lucide |
-| **Backend** | PHP 8, SQLite |
-| **Сервер** | nginx + PHP-CGI (Windows) |
+| **Backend (production)** | PHP 8 + MySQL на shared hosting |
+| **Backend (legacy local)** | PHP + SQLite в `api/` |
 
 ---
 
@@ -497,9 +474,7 @@ personal-rpg/
 | [docs/wiki/04-brandbook.md](docs/wiki/04-brandbook.md) | Брендбук |
 | [docs/wiki/06-assets-gallery.md](docs/wiki/06-assets-gallery.md) | Галерея ассетов |
 | [docs/wiki/09-privacy-plan.md](docs/wiki/09-privacy-plan.md) | Правила приватности |
-| [server/AUTOSTART.md](server/AUTOSTART.md) | Автозапуск nginx и PHP |
-| [server/README-server.md](server/README-server.md) | Серверная инфраструктура |
-| [installer/README.md](installer/README.md) | Сборка установщика |
+| [docs/wiki/11-shared-hosting-php-mysql-production.md](docs/wiki/11-shared-hosting-php-mysql-production.md) | Деплой на хостинг |
 
 ## Project Wiki
 

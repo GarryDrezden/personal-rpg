@@ -4,6 +4,26 @@
 
 ---
 
+## 2026-06-06 — Remove legacy Windows local stack from repo
+
+### Контекст
+
+Production переехал на shared hosting (fit-rpg.ru). В репозитории остались `.bat`, portable nginx/PHP (`server/`), Inno Setup installer и скрипты автозапуска — они не участвуют в деплое и путали структуру проекта.
+
+### Решение
+
+Удалить из Git: корневые `.bat`/`.vbs`, `server/`, `installer/`, скрипты автозапуска и `dev-api.ps1`. Оставить утилиты `scripts/import-measurements.*`, `reset-data.ps1`, `remove_white_bg.py`.
+
+### Почему
+
+Деплой = GitHub Actions → FTP (`dist/` + `api/`). Локальная разработка: `npm run dev` + OSPanel или `php -S` в `api/`.
+
+### Последствия
+
+Меньше мёртвого кода в репо; README и wiki обновлены. Папки `server/runtime/` на диске разработчика можно удалить вручную (не в Git).
+
+---
+
 ## 2026-06-06 — PHP auth session stabilization
 
 ### Контекст
