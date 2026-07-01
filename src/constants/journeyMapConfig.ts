@@ -1,9 +1,10 @@
 import type { BossId } from '../types/gameAssets';
 import { JOURNEY_STAGES } from './journeyMap';
 import {
-  computeBossAnchor,
-  computeDesktopAnchor,
-  type DesktopAnchor,
+  BOSS_PIN_OPPOSITE,
+  computeBossPinAnchor,
+  computeMarkerAnchor,
+  type MapAnchor,
 } from './journeyMapAnchors';
 
 export type JourneyTerrainType =
@@ -13,113 +14,99 @@ export type JourneyTerrainType =
   | 'ruins'
   | 'plateau'
   | 'fortress'
-  | 'mist';
+  | 'mist'
+  | 'valley';
 
-export type JourneyCardPlacement =
-  | 'top'
-  | 'bottom'
-  | 'left'
-  | 'right'
-  | 'topLeft'
-  | 'topRight'
-  | 'bottomLeft'
-  | 'bottomRight';
-
-export type JourneyMobileSide = 'left' | 'right';
+export type JourneyMarkerPlacement = 'top' | 'bottom' | 'left' | 'right';
 
 export type JourneyMapStageConfig = {
   id: string;
   chapterNumber: number;
   terrainType: JourneyTerrainType;
   subtitle: string;
-  node: { x: number; y: number };
-  cardPlacement: JourneyCardPlacement;
-  bossPlacement: JourneyCardPlacement | null;
-  mobile: {
-    order: number;
-    side: JourneyMobileSide;
-  };
+  /** SVG viewBox coordinates */
+  x: number;
+  y: number;
+  markerPlacement: JourneyMarkerPlacement;
+  bossPinPlacement: JourneyMarkerPlacement | null;
   bossId: BossId | null;
 };
 
-export const JOURNEY_MAP_VIEWBOX = { w: 1200, h: 720 } as const;
+export const JOURNEY_MAP_VIEWBOX = { w: 1200, h: 520 } as const;
 export const JOURNEY_MAP_ASPECT_RATIO = `${JOURNEY_MAP_VIEWBOX.w} / ${JOURNEY_MAP_VIEWBOX.h}`;
 
-/**
- * Node-anchored layout: cards and bosses are offsets from node, not free coordinates.
- * Coordinates are % of the shared coordinate layer (matches SVG viewBox).
- */
+/** Node positions aligned to journey-map-bg-desktop.png landmarks (ruins → tower → village → citadel). */
 const STAGE_LAYOUT: Omit<JourneyMapStageConfig, 'id' | 'chapterNumber' | 'subtitle'>[] = [
   {
-    terrainType: 'forest',
-    node: { x: 12, y: 66 },
-    cardPlacement: 'right',
-    bossPlacement: 'left',
-    mobile: { order: 1, side: 'left' },
+    terrainType: 'ruins',
+    x: 168,
+    y: 368,
+    markerPlacement: 'right',
+    bossPinPlacement: 'left',
     bossId: 'lord_of_empty_day',
   },
   {
+    terrainType: 'forest',
+    x: 285,
+    y: 318,
+    markerPlacement: 'top',
+    bossPinPlacement: null,
+    bossId: null,
+  },
+  {
+    terrainType: 'valley',
+    x: 415,
+    y: 248,
+    markerPlacement: 'bottom',
+    bossPinPlacement: 'top',
+    bossId: 'divan_king',
+  },
+  {
     terrainType: 'plateau',
-    node: { x: 24, y: 54 },
-    cardPlacement: 'topLeft',
-    bossPlacement: null,
-    mobile: { order: 2, side: 'left' },
+    x: 525,
+    y: 278,
+    markerPlacement: 'top',
+    bossPinPlacement: null,
     bossId: null,
   },
   {
     terrainType: 'lake',
-    node: { x: 36, y: 43 },
-    cardPlacement: 'bottomRight',
-    bossPlacement: 'top',
-    mobile: { order: 3, side: 'left' },
-    bossId: 'divan_king',
-  },
-  {
-    terrainType: 'ruins',
-    node: { x: 48, y: 34 },
-    cardPlacement: 'top',
-    bossPlacement: null,
-    mobile: { order: 4, side: 'left' },
-    bossId: null,
-  },
-  {
-    terrainType: 'mountain',
-    node: { x: 58, y: 44 },
-    cardPlacement: 'bottomLeft',
-    bossPlacement: 'right',
-    mobile: { order: 5, side: 'left' },
+    x: 635,
+    y: 318,
+    markerPlacement: 'bottom',
+    bossPinPlacement: 'top',
     bossId: 'misty_baron',
   },
   {
     terrainType: 'mist',
-    node: { x: 68, y: 36 },
-    cardPlacement: 'topRight',
-    bossPlacement: null,
-    mobile: { order: 6, side: 'left' },
+    x: 755,
+    y: 338,
+    markerPlacement: 'top',
+    bossPinPlacement: null,
     bossId: null,
   },
   {
     terrainType: 'fortress',
-    node: { x: 78, y: 48 },
-    cardPlacement: 'bottomRight',
-    bossPlacement: 'top',
-    mobile: { order: 7, side: 'left' },
+    x: 865,
+    y: 312,
+    markerPlacement: 'bottom',
+    bossPinPlacement: 'top',
     bossId: 'resource_devourer',
   },
   {
-    terrainType: 'plateau',
-    node: { x: 88, y: 40 },
-    cardPlacement: 'bottomLeft',
-    bossPlacement: null,
-    mobile: { order: 8, side: 'left' },
+    terrainType: 'mountain',
+    x: 985,
+    y: 258,
+    markerPlacement: 'bottom',
+    bossPinPlacement: null,
     bossId: null,
   },
   {
     terrainType: 'fortress',
-    node: { x: 94, y: 24 },
-    cardPlacement: 'left',
-    bossPlacement: 'bottom',
-    mobile: { order: 9, side: 'left' },
+    x: 1085,
+    y: 142,
+    markerPlacement: 'left',
+    bossPinPlacement: 'bottom',
     bossId: 'old_form_guardian',
   },
 ];
@@ -142,36 +129,28 @@ export function getJourneyMapStageConfig(stageId: string, fallbackIndex = 0): Jo
   return configById.get(stageId) ?? JOURNEY_MAP_STAGE_CONFIG[fallbackIndex]!;
 }
 
-export function percentToSvg(x: number, y: number): { x: number; y: number } {
+export function nodeToSvg(config: JourneyMapStageConfig): { x: number; y: number } {
+  return { x: config.x, y: config.y };
+}
+
+export function nodeToPercent(config: JourneyMapStageConfig): { left: number; top: number } {
   return {
-    x: (x / 100) * JOURNEY_MAP_VIEWBOX.w,
-    y: (y / 100) * JOURNEY_MAP_VIEWBOX.h,
+    left: (config.x / JOURNEY_MAP_VIEWBOX.w) * 100,
+    top: (config.y / JOURNEY_MAP_VIEWBOX.h) * 100,
   };
 }
 
-export function nodeToSvg(config: JourneyMapStageConfig): { x: number; y: number } {
-  return percentToSvg(config.node.x, config.node.y);
+export function markerAnchorForConfig(config: JourneyMapStageConfig): MapAnchor {
+  const node = nodeToPercent(config);
+  return computeMarkerAnchor(node.left, node.top, config.markerPlacement);
 }
 
-export function cardAnchorForConfig(config: JourneyMapStageConfig): DesktopAnchor {
-  return computeDesktopAnchor(config.node.x, config.node.y, config.cardPlacement);
-}
-
-export function bossAnchorForConfig(config: JourneyMapStageConfig): DesktopAnchor | null {
-  if (!config.bossId || !config.bossPlacement) return null;
-  return computeBossAnchor(config.node.x, config.node.y, config.bossPlacement);
-}
-
-/** @deprecated Use cardAnchorForConfig */
-export function cardToPercent(config: JourneyMapStageConfig): { x: number; y: number } {
-  const anchor = cardAnchorForConfig(config);
-  return { x: anchor.left, y: anchor.top };
-}
-
-/** @deprecated Use bossAnchorForConfig */
-export function bossToPercent(config: JourneyMapStageConfig): { x: number; y: number } | null {
-  const anchor = bossAnchorForConfig(config);
-  return anchor ? { x: anchor.left, y: anchor.top } : null;
+export function bossPinAnchorForConfig(config: JourneyMapStageConfig): MapAnchor | null {
+  if (!config.bossId) return null;
+  const node = nodeToPercent(config);
+  const placement =
+    config.bossPinPlacement ?? BOSS_PIN_OPPOSITE[config.markerPlacement];
+  return computeBossPinAnchor(node.left, node.top, placement);
 }
 
 /** Smooth cubic path through node coordinates. */
@@ -196,5 +175,5 @@ export function buildJourneyMapPath(points: { x: number; y: number }[]): string 
   return d;
 }
 
-export const JOURNEY_MAP_BG_DESKTOP = '/game-assets/maps/journey-map-bg-desktop.webp';
-export const JOURNEY_MAP_BG_MOBILE = '/game-assets/maps/journey-map-bg-mobile.webp';
+export const JOURNEY_MAP_BG_DESKTOP = '/game-assets/maps/journey-map-bg-desktop.png';
+export const JOURNEY_MAP_BG_MOBILE = '/game-assets/maps/journey-map-bg-mobile.png';

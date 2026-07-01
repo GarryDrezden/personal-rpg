@@ -1,7 +1,9 @@
+import { useMemo } from 'react';
 import type { AppThemeId } from '../../../types/theme';
 import type { JourneyStageProgress } from '../../../types/journeyMap';
 import { JourneyMapDesktop } from './JourneyMapDesktop';
 import { JourneyMapMobile } from './JourneyMapMobile';
+import { JourneyChapterDetailPanel } from './JourneyChapterDetailPanel';
 
 type JourneyMapSectionProps = {
   stages: JourneyStageProgress[];
@@ -16,6 +18,11 @@ export function JourneyMapSection({
   selectedStageId,
   onSelectStage,
 }: JourneyMapSectionProps) {
+  const selectedProgress = useMemo(() => {
+    if (!selectedStageId) return stages.find((s) => s.status === 'current') ?? stages[0];
+    return stages.find((s) => s.stage.id === selectedStageId) ?? stages[0];
+  }, [stages, selectedStageId]);
+
   return (
     <section className="journey-map-v2" data-testid="journey-development-map">
       <div className="journey-map-v2__frame" aria-hidden />
@@ -46,6 +53,12 @@ export function JourneyMapSection({
             onSelectStage={onSelectStage}
           />
         </div>
+
+        {selectedProgress ? (
+          <div className="journey-map-v2__detail-wrap">
+            <JourneyChapterDetailPanel progress={selectedProgress} themeId={themeId} />
+          </div>
+        ) : null}
       </div>
     </section>
   );

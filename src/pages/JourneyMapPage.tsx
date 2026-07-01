@@ -10,8 +10,6 @@ import {
 import { JourneyHeroCard } from '../components/journey/JourneyHeroCard';
 import { CurrentJourneyStageCard } from '../components/journey/CurrentJourneyStageCard';
 import { JourneyDevelopmentMap } from '../components/journey/JourneyDevelopmentMap';
-import { JourneyConditionRow } from '../components/journey/JourneyConditionRow';
-import { resolveJourneyStageText } from '../types/journeyMap';
 
 export function JourneyMapPage() {
   const { dailyEntries, measurements, settings } = useAppStore();
@@ -33,7 +31,6 @@ export function JourneyMapPage() {
   const [selectedStageId, setSelectedStageId] = useState<string | undefined>(undefined);
 
   const activeStageId = selectedStageId ?? defaultSelected;
-  const selectedStage = stages.find((s) => s.stage.id === activeStageId) ?? summary.currentStage;
 
   const showCurrentStageCard =
     summary.currentStage && summary.currentStage.status !== 'locked';
@@ -77,38 +74,6 @@ export function JourneyMapPage() {
           <div className="hidden md:block" aria-hidden />
         )}
       </div>
-
-      {selectedStage ? (
-        <section className="journey-page__details">
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
-            Детали главы {selectedStage.stage.order}
-          </h2>
-          <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)] p-4">
-            {(() => {
-              const text = resolveJourneyStageText(selectedStage.stage, themeId);
-              return (
-                <>
-                  <div className="mb-4 flex items-start gap-3">
-                    <span className="text-3xl">{selectedStage.stage.icon}</span>
-                    <div>
-                      <h3 className="font-semibold text-[var(--app-text)]">{text.title}</h3>
-                      <p className="text-sm text-[var(--app-text-muted)]">{text.description}</p>
-                      {selectedStage.status === 'completed' ? (
-                        <p className="mt-2 text-sm text-emerald-500">{text.completedText}</p>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    {selectedStage.conditions.map((cp) => (
-                      <JourneyConditionRow key={cp.condition.id} conditionProgress={cp} />
-                    ))}
-                  </div>
-                </>
-              );
-            })()}
-          </div>
-        </section>
-      ) : null}
     </div>
   );
 }

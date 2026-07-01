@@ -2,14 +2,13 @@ import { useMemo } from 'react';
 import type { AppThemeId } from '../../../types/theme';
 import type { JourneyStageProgress } from '../../../types/journeyMap';
 import {
-  bossAnchorForConfig,
-  cardAnchorForConfig,
+  bossPinAnchorForConfig,
   getJourneyMapStageConfig,
-  JOURNEY_MAP_BG_DESKTOP,
+  markerAnchorForConfig,
 } from '../../../constants/journeyMapConfig';
-import { computeJourneyPathProgress } from './journeyMapProgress';
+import { JourneyMapBackground } from './JourneyMapBackground';
 import { JourneyPathSvg } from './JourneyPathSvg';
-import { JourneyStageCard } from './JourneyStageCard';
+import { JourneyStageMarker } from './JourneyStageMarker';
 import { JourneyBossMini } from './JourneyBossMini';
 
 type JourneyMapDesktopProps = {
@@ -35,23 +34,10 @@ export function JourneyMapDesktop({
     [sorted],
   );
 
-  const pathProgress = useMemo(() => computeJourneyPathProgress(sorted), [sorted]);
-  const fogStartPercent = Math.min(98, Math.max(18, pathProgress * 100 + 8));
-
   return (
     <div className="journey-map-v2__desktop-scene" data-testid="journey-map-desktop">
-      <div className="journey-map-v2__scene-bg" aria-hidden>
-        <img
-          src={JOURNEY_MAP_BG_DESKTOP}
-          alt=""
-          className="journey-map-v2__scene-bg-img"
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
-        />
-      </div>
+      <JourneyMapBackground variant="desktop" />
       <div className="journey-map-v2__atmosphere" aria-hidden />
-      <div className="journey-map-v2__grid" aria-hidden />
       <div className="journey-map-v2__vignette" aria-hidden />
 
       <div className="journey-map-v2__plot">
@@ -60,21 +46,19 @@ export function JourneyMapDesktop({
             stages={sorted}
             configs={configs}
             selectedStageId={selectedStageId}
-            fogStartPercent={fogStartPercent}
           />
 
-          <div className="journey-map-v2__overlay">
+          <div className="journey-map-v2__ui-layer">
             {sorted.map((progress, index) => {
               const config = configs[index]!;
-              const anchor = cardAnchorForConfig(config);
+              const anchor = markerAnchorForConfig(config);
               return (
-                <JourneyStageCard
+                <JourneyStageMarker
                   key={progress.stage.id}
                   progress={progress}
                   themeId={themeId}
                   isSelected={selectedStageId === progress.stage.id}
                   onSelect={onSelectStage ? () => onSelectStage(progress.stage.id) : undefined}
-                  variant="desktop"
                   style={{
                     left: `${anchor.left}%`,
                     top: `${anchor.top}%`,
@@ -92,12 +76,12 @@ export function JourneyMapDesktop({
 
             {sorted.map((progress, index) => {
               const config = configs[index]!;
-              const bossAnchor = bossAnchorForConfig(config);
+              const bossAnchor = bossPinAnchorForConfig(config);
               if (!bossAnchor || !config.bossId) return null;
               return (
                 <div
                   key={`boss-${progress.stage.id}`}
-                  className="journey-map-v2__boss-anchor"
+                  className="journey-map-v2__boss-pin"
                   style={{
                     left: `${bossAnchor.left}%`,
                     top: `${bossAnchor.top}%`,
@@ -109,6 +93,7 @@ export function JourneyMapDesktop({
                     bossId={config.bossId}
                     status={progress.status}
                     isSelected={selectedStageId === progress.stage.id}
+                    size="xs"
                   />
                 </div>
               );

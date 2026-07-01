@@ -2,32 +2,23 @@ import { useEffect, useRef, useState } from 'react';
 import type { JourneyStageProgress } from '../../../types/journeyMap';
 import {
   buildJourneyMapPath,
-  cardAnchorForConfig,
   getJourneyMapStageConfig,
   JOURNEY_MAP_VIEWBOX,
   nodeToSvg,
-  percentToSvg,
   type JourneyMapStageConfig,
 } from '../../../constants/journeyMapConfig';
 import { computeJourneyPathProgress } from './journeyMapProgress';
 import { JourneyMapPath } from './JourneyMapPath';
 import { JourneyMapNode } from './JourneyMapNode';
-import { JourneyMapConnector } from './JourneyMapConnector';
-import { JourneyMapTerrain } from './JourneyMapTerrain';
 
 type JourneyPathSvgProps = {
   stages: JourneyStageProgress[];
   configs: JourneyMapStageConfig[];
   selectedStageId?: string;
-  fogStartPercent: number;
 };
 
-export function JourneyPathSvg({
-  stages,
-  configs,
-  selectedStageId,
-  fogStartPercent,
-}: JourneyPathSvgProps) {
+/** Layer 2: SVG route, nodes, and path progress only. */
+export function JourneyPathSvg({ stages, configs, selectedStageId }: JourneyPathSvgProps) {
   const measurePathRef = useRef<SVGPathElement>(null);
   const [pathLength, setPathLength] = useState(0);
 
@@ -48,30 +39,28 @@ export function JourneyPathSvg({
       className="journey-map-v2__svg"
       role="img"
       aria-label="Маршрут по главам пути"
-      preserveAspectRatio="none"
+      preserveAspectRatio="xMidYMid meet"
     >
-      <JourneyMapTerrain configs={configs} fogStartPercent={fogStartPercent} />
+      <defs>
+        <linearGradient id="jmap-fog-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="rgba(15, 23, 42, 0)" />
+          <stop offset="55%" stopColor="rgba(15, 23, 42, 0.35)" />
+          <stop offset="100%" stopColor="rgba(8, 12, 20, 0.55)" />
+        </linearGradient>
+      </defs>
+
+      <rect
+        x={(pathProgress * JOURNEY_MAP_VIEWBOX.w * 0.92) | 0}
+        y={0}
+        width={JOURNEY_MAP_VIEWBOX.w}
+        height={JOURNEY_MAP_VIEWBOX.h}
+        fill="url(#jmap-fog-gradient)"
+        pointerEvents="none"
+      />
 
       <JourneyMapPath pathD={pathD} pathLength={pathLength} progressOffset={progressOffset} />
 
       <path ref={measurePathRef} d={pathD} fill="none" stroke="none" visibility="hidden" />
-
-      {sorted.map((progress, index) => {
-        const config = configs[index] ?? getJourneyMapStageConfig(progress.stage.id, index);
-        const node = nodeToSvg(config);
-        const cardAnchor = cardAnchorForConfig(config);
-        const card = percentToSvg(cardAnchor.left, cardAnchor.top);
-        return (
-          <JourneyMapConnector
-            key={`conn-${progress.stage.id}`}
-            x1={node.x}
-            y1={node.y}
-            x2={card.x}
-            y2={card.y}
-            status={progress.status}
-          />
-        );
-      })}
 
       {sorted.map((progress, index) => {
         const config = configs[index] ?? getJourneyMapStageConfig(progress.stage.id, index);

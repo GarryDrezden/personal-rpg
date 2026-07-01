@@ -8,7 +8,7 @@ type JourneyBossMiniProps = {
   status: JourneyStageStatus;
   isSelected?: boolean;
   className?: string;
-  size?: 'sm' | 'md';
+  size?: 'xs' | 'sm' | 'md';
 };
 
 const BOSS_LABELS: Partial<Record<BossId, string>> = {
@@ -22,7 +22,7 @@ const BOSS_LABELS: Partial<Record<BossId, string>> = {
   promise_collector: 'Сборщик обещаний',
 };
 
-function BossPlaceholder({ label, size }: { label: string; size: 'sm' | 'md' }) {
+function BossPlaceholder({ label, size }: { label: string; size: 'xs' | 'sm' | 'md' }) {
   const initial = label.charAt(0).toUpperCase();
   return (
     <span
