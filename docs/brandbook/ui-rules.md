@@ -88,6 +88,17 @@ Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 - Dashboard: compact **«Ресурс сегодня»** — уровень, сон, голова, одна рекомендация.
 - Не дублировать негатив: «ресурс просел», не «провал».
 
+## Long-Term Motivation Rules
+
+- Do not make weight the only source of progress.
+- Do not show the whole 1–2 year path as one long bar.
+- Use days, weeks, seasons, chapters and acts.
+- Reward return, recovery and consistency.
+- Use «route held» language instead of failure language.
+- During plateaus, emphasize holding the pass.
+- The player should feel progress even when weight is stable.
+- Minimal day and recovery day are valid game states.
+
 ## Accessibility
 
 - Readable contrast in both themes

@@ -1,6 +1,6 @@
 # Roadmap
 
-> **Единый источник правды.** Обновлено: 2026-06-06.
+> **Единый источник правды.** Обновлено: 2026-06-06 (long-term campaign structure).
 
 ## Главный приоритет
 
@@ -82,3 +82,63 @@
 - Hero theme variant paths
 
 См. [`08-release-notes.md`](08-release-notes.md), [`07-decision-log.md`](07-decision-log.md).
+
+---
+
+## Long-Term Game Roadmap
+
+> Игровой дизайн на 12–24 месяца. Детали: [`03-game-systems.md`](03-game-systems.md) → Long-Term Game Structure.
+
+### Current
+
+- Production stabilization.
+- PHP + MySQL auth/storage.
+- Journey Map v3 polish.
+- Resource & Rest v1.
+
+### Next
+
+- Onboarding + Asset Registry 2.0.
+- Gender/theme/goal/avatar asset selection.
+- Initial and target weight setup.
+
+### Sprint 3 — Seasons v1
+
+- 28-day seasons.
+- Season focus.
+- Season quests.
+- Season reward.
+- Season recap.
+
+### Sprint 4 — Body Abilities v1
+
+- Ability tree.
+- Manual «I noticed improvement» unlocks.
+- Ability categories.
+- Integration with Freedom Score.
+
+### Sprint 5 — Plateau Mode
+
+- Detect plateau.
+- Reframe as «Удержание перевала».
+- Reward route holding.
+- Plateau achievements.
+
+### Sprint 6 — Camp/Base Progression
+
+- Visual base progression.
+- Non-weight unlocks.
+- Long-term cosmetic rewards.
+
+### Sprint 7 — Boss Campaign
+
+- Act bosses.
+- Boss artifacts.
+- Seasonal trials.
+- Story rewards.
+
+### Later
+
+- New Game+ / Maintenance campaign.
+- Strength/mobility campaigns.
+- Advanced analytics.

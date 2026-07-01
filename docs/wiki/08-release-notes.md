@@ -4,6 +4,8 @@
 
 ### Added
 
+- Documented long-term campaign structure for 12–24 month body transformation (`03-game-systems.md`: time layers, acts, parallel progress roads, seasons, plateau mode, body abilities, camp/base).
+- Added planned systems to roadmap: Seasons v1, Body Abilities v1, Plateau Mode, Camp/Base Progression, Boss Campaign.
 - **Journey Map v3** — vertical chapter road (`JourneyMapV3Section`, `JourneyMapV3Route`, `JourneyChapterRoadItem`, `JourneyChapterVignette`, `JourneyMapV3SummaryBar`, sticky/accordion `JourneyChapterDetailPanel`).
 - Per-chapter vignette art: `public/game-assets/maps/chapters/chapter-NN-*.webp`.
 - Resource & Rest v1: sleep quality, cognitive breaks, resource score, Today «Восстановление» block, Dashboard compact resource summary.

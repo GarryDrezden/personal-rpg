@@ -4,6 +4,41 @@
 
 ---
 
+## 2026-06-06 — Long-term campaign structure
+
+### Context
+
+A major body transformation can take 12–24 months. If the game depends only on weight loss, it will become frustrating during plateaus and boring over time.
+
+### Decision
+
+Design the game as a long-term RPG campaign with multiple time layers:
+
+- days;
+- weeks;
+- 28-day seasons;
+- chapters;
+- acts;
+- full campaign.
+
+Weight is only one of several progress roads. The game also tracks movement, control, clarity, strength, resource, recovery and body abilities.
+
+### Consequences
+
+Future development should prioritize systems that create long-term retention:
+
+- Seasons v1;
+- Body Abilities;
+- Plateau Mode;
+- Camp/Base Progression;
+- Boss Campaign.
+
+Features should not be added randomly. They must support the long-term campaign loop.
+
+См. [`03-game-systems.md`](03-game-systems.md) → Long-Term Game Structure.
+
+---
+
 ## 2026-06-06 — Journey Map v3 vertical chapter road
 
 ### Контекст
