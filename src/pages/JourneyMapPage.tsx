@@ -62,6 +62,7 @@ export function JourneyMapPage() {
       <section className="journey-map-fullwidth">
         <JourneyDevelopmentMap
           stages={stages}
+          themeId={themeId}
           selectedStageId={activeStageId}
           onSelectStage={setSelectedStageId}
         />
