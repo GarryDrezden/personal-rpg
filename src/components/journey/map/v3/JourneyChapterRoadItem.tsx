@@ -38,13 +38,15 @@ export function JourneyChapterRoadItem({
   const text = resolveJourneyStageText(progress.stage, themeId);
   const config = getJourneyMapStageConfig(progress.stage.id);
   const { status, progressPercent } = progress;
-  const goals = getIncompleteConditions(progress, 3);
+  const isCurrent = status === 'current';
+  const isCompact = status === 'locked' || status === 'completed';
+  const nextGoal = getIncompleteConditions(progress, 1)[0];
 
   return (
     <li
       className={`journey-v3-chapter journey-v3-chapter--${status} ${
         isSelected ? 'journey-v3-chapter--selected' : ''
-      }`}
+      }${isCompact ? ' journey-v3-chapter--compact' : ''}`}
     >
       <button
         type="button"
@@ -54,60 +56,63 @@ export function JourneyChapterRoadItem({
         aria-expanded={showMobileDetail}
       >
         <div className="journey-v3-chapter__body">
+          <JourneyChapterVignette chapterNumber={progress.stage.order} status={status} />
+
           <div className="journey-v3-chapter__main">
             <div className="journey-v3-chapter__head">
-              <span className="journey-v3-chapter__num">Глава {progress.stage.order}</span>
               <span className={`journey-v3-chapter__status journey-v3-chapter__status--${status}`}>
                 {STATUS_LABEL[status]}
               </span>
               {config.bossId ? (
                 <span className="journey-v3-chapter__boss">
-                  <JourneyBossMini bossId={config.bossId} status={status} size="xs" />
+                  <JourneyBossMini
+                    bossId={config.bossId}
+                    status={status}
+                    size={isCurrent ? 'xs' : 'xs'}
+                  />
                 </span>
               ) : null}
             </div>
 
             <h4 className="journey-v3-chapter__title">{text.title}</h4>
-            <p className="journey-v3-chapter__desc">{text.description}</p>
 
-            {status !== 'locked' ? (
-              <div className="journey-v3-chapter__progress">
-                <div className="journey-v3-chapter__progress-meta">
-                  <span>До следующей главы</span>
-                  <span>{progressPercent}%</span>
-                </div>
-                <div className="journey-v3-chapter__progress-track">
-                  <span
-                    className="journey-v3-chapter__progress-fill"
-                    style={{ width: `${progressPercent}%` }}
-                  />
-                </div>
-              </div>
-            ) : null}
+            {isCurrent ? (
+              <>
+                <p className="journey-v3-chapter__desc">{text.description}</p>
 
-            {status !== 'locked' && goals.length > 0 ? (
-              <ul className="journey-v3-chapter__goals">
-                {goals.map((cp) => (
-                  <li key={cp.condition.id} className="journey-v3-chapter__goal">
+                <div className="journey-v3-chapter__progress">
+                  <div className="journey-v3-chapter__progress-meta">
+                    <span>До следующей главы</span>
+                    <span>{progressPercent}%</span>
+                  </div>
+                  <div className="journey-v3-chapter__progress-track">
+                    <span
+                      className="journey-v3-chapter__progress-fill"
+                      style={{ width: `${progressPercent}%` }}
+                    />
+                  </div>
+                </div>
+
+                {nextGoal ? (
+                  <p className="journey-v3-chapter__next-goal">
                     <span className="journey-v3-chapter__goal-dot" aria-hidden />
-                    <span className="journey-v3-chapter__goal-title">{cp.condition.title}</span>
+                    <span className="journey-v3-chapter__next-goal-text">{nextGoal.condition.title}</span>
                     <span className="journey-v3-chapter__goal-ratio">
-                      {formatRatio(cp.current, cp.target)}
+                      {formatRatio(nextGoal.current, nextGoal.target)}
                     </span>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-
-            {status === 'completed' ? (
-              <p className="journey-v3-chapter__done">{text.completedText}</p>
-            ) : null}
+                  </p>
+                ) : null}
+              </>
+            ) : status === 'completed' ? (
+              <p className="journey-v3-chapter__desc journey-v3-chapter__desc--single">
+                {text.completedText}
+              </p>
+            ) : (
+              <p className="journey-v3-chapter__desc journey-v3-chapter__desc--single">
+                {text.description}
+              </p>
+            )}
           </div>
-
-          <JourneyChapterVignette
-            chapterNumber={progress.stage.order}
-            status={status}
-          />
         </div>
       </button>
 

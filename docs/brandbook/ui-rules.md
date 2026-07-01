@@ -57,7 +57,9 @@ Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 
 **Каждая глава — отдельный блок:**
 
-- premium vignette с chapter art + HTML/CSS overlay (медальон, title, lore, symbol, status);
+- premium vignette с chapter art, интегрированным в карточку (не отдельная колонка);
+- номер главы только на rail node; в vignette — label/symbol без дублирования номера;
+- current chapter раскрыта (progress + next goal); upcoming/completed — компактные строки;
 - конфиг art paths и captions: `journeyChapterVisuals.ts` (`JOURNEY_CHAPTER_VISUALS`);
 - route node + vertical rail;
 - boss mini, progress, 1–3 objectives;

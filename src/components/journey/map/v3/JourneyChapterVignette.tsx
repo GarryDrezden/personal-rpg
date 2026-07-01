@@ -11,12 +11,6 @@ type JourneyChapterVignetteProps = {
   status: JourneyVignetteStatus;
 };
 
-const STATUS_BADGE: Record<JourneyVignetteStatus, string | null> = {
-  current: 'Сейчас',
-  completed: null,
-  locked: null,
-};
-
 function tryLoadImage(urls: string[]): Promise<string | null> {
   return new Promise((resolve) => {
     let index = 0;
@@ -42,6 +36,7 @@ function tryLoadImage(urls: string[]): Promise<string | null> {
 export function JourneyChapterVignette({ chapterNumber, status }: JourneyChapterVignetteProps) {
   const visual = getJourneyChapterVisual(chapterNumber);
   const [resolvedArtUrl, setResolvedArtUrl] = useState<string | null>(null);
+  const isExpanded = status === 'current';
 
   useEffect(() => {
     let cancelled = false;
@@ -56,48 +51,47 @@ export function JourneyChapterVignette({ chapterNumber, status }: JourneyChapter
     };
   }, [chapterNumber]);
 
-  const statusBadge = STATUS_BADGE[status];
-
   return (
     <div
-      className={`journey-v3-vignette journey-v3-vignette--${status}`}
+      className={`journey-v3-vignette journey-v3-vignette--${status}${
+        isExpanded ? ' journey-v3-vignette--expanded' : ' journey-v3-vignette--compact'
+      }`}
       data-chapter={chapterNumber}
       style={{ ['--chapter-gradient-fallback' as string]: visual.gradient }}
+      aria-hidden
     >
       <div
         className={`journey-v3-vignette__fallback${resolvedArtUrl ? ' journey-v3-vignette__fallback--hidden' : ''}`}
-        aria-hidden
       />
 
       {resolvedArtUrl ? (
         <div
           className="journey-v3-vignette__art"
           style={{ backgroundImage: `url("${resolvedArtUrl}")` }}
-          aria-hidden
         />
       ) : null}
 
-      <div className="journey-v3-vignette__overlay" aria-hidden />
+      <div className="journey-v3-vignette__blend" />
+      <div className="journey-v3-vignette__overlay" />
 
-      {statusBadge ? (
-        <span className="journey-v3-vignette__status-badge">{statusBadge}</span>
+      {status === 'current' ? (
+        <span className="journey-v3-vignette__status-badge">Сейчас</span>
       ) : null}
 
       {status === 'completed' ? (
-        <span className="journey-v3-vignette__completed-mark" aria-hidden>
-          ✓
-        </span>
+        <span className="journey-v3-vignette__completed-mark">✓</span>
       ) : null}
 
       <div className="journey-v3-vignette__caption">
-        <span className="journey-v3-vignette__number">{chapterNumber}</span>
-        <div className="journey-v3-vignette__text">
-          <span className="journey-v3-vignette__title">{visual.captionTitle}</span>
-          <span className="journey-v3-vignette__subtitle">{visual.captionSubtitle}</span>
-        </div>
-        <span className="journey-v3-vignette__symbol" aria-hidden>
-          {visual.symbol}
-        </span>
+        {isExpanded ? (
+          <div className="journey-v3-vignette__text">
+            <span className="journey-v3-vignette__title">{visual.captionTitle}</span>
+            <span className="journey-v3-vignette__subtitle">{visual.captionSubtitle}</span>
+          </div>
+        ) : (
+          <span className="journey-v3-vignette__label">{visual.label}</span>
+        )}
+        <span className="journey-v3-vignette__symbol">{visual.symbol}</span>
       </div>
     </div>
   );
