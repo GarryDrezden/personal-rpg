@@ -24,6 +24,7 @@
 
 ### Changed
 
+- Added Journey Map v3 chapter vignette art support with UI-rendered captions, chapter medallions, and status overlays.
 - Rebuilt Journey Map as vertical chapter road (v3): per-chapter biome vignettes, route rail, sticky detail panel, summary bar.
 - Reworked Journey Map into layered RPG campaign map (v2, superseded by v3).
 - Project wiki and brandbook updated as source of truth (`00-project-state`, roadmap, architecture, decision log, UI rules).

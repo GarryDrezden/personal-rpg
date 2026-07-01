@@ -57,18 +57,20 @@ Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 
 **Каждая глава — отдельный блок:**
 
-- свой biome vignette (`journeyChapterVisuals.ts` + optional asset);
+- premium vignette с chapter art + HTML/CSS overlay (медальон, title, lore, symbol, status);
+- конфиг art paths и captions: `journeyChapterVisuals.ts` (`JOURNEY_CHAPTER_VISUALS`);
 - route node + vertical rail;
 - boss mini, progress, 1–3 objectives;
 - **не** один giant background на все 9 глав.
+- **не** вшивать текст/номера в PNG — только UI поверх art.
 
 **Компоненты v3:** `JourneyMapV3Section`, `JourneyMapV3Route`, `JourneyChapterRoadItem`, `JourneyChapterVignette`, `JourneyMapV3SummaryBar`.
 
 **Не использовать (legacy v2):** `JourneyMapDesktop`, horizontal Banana canvas, `JourneyStagePin` на полотне.
 
-**Assets глав:** `public/game-assets/maps/chapters/chapter-NN-*.webp` — см. README в папке.
+**Assets глав:** `public/game-assets/maps/chapters/chapter-NN-*.webp` — см. README в папке. Fallback: biome gradient без art.
 
-Конфиг биомов: `src/constants/journeyChapterVisuals.ts`. Стили: `src/styles/journey-map-v3.css`.
+Конфиг: `src/constants/journeyChapterVisuals.ts`. Стили: `src/styles/journey-map-v3.css`.
 
 ## Accessibility
 

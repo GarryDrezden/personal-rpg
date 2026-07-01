@@ -120,7 +120,7 @@ Vertical **chapter road** — 9 глав в ширине обычного кон
 | `JourneyChapterVignette` | Per-chapter biome panel |
 | `JourneyChapterDetailPanel` | Sticky / accordion detail |
 
-**Assets глав:** `public/game-assets/maps/chapters/chapter-NN-*.webp` (optional; fallback — CSS gradient).
+**Assets глав:** `public/game-assets/maps/chapters/chapter-NN-*.webp` — 9 фонов этапов; подписи, медальоны и статусы рендерятся UI (`JourneyChapterVignette`). Fallback — CSS gradient из `journeyChapterVisuals.ts`.
 
 Стили: `src/styles/journey-map-v3.css`. Legacy v2: `journey-map-v2.css` (не импортируется).
 

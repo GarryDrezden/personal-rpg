@@ -105,7 +105,6 @@ export function JourneyChapterRoadItem({
           </div>
 
           <JourneyChapterVignette
-            terrainType={config.terrainType}
             chapterNumber={progress.stage.order}
             status={status}
           />

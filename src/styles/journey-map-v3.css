@@ -259,7 +259,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 0;
-  border-radius: 14px;
+  border-radius: 16px;
   border: 1px solid rgba(148, 163, 184, 0.2);
   background: rgba(10, 16, 28, 0.82);
   overflow: hidden;
@@ -268,26 +268,45 @@
 
 @media (min-width: 640px) {
   .journey-v3-chapter__body {
-    grid-template-columns: minmax(0, 1fr) minmax(120px, 34%);
+    grid-template-columns: minmax(0, 1fr) minmax(148px, 38%);
   }
 }
 
 .journey-v3-chapter--current .journey-v3-chapter__body {
-  border-color: rgba(250, 204, 21, 0.45);
-  box-shadow: 0 0 20px rgba(250, 204, 21, 0.08);
+  border-color: rgba(245, 198, 87, 0.55);
+  box-shadow:
+    0 0 24px rgba(245, 198, 87, 0.12),
+    inset 0 0 0 1px rgba(245, 198, 87, 0.08);
 }
 
 .journey-v3-chapter--selected .journey-v3-chapter__body {
-  border-color: rgba(250, 204, 21, 0.55);
+  border-color: rgba(245, 198, 87, 0.65);
+}
+
+.journey-v3-chapter--completed .journey-v3-chapter__body {
+  border-color: rgba(245, 198, 87, 0.22);
 }
 
 .journey-v3-chapter--locked .journey-v3-chapter__body {
-  opacity: 0.82;
+  opacity: 0.88;
 }
 
 .journey-v3-chapter__main {
   padding: 0.85rem 1rem;
   min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 640px) {
+  .journey-v3-chapter__main {
+    background: linear-gradient(
+      to right,
+      #070b16 0%,
+      rgba(7, 11, 22, 0.92) 42%,
+      rgba(7, 11, 22, 0.35) 100%
+    );
+  }
 }
 
 .journey-v3-chapter__head {
@@ -432,18 +451,32 @@
   padding-left: 0.25rem;
 }
 
-/* Biome vignette */
+/* Biome vignette — premium RPG chapter card */
 .journey-v3-vignette {
   position: relative;
-  min-height: 88px;
+  min-height: 132px;
+  border-radius: 0;
   overflow: hidden;
+  background: var(--chapter-gradient-fallback, #070b16);
+  border-left: 1px solid rgba(245, 198, 87, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
 @media (min-width: 640px) {
   .journey-v3-vignette {
+    min-height: 148px;
     min-height: 100%;
-    min-height: 120px;
   }
+}
+
+.journey-v3-vignette__fallback {
+  position: absolute;
+  inset: 0;
+  background: var(--chapter-gradient-fallback, #070b16);
+}
+
+.journey-v3-vignette__fallback--hidden {
+  opacity: 0;
 }
 
 .journey-v3-vignette__art {
@@ -452,28 +485,172 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0.55;
+  transform: scale(1.02);
+  transition: transform 0.35s ease, filter 0.25s ease, opacity 0.25s ease;
 }
 
-.journey-v3-vignette--locked .journey-v3-vignette__art {
-  opacity: 0.35;
-  filter: grayscale(0.4);
+.journey-v3-vignette__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, rgba(3, 6, 14, 0.74), rgba(3, 6, 14, 0.28) 46%, rgba(3, 6, 14, 0.62)),
+    linear-gradient(to top, rgba(3, 6, 14, 0.94), rgba(3, 6, 14, 0.12) 58%, rgba(3, 6, 14, 0.18));
+  pointer-events: none;
+}
+
+.journey-v3-vignette__status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0f172a;
+  background: #f5c657;
+  box-shadow: 0 0 16px rgba(245, 198, 87, 0.35);
+}
+
+.journey-v3-vignette__completed-mark {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #052e16;
+  background: rgba(74, 222, 128, 0.92);
+  box-shadow: 0 0 12px rgba(74, 222, 128, 0.25);
+}
+
+.journey-v3-vignette__caption {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 10px;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: end;
+  pointer-events: none;
+}
+
+.journey-v3-vignette__number {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(245, 198, 87, 0.78);
+  color: #f5c657;
+  background: rgba(4, 7, 16, 0.72);
+  box-shadow: 0 0 20px rgba(245, 198, 87, 0.18);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.journey-v3-vignette__text {
+  min-width: 0;
+}
+
+.journey-v3-vignette__title {
+  display: block;
+  font-size: 11px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: rgba(255, 244, 214, 0.96);
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.journey-v3-vignette__subtitle {
+  display: -webkit-box;
+  margin-top: 3px;
+  font-size: 10px;
+  line-height: 1.25;
+  color: rgba(231, 226, 214, 0.78);
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.journey-v3-vignette__symbol {
+  color: rgba(245, 198, 87, 0.82);
+  font-size: 18px;
+  line-height: 1;
+  padding-bottom: 2px;
+  text-shadow: 0 0 12px rgba(245, 198, 87, 0.35);
+}
+
+/* Vignette states */
+.journey-v3-vignette--current {
+  border-left-color: rgba(245, 198, 87, 0.45);
+  box-shadow:
+    inset 0 0 0 1px rgba(245, 198, 87, 0.22),
+    0 0 28px rgba(245, 198, 87, 0.14);
+}
+
+.journey-v3-vignette--current .journey-v3-vignette__number {
+  border-color: rgba(245, 198, 87, 0.95);
+  background: rgba(245, 198, 87, 0.14);
+  box-shadow: 0 0 24px rgba(245, 198, 87, 0.32);
 }
 
 .journey-v3-vignette--current .journey-v3-vignette__art {
-  opacity: 0.65;
+  transform: scale(1.04);
 }
 
-.journey-v3-vignette__tag {
-  position: absolute;
-  left: 0.5rem;
-  bottom: 0.45rem;
-  z-index: 1;
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+.journey-v3-vignette--completed .journey-v3-vignette__overlay {
+  background:
+    linear-gradient(to right, rgba(3, 6, 14, 0.68), rgba(3, 6, 14, 0.22) 46%, rgba(3, 6, 14, 0.55)),
+    linear-gradient(to top, rgba(3, 6, 14, 0.9), rgba(3, 6, 14, 0.1) 58%, rgba(3, 6, 14, 0.14));
+}
+
+.journey-v3-vignette--completed .journey-v3-vignette__number {
+  border-color: rgba(74, 222, 128, 0.65);
+  color: #86efac;
+}
+
+.journey-v3-vignette--locked .journey-v3-vignette__art {
+  filter: grayscale(0.28);
+  opacity: 0.82;
+}
+
+.journey-v3-vignette--locked .journey-v3-vignette__overlay {
+  background:
+    linear-gradient(to right, rgba(3, 6, 14, 0.8), rgba(3, 6, 14, 0.38) 46%, rgba(3, 6, 14, 0.72)),
+    linear-gradient(to top, rgba(3, 6, 14, 0.96), rgba(3, 6, 14, 0.18) 58%, rgba(3, 6, 14, 0.24));
+}
+
+.journey-v3-vignette--locked .journey-v3-vignette__title,
+.journey-v3-vignette--locked .journey-v3-vignette__subtitle {
+  opacity: 0.88;
+}
+
+@media (max-width: 639px) {
+  .journey-v3-vignette {
+    border-left: none;
+    border-top: 1px solid rgba(245, 198, 87, 0.12);
+    min-height: 120px;
+  }
+
+  .journey-v3-vignette__overlay {
+    background:
+      linear-gradient(to top, rgba(3, 6, 14, 0.94), rgba(3, 6, 14, 0.35) 55%, rgba(3, 6, 14, 0.22));
+  }
 }
 
 /* Sticky detail (desktop) */
