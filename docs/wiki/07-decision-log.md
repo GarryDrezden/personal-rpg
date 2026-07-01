@@ -4,6 +4,30 @@
 
 ---
 
+## 2026-06-06 — Journey Map = RPG campaign map
+
+### Контекст
+
+Journey Map перегружался 9 большими карточками поверх фона, ломалась композиция, был horizontal scroll и дублирование информации в нижних блоках.
+
+### Решение
+
+1. Карта — **RPG campaign map**, не таблица глав.
+2. На карте только: SVG route, nodes, compact chapter pins (`JourneyStagePin`), boss pins, active glow.
+3. Полные детали выбранной главы — в `JourneyChapterDetailPanel` (desktop справа / tablet снизу).
+4. «Где я сейчас и что делать» — в едином `JourneyChapterSummaryDock` под картой (не две тяжёлые карточки).
+5. Mobile — отдельный vertical layout (`JourneyMapMobile`), без absolute desktop scene.
+
+### Почему
+
+Карта должна читаться как путешествие; UI не должен спорить с Banana-фоном и detail panel.
+
+### Последствия
+
+`JourneyStageCard` на desktop-карте не рендерится. Координаты pins в `journeyMapConfig.ts`. Layout: `JourneyMapSection`, `journey-map-v2.css`.
+
+---
+
 ## 2026-06-06 — Remove legacy Windows local stack from repo
 
 ### Контекст

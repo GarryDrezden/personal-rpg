@@ -40,9 +40,47 @@ Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 | Area | Key components |
 |------|----------------|
 | Dashboard | `DashboardScene`, `DailyQuestsCompact`, `NextBestActionCompact` |
-| Journey | `JourneyMapSection`, desktop grid (map scene + `JourneyChapterDetailPanel`), `JourneyStagePin`, `JourneyMapMobile` |
+| Journey | `JourneyMapSection`, `JourneyMapDesktop`, `JourneyStagePin`, `JourneyChapterDetailPanel`, `JourneyChapterSummaryDock`, `JourneyMapMobile` |
 | Codex | `HeroTransformationShowcase`, collections |
 | Game assets | `GameAssetImage`, `GameAssetPlaceholder` |
+
+## Journey Map rules
+
+Карта возвращения тела (`/journey`) — **RPG campaign map**, не таблица глав.
+
+**На карте показывать только:**
+
+- decorative background (`JourneyMapBackground`, CSS `cover`);
+- SVG route и nodes (`JourneyPathSvg`);
+- compact chapter pins (`JourneyStagePin`);
+- boss mini pins (`JourneyBossMini`);
+- active/current glow на текущем узле.
+
+**Не размещать на карте:**
+
+- 9 больших карточек глав;
+- progress bars на pins;
+- длинные описания и дублирующий текст.
+
+**Layout:**
+
+| Breakpoint | Структура |
+|------------|-----------|
+| Desktop (>1180px) | Карта (~70%) + `JourneyChapterDetailPanel` справа (~30%) |
+| Tablet (1024–1180px) | Карта сверху, detail panel снизу |
+| Mobile (<1024px) | `JourneyMapMobile` — vertical route |
+
+**Под картой:**
+
+- один `JourneyChapterSummaryDock` (контекст текущей главы + прогресс + цели);
+- **не** две отдельные карточки (`JourneyHeroCard` + `CurrentJourneyStageCard`).
+
+**Технические запреты:**
+
+- `100vw`, negative margins, horizontal scroll wrappers на карте;
+- absolute full chapter cards поверх map scene.
+
+Конфиг: `src/constants/journeyMapConfig.ts`, стили: `src/styles/journey-map-v2.css`.
 
 ## Accessibility
 

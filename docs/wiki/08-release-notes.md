@@ -4,7 +4,11 @@
 
 ### Added
 
-- PHP + MySQL production auth API in `api/` (shared hosting)
+- PHP + MySQL production backend for shared hosting (`api/`, MySQL auth/storage)
+- Journey Map campaign layout: layered map, compact pins, boss pins
+- `JourneyChapterDetailPanel` — selected chapter details (desktop/tablet/mobile)
+- `JourneyChapterSummaryDock` — unified lower summary block (context + progress + goals)
+- Updated project wiki as single source of truth for Cursor / ChatGPT
 - SQL migration `api/migrations/001_create_accounts_tables.sql`
 - `api/config/config.example.php` (real config on server only)
 - Production guide [`11-shared-hosting-php-mysql-production.md`](wiki/11-shared-hosting-php-mysql-production.md)
@@ -20,7 +24,9 @@
 
 ### Changed
 
-- Reworked Journey Map into a layered RPG campaign map: Banana background, SVG route, compact chapter pins, boss pins, and selected chapter detail panel.
+- Reworked Journey Map into layered RPG campaign map: Banana background, SVG route, compact chapter pins, boss pins, and selected chapter detail panel.
+- Reworked lower journey blocks into single `JourneyChapterSummaryDock` (replaces `JourneyHeroCard` + `CurrentJourneyStageCard` on `/journey`).
+- Project wiki and brandbook updated as source of truth (`00-project-state`, roadmap, architecture, decision log, UI rules).
 - `docs/README.md` — входная точка вики
 - Root `README.md` — ссылка на project wiki
 

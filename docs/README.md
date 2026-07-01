@@ -1,54 +1,76 @@
 # Project Wiki — Личная RPG
 
+**Единый источник правды** для разработки, Cursor и ChatGPT.
+
 Эта папка содержит внутреннюю проектную вики приложения «Личная RPG».
 
 ## Главные разделы
 
-- [`wiki/00-project-state.md`](wiki/00-project-state.md) — текущее состояние проекта
-- [`wiki/01-roadmap.md`](wiki/01-roadmap.md) — дорожная карта
-- [`wiki/02-architecture.md`](wiki/02-architecture.md) — архитектура
-- [`wiki/03-game-systems.md`](wiki/03-game-systems.md) — игровые системы
+| Файл | Содержание |
+|------|------------|
+| [`wiki/00-project-state.md`](wiki/00-project-state.md) | **Текущее состояние** — стек, production, долги, приоритеты |
+| [`wiki/01-roadmap.md`](wiki/01-roadmap.md) | Дорожная карта: сейчас / следующий спринт / позже |
+| [`wiki/02-architecture.md`](wiki/02-architecture.md) | Production architecture: React + PHP + MySQL |
+| [`wiki/03-game-systems.md`](wiki/03-game-systems.md) | Игровые системы (Journey, XP, bosses, …) |
+| [`wiki/07-decision-log.md`](wiki/07-decision-log.md) | Журнал архитектурных решений |
+| [`wiki/08-release-notes.md`](wiki/08-release-notes.md) | Release notes |
+| [`wiki/10-accounts-and-storage.md`](wiki/10-accounts-and-storage.md) | Auth, user_data, storage |
+| [`wiki/11-shared-hosting-php-mysql-production.md`](wiki/11-shared-hosting-php-mysql-production.md) | PHP + MySQL на shared hosting |
+| [`brandbook/ui-rules.md`](brandbook/ui-rules.md) | UI rules, Journey Map rules |
+| [`assets/manifest.json`](assets/manifest.json) | Реестр ассетов |
+
+Полный индекс:
+
 - [`wiki/04-brandbook.md`](wiki/04-brandbook.md) — краткий брендбук
 - [`wiki/05-ai-prompts.md`](wiki/05-ai-prompts.md) — индекс промптов
 - [`wiki/06-assets-gallery.md`](wiki/06-assets-gallery.md) — галерея ассетов
-- [`wiki/07-decision-log.md`](wiki/07-decision-log.md) — журнал решений
-- [`wiki/08-release-notes.md`](wiki/08-release-notes.md) — release notes
 - [`wiki/09-privacy-plan.md`](wiki/09-privacy-plan.md) — правила приватности
-- [`wiki/10-accounts-and-storage.md`](wiki/10-accounts-and-storage.md) — аккаунты, auth, user_data
-- [`wiki/11-shared-hosting-php-mysql-production.md`](wiki/11-shared-hosting-php-mysql-production.md) — PHP + MySQL на shared hosting
-- [`wiki/12-ideas-backlog.md`](wiki/12-ideas-backlog.md) — сырые идеи (backlog)
+- [`wiki/12-ideas-backlog.md`](wiki/12-ideas-backlog.md) — сырые идеи
+
+## AI / Cursor workflow
+
+### Перед крупной задачей читать
+
+1. [`wiki/00-project-state.md`](wiki/00-project-state.md) — что сейчас в production и какие долги
+2. [`wiki/01-roadmap.md`](wiki/01-roadmap.md) — приоритеты и «не делать пока»
+3. [`wiki/02-architecture.md`](wiki/02-architecture.md) — React + PHP + MySQL, не Node в prod
+4. Релевантные разделы:
+   - игровая механика → [`wiki/03-game-systems.md`](wiki/03-game-systems.md)
+   - UI / визуал → [`brandbook/`](brandbook/)
+   - auth / storage → [`wiki/10-accounts-and-storage.md`](wiki/10-accounts-and-storage.md)
+   - deploy → [`wiki/11-shared-hosting-php-mysql-production.md`](wiki/11-shared-hosting-php-mysql-production.md)
+
+**Не перечитывать длинные чаты** — актуальное состояние должно быть в wiki.
+
+### После крупной задачи обновлять
+
+1. [`wiki/00-project-state.md`](wiki/00-project-state.md) — если изменился статус / долги
+2. [`wiki/07-decision-log.md`](wiki/07-decision-log.md) — если принято архитектурное решение
+3. [`wiki/08-release-notes.md`](wiki/08-release-notes.md) — что добавлено / изменено / исправлено
+4. [`wiki/01-roadmap.md`](wiki/01-roadmap.md) — если изменились приоритеты
+5. [`brandbook/*`](brandbook/) — если менялся UI / визуал / правила экранов
+6. [`assets/manifest.json`](assets/manifest.json) — если менялись ассеты
 
 ## Legacy-документы
 
-Старые материалы сохранены и связаны ссылками:
-
 | Файл | Статус |
 |------|--------|
-| [`AVATAR_ASSETS.md`](AVATAR_ASSETS.md) | legacy — заменён `public/game-assets/` + manifest |
+| [`AVATAR_ASSETS.md`](AVATAR_ASSETS.md) | legacy — см. `public/game-assets/` + manifest |
 | [`BOSS_ASSETS.md`](BOSS_ASSETS.md) | legacy — см. `brandbook/mobs-and-bosses.md` |
-| [`HERO_MALE_AVATAR_PROMPT.md`](HERO_MALE_AVATAR_PROMPT.md) | legacy — см. `prompts/image-generation/hero-male-stages.md` |
-| [`HERO_STAGE_PROMPTS_V2.md`](HERO_STAGE_PROMPTS_V2.md) | legacy reference — полные промпты стадий |
-
-## Для Cursor и AI
-
-**Перед крупной задачей читать:**
-
-1. [`wiki/00-project-state.md`](wiki/00-project-state.md)
-2. [`wiki/01-roadmap.md`](wiki/01-roadmap.md)
-3. relevant brandbook / game systems files
-
-**После крупной задачи обновлять:**
-
-1. [`wiki/00-project-state.md`](wiki/00-project-state.md)
-2. [`wiki/01-roadmap.md`](wiki/01-roadmap.md), если изменились приоритеты
-3. [`wiki/07-decision-log.md`](wiki/07-decision-log.md)
-4. [`wiki/08-release-notes.md`](wiki/08-release-notes.md)
-5. [`assets/manifest.json`](assets/manifest.json), если менялись ассеты
-6. [`wiki/04-brandbook.md`](wiki/04-brandbook.md) или [`brandbook/*`](brandbook/), если менялся стиль
+| [`HERO_MALE_AVATAR_PROMPT.md`](HERO_MALE_AVATAR_PROMPT.md) | legacy — см. `prompts/image-generation/` |
+| [`HERO_STAGE_PROMPTS_V2.md`](HERO_STAGE_PROMPTS_V2.md) | legacy reference |
 
 ## Privacy
 
-Сейчас вики может быть публичной, потому что репозиторий может быть публичным.
-Не хранить здесь приватные фото, пароли, токены, реальные `.env`, SSH-ключи или личные медицинские данные.
+Вся `docs/` считается **публичной** (репозиторий может быть public).
+
+**Не хранить в wiki и Git:**
+
+- пароли, токены, API keys;
+- реальный `config.php` (только `config.example.php`);
+- личные фото, raw body references;
+- дампы БД, `.env`, SSH-ключи.
+
+Приватные материалы — только в `private-assets/` и `docs/private/` (gitignored).
 
 Подробнее: [`wiki/09-privacy-plan.md`](wiki/09-privacy-plan.md).
