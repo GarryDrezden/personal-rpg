@@ -485,17 +485,13 @@
 .journey-v3-vignette {
   position: absolute;
   inset: 0;
-  left: 52%;
+  left: 58%;
   z-index: 1;
   overflow: hidden;
   background: var(--chapter-gradient-fallback, #070b16);
   border: none;
   box-shadow: none;
   border-radius: 0 18px 18px 0;
-}
-
-.journey-v3-chapter--compact .journey-v3-vignette {
-  left: 58%;
 }
 
 .journey-v3-vignette__fallback {
