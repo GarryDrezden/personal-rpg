@@ -36,7 +36,6 @@ function tryLoadImage(urls: string[]): Promise<string | null> {
 export function JourneyChapterVignette({ chapterNumber, status }: JourneyChapterVignetteProps) {
   const visual = getJourneyChapterVisual(chapterNumber);
   const [resolvedArtUrl, setResolvedArtUrl] = useState<string | null>(null);
-  const isExpanded = status === 'current';
 
   useEffect(() => {
     let cancelled = false;
@@ -53,9 +52,7 @@ export function JourneyChapterVignette({ chapterNumber, status }: JourneyChapter
 
   return (
     <div
-      className={`journey-v3-vignette journey-v3-vignette--${status}${
-        isExpanded ? ' journey-v3-vignette--expanded' : ' journey-v3-vignette--compact'
-      }`}
+      className={`journey-v3-vignette journey-v3-vignette--${status}`}
       data-chapter={chapterNumber}
       style={{ ['--chapter-gradient-fallback' as string]: visual.gradient }}
       aria-hidden
@@ -72,25 +69,14 @@ export function JourneyChapterVignette({ chapterNumber, status }: JourneyChapter
       ) : null}
 
       <div className="journey-v3-vignette__blend" />
-      <div className="journey-v3-vignette__overlay" />
+      <div className="journey-v3-vignette__shade" />
 
       {status === 'current' ? (
-        <span className="journey-v3-vignette__status-badge">Сейчас</span>
+        <span className="journey-v3-vignette__status">Сейчас</span>
       ) : null}
 
-      {status === 'completed' ? (
-        <span className="journey-v3-vignette__completed-mark">✓</span>
-      ) : null}
-
-      <div className="journey-v3-vignette__caption">
-        {isExpanded ? (
-          <div className="journey-v3-vignette__text">
-            <span className="journey-v3-vignette__title">{visual.captionTitle}</span>
-            <span className="journey-v3-vignette__subtitle">{visual.captionSubtitle}</span>
-          </div>
-        ) : (
-          <span className="journey-v3-vignette__label">{visual.label}</span>
-        )}
+      <div className="journey-v3-vignette__meta">
+        <span className="journey-v3-vignette__biome">{visual.label}</span>
         <span className="journey-v3-vignette__symbol">{visual.symbol}</span>
       </div>
     </div>

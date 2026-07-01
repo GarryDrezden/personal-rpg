@@ -58,9 +58,9 @@ Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 **Каждая глава — отдельный блок:**
 
 - premium vignette с chapter art, интегрированным в карточку (не отдельная колонка);
-- номер главы только на rail node; в vignette — label/symbol без дублирования номера;
+- номер главы только на rail node;
 - current chapter раскрыта (progress + next goal); upcoming/completed — компактные строки;
-- конфиг art paths и captions: `journeyChapterVisuals.ts` (`JOURNEY_CHAPTER_VISUALS`);
+- конфиг art paths: `journeyChapterVisuals.ts` (`JOURNEY_CHAPTER_VISUALS`);
 - route node + vertical rail;
 - boss mini, progress, 1–3 objectives;
 - **не** один giant background на все 9 глав.
@@ -73,6 +73,13 @@ Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 **Assets глав:** `public/game-assets/maps/chapters/chapter-NN-*.webp` — см. README в папке. Fallback: biome gradient без art.
 
 Конфиг: `src/constants/journeyChapterVisuals.ts`. Стили: `src/styles/journey-map-v3.css`.
+
+## Journey v3 vignette rules
+
+- Chapter vignette is an atmospheric art area, not a second text card.
+- Do not duplicate chapter title, subtitle, number or progress inside vignette.
+- Text source of truth is the left chapter content area (`JourneyChapterRoadItem`).
+- Vignette may show only biome label, decorative symbol and optional current badge.
 
 ## Accessibility
 

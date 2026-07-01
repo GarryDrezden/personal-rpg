@@ -36,6 +36,8 @@
 - Fixed Journey Map v3 rail node clipping.
 - Improved chapter card layout so vignette art is integrated into the card instead of appearing as a separate table column.
 - Reduced duplicate chapter numbering in Journey vignettes.
+- Removed duplicated chapter title/subtitle/progress from Journey v3 vignette overlays.
+- Simplified chapter art area into atmospheric biome panel.
 
 - Fixed Journey Map background overlay seam.
 - Reworked lower journey summary blocks into a single chapter summary dock.
