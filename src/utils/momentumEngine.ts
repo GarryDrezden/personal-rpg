@@ -24,6 +24,7 @@ import {
   isNutritionLogged,
   isNutritionTrackingEnabled,
 } from './nutritionEngine';
+import { normalizeSleepQuality } from './resourceEngine';
 import {
   getDayMode,
   isStepsExcellentDone,
@@ -200,57 +201,42 @@ function buildDailyFactors(
     factors.push(factor('energy_2', 'Низкий ресурс', -3));
   }
 
-  // enableSleepTracking controls UI visibility only. Existing sleep data may still be used by momentum if present.
-  // Missing sleep data must never penalize the day.
+  // Sleep & cognitive rest — gentle bonuses, no harsh penalties for missing data
+  const sleepQ = normalizeSleepQuality(entry!.sleepQuality);
   const hasSleepHours = entry!.sleepHours !== null && entry!.sleepHours !== undefined;
-  const hasSleepQuality = entry!.sleepQuality !== null && entry!.sleepQuality !== undefined;
 
-  if (hasSleepHours || hasSleepQuality) {
-    const poorSleepDay =
-      (hasSleepHours && entry!.sleepHours! < 5) ||
-      (hasSleepQuality && entry!.sleepQuality! <= 2);
-    const goodSleepDay =
-      hasSleepHours &&
-      entry!.sleepHours! >= 7 &&
-      hasSleepQuality &&
-      entry!.sleepQuality! >= 4;
+  if (sleepQ === 'good') {
+    factors.push(
+      factor('sleep_good', 'Хороший сон поддержал инерцию', 3, {
+        source: 'sleep',
+        description: 'Отмечен хороший сон — небольшой бонус к инерции.',
+      }),
+    );
+  } else if (sleepQ === 'ok') {
+    factors.push(
+      factor('sleep_ok', 'Сон в норме', 1, {
+        source: 'sleep',
+        description: 'Сон отмечен как нормальный.',
+      }),
+    );
+  } else if (sleepQ === 'poor') {
+    factors.push(
+      factor('sleep_poor', 'Сон просел', -1, {
+        source: 'sleep',
+        description: 'Мягкий сигнал — без наказания, просто учёт ресурса.',
+      }),
+    );
+  } else if (hasSleepHours && entry!.sleepHours! >= 7) {
+    factors.push(factor('sleep_hours', 'Достаточно часов сна', 2, { source: 'sleep' }));
+  }
 
-    const poorSleepStreak = countConsecutiveDays(date, allEntries, (e) => {
-      if (!e) return false;
-      const hasH = e.sleepHours !== null && e.sleepHours !== undefined;
-      const hasQ = e.sleepQuality !== null && e.sleepQuality !== undefined;
-      if (!hasH && !hasQ) return false;
-      return (hasH && e.sleepHours! < 5) || (hasQ && e.sleepQuality! <= 2);
-    });
-
-    if (poorSleepStreak >= 3) {
-      factors.push(
-        factor('sleep_low_streak', 'Несколько дней низкого восстановления', -10, {
-          source: 'sleep',
-          description: 'Несколько дней подряд с низким сном сильнее тормозят систему.',
-          explanation:
-            'Применяется, когда 3 дня подряд указано меньше 5 часов сна или качество сна 1–2.',
-        }),
-      );
-    } else if (goodSleepDay) {
-      factors.push(
-        factor('sleep_good', 'Сон поддержал систему', 4, {
-          source: 'sleep',
-          description: 'Сон дал небольшой вклад в инерцию.',
-          explanation:
-            'Применяется, когда указано не меньше 7 часов сна и качество сна 4 или 5.',
-        }),
-      );
-    } else if (poorSleepDay) {
-      factors.push(
-        factor('sleep_low', 'Сон просел', -6, {
-          source: 'sleep',
-          description: 'Низкое восстановление снизило инерцию дня.',
-          explanation:
-            'Применяется, когда указано меньше 5 часов сна или качество сна 1–2.',
-        }),
-      );
-    }
+  const cognitive = entry!.cognitiveBreaks;
+  if (cognitive === 'deep') {
+    factors.push(factor('cognitive_deep', 'Глубокая разгрузка головы', 3, { source: 'rest' }));
+  } else if (cognitive === 'good') {
+    factors.push(factor('cognitive_good', 'Разгрузка головы', 2, { source: 'rest' }));
+  } else if (cognitive === 'small') {
+    factors.push(factor('cognitive_small', 'Короткий перерыв', 1, { source: 'rest' }));
   }
 
   return factors;

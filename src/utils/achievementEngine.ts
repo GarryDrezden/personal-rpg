@@ -26,6 +26,13 @@ import {
 } from './achievementHelpers';
 import { isMinimalDayCompleted } from './recoveryEngine';
 import {
+  countRestMarkerDays,
+  getMaxCognitiveBreakStreak,
+  getMaxRestHighStreak,
+  hasCognitiveBreak,
+  hasRestMarker,
+} from './resourceEngine';
+import {
   isStepsMinimumDone,
   isStepsNormalDone,
   isStepsExcellentDone,
@@ -429,6 +436,11 @@ function buildMetrics(params: AchievementEngineParams): AchievementMetrics {
     momentumReachedBoost: momentumMetrics.hasReachedBoost,
     momentumReachedFlow: momentumMetrics.hasReachedFlow,
     momentumReturnedFromLostSpeed: momentumMetrics.hasReturnedFromLostSpeed,
+    hasFirstRestMark: entries.some((e) => hasRestMarker(e)),
+    hasFirstCognitiveBreak: entries.some((e) => hasCognitiveBreak(e)),
+    maxCognitiveBreakStreak: getMaxCognitiveBreakStreak(entries),
+    maxRestHighStreak: getMaxRestHighStreak(entries),
+    restMarkerDays: countRestMarkerDays(entries),
   };
 
   return m;
@@ -481,6 +493,8 @@ function evaluateAchievement(achievement: Achievement, m: AchievementMetrics): {
     momentum_boost: !!m.momentumReachedBoost,
     momentum_flow: !!m.momentumReachedFlow,
     momentum_return: !!m.momentumReturnedFromLostSpeed,
+    rest_first_breath: !!m.hasFirstRestMark,
+    rest_quiet_room: !!m.hasFirstCognitiveBreak,
   };
 
   if (achievement.conditionType === 'instant' || achievement.conditionType === 'combo') {
@@ -548,6 +562,9 @@ function evaluateAchievement(achievement: Achievement, m: AchievementMetrics): {
     boss_4_streak: m.maxBossDefeatStreak as number,
     recovery_not_a_robot: m.maxRecoveryDaysInTracking as number,
     recovery_balance_of_strength: m.maxBalancedWeeksStreak as number,
+    rest_not_burned: m.maxCognitiveBreakStreak as number,
+    rest_hearth: m.maxRestHighStreak as number,
+    rest_guardian: m.restMarkerDays as number,
   };
 
   const current = metricMap[achievement.id] ?? 0;

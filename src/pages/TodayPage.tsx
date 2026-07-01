@@ -20,8 +20,7 @@ import { getDailyQuests, getQuestCompletionStats, isDayEmpty } from '../utils/qu
 import { getRecoveryState, shouldShowRecoveryCard } from '../utils/recoveryEngine';
 import { RecoveryCard } from '../components/recovery/RecoveryCard';
 import { RecoverySuggestionCard } from '../components/recovery/RecoverySuggestionCard';
-import { EnergyDayCard } from '../components/energy/EnergyDayCard';
-import { SleepDayCard } from '../components/sleep/SleepDayCard';
+import { RestDayCard } from '../components/rest/RestDayCard';
 import { getDayMode } from '../utils/stepsEngine';
 import {
   dismissRecoverySuggestion as persistRecoverySuggestionDismiss,
@@ -360,11 +359,7 @@ export function TodayPage() {
         />
       )}
 
-      <EnergyDayCard entry={entry} onPatch={patch} />
-
-      {settings.enableSleepTracking && (
-        <SleepDayCard entry={entry} onPatch={patch} />
-      )}
+      <RestDayCard entry={entry} onPatch={patch} />
 
       {isEditingToday && (
         <MomentumFactorsCard result={todayMomentumResult} />

@@ -4,6 +4,7 @@
 
 ### Added
 
+- Resource & Rest v1: sleep quality, cognitive breaks, resource score, Today «Восстановление» block, Dashboard compact resource summary.
 - PHP + MySQL production backend for shared hosting (`api/`, MySQL auth/storage)
 - Journey Map v3 vertical chapter road (`JourneyMapV3Section`, per-chapter vignettes)
 - `JourneyChapterDetailPanel` — selected chapter details (desktop/tablet/mobile)

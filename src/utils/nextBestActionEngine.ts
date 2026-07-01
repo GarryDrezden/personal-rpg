@@ -16,6 +16,7 @@ import {
 import { getStepsThresholds, getDayMode } from './stepsEngine';
 import { DEFAULT_STEPS_THRESHOLDS } from '../constants/steps';
 import { MINIMAL_DAY_STEPS } from './recoveryEngine';
+import { shouldSuggestRecoveryFromResource } from './resourceEngine';
 
 function themedAction(
   actionId: string,
@@ -104,6 +105,24 @@ export function getNextBestAction(params: {
   const entry = todayEntry ?? dailyEntries.find((e) => e.date === today) ?? null;
   const dayMode = entry ? getDayMode(entry.dayMode) : 'normal';
   const momentum = momentumSummary.currentValue;
+
+  if (
+    entry &&
+    dayMode === 'normal' &&
+    shouldSuggestRecoveryFromResource(entry) &&
+    momentum > -40
+  ) {
+    return {
+      id: 'low_resource_minimal',
+      priority: 'recovery',
+      title: 'Удержать маршрут',
+      description:
+        'Сегодня ресурс низкий. Лучший ход — минимальный день: питание, 5000 шагов, без алкоголя, одна строка дневника.',
+      actionLabel: 'Открыть восстановление',
+      targetRoute: '/today',
+      icon: '🔋',
+    };
+  }
 
   if (dayMode === 'recovery' || dayMode === 'minimal') {
     return {

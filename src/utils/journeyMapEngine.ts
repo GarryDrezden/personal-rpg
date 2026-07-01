@@ -20,6 +20,11 @@ import {
   getDayMode,
 } from './stepsEngine';
 import {
+  countCognitiveBreakDays,
+  countRestMarkerDays,
+  countRestRecoveryDays,
+} from './resourceEngine';
+import {
   getWeightLossKg,
   getWaistLossCm,
   getAllBodyAbilityProgress,
@@ -128,6 +133,12 @@ export function getJourneyConditionCurrentValue(
       return countUnlockedBodyAbilities(bodyAbilities);
     case 'return_after_bad_day':
       return countReturnAfterBadDay(dailyEntries, settings);
+    case 'rest_marker_days':
+      return countRestMarkerDays(dailyEntries);
+    case 'rest_recovery_days':
+      return countRestRecoveryDays(dailyEntries);
+    case 'cognitive_break_days':
+      return countCognitiveBreakDays(dailyEntries);
     default:
       return 0;
   }

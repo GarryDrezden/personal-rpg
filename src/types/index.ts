@@ -4,6 +4,10 @@ export type DayMode = 'normal' | 'recovery' | 'minimal';
 
 export type EnergyLevel = 1 | 2 | 3 | 4 | 5;
 
+export type SleepQuality = 'poor' | 'ok' | 'good';
+
+export type CognitiveBreakLevel = 'none' | 'small' | 'good' | 'deep';
+
 export type { NutritionLevel, NutritionStatus, NutritionTrackingMode } from './nutrition';
 
 import type { NutritionLevel, NutritionTrackingMode } from './nutrition';
@@ -30,9 +34,12 @@ export interface DailyEntry {
   dayMode?: DayMode;
   /** Ресурс дня: 5 — полный, 1 — восстановление */
   energyLevel?: EnergyLevel | null;
-  /** Опционально — учёт сна (future-ready) */
+  /** Качество сна (legacy 1–5 нормализуется при чтении) */
+  sleepQuality?: SleepQuality | 1 | 2 | 3 | 4 | 5 | null;
+  /** Когнитивная разгрузка / перерыв для головы */
+  cognitiveBreaks?: CognitiveBreakLevel | null;
+  /** Опционально — часы сна (расширенный учёт) */
   sleepHours?: number | null;
-  sleepQuality?: 1 | 2 | 3 | 4 | 5 | null;
 }
 
 export interface MeasurementEntry {

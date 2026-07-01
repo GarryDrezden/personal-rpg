@@ -41,6 +41,7 @@ function emptyDaily(date: string): DailyEntry {
     customCompletions: {},
     dayMode: 'normal',
     energyLevel: null,
+    cognitiveBreaks: null,
     nutritionLevel: null,
   };
 }

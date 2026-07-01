@@ -60,7 +60,7 @@
 
 ### Экраны и навигация
 
-- **Dashboard** (`/`) — компактная панель: герой, CTA, квесты, неделя, recovery
+- **Dashboard** (`/`) — компактная панель: герой, CTA, ресурс дня, квесты, recovery
 - **Today** (`/today`) — ввод дня, квесты, nutrition modes
 - **Week** (`/week`) — недельный босс, календарь, бонусы
 - **Growth hub** (`/growth/:tab`) — skills, abilities, rewards, achievements, trials

@@ -16,6 +16,7 @@ import { DashboardPrimaryCta } from '../components/dashboard/DashboardPrimaryCta
 
 import { DailyQuestsCompact } from '../components/dashboard/DailyQuestsCompact';
 
+import { DashboardResourceCompact } from '../components/rest/DashboardResourceCompact';
 import { DashboardSummaryStrip } from '../components/dashboard/DashboardSummaryStrip';
 
 import { getMomentumSummary } from '../utils/momentumEngine';
@@ -294,7 +295,7 @@ export function DashboardPage() {
 
       <DashboardPrimaryCta action={primaryAction} />
 
-
+      <DashboardResourceCompact entry={stats.todayEntry} />
 
       {showMomentumHelp ? (
 

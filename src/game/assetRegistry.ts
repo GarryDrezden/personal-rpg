@@ -102,7 +102,8 @@ export const GAME_ASSET_REGISTRY: GameAssetRegistry = {
       id: 'fog_of_fatigue',
       title: 'Туман Усталости',
       subtitle: 'Гасит движение',
-      description: 'Делает день тяжелее, чем он есть. Рассеивается в режиме восстановления.',
+      description:
+        'Делает день тяжелее, чем он есть. Рассеивается от сна, перерыва или режима восстановления.',
       weakness: 'recovery',
       image: getMobPublicPath('fog_of_fatigue'),
       theme: 'darkFantasy',
@@ -138,7 +139,8 @@ export const GAME_ASSET_REGISTRY: GameAssetRegistry = {
       id: 'gray_heaviness',
       title: 'Серая Тягость',
       subtitle: 'Делает простой шаг тяжёлым',
-      description: 'Давит ожиданиями максимума. Отступает перед минимальным, но честным днём.',
+      description:
+        'Давит ожиданиями максимума. Отступает перед разгрузкой головы, дневником или минимальным днём.',
       weakness: 'minimal_day',
       image: getMobPublicPath('gray_heaviness'),
       theme: 'universal',
@@ -168,7 +170,8 @@ export const GAME_ASSET_REGISTRY: GameAssetRegistry = {
       id: 'resource_devourer',
       title: 'Пожиратель Ресурса',
       subtitle: 'Глава 4',
-      description: 'Съедает силы, оставляя только героизм без системы.',
+      description:
+        'Съедает силы без восстановления. Слабеет от перерывов, нормального сна и recovery-дней.',
       chapter: 4,
       image: getBossPublicPath('resource_devourer'),
       rewardArtifactId: 'recovery_shield',

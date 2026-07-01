@@ -156,10 +156,10 @@ export const JOURNEY_STAGES: JourneyStage[] = [
         title: '7 дней с нормой шагов',
       },
       {
-        id: 'steps_excellent_1_day',
-        type: 'steps_days_excellent',
-        target: 1,
-        title: '1 день на 14000+ шагов',
+        id: 'rest_marker_3_days',
+        type: 'rest_marker_days',
+        target: 3,
+        title: '3 дня с отмеченным сном или энергией',
       },
     ],
   },
@@ -185,10 +185,10 @@ export const JOURNEY_STAGES: JourneyStage[] = [
         title: 'Открыть 5 способностей тела',
       },
       {
-        id: 'gym_5_total',
-        type: 'gym_total',
+        id: 'rest_recovery_5_days',
+        type: 'rest_recovery_days',
         target: 5,
-        title: 'Отметить 5 тренировок',
+        title: '5 дней восстановления или отметок ресурса',
       },
     ],
     cozyText: {
@@ -214,10 +214,10 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       'Система стала устойчивой. Она держится не на идеальности, а на возвращении в игру.',
     conditions: [
       {
-        id: 'return_after_bad_day_1',
-        type: 'return_after_bad_day',
-        target: 1,
-        title: 'Вернуться к учету после тяжелого дня',
+        id: 'cognitive_break_5_days',
+        type: 'cognitive_break_days',
+        target: 5,
+        title: '5 дней с разгрузкой головы',
       },
       {
         id: 'recovery_days_5',

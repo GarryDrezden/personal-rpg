@@ -23,7 +23,10 @@ export type JourneyStageConditionType =
   | 'recovery_days'
   | 'minimal_days'
   | 'body_abilities_unlocked'
-  | 'return_after_bad_day';
+  | 'return_after_bad_day'
+  | 'rest_marker_days'
+  | 'rest_recovery_days'
+  | 'cognitive_break_days';
 
 export type JourneyStageCondition = {
   id: string;

@@ -1,6 +1,7 @@
 import type { AppSettings, DailyEntry, MeasurementEntry, WeeklySettings } from '../types';
 import { isMonday, weekDays, weekStart } from './dates';
 import { getStepsStatus } from './stepsEngine';
+import { calcResourceRestBonusPoints } from './resourceEngine';
 import {
   getNutritionPoints,
   getTrackingMode,
@@ -61,6 +62,8 @@ export function calcDailyPoints(entry: DailyEntry, settings: AppSettings): numbe
       total += custom.points;
     }
   }
+
+  total += calcResourceRestBonusPoints(entry);
 
   return total;
 }

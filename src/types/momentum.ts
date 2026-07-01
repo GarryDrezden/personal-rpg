@@ -27,6 +27,7 @@ export type MomentumFactorSource =
   | 'gym'
   | 'journal'
   | 'energy'
+  | 'rest'
   | 'other';
 
 export type MomentumDailyFactor = {

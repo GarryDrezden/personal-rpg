@@ -81,6 +81,12 @@ Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 - Text source of truth is the left chapter content area (`JourneyChapterRoadItem`).
 - Vignette may show only biome label, decorative symbol and optional current badge.
 
+## Resource & Rest (Today / Dashboard)
+
+- Блок **«Восстановление»** на Today: сон, разгрузка головы, энергия — поддерживающий тон, без вины.
+- Dashboard: compact **«Ресурс сегодня»** — уровень, сон, голова, одна рекомендация.
+- Не дублировать негатив: «ресурс просел», не «провал».
+
 ## Accessibility
 
 - Readable contrast in both themes
