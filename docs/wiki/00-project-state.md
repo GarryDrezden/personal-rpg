@@ -65,20 +65,28 @@
 - **Week** (`/week`) — недельный босс, календарь, бонусы
 - **Growth hub** (`/growth/:tab`) — skills, abilities, rewards, achievements, trials
 - **Measurements** (`/measurements`) — замеры и графики
-- **Journey map** (`/journey`) — RPG campaign map, 9 глав пути + hero stages (20 стадий трансформации)
+- **Journey map** (`/journey`) — вертикальная хроника пути (v3): 9 глав + hero stages (20 стадий трансформации)
 - **Codex** (`/codex`) — коллекции: герой, спутники, мобы, боссы, артефакты
 - **Freedom** (`/freedom`), **Momentum** (`/momentum`) — метрики устойчивости
 - **Progress map** (`/map`) — пути веса, шагов, трезвости и др.
 - **Reports** (`/reports`), **Insights** (`/insights`)
 - **Settings** (`/settings`), **FAQ** (`/faq`)
 
-### Journey Map (актуальный UI)
+### Journey Map (актуальный UI — v3)
 
-- Desktop: карта (Banana bg + SVG route + compact pins) + `JourneyChapterDetailPanel` справа
-- Tablet: карта сверху, detail panel снизу
-- Mobile: `JourneyMapMobile` — вертикальный маршрут
-- Под картой: единый `JourneyChapterSummaryDock` (контекст + прогресс + цели)
-- См. [`03-game-systems.md`](03-game-systems.md), [`../brandbook/ui-rules.md`](../brandbook/ui-rules.md)
+**Journey Map v3** = vertical chapter road (не horizontal canvas).
+
+| Breakpoint | Layout |
+|------------|--------|
+| Desktop (≥1024px) | Vertical route + 9 chapter blocks + sticky `JourneyChapterDetailPanel` справа |
+| Mobile (<1024px) | Одна колонка; detail раскрывается под выбранной главой (accordion) |
+
+- **Per-chapter vignettes:** `public/game-assets/maps/chapters/chapter-NN-*.webp` (fallback — CSS gradient).
+- **Chapter card:** текст главы слева (статус, title, progress, цели); vignette справа — только art, biome label, symbol, optional current badge «Сейчас».
+- **Summary:** `JourneyMapV3SummaryBar` вверху страницы.
+- **Legacy v2** (Banana bg, horizontal canvas, `JourneyMapDesktop`, `JourneyMapMobile`, `JourneyChapterSummaryDock`) — **не используется** в UI.
+
+См. [`03-game-systems.md`](03-game-systems.md), [`../brandbook/ui-rules.md`](../brandbook/ui-rules.md).
 
 ### Игровые системы
 
@@ -106,7 +114,7 @@
 - Female hero: полный набор 20 стадий + death
 - Male hero: стадии 1–3, 19–20 + death (4–18 — fallback на якоря)
 - 8 chapter bosses, 8 daily mobs, 4 companions
-- Journey map background: `public/game-assets/maps/`
+- Journey chapter vignettes: `public/game-assets/maps/chapters/` (9 × `.webp`)
 
 ## Текущие долги
 
@@ -114,7 +122,7 @@
 |-----------|--------|
 | Высокий | Sidecar sync achievements / coins / momentum на remote `user_data` |
 | Высокий | Стабилизация PHP auth / session на shared hosting |
-| Средний | Journey Map — финальный visual polish (координаты pins под фон) |
+| Средний | Journey Map v3 — polish (mobile QA, art tuning) |
 | Следующий спринт | **Sprint 2:** Onboarding + Asset Registry 2.0 |
 
 ## Следующий приоритет
@@ -141,7 +149,7 @@
 ## Последние крупные решения
 
 - Production backend = **PHP + MySQL** (не Node) из-за shared hosting
-- Journey Map = RPG campaign map, не таблица карточек
+- Journey Map v3 = vertical chapter road (не horizontal campaign canvas)
 - `docs/` — единый источник правды для Cursor и ChatGPT
 - Codex = коллекции; Dashboard = кто я + что делать сегодня
 

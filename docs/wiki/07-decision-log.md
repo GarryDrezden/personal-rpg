@@ -4,17 +4,31 @@
 
 ---
 
+## 2026-06-06 — Journey Map v3 vertical chapter road
+
 ### Контекст
 
-Journey Map v2 (horizontal Banana canvas + pins) перегружала UI и плохо масштабировалась.
+Journey Map v2 (horizontal Banana canvas + pins) перегружала UI, плохо масштабировалась и давала horizontal scroll. Отдельные summary-блоки дублировали detail panel.
 
 ### Решение
 
-Journey Map v3 — **vertical chapter road**: 9 отдельных chapter blocks, per-chapter biome vignette, vertical route rail, sticky detail panel (desktop), accordion (mobile). Без одного giant background.
+Journey Map v3 — **vertical chapter road**:
+
+- 9 отдельных chapter blocks с vertical route rail (номера глав на rail node).
+- Per-chapter biome vignette: `public/game-assets/maps/chapters/chapter-NN-*.webp`.
+- Desktop: chapter list + sticky `JourneyChapterDetailPanel` справа.
+- Mobile: одна колонка; detail accordion под выбранной главой.
+- Текст главы слева в карточке; vignette справа — только art, biome label, symbol, optional badge «Сейчас».
+- `JourneyMapV3SummaryBar` вверху страницы.
+- Без одного giant background на все 9 глав.
+
+### Почему
+
+Карта должна читаться как вертикальная хроника пути; UI не должен спорить с контентом и detail panel.
 
 ### Последствия
 
-Legacy v2 компоненты (`JourneyMapDesktop`, `JourneyPathSvg`, …) не рендерятся. Assets глав: `public/game-assets/maps/chapters/`.
+Legacy v2 компоненты (`JourneyMapDesktop`, `JourneyMapMobile`, `JourneyPathSvg`, `JourneyChapterSummaryDock`, …) **не рендерятся**. Активные стили: `journey-map-v3.css`. Конфиг art: `journeyChapterVisuals.ts`.
 
 ---
 

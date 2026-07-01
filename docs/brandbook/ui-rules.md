@@ -64,6 +64,7 @@ Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 - route node + vertical rail;
 - boss mini, progress, 1–3 objectives;
 - **не** один giant background на все 9 глав.
+- vignette справа — только art, biome label, symbol, optional badge «Сейчас» (без title/subtitle/номера).
 - **не** вшивать текст/номера в PNG — только UI поверх art.
 
 **Компоненты v3:** `JourneyMapV3Section`, `JourneyMapV3Route`, `JourneyChapterRoadItem`, `JourneyChapterVignette`, `JourneyMapV3SummaryBar`.

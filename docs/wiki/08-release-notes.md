@@ -4,11 +4,10 @@
 
 ### Added
 
+- **Journey Map v3** — vertical chapter road (`JourneyMapV3Section`, `JourneyMapV3Route`, `JourneyChapterRoadItem`, `JourneyChapterVignette`, `JourneyMapV3SummaryBar`, sticky/accordion `JourneyChapterDetailPanel`).
+- Per-chapter vignette art: `public/game-assets/maps/chapters/chapter-NN-*.webp`.
 - Resource & Rest v1: sleep quality, cognitive breaks, resource score, Today «Восстановление» block, Dashboard compact resource summary.
 - PHP + MySQL production backend for shared hosting (`api/`, MySQL auth/storage)
-- Journey Map v3 vertical chapter road (`JourneyMapV3Section`, per-chapter vignettes)
-- `JourneyChapterDetailPanel` — selected chapter details (desktop/tablet/mobile)
-- `JourneyChapterSummaryDock` — unified lower summary block (context + progress + goals)
 - Updated project wiki as single source of truth for Cursor / ChatGPT
 - SQL migration `api/migrations/001_create_accounts_tables.sql`
 - `api/config/config.example.php` (real config on server only)
@@ -25,27 +24,23 @@
 
 ### Changed
 
-- Added Journey Map v3 chapter vignette art support with UI-rendered captions, chapter medallions, and status overlays.
-- Rebuilt Journey Map as vertical chapter road (v3): per-chapter biome vignettes, route rail, sticky detail panel, summary bar.
-- Reworked Journey Map into layered RPG campaign map (v2, superseded by v3).
+- **Journey Map:** replaced horizontal campaign map experiments (v2: Banana canvas, pins, summary dock) with **vertical chapter road (v3)**.
+- Journey Map v3 chapter vignette art integrated into chapter cards (atmospheric art panel, no duplicate text on vignette).
 - Project wiki and brandbook updated as source of truth (`00-project-state`, roadmap, architecture, decision log, UI rules).
 - `docs/README.md` — входная точка вики
 - Root `README.md` — ссылка на project wiki
 
-### Fixed
+### Fixed (Journey Map v3)
 
-- Fixed Journey Map v3 rail node clipping.
-- Improved chapter card layout so vignette art is integrated into the card instead of appearing as a separate table column.
-- Reduced duplicate chapter numbering in Journey vignettes.
-- Removed duplicated chapter title/subtitle/progress from Journey v3 vignette overlays.
-- Simplified chapter art area into atmospheric biome panel.
+- Rail node clipping on vertical route.
+- Vignette art integrated into chapter card (not a separate table column).
+- Removed duplicate chapter numbering and title/subtitle/progress inside vignette overlays.
+- Simplified vignette to atmospheric biome panel (label + symbol + optional current badge).
 
-- Fixed Journey Map background overlay seam.
-- Reworked lower journey summary blocks into a single chapter summary dock.
-- Removed overlapping full chapter cards from the desktop journey map.
-- Fixed map overflow and detached stage labels.
-- Fixed stretched map composition and horizontal overflow.
-- Fixed Journey Map v2 desktop overflow, sidebar offset, detached stage labels, and active node mismatch.
+### Fixed (other)
+
+- Fixed Journey Map v2 background overlay seam (historical; v2 superseded).
+- Reworked lower journey summary blocks into unified dock (historical; replaced by v3 summary bar).
 - PHP auth session cookie on shared hosting (explicit Set-Cookie, Path=/)
 - Register/login verify session via `/api/auth/me` before data load
 - Removed outdated Node backend error hint on frontend

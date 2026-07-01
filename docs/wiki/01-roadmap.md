@@ -17,11 +17,11 @@
 ## Сейчас
 
 - [x] PHP + MySQL production auth/storage (shared hosting)
-- [x] Journey Map campaign layout (pins, detail panel, summary dock)
+- [x] Journey Map v3 vertical chapter road, per-chapter vignettes, sticky/accordion detail panel
 - [ ] PHP auth/session stabilization (cookie, `/api/auth/me` flow)
 - [ ] Sidecar sync: achievements, coins, momentum → remote `user_data`
 - [ ] Production smoke tests на fit-rpg.ru
-- [ ] Journey Map — финальный polish (координаты, mobile QA)
+- [ ] Journey Map v3 — polish (mobile QA, chapter art tuning)
 
 ---
 
@@ -75,7 +75,7 @@
 
 ### Недавние UI / infra
 
-- Journey Map v2/v3: layered map, pins, detail panel, summary dock
+- Journey Map v3: vertical chapter road, per-chapter vignettes, sticky/accordion detail panel, summary bar
 - Project wiki + brandbook as source of truth
 - GitHub Actions FTP deploy
 - PHP 8.2 hosting + `health.php`
