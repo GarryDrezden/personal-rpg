@@ -4,7 +4,21 @@
 
 ---
 
-## 2026-06-06 — Journey Map = RPG campaign map
+### Контекст
+
+Journey Map v2 (horizontal Banana canvas + pins) перегружала UI и плохо масштабировалась.
+
+### Решение
+
+Journey Map v3 — **vertical chapter road**: 9 отдельных chapter blocks, per-chapter biome vignette, vertical route rail, sticky detail panel (desktop), accordion (mobile). Без одного giant background.
+
+### Последствия
+
+Legacy v2 компоненты (`JourneyMapDesktop`, `JourneyPathSvg`, …) не рендерятся. Assets глав: `public/game-assets/maps/chapters/`.
+
+---
+
+## 2026-06-06 — Journey Map = RPG campaign map (v2, superseded)
 
 ### Контекст
 

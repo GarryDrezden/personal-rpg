@@ -40,47 +40,35 @@ Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 | Area | Key components |
 |------|----------------|
 | Dashboard | `DashboardScene`, `DailyQuestsCompact`, `NextBestActionCompact` |
-| Journey | `JourneyMapSection`, `JourneyMapDesktop`, `JourneyStagePin`, `JourneyChapterDetailPanel`, `JourneyChapterSummaryDock`, `JourneyMapMobile` |
+| Journey | `JourneyMapV3Section`, `JourneyChapterRoadItem`, `JourneyMapV3SummaryBar`, `JourneyChapterDetailPanel` |
 | Codex | `HeroTransformationShowcase`, collections |
 | Game assets | `GameAssetImage`, `GameAssetPlaceholder` |
 
 ## Journey Map rules
 
-Карта возвращения тела (`/journey`) — **RPG campaign map**, не таблица глав.
+Карта возвращения тела (`/journey`) — **вертикальная хроника пути (v3)**, не горизонтальная карта-мир.
 
-**На карте показывать только:**
-
-- decorative background (`JourneyMapBackground`, CSS `cover`);
-- SVG route и nodes (`JourneyPathSvg`);
-- compact chapter pins (`JourneyStagePin`);
-- boss mini pins (`JourneyBossMini`);
-- active/current glow на текущем узле.
-
-**Не размещать на карте:**
-
-- 9 больших карточек глав;
-- progress bars на pins;
-- длинные описания и дублирующий текст.
-
-**Layout:**
+**Layout v3:**
 
 | Breakpoint | Структура |
 |------------|-----------|
-| Desktop (>1180px) | Карта (~70%) + `JourneyChapterDetailPanel` справа (~30%) |
-| Tablet (1024–1180px) | Карта сверху, detail panel снизу |
-| Mobile (<1024px) | `JourneyMapMobile` — vertical route |
+| Desktop (≥1024px) | Vertical route + chapter blocks слева, sticky `JourneyChapterDetailPanel` справа |
+| Mobile (<1024px) | Одна колонка; detail раскрывается под выбранной главой (accordion) |
 
-**Под картой:**
+**Каждая глава — отдельный блок:**
 
-- один `JourneyChapterSummaryDock` (контекст текущей главы + прогресс + цели);
-- **не** две отдельные карточки (`JourneyHeroCard` + `CurrentJourneyStageCard`).
+- свой biome vignette (`journeyChapterVisuals.ts` + optional asset);
+- route node + vertical rail;
+- boss mini, progress, 1–3 objectives;
+- **не** один giant background на все 9 глав.
 
-**Технические запреты:**
+**Компоненты v3:** `JourneyMapV3Section`, `JourneyMapV3Route`, `JourneyChapterRoadItem`, `JourneyChapterVignette`, `JourneyMapV3SummaryBar`.
 
-- `100vw`, negative margins, horizontal scroll wrappers на карте;
-- absolute full chapter cards поверх map scene.
+**Не использовать (legacy v2):** `JourneyMapDesktop`, horizontal Banana canvas, `JourneyStagePin` на полотне.
 
-Конфиг: `src/constants/journeyMapConfig.ts`, стили: `src/styles/journey-map-v2.css`.
+**Assets глав:** `public/game-assets/maps/chapters/chapter-NN-*.webp` — см. README в папке.
+
+Конфиг биомов: `src/constants/journeyChapterVisuals.ts`. Стили: `src/styles/journey-map-v3.css`.
 
 ## Accessibility
 

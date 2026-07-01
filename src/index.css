@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "./styles/journey-map-v2.css";
+@import "./styles/journey-map-v3.css";
 
 :root,
 [data-theme='cozy'] {

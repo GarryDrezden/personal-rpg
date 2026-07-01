@@ -5,7 +5,7 @@
 ### Added
 
 - PHP + MySQL production backend for shared hosting (`api/`, MySQL auth/storage)
-- Journey Map campaign layout: layered map, compact pins, boss pins
+- Journey Map v3 vertical chapter road (`JourneyMapV3Section`, per-chapter vignettes)
 - `JourneyChapterDetailPanel` — selected chapter details (desktop/tablet/mobile)
 - `JourneyChapterSummaryDock` — unified lower summary block (context + progress + goals)
 - Updated project wiki as single source of truth for Cursor / ChatGPT
@@ -24,8 +24,8 @@
 
 ### Changed
 
-- Reworked Journey Map into layered RPG campaign map: Banana background, SVG route, compact chapter pins, boss pins, and selected chapter detail panel.
-- Reworked lower journey blocks into single `JourneyChapterSummaryDock` (replaces `JourneyHeroCard` + `CurrentJourneyStageCard` on `/journey`).
+- Rebuilt Journey Map as vertical chapter road (v3): per-chapter biome vignettes, route rail, sticky detail panel, summary bar.
+- Reworked Journey Map into layered RPG campaign map (v2, superseded by v3).
 - Project wiki and brandbook updated as source of truth (`00-project-state`, roadmap, architecture, decision log, UI rules).
 - `docs/README.md` — входная точка вики
 - Root `README.md` — ссылка на project wiki
