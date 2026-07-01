@@ -26,6 +26,8 @@
 
 ### Fixed
 
+- Fixed Journey Map background overlay seam.
+- Reworked lower journey summary blocks into a single chapter summary dock.
 - Removed overlapping full chapter cards from the desktop journey map.
 - Fixed map overflow and detached stage labels.
 - Fixed stretched map composition and horizontal overflow.

@@ -7,9 +7,8 @@ import {
   hasAnyJourneyData,
   hasMinimalJourneyData,
 } from '../utils/journeyMapEngine';
-import { JourneyHeroCard } from '../components/journey/JourneyHeroCard';
-import { CurrentJourneyStageCard } from '../components/journey/CurrentJourneyStageCard';
 import { JourneyDevelopmentMap } from '../components/journey/JourneyDevelopmentMap';
+import { JourneyChapterSummaryDock } from '../components/journey/map/JourneyChapterSummaryDock';
 
 export function JourneyMapPage() {
   const { dailyEntries, measurements, settings } = useAppStore();
@@ -32,8 +31,10 @@ export function JourneyMapPage() {
 
   const activeStageId = selectedStageId ?? defaultSelected;
 
-  const showCurrentStageCard =
-    summary.currentStage && summary.currentStage.status !== 'locked';
+  const dockProgress = useMemo(() => {
+    if (summary.currentStage) return summary.currentStage;
+    return stages.find((s) => s.status === 'current') ?? stages[0];
+  }, [summary.currentStage, stages]);
 
   return (
     <div className="journey-page pb-4">
@@ -56,7 +57,7 @@ export function JourneyMapPage() {
         </p>
       ) : null}
 
-      <section className="journey-map-shell mb-8">
+      <section className="journey-map-shell mb-5">
         <JourneyDevelopmentMap
           stages={stages}
           themeId={themeId}
@@ -65,15 +66,13 @@ export function JourneyMapPage() {
         />
       </section>
 
-      <div className="journey-page__below grid gap-6 md:grid-cols-2">
-        <JourneyHeroCard summary={summary} themeId={themeId} />
-
-        {showCurrentStageCard ? (
-          <CurrentJourneyStageCard progress={summary.currentStage!} themeId={themeId} />
-        ) : (
-          <div className="hidden md:block" aria-hidden />
-        )}
-      </div>
+      {hasData && dockProgress ? (
+        <JourneyChapterSummaryDock
+          progress={dockProgress}
+          summary={summary}
+          themeId={themeId}
+        />
+      ) : null}
     </div>
   );
 }
