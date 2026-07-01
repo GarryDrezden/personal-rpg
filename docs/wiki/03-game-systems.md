@@ -109,19 +109,19 @@ Dark fantasy карта **9 глав пути** (condition-based stages из `jo
 | Компонент | Назначение |
 |-----------|------------|
 | `JourneyMapSection` | Обёртка, заголовок, переключение desktop/mobile |
-| `JourneyMapDesktop` | Широкая сцена 16:9, SVG-путь + HTML-карточки |
-| `JourneyMapMobile` | Вертикальный маршрут (экспедиционный layout) |
+| `JourneyMapDesktop` | Широкая сцена 1200×720, SVG + HTML в общем coord-layer |
+| `JourneyMapMobile` | Вертикальный маршрут (узел слева, карточка справа) |
 | `JourneyPathSvg` | SVG: рельеф, путь, узлы, коннекторы |
 | `JourneyStageCard` | Карточка главы (статус, прогресс) |
 | `JourneyBossMini` | Миниатюра босса у ключевых этапов |
 
-Координаты desktop — **проценты viewBox 1200×720** (`nodeX/nodeY`, `cardSide`). Mobile — `mobile.order` + `mobile.side` (left/right).
+Координаты desktop — **проценты общего слоя 1200×720**: `node { x, y }` + `cardPlacement` / `bossPlacement` (смещение от узла, `journeyMapAnchors.ts`). Mobile — вертикальный список без absolute.
 
 Боссы привязаны к этапам 1, 3, 5, 7, 9 (`getBossPublicPath`). При отсутствии PNG — placeholder с инициалом.
 
 Опциональные фоны: `public/game-assets/maps/journey-map-bg-desktop.webp`, `journey-map-bg-mobile.webp` (graceful fallback на CSS-градиенты).
 
-Полная ширина контента: класс `.journey-map-fullwidth` + `--app-sidebar-width: 356px`. Внутреннего scroll у карты нет.
+Ширина: `/journey` в `AppShell` без `max-w-6xl`; блок `.journey-map-shell { width: 100% }`. Без `100vw` и внутреннего scroll.
 
 ---
 

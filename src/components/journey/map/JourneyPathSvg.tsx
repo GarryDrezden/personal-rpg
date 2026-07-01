@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import type { JourneyStageProgress } from '../../../types/journeyMap';
 import {
   buildJourneyMapPath,
+  cardAnchorForConfig,
   getJourneyMapStageConfig,
   JOURNEY_MAP_VIEWBOX,
   nodeToSvg,
+  percentToSvg,
   type JourneyMapStageConfig,
 } from '../../../constants/journeyMapConfig';
 import { computeJourneyPathProgress } from './journeyMapProgress';
@@ -46,7 +48,7 @@ export function JourneyPathSvg({
       className="journey-map-v2__svg"
       role="img"
       aria-label="Маршрут по главам пути"
-      preserveAspectRatio="xMidYMid meet"
+      preserveAspectRatio="none"
     >
       <JourneyMapTerrain configs={configs} fogStartPercent={fogStartPercent} />
 
@@ -57,14 +59,8 @@ export function JourneyPathSvg({
       {sorted.map((progress, index) => {
         const config = configs[index] ?? getJourneyMapStageConfig(progress.stage.id, index);
         const node = nodeToSvg(config);
-        const cardYPercent =
-          config.desktop.cardSide === 'top'
-            ? Math.max(6, config.desktop.nodeY - 22)
-            : Math.min(90, config.desktop.nodeY + 18);
-        const card = {
-          x: (config.desktop.nodeX / 100) * JOURNEY_MAP_VIEWBOX.w,
-          y: (cardYPercent / 100) * JOURNEY_MAP_VIEWBOX.h,
-        };
+        const cardAnchor = cardAnchorForConfig(config);
+        const card = percentToSvg(cardAnchor.left, cardAnchor.top);
         return (
           <JourneyMapConnector
             key={`conn-${progress.stage.id}`}

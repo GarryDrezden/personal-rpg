@@ -20,8 +20,8 @@ export function JourneyMapNode({ cx, cy, status, isSelected, stageOrder }: Journ
     <g className={isLocked ? 'journey-map-node--locked' : ''}>
       {isCurrent ? (
         <>
-          <circle cx={cx} cy={cy} r={38} fill="none" stroke="rgba(250, 204, 21, 0.35)" strokeWidth={1.5}>
-            <animate attributeName="r" values="34;42;34" dur="2.6s" repeatCount="indefinite" />
+          <circle cx={cx} cy={cy} r={28} fill="none" stroke="rgba(250, 204, 21, 0.35)" strokeWidth={1.5}>
+            <animate attributeName="r" values="24;30;24" dur="2.6s" repeatCount="indefinite" />
             <animate attributeName="opacity" values="0.2;0.6;0.2" dur="2.6s" repeatCount="indefinite" />
           </circle>
           <circle

@@ -39,27 +39,27 @@ export function JourneyMapPage() {
     summary.currentStage && summary.currentStage.status !== 'locked';
 
   return (
-    <div className="journey-page space-y-8 pb-4">
-      <header>
+    <div className="journey-page pb-4">
+      <header className="journey-page__header mb-6 max-w-3xl">
         <h1 className="text-2xl font-bold text-[var(--app-text)]">Карта возвращения тела</h1>
-        <p className="mt-2 max-w-2xl text-sm text-[var(--app-text-muted)]">
+        <p className="mt-2 text-sm text-[var(--app-text-muted)]">
           Это не просто путь к меньшему весу. Это маршрут возвращения движения, контроля и
           устойчивости.
         </p>
       </header>
 
       {!hasData ? (
-        <p className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-6 text-center text-sm text-[var(--app-text-muted)]">
+        <p className="mb-6 rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-6 text-center text-sm text-[var(--app-text-muted)]">
           Карта пути пока спит. Внеси первый вес, калории или шаги — и первая глава откроется.
         </p>
       ) : !hasMinimalData ? (
-        <p className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-4 text-center text-sm text-[var(--app-text-muted)]">
+        <p className="mb-6 rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-4 text-center text-sm text-[var(--app-text-muted)]">
           Путь уже начался. Чем больше данных ты вносишь, тем точнее карта показывает следующую
           главу.
         </p>
       ) : null}
 
-      <section className="journey-map-fullwidth">
+      <section className="journey-map-shell mb-8">
         <JourneyDevelopmentMap
           stages={stages}
           themeId={themeId}

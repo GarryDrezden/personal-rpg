@@ -25,6 +25,7 @@
 
 ### Fixed
 
+- Fixed Journey Map v2 desktop overflow, sidebar offset, detached stage labels, and active node mismatch.
 - PHP auth session cookie on shared hosting (explicit Set-Cookie, Path=/)
 - Register/login verify session via `/api/auth/me` before data load
 - Removed outdated Node backend error hint on frontend

@@ -118,9 +118,9 @@ export function JourneyMapTerrain({ configs, fogStartPercent }: JourneyMapTerrai
       <ellipse cx={w * 0.38} cy={h * 0.62} rx={w * 0.08} ry={h * 0.05} fill="url(#jmap-v2-lake-glow)" />
 
       {configs.map((config) => {
-        const x = (config.desktop.nodeX / 100) * w;
-        const y = (config.desktop.nodeY / 100) * h;
-        const offsetY = config.desktop.cardSide === 'top' ? 28 : -28;
+        const x = (config.node.x / 100) * w;
+        const y = (config.node.y / 100) * h;
+        const offsetY = config.cardPlacement.startsWith('top') ? 28 : -28;
         const render = TERRAIN_GLYPH[config.terrainType];
         return (
           <g key={`terrain-${config.id}`}>{render(x, y + offsetY)}</g>

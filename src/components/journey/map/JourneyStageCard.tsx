@@ -1,8 +1,6 @@
 import type { AppThemeId } from '../../../types/theme';
 import type { JourneyStageProgress } from '../../../types/journeyMap';
 import { resolveJourneyStageText } from '../../../types/journeyMap';
-import type { JourneyCardSide } from '../../../constants/journeyMapConfig';
-import { getCardTransform } from '../../../constants/journeyMapConfig';
 
 type JourneyStageCardProps = {
   progress: JourneyStageProgress;
@@ -10,7 +8,6 @@ type JourneyStageCardProps = {
   isSelected: boolean;
   onSelect?: () => void;
   variant: 'desktop' | 'mobile';
-  cardSide?: JourneyCardSide;
   style?: React.CSSProperties;
 };
 
@@ -26,15 +23,11 @@ export function JourneyStageCard({
   isSelected,
   onSelect,
   variant,
-  cardSide = 'bottom',
   style,
 }: JourneyStageCardProps) {
   const text = resolveJourneyStageText(progress.stage, themeId);
   const { status, progressPercent } = progress;
   const isCurrent = status === 'current';
-
-  const transform =
-    variant === 'desktop' ? getCardTransform(cardSide) : undefined;
 
   return (
     <button
@@ -47,7 +40,7 @@ export function JourneyStageCard({
       } ${status === 'locked' ? 'journey-stage-card--locked' : ''} ${
         status === 'completed' ? 'journey-stage-card--completed' : ''
       }`}
-      style={variant === 'desktop' ? { ...style, transform } : style}
+      style={style}
       aria-pressed={isSelected}
       aria-label={`Глава ${progress.stage.order}: ${text.title}, ${STATUS_LABEL[status]}`}
     >
@@ -57,9 +50,7 @@ export function JourneyStageCard({
         {variant === 'desktop' ? (
           <span className="journey-stage-card__subtitle">{progress.stage.subtitle}</span>
         ) : null}
-        <span
-          className={`journey-stage-card__status journey-stage-card__status--${status}`}
-        >
+        <span className={`journey-stage-card__status journey-stage-card__status--${status}`}>
           {STATUS_LABEL[status]}
         </span>
         {status !== 'locked' ? (
