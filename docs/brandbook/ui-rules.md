@@ -40,7 +40,7 @@ Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 | Area | Key components |
 |------|----------------|
 | Dashboard | `DashboardScene`, `DailyQuestsCompact`, `NextBestActionCompact` |
-| Journey | `JourneyMapSection`, layered map (bg + SVG route + markers), `JourneyChapterDetailPanel` |
+| Journey | `JourneyMapSection`, desktop grid (map scene + `JourneyChapterDetailPanel`), `JourneyStagePin`, `JourneyMapMobile` |
 | Codex | `HeroTransformationShowcase`, collections |
 | Game assets | `GameAssetImage`, `GameAssetPlaceholder` |
 

@@ -84,7 +84,13 @@
 .journey-map-v2__body {
   position: relative;
   z-index: 10;
-  padding: 0 0 1.25rem;
+  padding: 0 1rem 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .journey-map-v2__body {
+    padding: 0 1.5rem 1.25rem;
+  }
 }
 
 .journey-map-v2__desktop-only {
@@ -105,16 +111,37 @@
   }
 }
 
-/* Layer 1: background scene */
-.journey-map-v2__desktop-scene {
+/* Desktop / tablet: map scene + detail panel */
+.journey-map-desktop-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: 16px;
+  width: 100%;
+  max-width: none;
+  overflow: hidden;
+  align-items: start;
+}
+
+@media (max-width: 1180px) {
+  .journey-map-desktop-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1600px) {
+  .journey-map-desktop-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
+  }
+}
+
+.journey-map-scene {
   position: relative;
   width: 100%;
-  aspect-ratio: 1200 / 520;
-  min-height: 280px;
-  max-height: min(72vh, 640px);
-  margin: 0;
+  aspect-ratio: 16 / 7;
+  min-height: 260px;
+  max-height: min(68vh, 620px);
   overflow: hidden;
-  border-radius: 0 0 0.5rem 0.5rem;
+  border-radius: 18px;
 }
 
 .journey-map-v2__bg-layer {
@@ -122,7 +149,7 @@
   inset: 0;
   background-color: #0d1424;
   background-size: cover;
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
 }
 
@@ -138,7 +165,10 @@
   pointer-events: none;
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(8, 12, 20, 0.08) 0%, rgba(8, 12, 20, 0.28) 100%);
+  z-index: 2;
+  background:
+    linear-gradient(180deg, rgba(6, 10, 18, 0.35) 0%, rgba(6, 10, 18, 0.15) 40%, rgba(6, 10, 18, 0.45) 100%),
+    linear-gradient(90deg, rgba(6, 10, 18, 0.25) 0%, transparent 18%, transparent 82%, rgba(6, 10, 18, 0.3) 100%);
 }
 
 .journey-map-v2__vignette {
@@ -198,8 +228,8 @@
   pointer-events: none;
 }
 
-/* Layer 3: compact stage markers */
-.journey-stage-marker {
+/* Layer 3: compact stage pins */
+.journey-stage-pin {
   position: absolute;
   border: none;
   background: transparent;
@@ -207,44 +237,45 @@
   font: inherit;
   color: inherit;
   text-align: left;
-  width: clamp(108px, 10vw, 138px);
-  min-height: 38px;
+  width: clamp(92px, 8.5vw, 128px);
+  min-height: 40px;
+  max-height: 52px;
 }
 
-.journey-stage-marker--interactive {
+.journey-stage-pin--interactive {
   cursor: pointer;
   transition: filter 0.2s ease, transform 0.2s ease;
 }
 
-.journey-stage-marker--interactive:hover {
-  filter: brightness(1.08);
+.journey-stage-pin--interactive:hover {
+  filter: brightness(1.1);
 }
 
-.journey-stage-marker__inner {
-  display: block;
-  padding: 0.4rem 0.55rem;
-  border-radius: 0.45rem;
+.journey-stage-pin__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.35rem 0.45rem;
+  border-radius: 0.4rem;
   border: 1px solid rgba(148, 163, 184, 0.35);
-  background: rgba(8, 14, 26, 0.88);
+  background: rgba(8, 14, 26, 0.9);
   backdrop-filter: blur(8px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.38);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.42);
 }
 
-.journey-stage-marker__chapter {
-  display: block;
+.journey-stage-pin__chapter {
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #94a3b8;
+  line-height: 1.1;
 }
 
-.journey-stage-marker__title {
-  display: block;
-  margin-top: 0.15rem;
-  font-size: 11px;
+.journey-stage-pin__title {
+  font-size: 10px;
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 1.2;
   color: var(--jmap-text);
   overflow: hidden;
   display: -webkit-box;
@@ -252,91 +283,79 @@
   -webkit-box-orient: vertical;
 }
 
-.journey-stage-marker__status {
-  display: block;
-  margin-top: 0.25rem;
-  font-size: 9px;
+.journey-stage-pin__badge {
+  align-self: flex-start;
+  margin-top: 0.1rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 999px;
+  font-size: 8px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  line-height: 1.4;
 }
 
-.journey-stage-marker__status--current {
-  color: var(--jmap-gold-bright);
+.journey-stage-pin__badge--current {
+  color: #0f172a;
+  background: var(--jmap-gold-bright);
 }
 
-.journey-stage-marker__status--completed {
-  color: var(--jmap-success);
+.journey-stage-pin__badge--completed {
+  color: #052e16;
+  background: rgba(74, 222, 128, 0.85);
 }
 
-.journey-stage-marker__status--locked {
-  color: #cbd5e1;
-}
-
-.journey-stage-marker__progress {
-  display: block;
-  margin-top: 0.3rem;
-  height: 3px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.8);
-  overflow: hidden;
-}
-
-.journey-stage-marker__progress-fill {
-  display: block;
-  height: 100%;
-  border-radius: 999px;
-  background: var(--jmap-gold);
-}
-
-.journey-stage-marker--current .journey-stage-marker__inner {
+.journey-stage-pin--current .journey-stage-pin__inner {
   border-color: rgba(250, 204, 21, 0.75);
-  box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.3), 0 0 16px rgba(250, 204, 21, 0.15);
+  box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.3), 0 0 14px rgba(250, 204, 21, 0.18);
 }
 
-.journey-stage-marker--selected .journey-stage-marker__inner {
+.journey-stage-pin--selected .journey-stage-pin__inner {
   border-color: var(--jmap-gold);
 }
 
-.journey-stage-marker--completed .journey-stage-marker__inner {
+.journey-stage-pin--completed .journey-stage-pin__inner {
   border-color: rgba(52, 211, 153, 0.35);
 }
 
-.journey-stage-marker--locked .journey-stage-marker__inner {
-  opacity: 0.88;
+.journey-stage-pin--locked .journey-stage-pin__inner {
+  opacity: 0.82;
 }
 
-/* Detail panel below map */
-.journey-map-v2__detail-wrap {
-  margin: 0 1rem 0;
-  padding-top: 1rem;
+.journey-map-v2__mobile-detail {
+  margin-top: 1rem;
+  padding: 0 0.25rem 0.5rem;
 }
 
-@media (min-width: 640px) {
-  .journey-map-v2__detail-wrap {
-    margin: 0 1.5rem 0;
-  }
-}
-
+/* Chapter detail panel (desktop right / tablet below / mobile below route) */
 .journey-chapter-panel {
-  display: grid;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 0.75rem;
+  display: block;
+  padding: 1rem 1.1rem;
+  border-radius: 14px;
   border: 1px solid rgba(148, 163, 184, 0.28);
-  background: rgba(10, 16, 28, 0.75);
-}
-
-@media (min-width: 768px) {
-  .journey-chapter-panel {
-    grid-template-columns: 1fr auto;
-    padding: 1.25rem;
-  }
+  background: rgba(10, 16, 28, 0.82);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 12px 32px rgba(0, 0, 0, 0.35);
+  min-height: 0;
 }
 
 .journey-chapter-panel--current {
   border-color: rgba(250, 204, 21, 0.45);
-  box-shadow: 0 0 24px rgba(250, 204, 21, 0.08);
+  box-shadow: inset 0 1px 0 rgba(250, 204, 21, 0.12), 0 0 24px rgba(250, 204, 21, 0.1);
+}
+
+.journey-chapter-panel__badge {
+  display: inline-block;
+  margin-bottom: 0.65rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--jmap-gold-bright);
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  background: rgba(250, 204, 21, 0.08);
 }
 
 .journey-chapter-panel__head {
@@ -410,17 +429,16 @@
   gap: 0.5rem;
 }
 
-.journey-chapter-panel__aside {
+.journey-chapter-panel__boss-row {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 0.65rem 0.75rem;
   border-radius: 0.65rem;
   border: 1px solid rgba(212, 175, 55, 0.25);
   background: rgba(8, 12, 20, 0.55);
-  min-width: 5.5rem;
 }
 
 .journey-chapter-panel__boss-label {
@@ -428,6 +446,36 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--jmap-muted);
+}
+
+.journey-chapter-panel__boss-name {
+  margin-top: 0.2rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--jmap-text);
+}
+
+.journey-chapter-panel__hint {
+  margin-top: 1rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.55rem;
+  border: 1px dashed rgba(148, 163, 184, 0.25);
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.journey-chapter-panel__hint-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--jmap-muted);
+}
+
+.journey-chapter-panel__hint-text {
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--jmap-text);
 }
 
 /* Boss pins */

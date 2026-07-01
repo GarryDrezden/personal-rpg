@@ -8,6 +8,7 @@ import { getJourneyMapStageConfig } from '../../../constants/journeyMapConfig';
 type JourneyChapterDetailPanelProps = {
   progress: JourneyStageProgress;
   themeId: AppThemeId;
+  isCurrentChapter?: boolean;
 };
 
 const STATUS_LABEL = {
@@ -16,17 +17,34 @@ const STATUS_LABEL = {
   locked: 'Впереди',
 } as const;
 
-export function JourneyChapterDetailPanel({ progress, themeId }: JourneyChapterDetailPanelProps) {
+const BOSS_LABELS: Record<string, string> = {
+  lord_of_empty_day: 'Владыка Пустого Дня',
+  divan_king: 'Диванный король',
+  misty_baron: 'Туманный барон',
+  resource_devourer: 'Пожиратель ресурсов',
+  old_form_guardian: 'Страж старой формы',
+};
+
+export function JourneyChapterDetailPanel({
+  progress,
+  themeId,
+  isCurrentChapter,
+}: JourneyChapterDetailPanelProps) {
   const text = resolveJourneyStageText(progress.stage, themeId);
   const config = getJourneyMapStageConfig(progress.stage.id);
   const { status, progressPercent } = progress;
+  const isCurrent = status === 'current';
+  const chapterBadge =
+    isCurrent || isCurrentChapter ? 'Текущая глава' : 'Выбранная глава';
 
   return (
-    <div
+    <aside
       className={`journey-chapter-panel journey-chapter-panel--${status}`}
       data-testid="journey-chapter-detail-panel"
     >
       <div className="journey-chapter-panel__main">
+        <span className="journey-chapter-panel__badge">{chapterBadge}</span>
+
         <div className="journey-chapter-panel__head">
           <span className="journey-chapter-panel__icon" aria-hidden>
             {progress.stage.icon}
@@ -58,19 +76,29 @@ export function JourneyChapterDetailPanel({ progress, themeId }: JourneyChapterD
           </div>
         ) : null}
 
+        {config.bossId ? (
+          <div className="journey-chapter-panel__boss-row">
+            <div>
+              <p className="journey-chapter-panel__boss-label">Босс главы</p>
+              <p className="journey-chapter-panel__boss-name">
+                {BOSS_LABELS[config.bossId] ?? 'Страж пути'}
+              </p>
+            </div>
+            <JourneyBossMini bossId={config.bossId} status={status} size="md" />
+          </div>
+        ) : null}
+
+        <div className="journey-chapter-panel__hint">
+          <p className="journey-chapter-panel__hint-title">Что двигает путь</p>
+          <p className="journey-chapter-panel__hint-text">{progress.stage.subtitle}</p>
+        </div>
+
         <div className="journey-chapter-panel__conditions">
           {progress.conditions.map((cp) => (
             <JourneyConditionRow key={cp.condition.id} conditionProgress={cp} />
           ))}
         </div>
       </div>
-
-      {config.bossId ? (
-        <aside className="journey-chapter-panel__aside">
-          <p className="journey-chapter-panel__boss-label">Босс главы</p>
-          <JourneyBossMini bossId={config.bossId} status={status} size="md" />
-        </aside>
-      ) : null}
-    </div>
+    </aside>
   );
 }

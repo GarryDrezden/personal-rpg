@@ -20,13 +20,14 @@
 
 ### Changed
 
-- Reworked Journey Map v2 into layered fantasy map: decorative background, SVG route, compact stage markers, boss pins, and selected chapter detail panel.
+- Reworked Journey Map into a layered RPG campaign map: Banana background, SVG route, compact chapter pins, boss pins, and selected chapter detail panel.
 - `docs/README.md` — входная точка вики
 - Root `README.md` — ссылка на project wiki
 
 ### Fixed
 
-- Removed overlapping full stage cards from desktop map.
+- Removed overlapping full chapter cards from the desktop journey map.
+- Fixed map overflow and detached stage labels.
 - Fixed stretched map composition and horizontal overflow.
 - Fixed Journey Map v2 desktop overflow, sidebar offset, detached stage labels, and active node mismatch.
 - PHP auth session cookie on shared hosting (explicit Set-Cookie, Path=/)

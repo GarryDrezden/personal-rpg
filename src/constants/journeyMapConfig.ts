@@ -3,7 +3,7 @@ import { JOURNEY_STAGES } from './journeyMap';
 import {
   BOSS_PIN_OPPOSITE,
   computeBossPinAnchor,
-  computeMarkerAnchor,
+  computePinAnchor,
   type MapAnchor,
 } from './journeyMapAnchors';
 
@@ -15,97 +15,120 @@ export type JourneyTerrainType =
   | 'plateau'
   | 'fortress'
   | 'mist'
-  | 'valley';
+  | 'valley'
+  | 'road'
+  | 'tower'
+  | 'ridge'
+  | 'village'
+  | 'mountain-road';
 
-export type JourneyMarkerPlacement = 'top' | 'bottom' | 'left' | 'right';
+export type JourneyPinPlacement =
+  | 'top'
+  | 'bottom'
+  | 'left'
+  | 'right'
+  | 'topLeft'
+  | 'topRight'
+  | 'bottomLeft'
+  | 'bottomRight';
 
 export type JourneyMapStageConfig = {
   id: string;
   chapterNumber: number;
   terrainType: JourneyTerrainType;
   subtitle: string;
-  /** SVG viewBox coordinates */
+  shortTitle: string;
   x: number;
   y: number;
-  markerPlacement: JourneyMarkerPlacement;
-  bossPinPlacement: JourneyMarkerPlacement | null;
+  pinPlacement: JourneyPinPlacement;
+  pinOffset?: { x: number; y: number };
+  bossPinPlacement: JourneyPinPlacement | null;
+  bossPinOffset?: { x: number; y: number };
   bossId: BossId | null;
 };
 
 export const JOURNEY_MAP_VIEWBOX = { w: 1200, h: 520 } as const;
-export const JOURNEY_MAP_ASPECT_RATIO = `${JOURNEY_MAP_VIEWBOX.w} / ${JOURNEY_MAP_VIEWBOX.h}`;
+export const JOURNEY_MAP_ASPECT_RATIO = '16 / 7';
 
-/** Node positions aligned to journey-map-bg-desktop.png landmarks (ruins → tower → village → citadel). */
 const STAGE_LAYOUT: Omit<JourneyMapStageConfig, 'id' | 'chapterNumber' | 'subtitle'>[] = [
   {
     terrainType: 'ruins',
-    x: 168,
-    y: 368,
-    markerPlacement: 'right',
+    shortTitle: 'Пробуждение',
+    x: 135,
+    y: 355,
+    pinPlacement: 'bottomRight',
     bossPinPlacement: 'left',
     bossId: 'lord_of_empty_day',
   },
   {
-    terrainType: 'forest',
-    x: 285,
-    y: 318,
-    markerPlacement: 'top',
+    terrainType: 'road',
+    shortTitle: 'Трещина',
+    x: 260,
+    y: 315,
+    pinPlacement: 'top',
+    bossPinPlacement: null,
+    bossId: null,
+  },
+  {
+    terrainType: 'tower',
+    shortTitle: 'База',
+    x: 390,
+    y: 260,
+    pinPlacement: 'bottom',
+    bossPinPlacement: 'top',
+    bossId: 'divan_king',
+  },
+  {
+    terrainType: 'ridge',
+    shortTitle: 'Контроль',
+    x: 520,
+    y: 230,
+    pinPlacement: 'top',
     bossPinPlacement: null,
     bossId: null,
   },
   {
     terrainType: 'valley',
-    x: 415,
-    y: 248,
-    markerPlacement: 'bottom',
-    bossPinPlacement: 'top',
-    bossId: 'divan_king',
-  },
-  {
-    terrainType: 'plateau',
-    x: 525,
-    y: 278,
-    markerPlacement: 'top',
-    bossPinPlacement: null,
-    bossId: null,
-  },
-  {
-    terrainType: 'lake',
-    x: 635,
-    y: 318,
-    markerPlacement: 'bottom',
+    shortTitle: 'Выносливость',
+    x: 640,
+    y: 285,
+    pinPlacement: 'bottom',
     bossPinPlacement: 'top',
     bossId: 'misty_baron',
   },
   {
-    terrainType: 'mist',
-    x: 755,
-    y: 338,
-    markerPlacement: 'top',
+    terrainType: 'lake',
+    shortTitle: 'Лёгкость',
+    x: 765,
+    y: 250,
+    pinPlacement: 'topRight',
     bossPinPlacement: null,
     bossId: null,
   },
   {
-    terrainType: 'fortress',
-    x: 865,
-    y: 312,
-    markerPlacement: 'bottom',
+    terrainType: 'village',
+    shortTitle: 'Система',
+    x: 890,
+    y: 310,
+    pinPlacement: 'bottomRight',
     bossPinPlacement: 'top',
     bossId: 'resource_devourer',
   },
   {
-    terrainType: 'mountain',
-    x: 985,
-    y: 258,
-    markerPlacement: 'bottom',
+    terrainType: 'mountain-road',
+    shortTitle: 'Мобильность',
+    x: 1025,
+    y: 270,
+    pinPlacement: 'bottomLeft',
     bossPinPlacement: null,
     bossId: null,
   },
   {
     terrainType: 'fortress',
-    x: 1085,
-    y: 142,
-    markerPlacement: 'left',
+    shortTitle: 'Перерождение',
+    x: 1125,
+    y: 150,
+    pinPlacement: 'left',
     bossPinPlacement: 'bottom',
     bossId: 'old_form_guardian',
   },
@@ -140,20 +163,22 @@ export function nodeToPercent(config: JourneyMapStageConfig): { left: number; to
   };
 }
 
-export function markerAnchorForConfig(config: JourneyMapStageConfig): MapAnchor {
+export function pinAnchorForConfig(config: JourneyMapStageConfig): MapAnchor {
   const node = nodeToPercent(config);
-  return computeMarkerAnchor(node.left, node.top, config.markerPlacement);
+  return computePinAnchor(node.left, node.top, config.pinPlacement, config.pinOffset);
 }
 
 export function bossPinAnchorForConfig(config: JourneyMapStageConfig): MapAnchor | null {
   if (!config.bossId) return null;
   const node = nodeToPercent(config);
   const placement =
-    config.bossPinPlacement ?? BOSS_PIN_OPPOSITE[config.markerPlacement];
-  return computeBossPinAnchor(node.left, node.top, placement);
+    config.bossPinPlacement ?? BOSS_PIN_OPPOSITE[config.pinPlacement];
+  return computeBossPinAnchor(node.left, node.top, placement, config.bossPinOffset);
 }
 
-/** Smooth cubic path through node coordinates. */
+/** @deprecated Use pinAnchorForConfig */
+export const markerAnchorForConfig = pinAnchorForConfig;
+
 export function buildJourneyMapPath(points: { x: number; y: number }[]): string {
   if (points.length === 0) return '';
   if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;

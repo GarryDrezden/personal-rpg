@@ -1,17 +1,21 @@
-import type { JourneyMarkerPlacement } from './journeyMapConfig';
+import type { JourneyPinPlacement } from './journeyMapConfig';
 
-export const MARKER_WIDTH_PCT = 9.5;
-export const MARKER_HEIGHT_PCT = 9;
-export const BOSS_PIN_SIZE_PCT = 3.2;
+export const PIN_WIDTH_PCT = 8;
+export const PIN_HEIGHT_PCT = 7;
+export const BOSS_PIN_SIZE_PCT = 2.8;
 
 const PLACEMENT_META: Record<
-  JourneyMarkerPlacement,
+  JourneyPinPlacement,
   { offsetX: number; offsetY: number; transform: string }
 > = {
-  top: { offsetX: 0, offsetY: -10, transform: 'translate(-50%, -100%)' },
-  bottom: { offsetX: 0, offsetY: 10, transform: 'translate(-50%, 0)' },
-  left: { offsetX: -8.5, offsetY: 0, transform: 'translate(-100%, -50%)' },
-  right: { offsetX: 8.5, offsetY: 0, transform: 'translate(0, -50%)' },
+  top: { offsetX: 0, offsetY: -9, transform: 'translate(-50%, -100%)' },
+  bottom: { offsetX: 0, offsetY: 9, transform: 'translate(-50%, 0)' },
+  left: { offsetX: -7.5, offsetY: 0, transform: 'translate(-100%, -50%)' },
+  right: { offsetX: 7.5, offsetY: 0, transform: 'translate(0, -50%)' },
+  topLeft: { offsetX: -6, offsetY: -9, transform: 'translate(-100%, -100%)' },
+  topRight: { offsetX: 6, offsetY: -9, transform: 'translate(0, -100%)' },
+  bottomLeft: { offsetX: -6, offsetY: 9, transform: 'translate(-100%, 0)' },
+  bottomRight: { offsetX: 6, offsetY: 9, transform: 'translate(0, 0)' },
 };
 
 function clamp(value: number, min: number, max: number): number {
@@ -19,28 +23,28 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 function horizontalBounds(
-  placement: JourneyMarkerPlacement,
+  placement: JourneyPinPlacement,
   boxWidth: number,
 ): { min: number; max: number } {
-  const margin = 1.5;
-  if (placement === 'left') {
+  const margin = 1.2;
+  if (placement === 'left' || placement === 'topLeft' || placement === 'bottomLeft') {
     return { min: margin + boxWidth, max: 100 - margin };
   }
-  if (placement === 'right') {
+  if (placement === 'right' || placement === 'topRight' || placement === 'bottomRight') {
     return { min: margin, max: 100 - margin - boxWidth };
   }
   return { min: margin + boxWidth / 2, max: 100 - margin - boxWidth / 2 };
 }
 
 function verticalBounds(
-  placement: JourneyMarkerPlacement,
+  placement: JourneyPinPlacement,
   boxHeight: number,
 ): { min: number; max: number } {
-  const margin = 1.5;
-  if (placement === 'top') {
+  const margin = 1.2;
+  if (placement === 'top' || placement === 'topLeft' || placement === 'topRight') {
     return { min: margin + boxHeight, max: 100 - margin };
   }
-  if (placement === 'bottom') {
+  if (placement === 'bottom' || placement === 'bottomLeft' || placement === 'bottomRight') {
     return { min: margin, max: 100 - margin - boxHeight };
   }
   return { min: margin + boxHeight / 2, max: 100 - margin - boxHeight / 2 };
@@ -52,19 +56,22 @@ export type MapAnchor = {
   transform: string;
 };
 
-export function computeMarkerAnchor(
+export function computePinAnchor(
   nodeLeftPct: number,
   nodeTopPct: number,
-  placement: JourneyMarkerPlacement,
-  box: { w: number; h: number } = { w: MARKER_WIDTH_PCT, h: MARKER_HEIGHT_PCT },
+  placement: JourneyPinPlacement,
+  offset?: { x: number; y: number },
+  box: { w: number; h: number } = { w: PIN_WIDTH_PCT, h: PIN_HEIGHT_PCT },
 ): MapAnchor {
   const meta = PLACEMENT_META[placement];
+  const ox = offset?.x ?? 0;
+  const oy = offset?.y ?? 0;
   const xBounds = horizontalBounds(placement, box.w);
   const yBounds = verticalBounds(placement, box.h);
 
   return {
-    left: clamp(nodeLeftPct + meta.offsetX, xBounds.min, xBounds.max),
-    top: clamp(nodeTopPct + meta.offsetY, yBounds.min, yBounds.max),
+    left: clamp(nodeLeftPct + meta.offsetX + ox, xBounds.min, xBounds.max),
+    top: clamp(nodeTopPct + meta.offsetY + oy, yBounds.min, yBounds.max),
     transform: meta.transform,
   };
 }
@@ -72,24 +79,37 @@ export function computeMarkerAnchor(
 export function computeBossPinAnchor(
   nodeLeftPct: number,
   nodeTopPct: number,
-  placement: JourneyMarkerPlacement,
+  placement: JourneyPinPlacement,
+  offset?: { x: number; y: number },
 ): MapAnchor {
   const bossBox = { w: BOSS_PIN_SIZE_PCT, h: BOSS_PIN_SIZE_PCT };
   const meta = PLACEMENT_META[placement];
-  const scaled = { offsetX: meta.offsetX * 0.65, offsetY: meta.offsetY * 0.65 };
+  const scaled = { offsetX: meta.offsetX * 0.55, offsetY: meta.offsetY * 0.55 };
+  const ox = offset?.x ?? 0;
+  const oy = offset?.y ?? 0;
   const xBounds = horizontalBounds(placement, bossBox.w);
   const yBounds = verticalBounds(placement, bossBox.h);
 
   return {
-    left: clamp(nodeLeftPct + scaled.offsetX, xBounds.min, xBounds.max),
-    top: clamp(nodeTopPct + scaled.offsetY, yBounds.min, yBounds.max),
+    left: clamp(nodeLeftPct + scaled.offsetX + ox, xBounds.min, xBounds.max),
+    top: clamp(nodeTopPct + scaled.offsetY + oy, yBounds.min, yBounds.max),
     transform: 'translate(-50%, -50%)',
   };
 }
 
-export const BOSS_PIN_OPPOSITE: Record<JourneyMarkerPlacement, JourneyMarkerPlacement> = {
+export const BOSS_PIN_OPPOSITE: Record<JourneyPinPlacement, JourneyPinPlacement> = {
   top: 'bottom',
   bottom: 'top',
   left: 'right',
   right: 'left',
+  topLeft: 'bottomRight',
+  topRight: 'bottomLeft',
+  bottomLeft: 'topRight',
+  bottomRight: 'topLeft',
 };
+
+/** @deprecated Use computePinAnchor */
+export const computeMarkerAnchor = computePinAnchor;
+
+export const MARKER_WIDTH_PCT = PIN_WIDTH_PCT;
+export const MARKER_HEIGHT_PCT = PIN_HEIGHT_PCT;

@@ -42,6 +42,7 @@ export function JourneyMapSection({
             themeId={themeId}
             selectedStageId={selectedStageId}
             onSelectStage={onSelectStage}
+            selectedProgress={selectedProgress}
           />
         </div>
 
@@ -52,13 +53,16 @@ export function JourneyMapSection({
             selectedStageId={selectedStageId}
             onSelectStage={onSelectStage}
           />
+          {selectedProgress ? (
+            <div className="journey-map-v2__mobile-detail">
+              <JourneyChapterDetailPanel
+                progress={selectedProgress}
+                themeId={themeId}
+                isCurrentChapter={selectedProgress.status === 'current'}
+              />
+            </div>
+          ) : null}
         </div>
-
-        {selectedProgress ? (
-          <div className="journey-map-v2__detail-wrap">
-            <JourneyChapterDetailPanel progress={selectedProgress} themeId={themeId} />
-          </div>
-        ) : null}
       </div>
     </section>
   );
