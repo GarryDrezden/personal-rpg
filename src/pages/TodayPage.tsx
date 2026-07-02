@@ -274,18 +274,21 @@ export function TodayPage() {
       {routeWelcome ? (
         <div
           data-testid="route-opened-banner"
-          className="rounded-2xl border border-[var(--app-gold)]/30 bg-[var(--app-primary-soft)]/50 px-4 py-3 text-sm text-[var(--app-text)]"
+          className="rounded-2xl border border-[var(--app-gold)]/35 bg-[var(--app-primary-soft)]/55 px-4 py-4 text-sm text-[var(--app-text)] shadow-[0_0_24px_rgba(250,204,21,0.08)]"
         >
-          <p className="font-semibold text-[var(--app-gold)]">Ядро пробуждено</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--app-gold)]">
+            Ядро пробуждено
+          </p>
+          <p className="mt-2 font-medium text-[var(--app-text)]">Маршрут открыт</p>
           <p className="mt-1 text-[var(--app-text-muted)]">
-            Маршрут открыт. Сегодня не нужно быть идеальным — достаточно удержать первый шаг.
+            Сегодня не нужно быть идеальным — достаточно удержать первый шаг.
           </p>
           <button
             type="button"
             onClick={() => setRouteWelcome(false)}
-            className="mt-2 text-xs font-medium text-[var(--app-primary)] hover:underline"
+            className="mt-3 rounded-lg border border-[var(--app-border)] bg-[var(--app-card)] px-3 py-1.5 text-xs font-semibold text-[var(--app-primary)]"
           >
-            Понятно
+            Продолжить путь
           </button>
         </div>
       ) : null}

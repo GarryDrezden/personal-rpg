@@ -7,6 +7,7 @@ import {
   getOnboardingStep,
   isLegacyProfileComplete,
   isOnboardingCompleted,
+  mergeOnboardingDraft,
   needsOnboarding,
 } from './onboardingState';
 
@@ -54,6 +55,11 @@ describe('onboardingState', () => {
   it('clamps onboarding step', () => {
     expect(getOnboardingStep({ ...DEFAULT_APP_SETTINGS, onboardingStep: 99 })).toBe(4);
     expect(getOnboardingStep({ ...DEFAULT_APP_SETTINGS, onboardingStep: -2 })).toBe(0);
+  });
+
+  it('merges onboarding draft into settings', () => {
+    const merged = mergeOnboardingDraft(DEFAULT_APP_SETTINGS, { startWeight: 90 });
+    expect(merged.onboardingDraft?.startWeight).toBe(90);
   });
 
   it('applies soft route defaults', () => {

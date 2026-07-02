@@ -55,12 +55,13 @@
 
 ---
 
-## Onboarding v1 — Пробуждение ядра
+## Onboarding v1 — Пробуждение ядра (polish)
 
-- Added first-start flow for new users at `/start` (user-facing: «Пробуждение ядра», not «Onboarding»).
-- Collected start weight, target weight, height, hero style, companion and first route focus.
-- Redirected new users to Today after route setup with welcome banner.
-- Preserved existing storage architecture without DB migrations (`user_profiles` + `customSettingsBackup`).
+- RPG tone copy per step (кампания / стартовая точка / облик героя / спутник / первый ритм).
+- Mobile: sticky CTA, compact companions, safe-area padding, no horizontal scroll.
+- Desktop: centered `max-w-md` ritual layout with ambient glow.
+- Returning users redirected from `/start`; back navigation persists step for reload.
+- Today welcome banner polish after route setup.
 
 ---
 

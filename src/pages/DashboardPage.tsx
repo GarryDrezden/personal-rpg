@@ -266,10 +266,10 @@ export function DashboardPage() {
     <div data-testid="dashboard-page" className="space-y-3 pb-2">
 
       {showStartRouteBanner ? (
-        <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)]/60 px-4 py-3 text-sm text-[var(--app-text-muted)]">
-          Пробуди ядро маршрута в{' '}
-          <Link to="/start" className="text-[var(--app-gold)] hover:underline">
-            первом старте
+        <div className="rounded-xl border border-[var(--app-gold)]/25 bg-[var(--app-card)]/70 px-4 py-3 text-sm text-[var(--app-text-muted)]">
+          Кампания ждёт первого ритма —{' '}
+          <Link to="/start" className="font-medium text-[var(--app-gold)] hover:underline">
+            продолжить пробуждение ядра
           </Link>
           .
         </div>

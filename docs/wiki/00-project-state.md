@@ -129,13 +129,13 @@
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
 | Следующий спринт | **Core Loop Polish** |
 
-### Onboarding v1 — Пробуждение ядра ✅
+### Onboarding v1 — Пробуждение ядра ✅ (QA polish)
 
 - Маршрут `/start`: 5 шагов (пробуждение → вес/рост → герой/тема → спутник → ритм/фокус)
-- Gate `OnboardingGate`: новый пользователь → `/start`, завершивший → приложение
-- Данные: `PATCH /api/profile` + `customSettingsBackup` (`onboardingCompleted`, `routeMode`, `firstFocus`, draft/step)
+- Gate `OnboardingGate` + redirect с `/start` для завершивших
+- RPG-копирайт, sticky CTA на mobile, `max-w-md` ритуал на desktop
+- Reload: step/draft в `customSettingsBackup`; «Назад» тоже сохраняет шаг
 - После завершения → Today с баннером «Ядро пробуждено»
-- Без DB migrations; legacy-профили с весом/полом пропускают onboarding
 
 ### Stabilize — sidecar remote persist ✅
 
