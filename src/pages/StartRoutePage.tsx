@@ -356,7 +356,6 @@ export function StartRoutePage() {
 
           {step === 4 ? (
             <div className="mt-5 space-y-5">
-              <p className="text-sm text-[var(--app-text-muted)]">{stepCopy.lead}</p>
               <div>
                 <p className="mb-2 text-sm font-medium text-[var(--app-text)]">Ритм маршрута</p>
                 <div className="grid gap-2">
