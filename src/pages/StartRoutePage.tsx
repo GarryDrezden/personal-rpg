@@ -421,9 +421,20 @@ export function StartRoutePage() {
           ) : null}
         </section>
 
-        <div className="sticky bottom-0 mt-5 shrink-0 border-t border-[var(--app-border)]/60 bg-[var(--app-bg)]/95 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 backdrop-blur-sm sm:relative sm:border-0 sm:bg-transparent sm:pb-0 sm:pt-5 sm:backdrop-blur-none">
-          <div className="flex gap-3">
-            {step > 0 ? (
+        <div className="sticky bottom-0 mt-5 w-full shrink-0 border-t border-[var(--app-border)]/60 bg-[var(--app-bg)]/95 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 backdrop-blur-sm sm:relative sm:border-0 sm:bg-transparent sm:pb-0 sm:pt-5 sm:backdrop-blur-none">
+          {step === 0 ? (
+            <button
+              type="button"
+              data-testid="onboarding-next"
+              onClick={() => void goNext()}
+              disabled={submitting || savingStep}
+              className="btn-primary flex w-full items-center justify-center gap-1 rounded-xl px-4 py-3.5 text-sm font-semibold shadow-[0_0_20px_rgba(250,204,21,0.12)] disabled:opacity-50"
+            >
+              {primaryCta}
+              <ChevronRight className="h-4 w-4" aria-hidden />
+            </button>
+          ) : (
+            <div className="flex w-full gap-3">
               <button
                 type="button"
                 onClick={() => void goBack()}
@@ -433,34 +444,32 @@ export function StartRoutePage() {
                 <ChevronLeft className="h-4 w-4" aria-hidden />
                 Назад
               </button>
-            ) : (
-              <span className="hidden flex-1 sm:block" />
-            )}
 
-            {step < ONBOARDING_STEP_COUNT - 1 ? (
-              <button
-                type="button"
-                data-testid="onboarding-next"
-                onClick={() => void goNext()}
-                disabled={submitting || savingStep}
-                className="btn-primary inline-flex flex-[2] items-center justify-center gap-1 rounded-xl px-4 py-3.5 text-sm font-semibold shadow-[0_0_20px_rgba(250,204,21,0.12)] disabled:opacity-50"
-              >
-                {primaryCta}
-                <ChevronRight className="h-4 w-4" aria-hidden />
-              </button>
-            ) : (
-              <button
-                type="button"
-                data-testid="onboarding-finish"
-                onClick={() => void finish()}
-                disabled={finishDisabled || savingStep}
-                title={!draft.firstFocus ? 'Выбери первый фокус' : undefined}
-                className="btn-primary inline-flex flex-[2] items-center justify-center rounded-xl px-4 py-3.5 text-sm font-semibold shadow-[0_0_20px_rgba(250,204,21,0.12)] disabled:cursor-not-allowed disabled:opacity-45"
-              >
-                {submitting ? 'Открываем маршрут…' : 'Настроить маршрут'}
-              </button>
-            )}
-          </div>
+              {step < ONBOARDING_STEP_COUNT - 1 ? (
+                <button
+                  type="button"
+                  data-testid="onboarding-next"
+                  onClick={() => void goNext()}
+                  disabled={submitting || savingStep}
+                  className="btn-primary inline-flex flex-1 items-center justify-center gap-1 rounded-xl px-4 py-3.5 text-sm font-semibold shadow-[0_0_20px_rgba(250,204,21,0.12)] disabled:opacity-50"
+                >
+                  {primaryCta}
+                  <ChevronRight className="h-4 w-4" aria-hidden />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  data-testid="onboarding-finish"
+                  onClick={() => void finish()}
+                  disabled={finishDisabled || savingStep}
+                  title={!draft.firstFocus ? 'Выбери первый фокус' : undefined}
+                  className="btn-primary inline-flex flex-1 items-center justify-center rounded-xl px-4 py-3.5 text-sm font-semibold shadow-[0_0_20px_rgba(250,204,21,0.12)] disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  {submitting ? 'Открываем маршрут…' : 'Настроить маршрут'}
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
