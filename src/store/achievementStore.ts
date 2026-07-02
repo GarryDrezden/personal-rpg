@@ -7,6 +7,7 @@ import {
   mergeUnlocked,
   saveUnlockedAchievements,
 } from './achievementStorage';
+import { scheduleSidecarRemoteSave } from '../storage/sidecarSync';
 
 interface AchievementState {
   unlockedAchievements: ReturnType<typeof loadUnlockedAchievements>;
@@ -43,6 +44,7 @@ export const useAchievementStore = create<AchievementState>((set, get) => ({
         newly.map((a) => a.id),
       );
       saveUnlockedAchievements(merged);
+      scheduleSidecarRemoteSave();
       set((state) => ({
         unlockedAchievements: merged,
         toastQueue: [...state.toastQueue, ...newly],

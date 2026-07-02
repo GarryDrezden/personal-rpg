@@ -2,6 +2,7 @@ import { addDays, format, parseISO } from 'date-fns';
 import type { MomentumDayResult } from '../types/momentum';
 import type { AppSettings, DailyEntry } from '../types';
 import { MOMENTUM_STORAGE_KEY } from '../constants/momentum';
+import { scheduleSidecarRemoteSave } from '../storage/sidecarSync';
 import { calculateMomentumDay, calculateMomentumHistory } from './momentumEngine';
 import { hasAnyDailyData } from './achievementHelpers';
 import { migrateMomentumHistoryRecord } from './momentumFactorMigration';
@@ -16,6 +17,7 @@ export function getMomentumHistoryFromStorage(): Record<string, MomentumDayResul
     const { history, changed } = migrateMomentumHistoryRecord(parsed);
     if (changed) {
       localStorage.setItem(MOMENTUM_STORAGE_KEY, JSON.stringify(history));
+      scheduleSidecarRemoteSave();
     }
     return history;
   } catch {
@@ -44,6 +46,7 @@ export function saveMomentumHistoryToStorage(history: MomentumDayResult[]): void
   }
   const { history: migrated } = migrateMomentumHistoryRecord(map);
   localStorage.setItem(MOMENTUM_STORAGE_KEY, JSON.stringify(migrated));
+  scheduleSidecarRemoteSave();
 }
 
 export function saveMomentumDayResult(result: MomentumDayResult): void {
@@ -51,10 +54,12 @@ export function saveMomentumDayResult(result: MomentumDayResult): void {
   map[result.date] = result;
   const { history: migrated } = migrateMomentumHistoryRecord(map);
   localStorage.setItem(MOMENTUM_STORAGE_KEY, JSON.stringify(migrated));
+  scheduleSidecarRemoteSave();
 }
 
 export function clearMomentumHistoryStorage(): void {
   localStorage.removeItem(MOMENTUM_STORAGE_KEY);
+  scheduleSidecarRemoteSave();
 }
 
 export function rebuildAndSaveMomentumHistory(params: {

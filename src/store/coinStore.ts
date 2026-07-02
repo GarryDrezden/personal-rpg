@@ -6,6 +6,8 @@ import type { Reward } from '../types';
 
 import { loadCoinTransactions, saveCoinTransactions } from './coinStorage';
 
+import { scheduleSidecarRemoteSave } from '../storage/sidecarSync';
+
 import { todayISO } from '../utils/dates';
 
 
@@ -106,7 +108,15 @@ export const useCoinStore = create<CoinState>((set, get) => ({
 
     const next = [...byRelated.values()];
 
+    const unchanged =
+      next.length === current.length &&
+      JSON.stringify(next) === JSON.stringify(current);
+
+    if (unchanged) return;
+
     saveCoinTransactions(next);
+
+    scheduleSidecarRemoteSave();
 
     set({ transactions: next });
 
@@ -128,6 +138,8 @@ export const useCoinStore = create<CoinState>((set, get) => ({
 
     saveCoinTransactions(next);
 
+    scheduleSidecarRemoteSave();
+
     set({ transactions: next });
 
     return true;
@@ -148,6 +160,8 @@ export const useCoinStore = create<CoinState>((set, get) => ({
 
     saveCoinTransactions(next);
 
+    scheduleSidecarRemoteSave();
+
     set({ transactions: next });
 
     return true;
@@ -155,5 +169,3 @@ export const useCoinStore = create<CoinState>((set, get) => ({
   },
 
 }));
-
-

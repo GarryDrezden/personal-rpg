@@ -4,6 +4,22 @@
 
 ---
 
+## 2026-06-06 — Sidecar remote persist (Stabilize)
+
+### Context
+
+Achievements, coins and momentum were hydrated from remote `user_data` on init but never persisted back. Progress could be lost on device/browser change.
+
+### Decision
+
+Wire existing `collectLocalSidecarsForSave()` to debounced `dataApi.putType()` for `achievements`, `coinTransactions`, `momentumHistory`. Trigger save from achievement/coin stores and momentum storage writes. During hydrate, skip remote save; do not apply empty remote over non-empty local sidecars.
+
+### Consequences
+
+No schema change. Silent debounced sync (no new UI). Legacy/local mode unchanged. Login re-triggers `appStore.init()` via `authenticated` dependency.
+
+---
+
 ## 2026-06-06 — Year Campaign Structure
 
 ### Context

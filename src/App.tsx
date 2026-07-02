@@ -167,6 +167,14 @@ function AuthenticatedApp() {
 
   useEffect(() => {
 
+    if (!authenticated) {
+
+      setSessionReady(false);
+
+      return;
+
+    }
+
     void (async () => {
 
       setSessionReady(false);
@@ -177,7 +185,7 @@ function AuthenticatedApp() {
 
     })();
 
-  }, [init]);
+  }, [init, authenticated]);
 
 
 

@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Stabilize — Remote Sidecar Persist:** achievements, coins and momentum sync to remote `user_data` via `sidecarSync.ts` (debounced save, hydrate on init, merge guards).
 - Documented long-term campaign structure for 12–24 month body transformation (`03-game-systems.md`: time layers, acts, parallel progress roads, seasons, plateau mode, body abilities, camp/base).
 - Added planned systems to roadmap: Seasons v1, Body Abilities v1, Plateau Mode, Camp/Base Progression, Boss Campaign.
 - **Journey Map v3** — vertical chapter road (`JourneyMapV3Section`, `JourneyMapV3Route`, `JourneyChapterRoadItem`, `JourneyChapterVignette`, `JourneyMapV3SummaryBar`, sticky/accordion `JourneyChapterDetailPanel`).
@@ -50,6 +51,18 @@
 ### Removed
 
 - —
+
+---
+
+## Stabilize — Remote Sidecar Persist
+
+- Connected local sidecar progress to remote `user_data` storage.
+- Achievements, coins and momentum now survive reload/login/device changes.
+- Added guard against hydrate → save loops (`isSidecarHydrating`).
+- Empty remote payload no longer overwrites existing local sidecar progress.
+- Preserved local fallback for unauthenticated/offline usage.
+- Re-init app data on login (`AuthenticatedApp` watches `authenticated`).
+- Build and tests are green.
 
 ---
 

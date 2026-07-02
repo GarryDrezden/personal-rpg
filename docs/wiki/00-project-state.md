@@ -125,10 +125,17 @@
 
 | Приоритет | Задача |
 |-----------|--------|
-| Высокий | Sidecar sync achievements / coins / momentum на remote `user_data` |
 | Высокий | Стабилизация PHP auth / session на shared hosting |
+| Высокий | Production smoke tests на fit-rpg.ru |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Sprint 2:** Onboarding + Asset Registry 2.0 |
+| Следующий спринт | **Onboarding + Asset Registry 2.0** (после Stabilize) |
+
+### Stabilize — sidecar remote persist ✅
+
+- Achievements, coins, momentum сохраняются в remote `user_data` через `sidecarSync.ts`
+- Hydrate при login/init; debounced save при изменениях
+- Guard: пустой remote не затирает local; hydrate не создаёт save loop
+- Local fallback для legacy/unauthenticated режима
 
 ## Следующий приоритет
 
@@ -142,7 +149,7 @@
 - дублирование навигации (legacy routes → redirects);
 - рассинхрон ассетов (manifest vs `public/game-assets/` vs `GAME_ASSET_VERSION`);
 - приватные данные в публичной вики;
-- sidecar sync achievements/coins/momentum — частично через localStorage;
+- sidecar sync achievements/coins/momentum — **remote persist подключён** (см. Stabilize в долгах);
 - consistency hero stages (male incomplete);
 - FTP deploy не заливает `data/` — MySQL на хостинге отдельно;
 - `api/config/config.php` только на сервере, не в Git.
