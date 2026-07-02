@@ -56,11 +56,13 @@ export function SeasonDashboardSummary({
           <div className="mt-1.5">
             <ProgressBar value={boss.bossProgressPercent} max={100} />
           </div>
-          {boss.weaknessSignals[0] ? (
-            <p className="mt-1 text-xs text-[var(--app-text-muted)] line-clamp-1">
-              {boss.weaknessSignals[0]}
+          {boss.weaknessSignals.length > 0 ? (
+            <p className="mt-1 text-xs text-[var(--app-text-muted)]">
+              {boss.weaknessSignals.join(' · ')}
             </p>
-          ) : null}
+          ) : (
+            <p className="mt-1 text-xs text-[var(--app-text-muted)]">{boss.nextWeaknessHint}</p>
+          )}
         </div>
       ) : null}
     </section>

@@ -126,10 +126,7 @@ export function computeBossProgressPercent(params: {
   return Math.min(100, Math.round(progress));
 }
 
-function buildWeaknessSignals(
-  signals: ReturnType<typeof countSeasonSignals>,
-  bossWeaknessText: string,
-): string[] {
+function buildWeaknessSignals(signals: ReturnType<typeof countSeasonSignals>): string[] {
   const lines: string[] = [];
   if (signals.routeHeld > 0) lines.push(`${signals.routeHeld} сохранённых дней`);
   if (signals.minimal > 0) lines.push(`${signals.minimal} минимальных дней`);
@@ -138,7 +135,7 @@ function buildWeaknessSignals(
   if (signals.bodyAbilitiesInSeason > 0) {
     lines.push(`+${signals.bodyAbilitiesInSeason} способностей тела`);
   }
-  if (lines.length === 0) return [bossWeaknessText];
+  if (lines.length === 0) return [];
   return lines.slice(0, 2);
 }
 
@@ -188,7 +185,7 @@ export function getBossCampaignSnapshot(params: {
   });
 
   const bossStatus = resolveBossStatus(bossProgressPercent, partialSealed);
-  const weaknessSignals = buildWeaknessSignals(signals, currentBoss.weaknessText);
+  const weaknessSignals = buildWeaknessSignals(signals);
 
   return {
     currentBoss,

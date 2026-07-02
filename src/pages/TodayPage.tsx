@@ -566,56 +566,6 @@ export function TodayPage() {
         <MomentumFactorsCard result={todayMomentumResult} />
       )}
 
-      <Card className={CARD_ACCENT.primary}>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <p className="text-sm text-[var(--app-text-muted)]">Очки дня (XP)</p>
-            <p className="text-3xl font-bold text-[var(--app-primary)]">+{Math.max(0, points)}</p>
-            {momentumPoints.multiplier > 1 && isEditingToday && (
-              <p className="mt-1 text-xs text-[var(--app-text-muted)]">
-                Бонус инерции: +{Math.round((momentumPoints.multiplier - 1) * 100)}% XP за дневные
-                квесты
-                {momentumPoints.base !== points && (
-                  <span className="text-[var(--app-text-muted)]">
-                    {' '}
-                    (база {Math.max(0, momentumPoints.base)})
-                  </span>
-                )}
-              </p>
-            )}
-          </div>
-          <div>
-            <p className="text-sm text-[var(--app-text-muted)]">Монеты за день</p>
-            <p className="text-3xl font-bold text-[var(--app-primary)]">+{coins} 🪙</p>
-          </div>
-        </div>
-        <div className="mt-4 flex flex-wrap gap-4 text-sm text-[var(--app-text)]">
-          <span>
-            Основные:{' '}
-            <strong>
-              {stats.mainDone}/{stats.mainTotal}
-            </strong>
-          </span>
-          <span>
-            Всего квестов:{' '}
-            <strong>
-              {stats.done}/{stats.total}
-            </strong>
-          </span>
-        </div>
-        <div className="mt-3">
-          <div className="mb-1 flex justify-between text-xs text-[var(--app-text-muted)]">
-            <span>Прогресс квестов</span>
-            <span>{stats.percent}%</span>
-          </div>
-          <ProgressBar
-            value={stats.percent}
-            color={stats.percent >= 70 ? 'success' : 'gold'}
-            className="h-2.5"
-          />
-        </div>
-      </Card>
-
       {dayEmpty && isEditingToday && recoveryState === 'normal' && dayMode === 'normal' && (
         <p className="rounded-2xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-4 text-center text-sm text-[var(--app-text-muted)]">
           День ещё пустой — начни с одного квеста или включи минимальный день. Маршрут не требует
@@ -680,6 +630,56 @@ export function TodayPage() {
           />
         ))}
       </section>
+
+      <Card className={CARD_ACCENT.primary} data-testid="today-day-summary">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <p className="text-sm text-[var(--app-text-muted)]">Очки дня (XP)</p>
+            <p className="text-3xl font-bold text-[var(--app-primary)]">+{Math.max(0, points)}</p>
+            {momentumPoints.multiplier > 1 && isEditingToday && (
+              <p className="mt-1 text-xs text-[var(--app-text-muted)]">
+                Бонус инерции: +{Math.round((momentumPoints.multiplier - 1) * 100)}% XP за дневные
+                квесты
+                {momentumPoints.base !== points && (
+                  <span className="text-[var(--app-text-muted)]">
+                    {' '}
+                    (база {Math.max(0, momentumPoints.base)})
+                  </span>
+                )}
+              </p>
+            )}
+          </div>
+          <div>
+            <p className="text-sm text-[var(--app-text-muted)]">Монеты за день</p>
+            <p className="text-3xl font-bold text-[var(--app-primary)]">+{coins} 🪙</p>
+          </div>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-4 text-sm text-[var(--app-text)]">
+          <span>
+            Основные:{' '}
+            <strong>
+              {stats.mainDone}/{stats.mainTotal}
+            </strong>
+          </span>
+          <span>
+            Всего квестов:{' '}
+            <strong>
+              {stats.done}/{stats.total}
+            </strong>
+          </span>
+        </div>
+        <div className="mt-3">
+          <div className="mb-1 flex justify-between text-xs text-[var(--app-text-muted)]">
+            <span>Прогресс квестов</span>
+            <span>{stats.percent}%</span>
+          </div>
+          <ProgressBar
+            value={stats.percent}
+            color={stats.percent >= 70 ? 'success' : 'gold'}
+            className="h-2.5"
+          />
+        </div>
+      </Card>
 
       <Card>
         <label className="block">
