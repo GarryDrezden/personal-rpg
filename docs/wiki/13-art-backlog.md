@@ -62,12 +62,12 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 > **Очередь:** [`BATCH-01-nano-banana-queue.md`](../prompts/assets/BATCH-01-nano-banana-queue.md)
 > **Статус:** `in-app` — **4/4** webp в `public/`, подключены в UI (`ManifestArtScene`).
 
-| id | P | Prompt | Expected path | Manifest status | fileStatus |
-|----|---|--------|---------------|-----------------|------------|
-| `onboarding-core-awakening` | P0 | [`onboarding-core-awakening.md`](../prompts/assets/onboarding-core-awakening.md) | `public/game-assets/onboarding/core-awakening.webp` | in-app | ready |
-| `camp-base-stage-01-ember-camp` | P0 | [`camp-base-stage-01-ember-camp.md`](../prompts/assets/camp-base-stage-01-ember-camp.md) | `public/game-assets/base/base-stage-01-ember-camp.webp` | in-app | ready |
-| `camp-base-stage-02-shelter` | P0 | [`camp-base-stage-02-shelter.md`](../prompts/assets/camp-base-stage-02-shelter.md) | `public/game-assets/base/base-stage-02-trail-shelter.webp` | in-app | ready |
-| `season-01-reward-core-spark` | P1 | [`season-01-reward-core-spark.md`](../prompts/assets/season-01-reward-core-spark.md) | `public/game-assets/rewards/season-01-core-spark.webp` | in-app | ready |
+| id | P | Prompt | Path | Status | UI |
+|----|---|--------|------|--------|-----|
+| `onboarding-core-awakening` | P0 | [prompt](../prompts/assets/onboarding-core-awakening.md) | `onboarding/core-awakening.webp` | in-app | `/start` |
+| `camp-base-stage-01-ember-camp` | P0 | [prompt](../prompts/assets/camp-base-stage-01-ember-camp.md) | `base/base-stage-01-ember-camp.webp` | in-app | `/growth/camp`, `BaseStageRail` |
+| `camp-base-stage-02-shelter` | P0 | [prompt](../prompts/assets/camp-base-stage-02-shelter.md) | `base/base-stage-02-trail-shelter.webp` | in-app | `/growth/camp`, `BaseStageRail` |
+| `season-01-reward-core-spark` | P1 | [prompt](../prompts/assets/season-01-reward-core-spark.md) | `rewards/season-01-core-spark.webp` | in-app | `SeasonDashboardSummary` (сезон 1) |
 
 **Не в Batch 1:** empty-state, body abilities, plateau artifact, season boss 1 — следующий дроп Priority Pack.
 

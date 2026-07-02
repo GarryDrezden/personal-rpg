@@ -2291,7 +2291,7 @@
       "promptStatus": "ready",
       "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Dark MVP Priority Pack v1. Return place, not base-building UI. Batch 1 in-app (.webp); wired in UI.",
+      "notes": "Dark MVP Priority Pack v1. Return place, not base-building UI. Batch 1 connected in UI (.webp).",
       "status": "in-app",
       "id": "camp-base-stage-01-ember-camp",
       "type": "camp-base-scene",
@@ -2300,7 +2300,9 @@
       "priority": "P0",
       "targetPath": "/game-assets/base/base-stage-01-ember-camp.webp",
       "usedIn": [
-        "BaseDashboardSummary",
+        "BaseCampPage",
+        "BaseStageRail",
+        "ManifestArtScene",
         "/growth/camp",
         "baseProgressionConfig"
       ],
@@ -2311,7 +2313,7 @@
       "promptStatus": "ready",
       "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Dark MVP Priority Pack v1. Early shelter — fire more reliable. Batch 1 in-app (.webp); wired in UI.",
+      "notes": "Dark MVP Priority Pack v1. Early shelter — fire more reliable. Batch 1 connected in UI (.webp).",
       "status": "in-app",
       "id": "camp-base-stage-02-shelter",
       "type": "camp-base-scene",
@@ -2320,7 +2322,9 @@
       "priority": "P0",
       "targetPath": "/game-assets/base/base-stage-02-trail-shelter.webp",
       "usedIn": [
-        "BaseDashboardSummary",
+        "BaseCampPage",
+        "BaseStageRail",
+        "ManifestArtScene",
         "/growth/camp",
         "baseProgressionConfig"
       ],
@@ -2679,7 +2683,7 @@
       "promptStatus": "ready",
       "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Dark MVP Priority Pack v1. Small reward for igniting the system. Batch 1 in-app (.webp); wired in UI.",
+      "notes": "Dark MVP Priority Pack v1. Small reward for igniting the system. Batch 1 connected in UI (.webp).",
       "status": "in-app",
       "id": "season-01-reward-core-spark",
       "type": "season-reward",
@@ -2689,7 +2693,8 @@
       "targetPath": "/game-assets/rewards/season-01-core-spark.webp",
       "usedIn": [
         "seasonConfig",
-        "SeasonDashboardSummary"
+        "SeasonDashboardSummary",
+        "ManifestArtScene"
       ],
       "relatedEntityId": "season_01_reward",
       "path": "/game-assets/rewards/season-01-core-spark.webp"
@@ -2932,7 +2937,7 @@
       "promptStatus": "ready",
       "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Dark MVP Priority Pack v1. Route has begun — core light in ruins. Batch 1 in-app (.webp); wired in UI.",
+      "notes": "Dark MVP Priority Pack v1. Route has begun — core light in ruins. Batch 1 connected in UI (.webp).",
       "status": "in-app",
       "id": "onboarding-core-awakening",
       "type": "onboarding-hero",
@@ -2942,8 +2947,8 @@
       "targetPath": "/game-assets/onboarding/core-awakening.webp",
       "usedIn": [
         "/start",
-        "OnboardingGate",
-        "StartRoutePage"
+        "StartRoutePage",
+        "ManifestArtScene"
       ],
       "path": "/game-assets/onboarding/core-awakening.webp"
     },

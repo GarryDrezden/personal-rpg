@@ -22,13 +22,17 @@ export function SeasonDashboardSummary({
       className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)]/80 px-4 py-3"
     >
       {rewardArtId ? (
-        <ManifestArtScene
-          assetId={rewardArtId}
-          alt={season.config.rewardName}
-          compact
-          className="mb-3"
-          testId="season-reward-art"
-        />
+        <div className="mb-3">
+          <ManifestArtScene
+            assetId={rewardArtId}
+            alt={`Награда сезона: ${season.config.rewardName}`}
+            compact
+            testId="season-reward-art"
+          />
+          <p className="mt-1.5 text-center text-[10px] font-medium uppercase tracking-wide text-[var(--app-text-muted)]">
+            Награда сезона: {season.config.rewardName}
+          </p>
+        </div>
       ) : null}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="min-w-0">

@@ -475,7 +475,7 @@ for (let i = 0; i < BASE_STAGES.length; i++) {
         title: `Лагерь — ${title}`,
         priority: 'P0',
         targetPath: `/game-assets/base/base-stage-01-ember-camp.webp`,
-        usedIn: ['BaseDashboardSummary', '/growth/camp', 'baseProgressionConfig'],
+        usedIn: ['BaseCampPage', 'BaseStageRail', 'ManifestArtScene', '/growth/camp', 'baseProgressionConfig'],
         relatedEntityId: entityId,
         notes: 'Dark MVP Priority Pack v1. Return place, not base-building UI.',
       }),
@@ -491,7 +491,7 @@ for (let i = 0; i < BASE_STAGES.length; i++) {
         title: `Лагерь — ${title}`,
         priority: 'P0',
         targetPath: `/game-assets/base/base-stage-02-trail-shelter.webp`,
-        usedIn: ['BaseDashboardSummary', '/growth/camp', 'baseProgressionConfig'],
+        usedIn: ['BaseCampPage', 'BaseStageRail', 'ManifestArtScene', '/growth/camp', 'baseProgressionConfig'],
         relatedEntityId: entityId,
         notes: 'Dark MVP Priority Pack v1. Early shelter — fire more reliable.',
       }),
@@ -557,7 +557,7 @@ for (const [seasonId, slug, rewardName] of SEASON_REWARDS) {
         title: `Награда сезона 1 — ${rewardName}`,
         priority: 'P1',
         targetPath: `/game-assets/rewards/season-01-core-spark.webp`,
-        usedIn: ['seasonConfig', 'SeasonDashboardSummary'],
+        usedIn: ['seasonConfig', 'SeasonDashboardSummary', 'ManifestArtScene'],
         relatedEntityId: 'season_01_reward',
         notes: 'Dark MVP Priority Pack v1. Small reward for igniting the system.',
       }),
@@ -604,7 +604,7 @@ assets.push(
     title: 'Onboarding — Пробуждение ядра',
     priority: 'P0',
     targetPath: '/game-assets/onboarding/core-awakening.webp',
-    usedIn: ['/start', 'OnboardingGate', 'StartRoutePage'],
+    usedIn: ['/start', 'StartRoutePage', 'ManifestArtScene'],
     notes: 'Dark MVP Priority Pack v1. Route has begun — core light in ruins.',
   }),
   promptReady({
@@ -704,7 +704,7 @@ function syncBatch1FromDisk(assetList) {
     asset.promptStatus = 'ready';
     if (BATCH_1_IN_APP) {
       asset.status = 'in-app';
-      asset.notes = `${asset.notes || ''} Batch 1 in-app (${ext}); wired in UI.`.trim();
+      asset.notes = `${asset.notes || ''} Batch 1 connected in UI (${ext}).`.trim();
     } else {
       asset.status = ext === '.webp' ? 'processed' : 'generated';
       asset.notes = `${asset.notes || ''} Batch 1 on disk (${ext}); not in-app until UI wire.`.trim();

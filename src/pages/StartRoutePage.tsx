@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import type { UserProfile } from '../api/authApi';
 import { useAppStore } from '../store/appStore';
 import { useAuth } from '../auth/useAuth';
@@ -27,6 +27,7 @@ import { completeOnboardingFlow } from '../utils/onboardingComplete';
 import { todayISO } from '../utils/dates';
 import { ManifestArtScene } from '../components/game/ManifestArtScene';
 import { ONBOARDING_CORE_AWAKENING_ASSET_ID } from '../game/manifestAssetUi';
+import { getManifestAssetUrl } from '../game/assetManifest';
 
 function draftFromSettings(
   settings: ReturnType<typeof useAppStore.getState>['settings'],
@@ -199,6 +200,7 @@ export function StartRoutePage() {
   }, [step]);
 
   const finishDisabled = submitting || !draft.firstFocus;
+  const onboardingArtSrc = getManifestAssetUrl(ONBOARDING_CORE_AWAKENING_ASSET_ID);
 
   if (!needsOnboarding(settings, profile)) {
     return <Navigate to="/today" replace />;
@@ -215,12 +217,19 @@ export function StartRoutePage() {
       />
       <div className="relative mx-auto flex min-h-screen w-full max-w-md flex-col px-4 py-6 sm:max-w-lg sm:px-6 sm:py-10">
         <header className="shrink-0 space-y-3 text-center">
-          <ManifestArtScene
-            assetId={ONBOARDING_CORE_AWAKENING_ASSET_ID}
-            alt="Пробуждение ядра — руины и тлеющее ядро"
-            testId="onboarding-art-scene"
-            className="mx-auto w-full max-w-sm"
-          />
+          {onboardingArtSrc ? (
+            <ManifestArtScene
+              assetId={ONBOARDING_CORE_AWAKENING_ASSET_ID}
+              alt="Пробуждение ядра — руины и тлеющее ядро"
+              testId="onboarding-art-scene"
+              className="mx-auto w-full max-w-sm"
+              imageLoading="eager"
+            />
+          ) : (
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--app-gold)]/35 bg-[var(--app-primary-soft)] shadow-[0_0_28px_rgba(250,204,21,0.14)]">
+              <Sparkles className="h-7 w-7 text-[var(--app-gold)]" aria-hidden />
+            </div>
+          )}
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--app-gold)]">
             Пробуждение ядра
           </p>

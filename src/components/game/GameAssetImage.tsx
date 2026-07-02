@@ -16,6 +16,7 @@ type GameAssetImageProps = {
   className?: string;
   imageClassName?: string;
   fit?: 'default' | 'hero' | 'companion' | 'mob' | 'boss';
+  loading?: 'eager' | 'lazy';
 };
 
 const FIT_CLASS: Record<NonNullable<GameAssetImageProps['fit']>, string> = {
@@ -52,6 +53,7 @@ export function GameAssetImage({
   className = '',
   imageClassName = '',
   fit = 'default',
+  loading = 'lazy',
 }: GameAssetImageProps) {
   const candidates = useMemo(
     () => [src, ...fallbackCandidates].filter((value): value is string => Boolean(value)),
@@ -102,6 +104,7 @@ export function GameAssetImage({
       <img
         src={activeSrc}
         alt={alt}
+        loading={loading}
         draggable={false}
         onError={() => {
           warnMissingGameAsset(activeSrc);

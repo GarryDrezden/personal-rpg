@@ -127,7 +127,7 @@
 - **Manifest v2:** категории hero → uiIcons, приоритеты P0–P3, lifecycle statuses
 - **Art Backlog:** [`13-art-backlog.md`](13-art-backlog.md) — P0/P1/P2/P3 без генерации
 - **Dark MVP Visual Priority Pack v1** ✅ — 8 prompt-ready ассетов, Nano Banana briefs в `docs/prompts/assets/`
-- **Dark MVP Asset Generation Batch 1** ✅ — 4/4 in-app в UI (`/start`, лагерь, сезон 1 reward)
+- **Dark MVP Asset Generation Batch 1** ✅ — 4/4 in-app; UI wire via `ManifestArtScene` (`GAME_ASSET_VERSION` 20)
 - **Runtime:** `src/game/assetManifest.ts` — `getAssetById`, `getEntityAsset`, `getAssetPlaceholder`
 - **Validation:** `assetManifest.test.ts` — unique ids, paths for in-app, categories
 - **Prompts:** pack files + `_template-nano-banana-asset.md`, `_template-boss.md`
@@ -239,7 +239,7 @@ Asset Registry 2.0 готов: manifest, backlog, naming, placeholders зафи�
 
 ## Следующий приоритет
 
-**Batch 1 UI wire** (4 processed assets) → `in-app` + `GAME_ASSET_VERSION` bump → **Priority Pack batch 2** → **Boss Campaign v2** (later).
+**Batch 2 / visual QA** (empty-state, body ability icons, plateau artifact, season boss) → **Boss Campaign v2** (later).
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

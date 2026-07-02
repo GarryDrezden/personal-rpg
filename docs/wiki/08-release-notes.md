@@ -6,7 +6,8 @@
 
 - **Asset Registry 2.0 / Art Backlog:** expanded manifest v2 schema (categories, priorities, lifecycle statuses); Art Backlog with P0–P3; naming convention and placeholder strategy; Nano Banana prompt templates; `assetManifest.ts` helpers and validation tests. Asset generation and gameplay changes kept out of scope.
 - **Dark MVP Visual Priority Pack v1:** 8 prompt-ready Dark Campaign assets with Nano Banana briefs; manifest `prompt-ready` status; Future Cozy Campaign explicitly excluded from pack. No asset generation or UI wire.
-- **Dark MVP Asset Generation Batch 1:** Nano Banana queue for 4 assets (onboarding, camp×2, season reward); disk sync in `build-asset-manifest.mjs`; `processed` not `in-app` until UI wire.
+- **Dark MVP Batch 1 — UI Wire:** connected 4 processed assets via `ManifestArtScene` and `getManifestAssetUrl()`; manifest `in-app`; `GAME_ASSET_VERSION` 20.
+- **Dark MVP Asset Generation Batch 1:** Nano Banana queue for 4 assets (onboarding, camp×2, season reward); disk sync in `build-asset-manifest.mjs`.
 - **Boss Campaign v1:** boss catalog; derived boss progress from season/daily/plateau/body ability/base signals; Today season boss line; Dashboard summary; Journey chapter boss labels; achievement «Первая трещина». Combat, DB schema, new daily metrics and boss art kept out of scope.
 - **Campaign Integration QA v1:** reviewed Today/Dashboard/Growth/Freedom integration; grouped campaign summaries; compact cards; Today hint de-duplication; confirmed readiness for Boss Campaign v1.
 - **Camp/Base Progression v1:** 8-stage hero camp; derived base score from existing daily, season, body ability and plateau signals; Dashboard base card; Growth `/growth/camp` section; lightweight Today save feedback. DB schema, new economy, manual building and Boss Campaign kept out of scope.
@@ -75,10 +76,18 @@
 - Added Nano Banana prompt templates.
 - Kept asset generation and gameplay changes out of scope.
 
+## Dark MVP Batch 1 — UI Wire
+
+- Connected onboarding core awakening art to `/start` (`StartRoutePage`, eager load).
+- Connected camp stage 1–2 visuals to `/growth/camp` (`BaseCampPage`, `BaseStageRail`).
+- Connected Season 1 Core Spark reward visual to `SeasonDashboardSummary` (preview label, not “earned”).
+- `ManifestArtScene` + `getManifestAssetUrl()` — registry layer, safe emoji fallback.
+- Updated asset manifest lifecycle to `in-app`; `GAME_ASSET_VERSION` → 20.
+
 ## Dark MVP Asset Generation Batch 1
 
 - Nano Banana queue for onboarding, camp stages 1–2, and season 1 reward.
-- Disk sync sets `processed` when `.webp` lands in `public/` — never auto-`in-app`.
+- Disk sync sets `processed` when `.webp` lands; `in-app` when `BATCH_1_IN_APP` in build script.
 - Cozy Campaign Variant excluded.
 
 ---

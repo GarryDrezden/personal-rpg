@@ -11,6 +11,7 @@ type ManifestArtSceneProps = {
   compact?: boolean;
   className?: string;
   testId?: string;
+  imageLoading?: 'eager' | 'lazy';
 };
 
 export function ManifestArtScene({
@@ -19,6 +20,7 @@ export function ManifestArtScene({
   compact = false,
   className = '',
   testId,
+  imageLoading = 'lazy',
 }: ManifestArtSceneProps) {
   const entry = getAssetById(assetId);
   const src = getManifestAssetUrl(assetId);
@@ -55,6 +57,7 @@ export function ManifestArtScene({
         src={src}
         alt={alt}
         variant="artifact"
+        loading={imageLoading}
         className="absolute inset-0"
         imageClassName="h-full w-full object-cover object-center"
       />

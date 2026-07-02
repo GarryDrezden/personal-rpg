@@ -17,7 +17,7 @@ export function BaseDashboardSummary({ snapshot, compact = false }: BaseDashboar
       data-testid="base-dashboard-summary"
       className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)]/80 px-4 py-3"
     >
-      {stageArtId ? (
+      {stageArtId && !compact ? (
         <ManifestArtScene
           assetId={stageArtId}
           alt={currentStage.title}

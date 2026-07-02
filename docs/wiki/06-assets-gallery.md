@@ -112,14 +112,22 @@ Legacy v1 статусы (`approved`, `draft`, …) сохранены в пол
 | [`BATCH-01-nano-banana-queue.md`](../prompts/assets/BATCH-01-nano-banana-queue.md) | Очередь для Nano Banana: id, prompt, ratio, output path |
 | `manifest.darkMvpAssetGenerationBatch1` | Машиночитаемый статус батча |
 
-**Pipeline:**
+**Pipeline (Batch 1 — done):**
 
 ```
-prompt-ready → (Nano Banana) → file in public/ → node scripts/build-asset-manifest.mjs
-  → generated (.png) or processed (.webp) → in-app only after UI wire sprint
+prompt-ready → Nano Banana → public/ → build-asset-manifest.mjs → in-app (BATCH_1_IN_APP)
 ```
 
-**Правило:** `processed` ≠ `in-app`. Файл на диске готов к подключению, но UI пока на placeholders.
+**Batch 1 UI wire (2026-06):** 4/4 ассетов подключены через `ManifestArtScene` + `getManifestAssetUrl()`:
+
+| id | UI |
+|----|-----|
+| `onboarding-core-awakening` | `/start` (`StartRoutePage`) |
+| `camp-base-stage-01-ember-camp` | `/growth/camp`, `BaseStageRail` (stage ember) |
+| `camp-base-stage-02-shelter` | `/growth/camp`, `BaseStageRail` (stage shelter) |
+| `season-01-reward-core-spark` | `SeasonDashboardSummary` (сезон 1) |
+
+`GAME_ASSET_VERSION` = **20**. Fallback: emoji/gradient если `getManifestAssetUrl()` → null.
 
 ## Workflow
 
@@ -128,7 +136,7 @@ Backlog (13-art-backlog.md)
   → prompt (docs/prompts/assets/{id}.md)
   → generate (manual, Nano Banana)
   → public/game-assets/
-  → manifest status processed (Batch 1) or in-app (after UI wire)
+  → manifest status in-app (Batch 1 wired) or processed (awaiting wire)
   → bump GAME_ASSET_VERSION
   → deploy
 ```
