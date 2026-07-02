@@ -1,0 +1,51 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { describe, expect, it } from 'vitest';
+import { getAssetById, getAssetPlaceholder, getEntityAsset } from './assetManifest';
+import type { AssetManifestV2 } from './assetManifestTypes';
+import { validateAssetManifest } from './assetManifestValidation';
+
+const manifestPath = join(process.cwd(), 'docs/assets/manifest.json');
+const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8')) as AssetManifestV2;
+const publicRoot = join(process.cwd(), 'public');
+
+describe('asset manifest validation', () => {
+  it('manifest is valid with existing public files', () => {
+    const issues = validateAssetManifest(manifest, {
+      publicRoot,
+      fileExists: existsSync,
+    });
+    expect(issues).toEqual([]);
+  });
+
+  it('has unique asset ids', () => {
+    const ids = manifest.assets.map((a) => a.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('includes journey chapter assets for chapters 1-9', () => {
+    for (let ch = 1; ch <= 9; ch++) {
+      const n = String(ch).padStart(2, '0');
+      const entry = getAssetById(`journey-chapter-${n}`);
+      expect(entry?.status).toBe('in-app');
+      expect(entry?.path).toMatch(/chapter-\d{2}-.+\.webp$/);
+    }
+  });
+});
+
+describe('asset manifest helpers', () => {
+  it('getEntityAsset resolves season mini-boss', () => {
+    const entry = getEntityAsset('season_mini_01');
+    expect(entry?.category).toBe('seasonBosses');
+    expect(entry?.status).toBe('needed');
+  });
+
+  it('getAssetPlaceholder returns safe fallback', () => {
+    expect(getAssetPlaceholder('campBase')).toBe('🔥');
+    expect(getAssetPlaceholder('bodyAbilities')).toBe('✨');
+  });
+
+  it('getAssetById returns undefined for unknown id', () => {
+    expect(getAssetById('nonexistent-asset')).toBeUndefined();
+  });
+});

@@ -449,3 +449,21 @@ Workflow: build → FTP `dist/`, `api/`, `.htaccess`. Secrets: `FTP_*`. `data/` 
 ### Последствия
 
 После перехода в private можно расширить закрытую документацию.
+
+---
+
+## 2026-06-06 — Asset Registry 2.0: track before generate
+
+### Контекст
+
+Годовая кампания (Seasons, Body Abilities, Plateau, Camp, Boss Campaign v1) добавила десятки визуальных сущностей. Генерировать всё сразу — хаос и рассинхрон с UI.
+
+### Решение
+
+Visual assets — часть мотивационного ядра, но **Asset Registry 2.0** сначала учитывает и приоритизирует их в `docs/assets/manifest.json` и [`13-art-backlog.md`](13-art-backlog.md). Отсутствующие ассеты используют безопасные placeholders (emoji/icon/glow) и **никогда** не блокируют core gameplay.
+
+### Последствия
+
+- P0 = учесть в MVP, не «срочно нарисовать»
+- `getAssetPathOrNull()` — не рендерить битые `<img>`
+- Генерация и UI wire — отдельные спринты после backlog

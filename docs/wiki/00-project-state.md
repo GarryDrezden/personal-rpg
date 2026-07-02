@@ -117,9 +117,19 @@
 
 - `public/game-assets/` — heroes, companions, mobs, bosses, artifacts, maps
 - Female hero: полный набор 20 стадий + death
-- Male hero: стадии 1–3, 19–20 + death (4–18 — fallback на якоря)
-- 8 chapter bosses, 8 daily mobs, 4 companions
-- Journey chapter vignettes: `public/game-assets/maps/chapters/` (9 × `.webp`)
+- Male hero: стадии 1–3, 19–20 + variants 4–18 + death
+- 8 legacy codex bosses (PNG), 8 daily mobs, 4 companions
+- Journey chapter vignettes: 9 × `.webp` (P0 in-app)
+- **Asset Registry 2.0** ✅ — `docs/assets/manifest.json` v2, Art Backlog, validation tests
+
+### Asset Registry 2.0 ✅
+
+- **Manifest v2:** категории hero → uiIcons, приоритеты P0–P3, lifecycle statuses
+- **Art Backlog:** [`13-art-backlog.md`](13-art-backlog.md) — P0/P1/P2/P3 без генерации
+- **Runtime:** `src/game/assetManifest.ts` — `getAssetById`, `getEntityAsset`, `getAssetPlaceholder`
+- **Validation:** `assetManifest.test.ts` — unique ids, paths for in-app, categories
+- **Prompts:** `docs/prompts/assets/_template-nano-banana-asset.md`, `_template-boss.md`
+- **Не в scope:** генерация артов, UI mass wire, Boss Campaign v2
 
 ## Текущие долги
 
@@ -127,7 +137,7 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Asset Registry 2.0** / **New Game+** (параллельно) |
+| Следующий спринт | **Visual asset generation** (P0/P1 из Art Backlog) → Boss Campaign v2 (later) |
 
 ### Boss Campaign v1 ✅
 
@@ -214,13 +224,13 @@
 - SPA: `index.html` + assets — OK по HTTP
 - **HTTPS** (`https://fit-rpg.ru`) → 404 nginx — **не блокер**, future hardening после выпуска сертификата
 
-### Готовность к Asset Registry 2.0 / New Game+
+### Готовность к visual generation / Boss Campaign v2
 
-Boss Campaign v1 готов к деплою на HTTP production.
+Asset Registry 2.0 готов: manifest, backlog, naming, placeholders зафиксированы.
 
 ## Следующий приоритет
 
-**Asset Registry 2.0** (boss art) → **Boss Campaign v2** (history page) → **New Game+ / Maintenance** (later).
+**P0/P1 asset generation** (season bosses, base scenes, ability icons) → **Boss Campaign v2** (history UI, later) → **New Game+ / Maintenance** (later).
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Asset Registry 2.0 / Art Backlog:** expanded manifest v2 schema (categories, priorities, lifecycle statuses); Art Backlog with P0–P3; naming convention and placeholder strategy; Nano Banana prompt templates; `assetManifest.ts` helpers and validation tests. Asset generation and gameplay changes kept out of scope.
 - **Boss Campaign v1:** boss catalog; derived boss progress from season/daily/plateau/body ability/base signals; Today season boss line; Dashboard summary; Journey chapter boss labels; achievement «Первая трещина». Combat, DB schema, new daily metrics and boss art kept out of scope.
 - **Campaign Integration QA v1:** reviewed Today/Dashboard/Growth/Freedom integration; grouped campaign summaries; compact cards; Today hint de-duplication; confirmed readiness for Boss Campaign v1.
 - **Camp/Base Progression v1:** 8-stage hero camp; derived base score from existing daily, season, body ability and plateau signals; Dashboard base card; Growth `/growth/camp` section; lightweight Today save feedback. DB schema, new economy, manual building and Boss Campaign kept out of scope.
@@ -59,6 +60,18 @@
 ### Removed
 
 - —
+
+---
+
+---
+
+## Asset Registry 2.0 / Art Backlog
+
+- Expanded asset registry categories for hero, bosses, base, abilities, rewards and campaign visuals.
+- Added Art Backlog with priorities and statuses.
+- Added naming convention and placeholder strategy.
+- Added Nano Banana prompt templates.
+- Kept asset generation and gameplay changes out of scope.
 
 ---
 

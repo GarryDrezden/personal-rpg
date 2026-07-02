@@ -46,12 +46,15 @@
 - [x] Первый фокус (питание / движение / ресурс / ясность / минимальный день)
 - [x] Gate + `/start` flow → Today после завершения
 
-### Asset Registry 2.0 (осталось)
+### Asset Registry 2.0 ✅
 
-- [ ] Режим питания в onboarding (сейчас — через firstFocus → simple nutrition)
-- [ ] Цели (калории, шаги) — частично через routeMode defaults
-- [ ] Связка `gender + theme + stage + asset` в `assetPaths` / manifest
-- [ ] Manifest / gallery / wiki в sync с approved assets
+- [x] Manifest v2 schema (categories, priorities, lifecycle statuses)
+- [x] Art Backlog [`13-art-backlog.md`](13-art-backlog.md) — P0/P1/P2/P3
+- [x] Naming convention + placeholder strategy
+- [x] Nano Banana prompt templates (`docs/prompts/assets/`)
+- [x] Runtime helpers + manifest validation tests
+- [x] Journey chapters 1–9, hero/companions/mobs reflected in manifest
+- [ ] Boss/base/ability **art generation** (tracked as needed — separate sprint)
 - [ ] Visual polish onboarding (иллюстрации, анимации)
 
 **Критерий готовности v1:** новый пользователь проходит «Пробуждение ядра»; данные в profile + remote settings.
