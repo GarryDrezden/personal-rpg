@@ -126,10 +126,18 @@
 
 - **Manifest v2:** категории hero → uiIcons, приоритеты P0–P3, lifecycle statuses
 - **Art Backlog:** [`13-art-backlog.md`](13-art-backlog.md) — P0/P1/P2/P3 без генерации
+- **Dark MVP Visual Priority Pack v1** ✅ — 8 prompt-ready ассетов, Nano Banana briefs в `docs/prompts/assets/`
 - **Runtime:** `src/game/assetManifest.ts` — `getAssetById`, `getEntityAsset`, `getAssetPlaceholder`
 - **Validation:** `assetManifest.test.ts` — unique ids, paths for in-app, categories
-- **Prompts:** `docs/prompts/assets/_template-nano-banana-asset.md`, `_template-boss.md`
-- **Не в scope:** генерация артов, UI mass wire, Boss Campaign v2
+- **Prompts:** pack files + `_template-nano-banana-asset.md`, `_template-boss.md`
+- **Не в scope:** генерация артов, UI wire, Boss Campaign v2
+
+### Campaign tone (design)
+
+- **MVP-1:** Dark Campaign — resistance-state bosses, dark fantasy copy, human hero
+- **Future:** Cozy Campaign — parallel tone, shared mechanics; separate avatar (cat), obstacles, copy, seasons, rewards, assets. **Not** a post-dark stage.
+
+См. [`07-decision-log.md`](07-decision-log.md), [`../brandbook/themes.md`](../brandbook/themes.md).
 
 ## Текущие долги
 
@@ -137,7 +145,7 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Visual asset generation** (P0/P1 из Art Backlog) → Boss Campaign v2 (later) |
+| Следующий спринт | **Dark MVP art generation** (Priority Pack v1) → UI wire → Boss Campaign v2 (later) |
 
 ### Boss Campaign v1 ✅
 
@@ -230,7 +238,7 @@ Asset Registry 2.0 готов: manifest, backlog, naming, placeholders зафи�
 
 ## Следующий приоритет
 
-**P0/P1 asset generation** (season bosses, base scenes, ability icons) → **Boss Campaign v2** (history UI, later) → **New Game+ / Maintenance** (later).
+**P0/P1 asset generation** (Dark MVP Visual Priority Pack v1 — 8 prompt-ready assets) → UI wire → **Boss Campaign v2** (later) → **New Game+ / Maintenance** (later).
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

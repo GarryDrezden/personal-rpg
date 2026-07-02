@@ -3,6 +3,20 @@
   "schema": "asset-registry-2.0",
   "updated": "2026-06-06",
   "gameAssetVersion": "19",
+  "darkMvpVisualPriorityPackV1": {
+    "updated": "2026-06-06",
+    "description": "First minimal Dark MVP art generation batch — prompt-ready, no files yet",
+    "assetIds": [
+      "onboarding-core-awakening",
+      "empty-state-no-entries",
+      "body-ability-icon-set-v1",
+      "camp-base-stage-01-ember-camp",
+      "camp-base-stage-02-shelter",
+      "plateau-artifact-pass-stone",
+      "season-01-reward-core-spark",
+      "season-boss-01-empty-day-lord"
+    ]
+  },
   "conventions": {
     "naming": "lowercase kebab-case: {entity-type}-{index}-{semantic-name}.webp under public/game-assets/{category-folder}/",
     "preferredFormat": "webp for runtime; png legacy allowed; heavy sources not in public/",
@@ -1795,12 +1809,12 @@
       "legacyStatus": "approved"
     },
     {
-      "promptStatus": "ready",
-      "fileStatus": "missing",
+      "promptStatus": "prompt-ready",
+      "fileStatus": "needed",
       "manifestStatus": "registered",
-      "notes": "Campaign v1 UI uses emoji icon. Target path follows naming convention.",
-      "status": "needed",
-      "id": "season-boss-01",
+      "notes": "Dark MVP Priority Pack v1. Emoji in UI until file exists.",
+      "status": "prompt-ready",
+      "id": "season-boss-01-empty-day-lord",
       "type": "season-mini-boss",
       "category": "seasonBosses",
       "title": "Сезон 1 — Владыка Пустого Дня",
@@ -2258,12 +2272,12 @@
       "relatedEntityId": "act_III"
     },
     {
-      "promptStatus": "ready",
-      "fileStatus": "missing",
+      "promptStatus": "prompt-ready",
+      "fileStatus": "needed",
       "manifestStatus": "registered",
-      "notes": "UI uses emoji icon until scene art exists.",
-      "status": "needed",
-      "id": "base-stage-01",
+      "notes": "Dark MVP Priority Pack v1. Return place, not base-building UI.",
+      "status": "prompt-ready",
+      "id": "camp-base-stage-01-ember-camp",
       "type": "camp-base-scene",
       "category": "campBase",
       "title": "Лагерь — Тлеющий костёр",
@@ -2277,16 +2291,16 @@
       "relatedEntityId": "ember"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "prompt-ready",
+      "fileStatus": "needed",
       "manifestStatus": "registered",
-      "notes": "UI uses emoji icon until scene art exists.",
-      "status": "needed",
-      "id": "base-stage-02",
+      "notes": "Dark MVP Priority Pack v1. Early shelter — fire more reliable.",
+      "status": "prompt-ready",
+      "id": "camp-base-stage-02-shelter",
       "type": "camp-base-scene",
       "category": "campBase",
       "title": "Лагерь — Укрытие",
-      "priority": "P1",
+      "priority": "P0",
       "targetPath": "/game-assets/base/base-stage-02-trail-shelter.webp",
       "usedIn": [
         "BaseDashboardSummary",
@@ -2408,6 +2422,24 @@
         "baseProgressionConfig"
       ],
       "relatedEntityId": "citadel"
+    },
+    {
+      "promptStatus": "prompt-ready",
+      "fileStatus": "needed",
+      "manifestStatus": "registered",
+      "notes": "Cohesive RPG token set: mobility, endurance, dailyLife, confidence, clothing, recovery. Not medical icons.",
+      "status": "prompt-ready",
+      "id": "body-ability-icon-set-v1",
+      "type": "body-ability-icon-set",
+      "category": "bodyAbilities",
+      "title": "Набор иконок Body Abilities v1 (12 шт.)",
+      "priority": "P0",
+      "targetPath": "/game-assets/abilities/ability-{slug}.webp",
+      "usedIn": [
+        "BodyAbilityV1Section",
+        "BodyAbilityDashboardSummary",
+        "bodyAbilityConfig"
+      ]
     },
     {
       "promptStatus": "planned",
@@ -2626,12 +2658,12 @@
       "relatedEntityId": "stairs_easier"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "prompt-ready",
+      "fileStatus": "needed",
       "manifestStatus": "registered",
-      "notes": "Text-only reward name in Seasons v1.",
-      "status": "needed",
-      "id": "season-reward-01",
+      "notes": "Dark MVP Priority Pack v1. Small reward for igniting the system.",
+      "status": "prompt-ready",
+      "id": "season-01-reward-core-spark",
       "type": "season-reward",
       "category": "seasonRewards",
       "title": "Награда сезона 1 — Искра ядра",
@@ -2860,17 +2892,17 @@
       "relatedEntityId": "season_13_reward"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "prompt-ready",
+      "fileStatus": "needed",
       "manifestStatus": "registered",
-      "notes": "Achievement exists; dedicated art not yet generated.",
-      "status": "needed",
-      "id": "plateau-route-guardian-artifact",
+      "notes": "Dark MVP Priority Pack v1. Calm holding seal — not failure imagery.",
+      "status": "prompt-ready",
+      "id": "plateau-artifact-pass-stone",
       "type": "plateau-artifact",
       "category": "plateauArtifacts",
-      "title": "Артефакт перевала — Страж перевала",
+      "title": "Камень перевала — удержание маршрута",
       "priority": "P1",
-      "targetPath": "/game-assets/artifacts/plateau-route-guardian.webp",
+      "targetPath": "/game-assets/artifacts/plateau-pass-stone.webp",
       "usedIn": [
         "PlateauDashboardSummary",
         "achievement plateau_route_guardian"
@@ -2878,11 +2910,11 @@
       "relatedEntityId": "plateau_route_guardian"
     },
     {
-      "promptStatus": "ready",
-      "fileStatus": "missing",
+      "promptStatus": "prompt-ready",
+      "fileStatus": "needed",
       "manifestStatus": "registered",
-      "notes": "StartRoutePage uses text/emoji; safe without image.",
-      "status": "needed",
+      "notes": "Dark MVP Priority Pack v1. Route has begun — core light in ruins.",
+      "status": "prompt-ready",
       "id": "onboarding-core-awakening",
       "type": "onboarding-hero",
       "category": "onboardingArt",
@@ -2891,24 +2923,26 @@
       "targetPath": "/game-assets/onboarding/core-awakening.webp",
       "usedIn": [
         "/start",
-        "OnboardingGate"
+        "OnboardingGate",
+        "StartRoutePage"
       ]
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "prompt-ready",
+      "fileStatus": "needed",
       "manifestStatus": "registered",
-      "notes": "Use gradient card + symbol until art exists.",
-      "status": "needed",
-      "id": "empty-state-no-data",
+      "notes": "Dark MVP Priority Pack v1. Inviting, not shameful — first traces will appear here.",
+      "status": "prompt-ready",
+      "id": "empty-state-no-entries",
       "type": "empty-state",
       "category": "emptyStates",
-      "title": "Empty state — нет данных",
+      "title": "Empty state — нет записей",
       "priority": "P0",
-      "targetPath": "/game-assets/ui/empty-no-data.webp",
+      "targetPath": "/game-assets/ui/empty-no-entries.webp",
       "usedIn": [
         "Dashboard",
         "Measurements",
+        "Today history",
         "generic lists"
       ]
     },

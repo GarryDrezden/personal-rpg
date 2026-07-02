@@ -37,8 +37,8 @@ Cursor и ChatGPT читают manifest, чтобы понимать что ес
 | `targetPath` | Целевой путь для needed ассетов |
 | `usedIn` | Экраны / модули |
 | `relatedEntityId` | Связь с bossConfig, bodyAbilityConfig, … |
-| `promptStatus` | missing / planned / ready |
-| `fileStatus` | missing / planned / ready |
+| `promptStatus` | missing / planned / ready / **prompt-ready** |
+| `fileStatus` | missing / **needed** / planned / ready |
 | `manifestStatus` | registered |
 | `notes` | Контекст, fallback, privacy |
 
@@ -52,7 +52,7 @@ Cursor и ChatGPT читают manifest, чтобы понимать что ес
 |--------|----------|
 | `idea` | Идея, не в работе |
 | `needed` | Нужен для кампании, placeholder в UI |
-| `prompt-ready` | Промпт готов к генерации |
+| `prompt-ready` | Промпт готов к генерации (`docs/prompts/assets/{id}.md`) — **файла ещё нет** |
 | `generated` | Сырой вывод из генератора |
 | `processed` | Обработан (crop, webp) |
 | `in-app` | Файл в `public/`, используется или готов к wire |
@@ -76,6 +76,32 @@ Legacy v1 статусы (`approved`, `draft`, …) сохранены в пол
 - `getAssetPathOrNull()` — только для `in-app` / `done`.
 - Journey: gradient fallback уже в `JourneyChapterVignette`.
 - Boss Campaign v1: emoji из config.
+
+## Dark MVP Visual Priority Pack v1
+
+Первый минимальный пакет ассетов для **Dark Campaign MVP** — 8 записей в manifest (`darkMvpVisualPriorityPackV1.assetIds`).
+
+| P0 | P1 |
+|----|-----|
+| onboarding-core-awakening | plateau-artifact-pass-stone |
+| empty-state-no-entries | season-01-reward-core-spark |
+| body-ability-icon-set-v1 | season-boss-01-empty-day-lord |
+| camp-base-stage-01-ember-camp | |
+| camp-base-stage-02-shelter | |
+
+**Prompt files:** `docs/prompts/assets/{asset-id}.md` — визуальные брифы для Nano Banana.
+
+**`prompt-ready` ≠ generated:** статус значит, что промпт написан и manifest обновлён; изображение ещё не создано. UI продолжает использовать placeholders.
+
+**После генерации:**
+
+1. Положить файл по `targetPath` в `public/game-assets/`
+2. Обновить manifest: `status` → `generated` → `processed` → `in-app`, `fileStatus` → `ready`, добавить `path`
+3. `npm test` — path validation для in-app
+4. Bump `GAME_ASSET_VERSION`
+5. Отдельный спринт — wire в UI (не автоматически)
+
+**Future Cozy Campaign** — не входит в этот пакет. См. [`13-art-backlog.md`](13-art-backlog.md) → Future Cozy Campaign Variant.
 
 ## Workflow
 

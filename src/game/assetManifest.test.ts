@@ -36,8 +36,9 @@ describe('asset manifest validation', () => {
 describe('asset manifest helpers', () => {
   it('getEntityAsset resolves season mini-boss', () => {
     const entry = getEntityAsset('season_mini_01');
+    expect(entry?.id).toBe('season-boss-01-empty-day-lord');
     expect(entry?.category).toBe('seasonBosses');
-    expect(entry?.status).toBe('needed');
+    expect(entry?.status).toBe('prompt-ready');
   });
 
   it('getAssetPlaceholder returns safe fallback', () => {

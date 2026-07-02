@@ -5,6 +5,7 @@
 ### Added
 
 - **Asset Registry 2.0 / Art Backlog:** expanded manifest v2 schema (categories, priorities, lifecycle statuses); Art Backlog with P0–P3; naming convention and placeholder strategy; Nano Banana prompt templates; `assetManifest.ts` helpers and validation tests. Asset generation and gameplay changes kept out of scope.
+- **Dark MVP Visual Priority Pack v1:** 8 prompt-ready Dark Campaign assets with Nano Banana briefs; manifest `prompt-ready` status; Future Cozy Campaign explicitly excluded from pack. No asset generation or UI wire.
 - **Boss Campaign v1:** boss catalog; derived boss progress from season/daily/plateau/body ability/base signals; Today season boss line; Dashboard summary; Journey chapter boss labels; achievement «Первая трещина». Combat, DB schema, new daily metrics and boss art kept out of scope.
 - **Campaign Integration QA v1:** reviewed Today/Dashboard/Growth/Freedom integration; grouped campaign summaries; compact cards; Today hint de-duplication; confirmed readiness for Boss Campaign v1.
 - **Camp/Base Progression v1:** 8-stage hero camp; derived base score from existing daily, season, body ability and plateau signals; Dashboard base card; Growth `/growth/camp` section; lightweight Today save feedback. DB schema, new economy, manual building and Boss Campaign kept out of scope.
@@ -72,6 +73,13 @@
 - Added naming convention and placeholder strategy.
 - Added Nano Banana prompt templates.
 - Kept asset generation and gameplay changes out of scope.
+
+## Dark MVP Visual Priority Pack v1
+
+- Selected 8 highest-priority Dark Campaign assets (5× P0, 3× P1).
+- Created visual Nano Banana prompt files per asset id.
+- Manifest entries set to `prompt-ready` without `in-app` paths.
+- Documented Future Cozy Campaign Variant as separate P2/P3 track — not mixed with Dark MVP.
 
 ---
 

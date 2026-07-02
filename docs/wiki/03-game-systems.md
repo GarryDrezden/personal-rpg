@@ -287,6 +287,21 @@ Main principle:
 
 **80 кг — это не один длинный прогресс-бар. Это 12–24 месяца сезонов, глав, навыков, ритуалов, открытий и возвращений.**
 
+### Campaign tones: Dark MVP vs Cozy variant
+
+**MVP-1** ships the **Dark Campaign** tone: season names, bosses, copy and visuals frame **resistance states** — fatigue, chaos, empty days, plateau, rollback, night eating, loss of control, the old form. See `bossConfig.ts`, `seasonConfig.ts`.
+
+The future **Cozy / Light Campaign** is **not** a narrative stage after dark («you finished the hard path, now it's cute»). It is a **parallel emotional version** of the same mechanics:
+
+| Layer | Shared | Per tone (separate) |
+|-------|--------|---------------------|
+| Day, season, quests, plateau, camp/base engines | ✅ | — |
+| Avatar | — | Human dark hero **vs** large charming cat (lighter, more agile, energetic, confident) |
+| Obstacles / bosses | — | Dark resistance bosses **vs** cute obstacles, sleepy spirits, playful blockers |
+| Copy, season flavor, rewards, assets | — | Full separate catalogs |
+
+Onboarding theme (`cozy` / `darkFantasy`) today switches UI shell and hero variants; full Cozy Campaign content is a **future sprint**. See [`07-decision-log.md`](07-decision-log.md), [`../brandbook/themes.md`](../brandbook/themes.md).
+
 Нельзя строить годовую игру как один bar «180 кг → 100 кг».
 
 ### Why

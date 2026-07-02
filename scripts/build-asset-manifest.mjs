@@ -40,6 +40,16 @@ function needed(partial) {
   });
 }
 
+function promptReady(partial) {
+  return entry({
+    status: 'prompt-ready',
+    promptStatus: 'prompt-ready',
+    fileStatus: 'needed',
+    manifestStatus: 'registered',
+    ...partial,
+  });
+}
+
 const JOURNEY_CHAPTERS = [
   [1, 'ruins', 'Руины · начало пути'],
   [2, 'burden', 'Каменный маршрут'],
@@ -386,19 +396,32 @@ for (const [id, entityId, title, file] of LEGACY_BOSSES) {
 // Season mini-bosses (campaign v1 — emoji placeholders)
 for (const [seasonId, slug, title] of SEASON_MINI_BOSSES) {
   const n = String(seasonId).padStart(2, '0');
+  const isPackBoss = seasonId === 1;
   assets.push(
-    needed({
-      id: `season-boss-${n}`,
-      type: 'season-mini-boss',
-      category: 'seasonBosses',
-      title: `Сезон ${seasonId} — ${title}`,
-      priority: 'P1',
-      targetPath: `/game-assets/bosses/seasons/season-boss-${n}-${slug}.webp`,
-      usedIn: ['SeasonTodayCard', 'SeasonDashboardSummary', 'bossConfig'],
-      relatedEntityId: `season_mini_${n}`,
-      promptStatus: seasonId <= 2 ? 'ready' : 'planned',
-      notes: `Campaign v1 UI uses emoji icon. Target path follows naming convention.`,
-    }),
+    isPackBoss
+      ? promptReady({
+          id: 'season-boss-01-empty-day-lord',
+          type: 'season-mini-boss',
+          category: 'seasonBosses',
+          title: `Сезон 1 — ${title}`,
+          priority: 'P1',
+          targetPath: `/game-assets/bosses/seasons/season-boss-01-empty-day-lord.webp`,
+          usedIn: ['SeasonTodayCard', 'SeasonDashboardSummary', 'bossConfig'],
+          relatedEntityId: 'season_mini_01',
+          notes: 'Dark MVP Priority Pack v1. Emoji in UI until file exists.',
+        })
+      : needed({
+          id: `season-boss-${n}`,
+          type: 'season-mini-boss',
+          category: 'seasonBosses',
+          title: `Сезон ${seasonId} — ${title}`,
+          priority: 'P1',
+          targetPath: `/game-assets/bosses/seasons/season-boss-${n}-${slug}.webp`,
+          usedIn: ['SeasonTodayCard', 'SeasonDashboardSummary', 'bossConfig'],
+          relatedEntityId: `season_mini_${n}`,
+          promptStatus: seasonId <= 2 ? 'ready' : 'planned',
+          notes: 'Campaign v1 UI uses emoji icon. Target path follows naming convention.',
+        }),
   );
 }
 
@@ -443,23 +466,68 @@ for (const [actId, slug, title] of ACT_BOSSES) {
 for (let i = 0; i < BASE_STAGES.length; i++) {
   const [entityId, slug, title] = BASE_STAGES[i];
   const n = String(i + 1).padStart(2, '0');
+  if (i === 0) {
+    assets.push(
+      promptReady({
+        id: 'camp-base-stage-01-ember-camp',
+        type: 'camp-base-scene',
+        category: 'campBase',
+        title: `Лагерь — ${title}`,
+        priority: 'P0',
+        targetPath: `/game-assets/base/base-stage-01-ember-camp.webp`,
+        usedIn: ['BaseDashboardSummary', '/growth/camp', 'baseProgressionConfig'],
+        relatedEntityId: entityId,
+        notes: 'Dark MVP Priority Pack v1. Return place, not base-building UI.',
+      }),
+    );
+    continue;
+  }
+  if (i === 1) {
+    assets.push(
+      promptReady({
+        id: 'camp-base-stage-02-shelter',
+        type: 'camp-base-scene',
+        category: 'campBase',
+        title: `Лагерь — ${title}`,
+        priority: 'P0',
+        targetPath: `/game-assets/base/base-stage-02-trail-shelter.webp`,
+        usedIn: ['BaseDashboardSummary', '/growth/camp', 'baseProgressionConfig'],
+        relatedEntityId: entityId,
+        notes: 'Dark MVP Priority Pack v1. Early shelter — fire more reliable.',
+      }),
+    );
+    continue;
+  }
   assets.push(
     needed({
       id: `base-stage-${n}`,
       type: 'camp-base-scene',
       category: 'campBase',
       title: `Лагерь — ${title}`,
-      priority: i === 0 ? 'P0' : 'P1',
+      priority: 'P1',
       targetPath: `/game-assets/base/base-stage-${n}-${slug}.webp`,
       usedIn: ['BaseDashboardSummary', '/growth/camp', 'baseProgressionConfig'],
       relatedEntityId: entityId,
-      promptStatus: i === 0 ? 'ready' : 'planned',
+      promptStatus: 'planned',
       notes: 'UI uses emoji icon until scene art exists.',
     }),
   );
 }
 
-// Body abilities
+// Body ability icon set (Dark MVP pack) + per-ability entries
+assets.push(
+  promptReady({
+    id: 'body-ability-icon-set-v1',
+    type: 'body-ability-icon-set',
+    category: 'bodyAbilities',
+    title: 'Набор иконок Body Abilities v1 (12 шт.)',
+    priority: 'P0',
+    targetPath: '/game-assets/abilities/ability-{slug}.webp',
+    usedIn: ['BodyAbilityV1Section', 'BodyAbilityDashboardSummary', 'bodyAbilityConfig'],
+    notes:
+      'Cohesive RPG token set: mobility, endurance, dailyLife, confidence, clothing, recovery. Not medical icons.',
+  }),
+);
 for (const [entityId, slug, title] of BODY_ABILITIES) {
   assets.push(
     needed({
@@ -480,6 +548,22 @@ for (const [entityId, slug, title] of BODY_ABILITIES) {
 // Season rewards
 for (const [seasonId, slug, rewardName] of SEASON_REWARDS) {
   const n = String(seasonId).padStart(2, '0');
+  if (seasonId === 1) {
+    assets.push(
+      promptReady({
+        id: 'season-01-reward-core-spark',
+        type: 'season-reward',
+        category: 'seasonRewards',
+        title: `Награда сезона 1 — ${rewardName}`,
+        priority: 'P1',
+        targetPath: `/game-assets/rewards/season-01-core-spark.webp`,
+        usedIn: ['seasonConfig', 'SeasonDashboardSummary'],
+        relatedEntityId: 'season_01_reward',
+        notes: 'Dark MVP Priority Pack v1. Small reward for igniting the system.',
+      }),
+    );
+    continue;
+  }
   assets.push(
     needed({
       id: `season-reward-${n}`,
@@ -498,43 +582,40 @@ for (const [seasonId, slug, rewardName] of SEASON_REWARDS) {
 
 // Plateau artifact
 assets.push(
-  needed({
-    id: 'plateau-route-guardian-artifact',
+  promptReady({
+    id: 'plateau-artifact-pass-stone',
     type: 'plateau-artifact',
     category: 'plateauArtifacts',
-    title: 'Артефакт перевала — Страж перевала',
+    title: 'Камень перевала — удержание маршрута',
     priority: 'P1',
-    targetPath: '/game-assets/artifacts/plateau-route-guardian.webp',
+    targetPath: '/game-assets/artifacts/plateau-pass-stone.webp',
     usedIn: ['PlateauDashboardSummary', 'achievement plateau_route_guardian'],
     relatedEntityId: 'plateau_route_guardian',
-    promptStatus: 'planned',
-    notes: 'Achievement exists; dedicated art not yet generated.',
+    notes: 'Dark MVP Priority Pack v1. Calm holding seal — not failure imagery.',
   }),
 );
 
 // Onboarding & empty states
 assets.push(
-  needed({
+  promptReady({
     id: 'onboarding-core-awakening',
     type: 'onboarding-hero',
     category: 'onboardingArt',
     title: 'Onboarding — Пробуждение ядра',
     priority: 'P0',
     targetPath: '/game-assets/onboarding/core-awakening.webp',
-    usedIn: ['/start', 'OnboardingGate'],
-    promptStatus: 'ready',
-    notes: 'StartRoutePage uses text/emoji; safe without image.',
+    usedIn: ['/start', 'OnboardingGate', 'StartRoutePage'],
+    notes: 'Dark MVP Priority Pack v1. Route has begun — core light in ruins.',
   }),
-  needed({
-    id: 'empty-state-no-data',
+  promptReady({
+    id: 'empty-state-no-entries',
     type: 'empty-state',
     category: 'emptyStates',
-    title: 'Empty state — нет данных',
+    title: 'Empty state — нет записей',
     priority: 'P0',
-    targetPath: '/game-assets/ui/empty-no-data.webp',
-    usedIn: ['Dashboard', 'Measurements', 'generic lists'],
-    promptStatus: 'planned',
-    notes: 'Use gradient card + symbol until art exists.',
+    targetPath: '/game-assets/ui/empty-no-entries.webp',
+    usedIn: ['Dashboard', 'Measurements', 'Today history', 'generic lists'],
+    notes: 'Dark MVP Priority Pack v1. Inviting, not shameful — first traces will appear here.',
   }),
   needed({
     id: 'empty-state-campaign-quiet',
@@ -601,6 +682,20 @@ const manifest = {
   schema: 'asset-registry-2.0',
   updated: '2026-06-06',
   gameAssetVersion: '19',
+  darkMvpVisualPriorityPackV1: {
+    updated: '2026-06-06',
+    description: 'First minimal Dark MVP art generation batch — prompt-ready, no files yet',
+    assetIds: [
+      'onboarding-core-awakening',
+      'empty-state-no-entries',
+      'body-ability-icon-set-v1',
+      'camp-base-stage-01-ember-camp',
+      'camp-base-stage-02-shelter',
+      'plateau-artifact-pass-stone',
+      'season-01-reward-core-spark',
+      'season-boss-01-empty-day-lord',
+    ],
+  },
   conventions: {
     naming:
       'lowercase kebab-case: {entity-type}-{index}-{semantic-name}.webp under public/game-assets/{category-folder}/',

@@ -467,3 +467,51 @@ Visual assets — часть мотивационного ядра, но **Asset
 - P0 = учесть в MVP, не «срочно нарисовать»
 - `getAssetPathOrNull()` — не рендерить битые `<img>`
 - Генерация и UI wire — отдельные спринты после backlog
+
+---
+
+## 2026-06-06 — Campaign Tone: Dark MVP and Future Cozy Variant
+
+### Контекст
+
+MVP-1 годовой кампании использует **Dark Campaign** tone: боссы, названия сезонов, визуальный язык и copy описывают состояния сопротивления (усталость, хаос, пустой день, плато, откат, ночное переедание, потеря контроля, старая форма).
+
+Возник риск трактовать Cozy/Light как «следующую стадию после тёмной» или только как смену палитры в Settings.
+
+### Решение
+
+**Dark Campaign** — текущий MVP-1 tone и основной контентный каталог.
+
+**Cozy / Light Campaign** — **альтернативная эмоциональная версия** тех же core mechanics (день, сезон, body abilities, plateau, camp/base, campaign obstacles). **Не** post-dark этап и **не** награда за прохождение тёмного пути.
+
+Cozy использует более мягкий позитивный фэнтези-язык:
+
+- вместо тёмных боссов — милые препятствия, сонные духи, игривые блокеры, cozy «шкодники»;
+- аватар — крупный обаятельный кот, постепенно легче, подвижнее, энергичнее и увереннее.
+
+**Механики общие.** Отдельно per tone: аватар, каталог врагов/боссов, copy, season flavor, награды, visual assets.
+
+### Последствия
+
+- Asset Registry и Art Backlog должны учитывать **два параллельных контентных трека**, не только hero variants
+- `themeId: cozy` сегодня ≠ полный Cozy Campaign — только UI shell + light hero paths
+- Cozy Campaign implementation — отдельный future sprint; не блокирует Dark MVP art generation
+- Идея «кот-аватар» в [`12-ideas-backlog.md`](12-ideas-backlog.md) эволюционирует в Cozy Campaign hero line
+
+---
+
+## 2026-06-06 — Dark vs Cozy: separate asset lines
+
+### Контекст
+
+Риск использовать dark bosses и human hero art как simple recolor для будущего Cozy Campaign.
+
+### Решение
+
+Dark MVP and future Cozy Campaign Variant are **separate emotional skins** over similar core mechanics. Dark MVP assets and bosses should **not** be reused as simple recolors for Cozy. Cozy may use a large charming cat avatar and cute obstacles later, but it is **not part of current P0/P1 generation**.
+
+### Последствия
+
+- Dark MVP Visual Priority Pack v1 — только dark tone
+- Cozy assets tracked in P2/P3 Future Cozy Campaign Variant
+- `themeId: cozy` today ≠ Cozy Campaign content catalog

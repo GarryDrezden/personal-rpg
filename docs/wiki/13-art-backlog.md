@@ -40,6 +40,25 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 
 ---
 
+## Dark MVP Visual Priority Pack v1
+
+> Первый минимальный пакет для **генерации** Dark MVP. Статус `prompt-ready` = промпт готов, **файла ещё нет**. Не смешивать с Future Cozy Campaign.
+
+| id | Название | Категория | P | Где используется | Статус | Prompt file | Expected path | Комментарий |
+|----|----------|-----------|---|------------------|--------|-------------|---------------|-------------|
+| `onboarding-core-awakening` | Пробуждение ядра | onboardingArt | P0 | `/start`, OnboardingGate | prompt-ready | [`onboarding-core-awakening.md`](../prompts/assets/onboarding-core-awakening.md) | `public/game-assets/onboarding/core-awakening.webp` | Старт кампании, ядро в руинах |
+| `empty-state-no-entries` | Нет записей | emptyStates | P0 | Dashboard, Measurements | prompt-ready | [`empty-state-no-entries.md`](../prompts/assets/empty-state-no-entries.md) | `public/game-assets/ui/empty-no-entries.webp` | Без стыда — «первые следы» |
+| `body-ability-icon-set-v1` | Иконки способностей ×12 | bodyAbilities | P0 | `/growth/abilities` | prompt-ready | [`body-ability-icon-set-v1.md`](../prompts/assets/body-ability-icon-set-v1.md) | `public/game-assets/abilities/ability-*.webp` | RPG tokens, not medical |
+| `camp-base-stage-01-ember-camp` | Тлеющий костёр | campBase | P0 | BaseDashboardSummary, `/growth/camp` | prompt-ready | [`camp-base-stage-01-ember-camp.md`](../prompts/assets/camp-base-stage-01-ember-camp.md) | `public/game-assets/base/base-stage-01-ember-camp.webp` | Место возвращения |
+| `camp-base-stage-02-shelter` | Укрытие | campBase | P0 | BaseDashboardSummary, `/growth/camp` | prompt-ready | [`camp-base-stage-02-shelter.md`](../prompts/assets/camp-base-stage-02-shelter.md) | `public/game-assets/base/base-stage-02-trail-shelter.webp` | Ранний путь, надёжнее огонь |
+| `plateau-artifact-pass-stone` | Камень перевала | plateauArtifacts | P1 | PlateauDashboardSummary | prompt-ready | [`plateau-artifact-pass-stone.md`](../prompts/assets/plateau-artifact-pass-stone.md) | `public/game-assets/artifacts/plateau-pass-stone.webp` | Удержание, не провал |
+| `season-01-reward-core-spark` | Искра ядра | seasonRewards | P1 | SeasonDashboardSummary | prompt-ready | [`season-01-reward-core-spark.md`](../prompts/assets/season-01-reward-core-spark.md) | `public/game-assets/rewards/season-01-core-spark.webp` | Награда сезона 1 |
+| `season-boss-01-empty-day-lord` | Владыка Пустого Дня | seasonBosses | P1 | SeasonTodayCard | prompt-ready | [`season-boss-01-empty-day-lord.md`](../prompts/assets/season-boss-01-empty-day-lord.md) | `public/game-assets/bosses/seasons/season-boss-01-empty-day-lord.webp` | Сопротивление пустому дню |
+
+**Workflow после генерации:** `generated` → `processed` (webp) → `in-app` (файл в `public/`) → bump `GAME_ASSET_VERSION` → optional UI wire.
+
+---
+
 ## P0 — MVP Visual Core
 
 > Важно учесть и не потерять. **Не значит «срочно генерировать».**
@@ -115,6 +134,20 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 | Achievement badge set | achievement-badge | Growth | achievements.ts | needed | P2 | iconKey per achievement |
 | Female hero full polish | hero-stage | Dashboard | female 1–20 in-app | in-app | P2 | Already in repo; P2 for theme parity |
 
+### Future Cozy Campaign Variant
+
+**Не часть Dark MVP P0/P1.** Отдельная добрая/мягкая эмоциональная оболочка **тех же** core mechanics (день, сезон, abilities, plateau, camp).
+
+| Будущие ассеты | Описание |
+|----------------|----------|
+| Cozy cat avatar stages | Большой милый кот → легче, подвижнее, увереннее (20 стадий) |
+| Cozy obstacles / шкодники | Вместо dark bosses — игривые блокеры, сонные духи |
+| Cozy camp / home | Отдельные сцены лагеря, не recolor dark base |
+| Cozy rewards | Отдельный flavor наград сезонов |
+| Cozy season copy | Параллельный каталог, не перевод dark имён |
+
+**Правило:** не смешивать с dark bosses, не делать simple recolor. См. [`07-decision-log.md`](07-decision-log.md).
+
 ---
 
 ## P3 — Later / Nice to have
@@ -123,7 +156,7 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 |----------|-----|--------|-------------|
 | Logo dark fantasy | logo | needed | Heraldic Huginn/Muninn |
 | New Game+ art | — | idea | **Out of scope** — track only |
-| Alternate themes | hero-variant | idea | Cozy/light variants |
+| Alternate themes | hero-variant | idea | **Cozy Campaign** — parallel content track (cat hero, cozy obstacles), not post-dark stage. See decision log. |
 | Advanced animations | — | idea | Hero stage transitions |
 | Seasonal recap illustrations | season-recap | idea | No recap screen in v1 |
 | Male hero stages 4–18 root PNG | hero-stage | partial | Variants cover runtime |

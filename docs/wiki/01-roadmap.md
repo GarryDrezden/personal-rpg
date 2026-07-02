@@ -169,12 +169,27 @@
 
 ---
 
+## 10. Cozy Campaign (future — parallel tone)
+
+**Не post-dark.** Альтернативная эмоциональная версия тех же mechanics: day, season, body abilities, plateau, camp/base.
+
+- [ ] Cozy obstacle/boss catalog (сонные духи, игривые блокеры, шкодники)
+- [ ] Cat hero avatar line (20 stages — lighter, agile, energetic, confident)
+- [ ] Separate season flavor, copy, rewards, assets from Dark Campaign
+- [ ] Onboarding / settings: choose campaign tone (future; today `themeId` = UI shell only)
+
+**Shared:** engines, daily metrics, season structure. **Separate:** avatar, enemies, copy, visuals.
+
+См. [`07-decision-log.md`](07-decision-log.md) → Campaign Tone.
+
+---
+
 ## Позже — графика (параллельно, не блокирует core)
 
 - [ ] Массовая генерация и approval hero stages
 - [ ] Мужчина — dark / light (все 20 стадий + death)
 - [ ] Женщина — dark / light (консистентность линейки)
-- [ ] Мобы / боссы dark/light
+- [ ] Мобы / боссы dark + **cozy parallel catalogs** (not light reskin of dark bosses)
 - [ ] Codex cinematic showcase polish
 - [ ] VPS / Node backend — когда будет бюджет
 

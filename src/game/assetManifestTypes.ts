@@ -41,8 +41,10 @@ export type AssetPriority = (typeof ASSET_PRIORITIES)[number];
 
 export const ASSET_TRACKING_STATUSES = [
   'missing',
+  'needed',
   'planned',
   'ready',
+  'prompt-ready',
   'registered',
 ] as const;
 
