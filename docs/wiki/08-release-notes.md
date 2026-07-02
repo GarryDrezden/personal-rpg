@@ -53,6 +53,22 @@
 
 ---
 
+## Wiki / Game Design Update — Year Campaign Structure
+
+- Added year campaign model for Personal RPG (`03-game-systems.md` → Year Campaign Structure).
+- Defined day → week → season → chapter → act → campaign progression.
+- Added 28-day seasons as the main long-term retention layer (~13 seasons/year).
+- Added weekly quests and season quests as wrappers around existing daily actions.
+- Added partial success model for seasons (no «5/5 or fail» logic).
+- Added boss hierarchy: daily mobs, weekly elites, seasonal mini-bosses, chapter bosses, act bosses.
+- Added boss weakening principle (real actions, not abstract damage).
+- Added 13-season catalog as structural baseline for year one.
+- Clarified that Boss Campaign is a future layer after core loop, Seasons v1, Body Abilities and Plateau Mode.
+- Reinforced UX rule: the game must support return and progress, not become a body accounting system.
+- Updated roadmap with correct implementation order: Stabilize → Onboarding → Core Loop Polish → Seasons v1 → …
+
+---
+
 ## 2026-06-06 — Deploy & assets
 
 ### Added

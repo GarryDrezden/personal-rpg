@@ -9,6 +9,18 @@
 - **Nutrition** может быть disabled / simple / precise — если выключено, не штрафует Freedom/Momentum
 - **Вес** — один из сигналов прогресса, не единственный KPI
 
+### Core loop (все системы)
+
+```
+Внести день → получить реакцию игры → увидеть прогресс → захотеть вернуться завтра
+```
+
+Любое расширение должно усиливать одно из трёх:
+
+1. Пользователь проще возвращается завтра.
+2. Пользователь видит прогресс даже без снижения веса.
+3. Пользователь чувствует, что его путь — это история, а не таблица.
+
 ---
 
 ## Daily quests
@@ -186,7 +198,9 @@ Fallback: ближайший якорь (1, 2, 19, 20) пока PNG отсутс
 **Assets:** `public/game-assets/mobs/`  
 **UI:** Codex
 
-8 мобов дня: sofa_magnet, snack_chaos, fog_of_fatigue, empty_day, impulse_of_rollback, night_call, gray_heaviness, sweet_whisper.
+8 мобов дня (уровень 1 в [Boss Layers](#boss-layers)): sofa_magnet, snack_chaos, fog_of_fatigue, empty_day, impulse_of_rollback, night_call, gray_heaviness, sweet_whisper.
+
+См. правила подбора мобов в [Boss Layers](#boss-layers).
 
 ---
 
@@ -196,12 +210,13 @@ Fallback: ближайший якорь (1, 2, 19, 20) пока PNG отсутс
 **Assets:** `public/game-assets/bosses/`  
 **UI:** Journey map, Codex
 
-8 chapter bosses: misty_baron, resource_devourer, divan_king, lord_of_empty_day, chain_of_rollback, night_feast_baron, promise_collector, old_form_guardian.
+8 chapter bosses (уровень 4 в [Boss Layers](#boss-layers)): misty_baron, resource_devourer, divan_king, lord_of_empty_day, chain_of_rollback, night_feast_baron, promise_collector, old_form_guardian.
 
 **Терминология:**
 
-- **Босс главы** — сюжетная сущность пути (journey)
+- **Босс главы** — сюжетная сущность пути (journey); см. [Boss Layers](#boss-layers)
 - **Испытание недели** — weekly challenge (`/growth/trials`), не путать с chapter boss
+- **Сезонный мини-босс** — конфликт 28-дневного сезона (планируется в Seasons v1)
 
 ---
 
@@ -228,7 +243,7 @@ Modes: **disabled** | **simple** | **precise**. Recovery suggestions через 
 **Engine:** `progressMapEngine.ts`  
 **UI:** `/map`
 
-5 путей: вес, трезвость, шаги, зал, замеры. Независимые майлстоуны.
+5 путей в коде сегодня: вес, трезвость, шаги, зал, замеры. Долгосрочный дизайн — 8 [Parallel Progress Roads](#parallel-progress-roads) (включая Resource и Story).
 
 ---
 
@@ -250,11 +265,13 @@ Modes: **disabled** | **simple** | **precise**. Recovery suggestions через 
 
 ---
 
-## Long-Term Game Structure
+## Year Campaign Structure
+
+> Ранее: Long-Term Game Structure. Годовая кампания = 12+ месяцев, ~13 сезонов по 28 дней.
 
 ### Core idea
 
-Personal RPG is designed as a long-term body recovery campaign, not a short challenge.
+Personal RPG — долгосрочная RPG-кампания восстановления тела, веса, контроля, ресурса и мобильности. Не трекер похудения и не таблица привычек.
 
 The game must support 12–24 months of progression without relying only on weight loss.
 
@@ -269,6 +286,8 @@ Main principle:
 > Акт меняет жизнь.
 
 **80 кг — это не один длинный прогресс-бар. Это 12–24 месяца сезонов, глав, навыков, ритуалов, открытий и возвращений.**
+
+Нельзя строить годовую игру как один bar «180 кг → 100 кг».
 
 ### Why
 
@@ -306,13 +325,18 @@ The game uses several time layers:
 
 ### Day
 
+Базовая игровая единица.
+
 Purpose:
 
 - hold the route;
 - complete minimal actions;
 - mark state;
 - fight daily mobs;
-- protect momentum.
+- protect momentum;
+- get game reaction and want to return tomorrow.
+
+**Минимальный день и recovery day — валидные игровые состояния, а не провал.**
 
 Examples:
 
@@ -325,6 +349,8 @@ Examples:
 
 ### Week
 
+Ритм. Цель недели: выбрать фокус, прожить неделю, получить хронику, скорректировать маршрут.
+
 Purpose:
 
 - create rhythm;
@@ -334,14 +360,22 @@ Purpose:
 
 Weekly loop:
 
+```
+Выбрать фокус → прожить неделю → получить хронику → скорректировать маршрут
+```
+
+Calendar rhythm (optional):
+
 - Monday: plan / weight / measurements / focus;
 - midweek: daily quests and resource checks;
 - Friday: fatigue/resource check;
 - Sunday: weekly chronicle.
 
+См. [Weekly Quests](#weekly-quests).
+
 ### Season
 
-A season lasts 28 days.
+A season lasts **28 days** (~4 weeks). Главный инструмент годового удержания. За год ≈ **13 сезонов**.
 
 Purpose:
 
@@ -351,12 +385,26 @@ Purpose:
 
 Each season has:
 
+- id;
 - title;
+- actId;
+- startDate;
+- endDate;
 - focus;
-- 3–5 seasonal quests;
+- season quests (3–5);
+- weekly focuses;
 - mini-boss or trial;
 - reward/artifact;
-- recap.
+- recap;
+- status.
+
+Seasonal loop:
+
+```
+Начать сезон → выполнить часть квестов → ослабить босса → получить recap/reward
+```
+
+См. [Season Quests](#season-quests), [13 Seasons Catalog](#13-seasons-catalog).
 
 ### Chapter
 
@@ -371,6 +419,12 @@ A full campaign has 3 acts.
 ### Campaign
 
 The whole 12–24 month transformation journey.
+
+Campaign loop:
+
+```
+Пройти сезоны → открыть главы → пройти акты → изменить тело и образ жизни
+```
 
 ### New Game+
 
@@ -506,8 +560,18 @@ Tracks:
 - alcohol-free days;
 - sleep;
 - cognitive breaks;
-- resource;
-- journal.
+- journal;
+- mental clarity.
+
+### Resource Road
+
+Tracks:
+
+- sleep quality;
+- cognitive breaks;
+- energy level;
+- recovery days;
+- resource consistency (Resource & Rest v1).
 
 ### Strength Road
 
@@ -526,7 +590,19 @@ Tracks:
 - waist;
 - measurements;
 - subjective body abilities;
-- Freedom Score.
+- Freedom Score;
+- mobility.
+
+### Story Road
+
+Tracks:
+
+- chapters (Journey Map v3);
+- seasons completed;
+- bosses weakened;
+- artifacts earned;
+- weekly/season recaps;
+- narrative milestones.
 
 Design rule:
 
@@ -536,54 +612,219 @@ If weight is stuck, other roads must still create visible progress.
 
 ## Seasons v1
 
-A season is a 28-day medium-term arc.
+A season is a **28-day** medium-term arc (= 4 weeks = одна небольшая сюжетная арка).
 
 Purpose:
 
 - create a manageable goal horizon;
-- keep the game interesting for 1–2 years;
+- keep the game interesting for 1–2 years (~13 seasons/year);
 - give story and rewards without depending only on weight.
 
-Each season has:
-
-- id;
-- title;
-- actId;
-- startDate;
-- endDate;
-- focus;
-- quests;
-- reward;
-- recap;
-- status.
-
-Example season:
-
-### Season 1 — Искра в руинах
-
-Duration:
-28 days.
-
-Focus:
-Не стать идеальным, а зажечь систему.
-
-Quests:
-
-- 18 days with any nutrition tracking;
-- 14 days with 5000+ steps;
-- 7 alcohol-free days;
-- 5 days with resource marked;
-- 3 minimal days without route collapse.
-
-Reward:
-Искра ядра.
+**Status:** design documented; implementation in roadmap after Core Loop Polish.
 
 Design rules:
 
-- seasons should reward consistency, not perfection;
-- failed quests should not destroy the season;
-- partial completion should still produce story;
-- season recap should be written as chronicle, not judgment.
+- seasons reward consistency, not perfection;
+- failed quests must not destroy the season;
+- partial completion still produces story;
+- season recap = chronicle, not judgment;
+- no tone of «провал», shame or punishment.
+
+---
+
+## Weekly Quests
+
+**Status:** planned (Seasons v1).
+
+Недельные квесты **не добавляют новые обязанности**. Они превращают уже существующие ежедневные действия в игровые цели.
+
+### Data sources (existing daily fields)
+
+- питание / учёт;
+- шаги;
+- алкоголь;
+- сон;
+- когнитивные перерывы;
+- энергия;
+- дневник;
+- зал / зарядка;
+- minimal day;
+- recovery day;
+- вес;
+- замеры.
+
+### Week focus types
+
+| Тип недели | Фокус |
+|------------|-------|
+| Неделя контроля | учёт, минимальные дни |
+| Неделя движения | шаги, ходьба |
+| Неделя ресурса | сон, перерывы, энергия |
+| Неделя ясности | алкоголь, дневник |
+| Неделя возврата | return после тяжёлых дней |
+| Неделя плато | удержание маршрута |
+| Неделя силы | зал, зарядка |
+| Неделя восстановления | recovery, minimal day |
+
+### Example — Неделя 1: Зажечь маршрут
+
+**Фокус:** вернуться в систему без героизма.
+
+**Квесты:**
+
+- 4 дня с любым учётом питания;
+- 3 дня 5000+ шагов;
+- 2 дня без алкоголя;
+- 1 строка дневника в любой день;
+- 1 минимальный день считается **сохранением маршрута**, а не потерей.
+
+**Правила:** мягкие, частично выполнимые, без тона списка наказаний.
+
+---
+
+## Season Quests
+
+**Status:** planned (Seasons v1).
+
+Сезон = 28 дней = 4 недели. 3–5 сезонных квестов на основе тех же daily-данных, что и недельные квесты.
+
+### Example — Сезон 1: Искра в руинах
+
+**Фокус:** не стать идеальным, а зажечь систему.
+
+**Квесты:**
+
+- 18 дней с любым учётом питания;
+- 14 дней 5000+ шагов;
+- 7 дней без алкоголя;
+- 5 дней с отмеченным ресурсом;
+- 3 минимальных дня без обвала.
+
+**Мини-босс:** Владыка Пустого Дня  
+**Награда:** Искра ядра  
+**Recap:** Ты не построил империю за месяц. Ты зажёг костёр, к которому можно вернуться.
+
+### Partial success (обязательно)
+
+| Закрыто квестов | Результат |
+|-----------------|-----------|
+| 1–2 | маршрут отмечен |
+| 3 | сезон удержан |
+| 4 | сезон пройден |
+| 5 | сезон усилен |
+
+**Нет логики «не выполнил 5/5 → сезон провален».** Personal RPG не использует тон провала, стыда и наказания.
+
+---
+
+## 13 Seasons Catalog
+
+Базовый годовой маршрут. Краткие карточки — структура, не полный нарратив.
+
+| # | Сезон | Act | Focus | Конфликт | Мини-босс | Награда |
+|---|-------|-----|-------|----------|-----------|---------|
+| 1 | Искра в руинах | I | зажечь систему | пустые дни, хаос | Владыка Пустого Дня | Искра ядра |
+| 2 | Первый тракт | I | первые шаги, ритм | лень, диван | Диванный Король | Метка тропы |
+| 3 | Каменная база | I | учёт, контроль | перекусы, хаос еды | Хаос Перекусов | Камень базы |
+| 4 | Башня режима | I→II | режим, сон | туман, усталость | Туманный Барон | Ключ башни |
+| 5 | Перевал выносливости | II | движение, выносливость | истощение | Пожиратель Ресурса | Перевальная метка |
+| 6 | Озеро восстановления | II | отдых, ресурс | инерция, плато | Страж Перевала | Озёрный свет |
+| 7 | Крепость устойчивости | II | удержание привычек | откаты | Цепь Отката | Печать крепости |
+| 8 | Река движения | II | шаги, активность | ночные срывы | Барон Ночного Пира | Капля реки |
+| 9 | Цитадель формы | II→III | форма, замеры | обещания без дела | Собиратель Обещаний | Щит формы |
+| 10 | Зал силы | III | зал, сила | старая форма | Хранитель Старой Формы | Медаль силы |
+| 11 | Тропа ясности | III | ясность, трезвость | усталость, архив | Серый Архивариус Усталости | Фонарь ясности |
+| 12 | Врата новой мобильности | III | мобильность | страх изменений | Привратник Новой Мобильности | Ключ врат |
+| 13 | Перерождение года | III | итог года, новая жизнь | тень прошлого | Тень Старого Года | Артефакт года |
+
+---
+
+## Boss Layers
+
+**Status:** Boss Campaign — future layer после Seasons v1, Body Abilities, Plateau Mode. Сейчас — только структура.
+
+Четыре уровня противников:
+
+| Уровень | Роль | Примеры |
+|---------|------|---------|
+| 1. Мобы дня | появляются по состоянию дня | 8 daily mobs (реализовано) |
+| 2. Недельные элиты | отражают проблему недели | планируется с Weekly Quests |
+| 3. Сезонные мини-боссы | главный конфликт 28-дневного сезона | 13 сезонных боссов (см. каталог) |
+| 4. Боссы глав / актов | крупные символы этапа тела | Journey Map + актовые боссы |
+
+### Daily mobs (уровень 1)
+
+| Моб | ID | Когда |
+|-----|-----|-------|
+| Диванный Магнит | sofa_magnet | нет шагов |
+| Хаос Перекусов | snack_chaos | хаос питания |
+| Туман Усталости | fog_of_fatigue | низкий ресурс |
+| Пустой День | empty_day | нет учёта |
+| Импульс Отката | impulse_of_rollback | риск отката |
+| Ночной Зов | night_call | ночная еда / алкоголь |
+| Серая Тягость | gray_heaviness | перегруз |
+| Сладкий Шёпот | sweet_whisper | срыв на сладкое |
+
+### Seasonal mini-bosses (уровень 3)
+
+1. Владыка Пустого Дня  
+2. Диванный Король  
+3. Хаос Перекусов  
+4. Туманный Барон  
+5. Пожиратель Ресурса  
+6. Страж Перевала  
+7. Цепь Отката  
+8. Барон Ночного Пира  
+9. Собиратель Обещаний  
+10. Хранитель Старой Формы  
+11. Серый Архивариус Усталости  
+12. Привратник Новой Мобильности  
+13. Тень Старого Года  
+
+### Chapter bosses (уровень 4)
+
+1. Страж Руин  
+2. Несущий Груз  
+3. Хозяин Старой Тропы  
+4. Смотритель Башни Режима  
+5. Повелитель Тяжёлого Перевала  
+6. Озёрный Хранитель Инерции  
+7. Комендант Крепости Привычек  
+8. Хранитель Реки Движения  
+9. Последняя Тень Старой Формы  
+
+*(В коде сегодня 8 chapter bosses с другими ID — маппинг при Boss Campaign.)*
+
+### Act bosses
+
+| Act | Босс |
+|-----|------|
+| Act I — Пробуждение системы | Повелитель Хаоса |
+| Act II — Становление формы | Архонт Плато |
+| Act III — Новая мобильность | Хранитель Старой Жизни |
+
+### Boss weakening (принцип)
+
+Босс **не умирает от абстрактного урона**. Он **слабеет от реальных действий** игрока.
+
+**Пожиратель Ресурса** ослабевает от:
+
+- 3 дней с отмеченным сном;
+- 2 дней с когнитивным перерывом;
+- 1 recovery day;
+- 1 записи в дневнике.
+
+**Диванный Король** ослабевает от:
+
+- 4 дней 5000+ шагов;
+- 1 дня 8000+ шагов;
+- 1 прогулки в день низкого ресурса.
+
+**Хаос Перекусов** ослабевает от:
+
+- 4 дней с учётом питания;
+- 2 дней без ночного переедания;
+- 1 минимального дня без обвала.
 
 ---
 

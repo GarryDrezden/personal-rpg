@@ -4,38 +4,56 @@
 
 ---
 
-## 2026-06-06 — Long-term campaign structure
+## 2026-06-06 — Year Campaign Structure
 
 ### Context
 
-A major body transformation can take 12–24 months. If the game depends only on weight loss, it will become frustrating during plateaus and boring over time.
+Personal RPG расширяется из короткого RPG-прототипа в годовую кампанию. Большая трансформация тела занимает 12 месяцев и больше. За это время неизбежны плато, усталость, откаты, болезни, перегруз на работе и периоды низкой мотивации. Если игра зависит только от веса, она станет фрустрирующей на плато и скучной со временем.
+
+Трансформация на 12–24 месяца **не должна быть одним прогресс-баром веса**.
 
 ### Decision
 
-Design the game as a long-term RPG campaign with multiple time layers:
+Годовая структура строится как серия из **~13 сезонов по 28 дней**:
 
-- days;
-- weeks;
-- 28-day seasons;
-- chapters;
-- acts;
-- full campaign.
+- временные уровни: день → неделя → сезон → глава → акт → кампания → New Game+;
+- 8 параллельных дорог прогресса (Weight, Movement, Control, Clarity, Resource, Strength, Freedom, Story);
+- weekly quests и season quests как обёртки над **уже существующими** daily-действиями;
+- partial success в сезонах (1–2 квеста = маршрут отмечен; нет «5/5 или провал»);
+- иерархия боссов: мобы дня → недельные элиты → сезонные мини-боссы → боссы глав → актовые боссы;
+- ослабление боссов от реальных действий, не от абстрактного урона.
 
-Weight is only one of several progress roads. The game also tracks movement, control, clarity, strength, resource, recovery and body abilities.
+**Правило:** квесты не добавляют новые обязанности. Они превращают уже существующие ежедневные действия в игровые цели.
 
-### Consequences
+**Core loop:** внести день → реакция игры → прогресс → вернуться завтра.
 
-Future development should prioritize systems that create long-term retention:
+### Why
 
-- Seasons v1;
-- Body Abilities;
-- Plateau Mode;
-- Camp/Base Progression;
-- Boss Campaign.
+Игра должна поддерживать маршрут даже тогда, когда вес стоит. Ключевая фраза: **«Вес стоит, но персонаж не стоит»**.
 
-Features should not be added randomly. They must support the long-term campaign loop.
+### Consequences / ограничения
 
-См. [`03-game-systems.md`](03-game-systems.md) → Long-Term Game Structure.
+Не внедрять все годовые системы одновременно. Порядок:
+
+1. Stabilize (auth, storage, Today, Dashboard, Journey v3, Resource & Rest)
+2. Onboarding
+3. Core Loop Polish
+4. Seasons v1
+5. Body Abilities v1
+6. Plateau Mode
+7. Camp/Base Progression
+8. Boss Campaign
+9. New Game+
+
+Features should not be added randomly. They must support return, visible progress without weight loss, and story — not turn the app into a body accounting system.
+
+См. [`03-game-systems.md`](03-game-systems.md) → Year Campaign Structure.
+
+---
+
+## 2026-06-06 — Long-term campaign structure (superseded detail)
+
+Расширено решением **Year Campaign Structure** выше. Базовые time layers и parallel roads зафиксированы в `03-game-systems.md`.
 
 ---
 
