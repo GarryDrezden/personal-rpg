@@ -1855,7 +1855,8 @@
         "SeasonTodayCard",
         "SeasonDashboardSummary",
         "bossConfig",
-        "Codex",
+        "ChapterBossCard",
+        "GameCodexPage",
         "assetRegistry",
         "JourneyBossMini",
         "getBossPublicPath"

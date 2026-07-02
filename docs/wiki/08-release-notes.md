@@ -122,6 +122,16 @@
 - Legacy manifest entry `boss-lord-of-empty-day` marked `superseded`; PNG removed from disk.
 - No mechanics, DB schema, or Cozy Variant changes.
 
+## Codex Boss Art Presentation Polish
+
+- Improved Codex boss art presentation for 16:9 boss assets.
+- Empty Day Lord now appears as a larger boss art block instead of a small square thumbnail.
+- Kept legacy boss replacement and manifest routing intact.
+
+## Measurements empty-state banner height
+
+- Tuned `empty-state-tall` layout on MeasurementsPage (21rem / 24rem sm).
+
 ---
 
 ## Boss Campaign v1

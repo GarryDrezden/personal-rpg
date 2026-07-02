@@ -15,7 +15,9 @@ export type ManifestArtLayout =
   | 'empty-state'
   | 'empty-state-tall'
   | 'artifact-icon'
-  | 'boss-compact';
+  | 'boss-compact'
+  | 'boss-codex'
+  | 'boss-codex-compact';
 
 type ManifestArtSceneProps = {
   assetId: string;
@@ -55,6 +57,10 @@ function frameClass(layout: ManifestArtLayout): string {
       return 'h-12 w-12 shrink-0 rounded-lg';
     case 'boss-compact':
       return 'h-14 w-[5.25rem] shrink-0';
+    case 'boss-codex':
+      return 'aspect-video w-full max-h-[13.75rem] sm:max-h-[16.25rem]';
+    case 'boss-codex-compact':
+      return 'aspect-video w-full max-h-[11rem]';
     default:
       return 'aspect-[16/9] w-full max-h-[22rem] sm:max-h-[25rem]';
   }

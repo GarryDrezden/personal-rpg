@@ -35,6 +35,7 @@ describe('manifestAssetUi', () => {
   it('provides object-position hints for wired assets', () => {
     expect(getManifestAssetObjectPosition(ONBOARDING_CORE_AWAKENING_ASSET_ID)).toContain('center');
     expect(getManifestAssetObjectPosition(EMPTY_STATE_NO_ENTRIES_ASSET_ID)).toContain('center');
+    expect(getManifestAssetObjectPosition('season-boss-01-empty-day-lord')).toBe('center 42%');
     expect(getManifestAssetObjectPosition('unknown')).toBe('center');
   });
 });
