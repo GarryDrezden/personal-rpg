@@ -76,6 +76,13 @@
 - Added Nano Banana prompt templates.
 - Kept asset generation and gameplay changes out of scope.
 
+## Dark MVP Batch 1 — Visual QA
+
+- Reviewed first in-app visual assets on `/start`, Dashboard and `/growth/camp`.
+- Polished sizing, object-position crop, locked-state dimming, season reward icon row + «в конце сезона» copy.
+- Onboarding art shown only on step 0 to keep CTA reachable on mobile 375px.
+- Confirmed Batch 1 assets remain **in-app** (acceptable for v1; no needs-redesign flags).
+
 ## Dark MVP Batch 1 — UI Wire
 
 - Connected onboarding core awakening art to `/start` (`StartRoutePage`, eager load).

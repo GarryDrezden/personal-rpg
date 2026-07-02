@@ -129,6 +129,8 @@ prompt-ready → Nano Banana → public/ → build-asset-manifest.mjs → in-app
 
 `GAME_ASSET_VERSION` = **20**. Fallback: emoji/gradient если `getManifestAssetUrl()` → null.
 
+**Visual QA (2026-06):** Batch 1 connected and polished — onboarding art только шаг 0; camp thumbnails с dim locked; season reward icon row + «в конце сезона».
+
 ## Workflow
 
 ```

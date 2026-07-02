@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { Lock } from 'lucide-react';
 import type { AssetUnlockStatus } from '../../types/gameAssets';
 import { warnMissingGameAsset } from '../../game/assetPaths';
@@ -15,6 +15,7 @@ type GameAssetImageProps = {
   fallbackCandidates?: string[];
   className?: string;
   imageClassName?: string;
+  imageStyle?: CSSProperties;
   fit?: 'default' | 'hero' | 'companion' | 'mob' | 'boss';
   loading?: 'eager' | 'lazy';
 };
@@ -52,6 +53,7 @@ export function GameAssetImage({
   fallbackCandidates = [],
   className = '',
   imageClassName = '',
+  imageStyle,
   fit = 'default',
   loading = 'lazy',
 }: GameAssetImageProps) {
@@ -117,6 +119,7 @@ export function GameAssetImage({
         className={`select-none pointer-events-none bg-transparent ${fitClass} ${variantScale} ${imageClassName} ${
           locked ? 'blur-[1px]' : ''
         }`}
+        style={imageStyle}
       />
       {locked && (
         <span className="absolute inset-0 flex items-center justify-center bg-black/20">

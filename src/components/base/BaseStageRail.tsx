@@ -34,8 +34,9 @@ export function BaseStageRail({ snapshot }: BaseStageRailProps) {
                 <ManifestArtScene
                   assetId={stageArtId}
                   alt={stage.title}
-                  compact
-                  className="h-16 w-24 shrink-0"
+                  layout="thumbnail"
+                  dimmed={!unlocked}
+                  className={isCurrent ? 'ring-1 ring-[var(--app-gold)]/35' : ''}
                   testId={`base-stage-art-${stage.id}`}
                 />
               ) : (

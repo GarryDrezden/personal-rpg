@@ -43,6 +43,7 @@ export function BaseCampPage({ embedded = false }: { embedded?: boolean }) {
         <ManifestArtScene
           assetId={stageArtId}
           alt={snapshot.currentStage.title}
+          layout="hero"
           testId="base-camp-art-scene"
         />
       ) : null}

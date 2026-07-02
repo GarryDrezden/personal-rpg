@@ -217,19 +217,20 @@ export function StartRoutePage() {
       />
       <div className="relative mx-auto flex min-h-screen w-full max-w-md flex-col px-4 py-6 sm:max-w-lg sm:px-6 sm:py-10">
         <header className="shrink-0 space-y-3 text-center">
-          {onboardingArtSrc ? (
+          {onboardingArtSrc && step === 0 ? (
             <ManifestArtScene
               assetId={ONBOARDING_CORE_AWAKENING_ASSET_ID}
               alt="Пробуждение ядра — руины и тлеющее ядро"
+              layout="onboarding"
               testId="onboarding-art-scene"
               className="mx-auto w-full max-w-sm"
               imageLoading="eager"
             />
-          ) : (
+          ) : !onboardingArtSrc ? (
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--app-gold)]/35 bg-[var(--app-primary-soft)] shadow-[0_0_28px_rgba(250,204,21,0.14)]">
               <Sparkles className="h-7 w-7 text-[var(--app-gold)]" aria-hidden />
             </div>
-          )}
+          ) : null}
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--app-gold)]">
             Пробуждение ядра
           </p>

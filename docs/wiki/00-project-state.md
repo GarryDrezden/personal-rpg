@@ -127,7 +127,7 @@
 - **Manifest v2:** категории hero → uiIcons, приоритеты P0–P3, lifecycle statuses
 - **Art Backlog:** [`13-art-backlog.md`](13-art-backlog.md) — P0/P1/P2/P3 без генерации
 - **Dark MVP Visual Priority Pack v1** ✅ — 8 prompt-ready ассетов, Nano Banana briefs в `docs/prompts/assets/`
-- **Dark MVP Asset Generation Batch 1** ✅ — 4/4 in-app; UI wire via `ManifestArtScene` (`GAME_ASSET_VERSION` 20)
+- **Dark MVP Asset Generation Batch 1** ✅ — 4/4 in-app; **Visual QA** (2026-06) — sizing/crop polish, статусы in-app сохранены
 - **Runtime:** `src/game/assetManifest.ts` — `getAssetById`, `getEntityAsset`, `getAssetPlaceholder`
 - **Validation:** `assetManifest.test.ts` — unique ids, paths for in-app, categories
 - **Prompts:** pack files + `_template-nano-banana-asset.md`, `_template-boss.md`
@@ -146,7 +146,7 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Priority Pack batch 2** (empty-state, body abilities, plateau, season boss) |
+| Следующий visual priority | **Batch 2 generation** (empty-state, body abilities, plateau, season boss) или точечный crop Batch 1 |
 
 ### Boss Campaign v1 ✅
 

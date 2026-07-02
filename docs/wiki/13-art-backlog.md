@@ -60,7 +60,7 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 ### Dark MVP Asset Generation Batch 1 (active)
 
 > **Очередь:** [`BATCH-01-nano-banana-queue.md`](../prompts/assets/BATCH-01-nano-banana-queue.md)
-> **Статус:** `in-app` — **4/4** webp в `public/`, подключены в UI (`ManifestArtScene`).
+**Batch 1 Visual QA (2026-06):** все 4 in-app; лёгкий polish layout/crop/copy. Визуальные долги: onboarding — acceptable v1 (watch crop on 375px); camp stages — acceptable v1; season spark — acceptable v1 (icon row, не «получено»).
 
 | id | P | Prompt | Path | Status | UI |
 |----|---|--------|------|--------|-----|
