@@ -677,13 +677,16 @@ assets.push(
   }),
 );
 
-/** Dark MVP Asset Generation Batch 1 — disk sync never sets in-app (UI wire is separate). */
+/** Dark MVP Asset Generation Batch 1 — disk sync; in-app when UI wired. */
 const DARK_MVP_BATCH_1_IDS = [
   'onboarding-core-awakening',
   'camp-base-stage-01-ember-camp',
   'camp-base-stage-02-shelter',
   'season-01-reward-core-spark',
 ];
+
+/** Set true after ManifestArtScene is wired in onboarding, camp, and season UI. */
+const BATCH_1_IN_APP = true;
 
 function syncBatch1FromDisk(assetList) {
   let onDisk = 0;
@@ -699,22 +702,29 @@ function syncBatch1FromDisk(assetList) {
     asset.path = asset.targetPath;
     asset.fileStatus = 'ready';
     asset.promptStatus = 'ready';
-    asset.status = ext === '.webp' ? 'processed' : 'generated';
-    asset.notes = `${asset.notes || ''} Batch 1 on disk (${ext}); not in-app until UI wire.`.trim();
+    if (BATCH_1_IN_APP) {
+      asset.status = 'in-app';
+      asset.notes = `${asset.notes || ''} Batch 1 in-app (${ext}); wired in UI.`.trim();
+    } else {
+      asset.status = ext === '.webp' ? 'processed' : 'generated';
+      asset.notes = `${asset.notes || ''} Batch 1 on disk (${ext}); not in-app until UI wire.`.trim();
+    }
   }
   return onDisk;
 }
 
 const batch1OnDisk = syncBatch1FromDisk(assets);
+const batch1InApp =
+  BATCH_1_IN_APP && batch1OnDisk === DARK_MVP_BATCH_1_IDS.length;
 
 const manifest = {
   version: 2,
   schema: 'asset-registry-2.0',
   updated: '2026-06-06',
-  gameAssetVersion: '19',
+  gameAssetVersion: '20',
   darkMvpVisualPriorityPackV1: {
     updated: '2026-06-06',
-    description: 'First minimal Dark MVP art generation batch — prompt-ready, no files yet',
+    description: 'Dark MVP Priority Pack v1 — Batch 1 (4 assets) in-app',
     assetIds: [
       'onboarding-core-awakening',
       'empty-state-no-entries',
@@ -728,15 +738,20 @@ const manifest = {
   },
   darkMvpAssetGenerationBatch1: {
     updated: '2026-06-06',
-    status: batch1OnDisk === DARK_MVP_BATCH_1_IDS.length ? 'files-on-disk' : 'awaiting-generation',
+    status: batch1InApp
+      ? 'in-app'
+      : batch1OnDisk === DARK_MVP_BATCH_1_IDS.length
+        ? 'files-on-disk'
+        : 'awaiting-generation',
     description:
       'First Dark MVP generation drop: onboarding + camp stages 1–2 + season 1 reward. Cozy variant excluded.',
     assetIds: DARK_MVP_BATCH_1_IDS,
     filesOnDisk: batch1OnDisk,
     filesExpected: DARK_MVP_BATCH_1_IDS.length,
+    inApp: batch1InApp,
     promptQueue: 'docs/prompts/assets/BATCH-01-nano-banana-queue.md',
     workflow:
-      'Generate → place in public/game-assets/ → node scripts/build-asset-manifest.mjs → processed (not in-app)',
+      'Generate → place in public/game-assets/ → node scripts/build-asset-manifest.mjs → in-app when BATCH_1_IN_APP',
   },
   conventions: {
     naming:

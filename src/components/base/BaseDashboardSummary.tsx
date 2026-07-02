@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import type { BaseProgressionSnapshot } from '../../types/baseV1';
+import { ManifestArtScene } from '../game/ManifestArtScene';
+import { getBaseStageManifestAssetId } from '../../game/manifestAssetUi';
 import { ProgressBar } from '../ui/ProgressBar';
-
 type BaseDashboardSummaryProps = {
   snapshot: BaseProgressionSnapshot;
   compact?: boolean;
@@ -9,12 +10,22 @@ type BaseDashboardSummaryProps = {
 
 export function BaseDashboardSummary({ snapshot, compact = false }: BaseDashboardSummaryProps) {
   const { currentStage, nextStage, progressPercent, flavorText } = snapshot;
+  const stageArtId = getBaseStageManifestAssetId(currentStage.id);
 
   return (
     <section
       data-testid="base-dashboard-summary"
       className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)]/80 px-4 py-3"
     >
+      {stageArtId ? (
+        <ManifestArtScene
+          assetId={stageArtId}
+          alt={currentStage.title}
+          compact
+          className="mb-3"
+          testId="base-dashboard-art"
+        />
+      ) : null}
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-gold)]">

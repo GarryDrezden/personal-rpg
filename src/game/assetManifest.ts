@@ -1,6 +1,7 @@
 import manifestJson from '../../docs/assets/manifest.json';
 import type { AssetManifestEntry, AssetManifestV2, AssetRegistryCategory } from './assetManifestTypes';
 import { indexManifestByEntityId, indexManifestById } from './assetManifestValidation';
+import { gameAsset } from './assetPaths';
 
 const manifest = manifestJson as AssetManifestV2;
 
@@ -48,6 +49,16 @@ export function getAssetPathOrNull(entry: AssetManifestEntry | undefined): strin
     return entry.path;
   }
   return null;
+}
+
+/** Versioned public URL when asset is in-app/done; null → UI fallback. */
+export function getManifestAssetUrl(assetId: string): string | null {
+  const path = getAssetPathOrNull(getAssetById(assetId));
+  if (!path) return null;
+  const relative = path.startsWith('/game-assets/')
+    ? path.slice('/game-assets/'.length)
+    : path.replace(/^\//, '');
+  return gameAsset(relative);
 }
 
 export function getAssetPlaceholder(category: AssetRegistryCategory): string {

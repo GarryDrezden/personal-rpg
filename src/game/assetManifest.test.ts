@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { getAssetById, getAssetPlaceholder, getEntityAsset } from './assetManifest';
+import { getAssetById, getAssetPlaceholder, getEntityAsset, getManifestAssetUrl } from './assetManifest';
 import type { AssetManifestV2 } from './assetManifestTypes';
 import { validateAssetManifest } from './assetManifestValidation';
 
@@ -48,5 +48,14 @@ describe('asset manifest helpers', () => {
 
   it('getAssetById returns undefined for unknown id', () => {
     expect(getAssetById('nonexistent-asset')).toBeUndefined();
+  });
+
+  it('getManifestAssetUrl returns versioned path for in-app batch 1 assets', () => {
+    const url = getManifestAssetUrl('onboarding-core-awakening');
+    expect(url).toMatch(/\/game-assets\/onboarding\/core-awakening\.webp\?v=20$/);
+  });
+
+  it('getManifestAssetUrl returns null for prompt-ready assets', () => {
+    expect(getManifestAssetUrl('season-boss-01-empty-day-lord')).toBeNull();
   });
 });

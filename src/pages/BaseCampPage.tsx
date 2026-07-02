@@ -3,6 +3,8 @@ import { useAppStore } from '../store/appStore';
 import { useAchievementStore } from '../store/achievementStore';
 import { getBaseProgressionSnapshot } from '../game/base/baseProgressionEngine';
 import { BaseStageRail } from '../components/base/BaseStageRail';
+import { ManifestArtScene } from '../components/game/ManifestArtScene';
+import { getBaseStageManifestAssetId } from '../game/manifestAssetUi';
 
 export function BaseCampPage({ embedded = false }: { embedded?: boolean }) {
   const { dailyEntries, measurements, settings } = useAppStore();
@@ -19,6 +21,8 @@ export function BaseCampPage({ embedded = false }: { embedded?: boolean }) {
     [dailyEntries, measurements, settings, unlockedAchievements],
   );
 
+  const stageArtId = getBaseStageManifestAssetId(snapshot.currentStage.id);
+
   return (
     <div className="space-y-6 pb-4">
       {!embedded ? (
@@ -34,6 +38,14 @@ export function BaseCampPage({ embedded = false }: { embedded?: boolean }) {
           Лагерь растёт сам, когда маршрут удержан. Вес стоит — но персонаж не стоит.
         </p>
       )}
+
+      {stageArtId ? (
+        <ManifestArtScene
+          assetId={stageArtId}
+          alt={snapshot.currentStage.title}
+          testId="base-camp-art-scene"
+        />
+      ) : null}
 
       <section className="rounded-xl border border-[var(--app-gold)]/25 bg-[var(--app-primary-soft)]/30 px-4 py-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-gold)]">

@@ -127,7 +127,7 @@
 - **Manifest v2:** категории hero → uiIcons, приоритеты P0–P3, lifecycle statuses
 - **Art Backlog:** [`13-art-backlog.md`](13-art-backlog.md) — P0/P1/P2/P3 без генерации
 - **Dark MVP Visual Priority Pack v1** ✅ — 8 prompt-ready ассетов, Nano Banana briefs в `docs/prompts/assets/`
-- **Dark MVP Asset Generation Batch 1** ✅ — 4/4 webp на диске, manifest `processed`; **UI wire** (следующий шаг)
+- **Dark MVP Asset Generation Batch 1** ✅ — 4/4 in-app в UI (`/start`, лагерь, сезон 1 reward)
 - **Runtime:** `src/game/assetManifest.ts` — `getAssetById`, `getEntityAsset`, `getAssetPlaceholder`
 - **Validation:** `assetManifest.test.ts` — unique ids, paths for in-app, categories
 - **Prompts:** pack files + `_template-nano-banana-asset.md`, `_template-boss.md`
@@ -146,7 +146,7 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Batch 1 UI wire** (4 assets → `in-app`) → Priority Pack batch 2 |
+| Следующий спринт | **Priority Pack batch 2** (empty-state, body abilities, plateau, season boss) |
 
 ### Boss Campaign v1 ✅
 

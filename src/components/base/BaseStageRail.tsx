@@ -1,4 +1,6 @@
 import type { BaseProgressionSnapshot } from '../../types/baseV1';
+import { ManifestArtScene } from '../game/ManifestArtScene';
+import { getBaseStageManifestAssetId } from '../../game/manifestAssetUi';
 import { ProgressBar } from '../ui/ProgressBar';
 
 type BaseStageRailProps = {
@@ -14,6 +16,7 @@ export function BaseStageRail({ snapshot }: BaseStageRailProps) {
         const unlocked = baseScore >= stage.unlockScore;
         const isCurrent = stage.id === currentStage.id;
         const isPast = stage.level < currentStage.level;
+        const stageArtId = getBaseStageManifestAssetId(stage.id);
 
         return (
           <article
@@ -27,14 +30,24 @@ export function BaseStageRail({ snapshot }: BaseStageRailProps) {
             }`}
           >
             <div className="flex items-start gap-3">
-              <span
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-lg ${
-                  unlocked ? 'bg-[var(--app-primary-soft)]' : 'bg-[var(--app-bg-soft)]'
-                }`}
-                aria-hidden
-              >
-                {stage.icon}
-              </span>
+              {stageArtId ? (
+                <ManifestArtScene
+                  assetId={stageArtId}
+                  alt={stage.title}
+                  compact
+                  className="h-16 w-24 shrink-0"
+                  testId={`base-stage-art-${stage.id}`}
+                />
+              ) : (
+                <span
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-lg ${
+                    unlocked ? 'bg-[var(--app-primary-soft)]' : 'bg-[var(--app-bg-soft)]'
+                  }`}
+                  aria-hidden
+                >
+                  {stage.icon}
+                </span>
+              )}
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="text-sm font-semibold text-[var(--app-text)]">{stage.title}</h3>
@@ -54,7 +67,7 @@ export function BaseStageRail({ snapshot }: BaseStageRailProps) {
               </div>
             </div>
             {isCurrent && snapshot.nextStage ? (
-              <div className="mt-3 pl-[52px]">
+              <div className={`mt-3 ${stageArtId ? 'pl-[6.75rem]' : 'pl-[52px]'}`}>
                 <ProgressBar value={snapshot.progressPercent} max={100} />
                 <p className="mt-1 text-xs text-[var(--app-text-muted)]">
                   До «{snapshot.nextStage.title}»: {snapshot.progressToNext} очков маршрута
@@ -62,7 +75,9 @@ export function BaseStageRail({ snapshot }: BaseStageRailProps) {
               </div>
             ) : null}
             {isPast ? (
-              <p className="mt-2 pl-[52px] text-xs text-[var(--app-success)]">Стадия удержана</p>
+              <p className={`mt-2 text-xs text-[var(--app-success)] ${stageArtId ? 'pl-[6.75rem]' : 'pl-[52px]'}`}>
+                Стадия удержана
+              </p>
             ) : null}
           </article>
         );

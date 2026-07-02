@@ -33,6 +33,7 @@ const manifest = JSON.parse(
     status: string;
     filesOnDisk: number;
     filesExpected: number;
+    inApp?: boolean;
   };
 };
 
@@ -43,18 +44,19 @@ describe('Dark MVP Asset Generation Batch 1', () => {
     expect(manifest.darkMvpAssetGenerationBatch1?.assetIds).toEqual([...BATCH_1_IDS]);
   });
 
-  it('batch 1 metadata reflects files on disk', () => {
+  it('batch 1 metadata reflects in-app wired state', () => {
     const batch = manifest.darkMvpAssetGenerationBatch1;
     expect(batch?.filesExpected).toBe(4);
     expect(batch?.filesOnDisk).toBe(4);
-    expect(batch?.status).toBe('files-on-disk');
+    expect(batch?.inApp).toBe(true);
+    expect(batch?.status).toBe('in-app');
   });
 
   for (const id of BATCH_1_IDS) {
-    it(`${id} is processed on disk with prompt file and targetPath`, () => {
+    it(`${id} is in-app on disk with prompt file and targetPath`, () => {
       const asset = manifest.assets.find((a) => a.id === id);
       expect(asset).toBeDefined();
-      expect(asset?.status).toBe('processed');
+      expect(asset?.status).toBe('in-app');
       expect(asset?.promptStatus).toBe('ready');
       expect(asset?.fileStatus).toBe('ready');
       expect(asset?.path).toBe(asset?.targetPath);
@@ -66,16 +68,7 @@ describe('Dark MVP Asset Generation Batch 1', () => {
     });
   }
 
-  it('batch 1 assets are not in-app until UI wire', () => {
-    for (const id of BATCH_1_IDS) {
-      const asset = manifest.assets.find((a) => a.id === id)!;
-      expect(asset.status).not.toBe('in-app');
-      expect(asset.status).not.toBe('done');
-      expect(asset.status).toBe('processed');
-    }
-  });
-
-  it('manifest validation passes (no broken in-app paths)', () => {
+  it('manifest validation passes including in-app file paths', () => {
     const issues = validateAssetManifest(manifest, {
       publicRoot,
       fileExists: existsSync,

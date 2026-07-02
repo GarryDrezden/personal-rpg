@@ -1,5 +1,7 @@
 import type { SeasonSnapshotWithRecap } from '../../game/seasons/seasonEngine';
 import type { BossCampaignSnapshot } from '../../game/bosses/bossTypes';
+import { ManifestArtScene } from '../game/ManifestArtScene';
+import { getSeasonRewardManifestAssetId } from '../../game/manifestAssetUi';
 import { ProgressBar } from '../ui/ProgressBar';
 
 type SeasonDashboardSummaryProps = {
@@ -12,11 +14,22 @@ export function SeasonDashboardSummary({
   compact = false,
   boss,
 }: SeasonDashboardSummaryProps) {
+  const rewardArtId = getSeasonRewardManifestAssetId(season.seasonIndex);
+
   return (
     <section
       data-testid="season-dashboard-summary"
       className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)]/80 px-4 py-3"
     >
+      {rewardArtId ? (
+        <ManifestArtScene
+          assetId={rewardArtId}
+          alt={season.config.rewardName}
+          compact
+          className="mb-3"
+          testId="season-reward-art"
+        />
+      ) : null}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-gold)]">
