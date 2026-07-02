@@ -905,11 +905,13 @@ Body abilities help the game remain meaningful even when weight progress is slow
 
 ---
 
-## Future System — Camp / Base Progression
+## Camp / Base Progression — Лагерь героя
 
-The hero can have a visual base that grows from stability, not only from weight.
+**Status:** Camp/Base Progression v1 implemented.
 
-Possible progression:
+The hero camp is **derived meta-progression** — it grows from route stability, not from weight alone or manual building.
+
+### 8 stages (v1)
 
 1. Тлеющий костёр
 2. Укрытие
@@ -919,6 +921,44 @@ Possible progression:
 6. Очаг восстановления
 7. Крепость режима
 8. Цитадель формы
+
+Engine: `src/game/base/baseProgressionEngine.ts`. Config: `src/game/base/baseProgressionConfig.ts`.
+
+### Score sources (derived, no new daily fields)
+
+- saved days, minimal/recovery days
+- resource, movement, alcohol-free, nutrition days
+- Body Abilities unlocked (+3 each)
+- seasons held/cleared/empowered (+5 each)
+- achievement «Страж перевала» (+5)
+
+### UI (v1)
+
+- **Dashboard:** compact `BaseDashboardSummary`
+- **Growth:** `/growth/camp` — all stages, progress rail
+- **Today:** optional base spark line in save reaction
+
+### Design rule
+
+Camp grows when the route is held — **not a new obligation**. No manual building, no construction economy.
+
+During plateaus, camp progression shows that «персонаж не стоит» even when weight stalls.
+
+**Not in v1:** base art/scenes, manual upgrades, Boss Campaign, DB migrations, new daily metrics.
+
+Future assets for camp stages → asset backlog, not blocking v1.
+
+---
+
+## Future System — Camp / Base Progression (legacy notes)
+
+*Superseded by v1 implementation above. Kept for historical design intent.*
+
+The hero can have a visual base that grows from stability, not only from weight.
+
+Possible progression (now implemented as 8 stages):
+
+1. Тлеющий костёр … 8. Цитадель формы
 
 Base upgrades can be unlocked by:
 
@@ -932,3 +972,5 @@ Base upgrades can be unlocked by:
 Purpose:
 
 Create non-weight visual progress for long plateaus and maintenance.
+
+---

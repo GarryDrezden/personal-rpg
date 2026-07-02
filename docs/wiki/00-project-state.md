@@ -127,7 +127,16 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Camp/Base Progression** |
+| Следующий спринт | **Boss Campaign** (или Asset Registry 2.0 параллельно) |
+
+### Camp/Base Progression v1 ✅
+
+- **8 стадий лагеря:** `src/game/base/baseProgressionConfig.ts` — от «Тлеющий костёр» до «Цитадель формы»
+- **Derived engine:** `src/game/base/baseProgressionEngine.ts` — base score из daily entries, seasons, Body Abilities, plateau achievement
+- **Без ручного строительства:** прогресс считается автоматически, без новой экономики
+- **UI:** `BaseDashboardSummary` на Dashboard, `/growth/camp` в Growth hub, `BaseStageRail` со всеми стадиями
+- **Today:** optional `baseLine` в `TodaySaveReactionCard` после save
+- **Не в scope v1:** base art/scenes, manual building, DB migration, новые daily metrics
 
 ### Plateau Mode v1 ✅
 
@@ -190,13 +199,13 @@
 - SPA: `index.html` + assets — OK по HTTP
 - **HTTPS** (`https://fit-rpg.ru`) → 404 nginx — **не блокер**, future hardening после выпуска сертификата
 
-### Готовность к Camp/Base Progression
+### Готовность к Boss Campaign
 
-Plateau Mode v1 готов к деплою на HTTP production.
+Camp/Base v1 готов к деплою на HTTP production.
 
 ## Следующий приоритет
 
-**Camp/Base Progression** → Boss Campaign (later) → New Game+ / Maintenance (later).
+**Boss Campaign** (после Camp/Base) → Asset Registry 2.0 (параллельно) → New Game+ / Maintenance (later).
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

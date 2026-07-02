@@ -116,11 +116,16 @@
 
 ---
 
-## 7. Camp/Base Progression
+## 7. Camp/Base Progression ✅
 
-- [ ] Visual base progression (non-weight)
-- [ ] Unlocks from streaks, seasons, resource, abilities
-- [ ] Long-term cosmetic rewards
+- [x] 8-stage hero camp config
+- [x] Derived base score from daily, season, body ability, plateau signals
+- [x] Dashboard base card
+- [x] Growth hub section `/growth/camp`
+- [x] Lightweight Today save feedback
+- [x] No manual building, no new economy
+
+**Критерий готовности v1:** визуальный долгий прогресс без новых обязанностей; derived only; без DB migration и ассетов.
 
 ---
 

@@ -44,6 +44,9 @@ import { getBodyAbilityV1Summary } from '../game/bodyAbilities/bodyAbilityV1Engi
 import { BodyAbilityDashboardSummary } from '../components/bodyAbilities/BodyAbilityDashboardSummary';
 import { getPlateauSnapshot, setManualPlateauActive } from '../game/plateau/plateauEngine';
 import { PlateauDashboardSummary } from '../components/plateau/PlateauDashboardSummary';
+import { getBaseProgressionSnapshot } from '../game/base/baseProgressionEngine';
+import { BaseDashboardSummary } from '../components/base/BaseDashboardSummary';
+import { useAchievementStore } from '../store/achievementStore';
 
 import { useAppTheme } from '../hooks/useAppTheme';
 
@@ -61,6 +64,7 @@ export function DashboardPage() {
   const { dailyEntries, measurements, settings, updateDaily, saveSettings } = useAppStore();
 
   const { profile } = useAuth();
+  const unlockedAchievements = useAchievementStore((s) => s.unlockedAchievements);
   const showStartRouteBanner = needsOnboarding(settings, profile);
 
   const { themeId } = useAppTheme();
@@ -224,6 +228,18 @@ export function DashboardPage() {
     await saveSettings(setManualPlateauActive(settings, !plateauSnapshot.manualActive));
   }, [saveSettings, settings, plateauSnapshot.manualActive]);
 
+  const baseSnapshot = useMemo(
+    () =>
+      getBaseProgressionSnapshot({
+        dailyEntries,
+        measurements,
+        settings,
+        today,
+        unlockedAchievementIds: unlockedAchievements.map((a) => a.achievementId),
+      }),
+    [dailyEntries, measurements, settings, today, unlockedAchievements],
+  );
+
   const nextAbilities = useMemo(
 
     () => getNextBodyAbilities({ dailyEntries, measurements, settings, limit: 1 }),
@@ -380,6 +396,8 @@ export function DashboardPage() {
         snapshot={plateauSnapshot}
         onToggleManual={() => void handleTogglePlateauManual()}
       />
+
+      <BaseDashboardSummary snapshot={baseSnapshot} />
 
       <DashboardSummaryStrip />
 

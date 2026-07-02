@@ -7,6 +7,7 @@ import { isDayEmpty } from './questEngine';
 export type TodaySaveReaction = {
   headline: string;
   detail: string;
+  baseLine?: string;
 };
 
 export function getTodaySaveReaction(params: {

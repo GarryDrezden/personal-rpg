@@ -45,6 +45,7 @@ import { DailyMobCard } from '../components/game/DailyMobCard';
 import { getOrCreateDailyMobForEntry } from '../game/dailyMobEngine';
 import { getDailyMobContextLine } from '../utils/todayMobContext';
 import { getTodaySaveReaction, type TodaySaveReaction } from '../utils/todayDayReaction';
+import { getBaseSaveSparkLine } from '../game/base/baseProgressionEngine';
 import { TodayMinimalQuickCard } from '../components/today/TodayMinimalQuickCard';
 import { TodaySaveReactionCard } from '../components/today/TodaySaveReactionCard';
 import { NutritionDayCard } from '../components/nutrition/NutritionDayCard';
@@ -182,15 +183,15 @@ export function TodayPage() {
     (momentumSummary.recoverySuggested || momentumSummary.minimalModeSuggested);
 
   const applySaveReaction = (savedEntry: DailyEntry) => {
-    setSaveReaction(
-      getTodaySaveReaction({
-        entry: savedEntry,
-        settings,
-        questDone: stats.done,
-        questTotal: stats.total,
-        points,
-      }),
-    );
+    const reaction = getTodaySaveReaction({
+      entry: savedEntry,
+      settings,
+      questDone: stats.done,
+      questTotal: stats.total,
+      points,
+    });
+    const baseLine = getBaseSaveSparkLine(savedEntry, settings);
+    setSaveReaction(baseLine ? { ...reaction, baseLine } : reaction);
   };
 
   const acceptRecoverySuggestion = async () => {

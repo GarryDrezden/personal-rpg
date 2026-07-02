@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-06-06 — Camp/Base v1 (derived meta-progression, not building sim)
+
+### Context
+
+Long campaigns need visual progress when weight stalls. Users should not gain new obligations or a construction economy.
+
+### Decision
+
+- Camp/Base v1 is **derived meta-progression** from existing daily, season, body ability and plateau signals.
+- **8 stages** with score thresholds — no manual building, no new currency, no DB migration.
+- UI: compact Dashboard card + `/growth/camp` section; optional Today save spark line.
+- Emojis + existing UI style for v1 — **no new assets**.
+
+### Consequences
+
+Base art / stage scenes deferred to asset backlog. Boss Campaign remains next major gameplay layer.
+
+---
+
 ## 2026-06-06 — Plateau Mode v1 (game-support state, not medical diagnosis)
 
 ### Context

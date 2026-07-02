@@ -1,9 +1,10 @@
-import { Sparkles, Dna, Gift, Trophy, Swords } from 'lucide-react';
+import { Sparkles, Dna, Gift, Trophy, Swords, Flame } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export const GROWTH_HUB_TABS = [
   { id: 'skills', label: 'Навыки', path: '/growth/skills', icon: Sparkles },
   { id: 'abilities', label: 'Способности', path: '/growth/abilities', icon: Dna },
+  { id: 'camp', label: 'Лагерь', path: '/growth/camp', icon: Flame },
   { id: 'rewards', label: 'Награды', path: '/growth/rewards', icon: Gift },
   { id: 'achievements', label: 'Достижения', path: '/growth/achievements', icon: Trophy },
   { id: 'trials', label: 'Испытания', path: '/growth/trials', icon: Swords },

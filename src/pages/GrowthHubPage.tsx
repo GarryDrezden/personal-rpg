@@ -7,6 +7,7 @@ import { BodyAbilitiesPage } from './BodyAbilitiesPage';
 import { RewardsPage } from './RewardsPage';
 import { AchievementsPage } from './AchievementsPage';
 import { BossesPage } from './BossesPage';
+import { BaseCampPage } from './BaseCampPage';
 
 export function GrowthHubPage() {
   const { tab } = useParams<{ tab: string }>();
@@ -37,6 +38,7 @@ export function GrowthHubPage() {
       <div className="pt-1">
         {tab === 'skills' ? <SkillsPage embedded /> : null}
         {tab === 'abilities' ? <BodyAbilitiesPage embedded /> : null}
+        {tab === 'camp' ? <BaseCampPage embedded /> : null}
         {tab === 'rewards' ? <RewardsPage embedded /> : null}
         {tab === 'achievements' ? <AchievementsPage embedded /> : null}
         {tab === 'trials' ? <BossesPage embedded /> : null}

@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Camp/Base Progression v1:** 8-stage hero camp; derived base score from existing daily, season, body ability and plateau signals; Dashboard base card; Growth `/growth/camp` section; lightweight Today save feedback. DB schema, new economy, manual building and Boss Campaign kept out of scope.
 - **Plateau Mode v1 — Удержание перевала:** soft and active plateau detection; manual «Я на перевале» state; route-holding snapshot from existing daily entries; Today plateau card and Dashboard summary; Body Abilities connection as non-weight progress; achievement «Страж перевала». Medical analytics, DB schema changes and new daily metrics kept out of scope.
 - **Core Loop Polish v1 — Today:** improved daily Today flow; save reaction card; minimal/recovery day quick path; contextual daily mob; sticky mobile save CTA.
 - **Seasons v1:** 28-day season engine; 13 season configs; quest progress from daily entries; partial success; compact season card on Today and Dashboard.
@@ -56,6 +57,16 @@
 ### Removed
 
 - —
+
+---
+
+## Camp/Base Progression v1
+
+- Added 8-stage hero camp progression.
+- Added derived base score from existing daily, season, body ability and plateau signals.
+- Added Dashboard base card and Growth `/growth/camp` section.
+- Added lightweight Today feedback after save.
+- Kept DB schema, new economy, manual building and Boss Campaign out of scope.
 
 ---
 
