@@ -115,6 +115,13 @@
 - Manifest lifecycle → `in-app`; `GAME_ASSET_VERSION` → 21.
 - Kept fallback strategy; no broken images.
 
+## Legacy Boss Asset Replacement
+
+- Replaced legacy `lord-of-empty-day.png` with Batch 2 `season-boss-01-empty-day-lord.webp` everywhere in UI/config.
+- `getBossPublicPath('lord_of_empty_day')` and `getLegacyCodexBossManifestAssetId()` route to manifest asset id.
+- Legacy manifest entry `boss-lord-of-empty-day` marked `superseded`; PNG removed from disk.
+- No mechanics, DB schema, or Cozy Variant changes.
+
 ---
 
 ## Boss Campaign v1

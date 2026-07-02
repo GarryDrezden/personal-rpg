@@ -7,6 +7,8 @@ import type {
   HeroStageNumber,
   MobId,
 } from '../types/gameAssets';
+import { getManifestAssetUrl } from './assetManifest';
+import { getLegacyCodexBossManifestAssetId } from './manifestAssetUi';
 
 /** Base path for drop-in game assets (no code changes needed) */
 export const GAME_ASSET_BASE_PATH = '/game-assets';
@@ -102,16 +104,24 @@ export function getMobPublicPath(id: MobId): string {
 }
 
 export function getBossPublicPath(id: BossId): string {
-  const fileMap: Record<BossId, string> = {
+  const manifestAssetId = getLegacyCodexBossManifestAssetId(id);
+  if (manifestAssetId) {
+    const manifestUrl = getManifestAssetUrl(manifestAssetId);
+    if (manifestUrl) return manifestUrl;
+  }
+
+  const fileMap: Record<Exclude<BossId, 'lord_of_empty_day'>, string> = {
     misty_baron: 'misty-baron.png',
     resource_devourer: 'resource-devourer.png',
     divan_king: 'divan-king.png',
-    lord_of_empty_day: 'lord-of-empty-day.png',
     chain_of_rollback: 'chain-of-rollback.png',
     night_feast_baron: 'night-feast-baron.png',
     promise_collector: 'promise-collector.png',
     old_form_guardian: 'old-form-guardian.png',
   };
+  if (id === 'lord_of_empty_day') {
+    return gameAsset('bosses/seasons/season-boss-01-empty-day-lord.webp');
+  }
   return gameAsset(`bosses/${fileMap[id]}`);
 }
 

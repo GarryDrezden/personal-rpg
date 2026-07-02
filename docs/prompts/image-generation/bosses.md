@@ -7,7 +7,7 @@
 | misty_baron | bosses/misty-baron.png |
 | resource_devourer | bosses/resource-devourer.png |
 | divan_king | bosses/divan-king.png |
-| lord_of_empty_day | bosses/lord-of-empty-day.png |
+| lord_of_empty_day | bosses/seasons/season-boss-01-empty-day-lord.webp (manifest: `season-boss-01-empty-day-lord`) |
 | chain_of_rollback | bosses/chain-of-rollback.png |
 | night_feast_baron | bosses/night-feast-baron.png |
 | promise_collector | bosses/promise-collector.png |

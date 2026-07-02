@@ -1660,26 +1660,23 @@
     },
     {
       "promptStatus": "ready",
-      "fileStatus": "ready",
+      "fileStatus": "missing",
       "manifestStatus": "registered",
-      "notes": "Legacy chapter boss art; Boss Campaign v1 uses emoji until campaign art ships.",
-      "status": "in-app",
+      "notes": "Legacy PNG removed. Codex/Journey use season-boss-01-empty-day-lord via getBossPublicPath().",
       "id": "boss-lord-of-empty-day",
       "type": "boss-legacy",
       "category": "chapterBosses",
       "title": "Босс (codex) — Владыка Пустого Дня",
       "priority": "P1",
-      "path": "/game-assets/bosses/lord-of-empty-day.png",
+      "status": "done",
       "usedIn": [
-        "Codex",
-        "assetRegistry",
-        "Journey (legacy bossId)"
+        "superseded-by season-boss-01-empty-day-lord"
       ],
       "relatedEntityId": "lord_of_empty_day",
       "theme": "darkFantasy",
       "source": "Leonardo",
       "date": "2026-05",
-      "legacyStatus": "approved"
+      "legacyStatus": "superseded"
     },
     {
       "promptStatus": "ready",
@@ -1846,7 +1843,7 @@
       "promptStatus": "ready",
       "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Dark MVP Priority Pack v1. Emoji in UI until file exists. Batch 2 connected in UI (.webp).",
+      "notes": "Batch 2 in-app. Replaces legacy boss-lord-of-empty-day for codex and journey. Batch 2 connected in UI (.webp).",
       "status": "in-app",
       "id": "season-boss-01-empty-day-lord",
       "type": "season-mini-boss",
@@ -1857,7 +1854,11 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
-        "bossConfig"
+        "bossConfig",
+        "Codex",
+        "assetRegistry",
+        "JourneyBossMini",
+        "getBossPublicPath"
       ],
       "relatedEntityId": "season_mini_01",
       "path": "/game-assets/bosses/seasons/season-boss-01-empty-day-lord.webp"

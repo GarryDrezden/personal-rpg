@@ -40,7 +40,7 @@ Journey narrative. Assets: `public/game-assets/bosses/`.
 | misty_baron | misty-baron.png |
 | resource_devourer | resource-devourer.png |
 | divan_king | divan-king.png |
-| lord_of_empty_day | lord-of-empty-day.png |
+| lord_of_empty_day | seasons/season-boss-01-empty-day-lord.webp (`season-boss-01-empty-day-lord`) |
 | chain_of_rollback | chain-of-rollback.png |
 | night_feast_baron | night-feast-baron.png |
 | promise_collector | promise-collector.png |

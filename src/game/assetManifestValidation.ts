@@ -96,7 +96,9 @@ export function validateAssetManifest(
     }
 
     if (PATH_REQUIRED_STATUSES.has(asset.status)) {
-      if (!asset.path) {
+      if (asset.legacyStatus === 'superseded') {
+        // Superseded legacy entries may omit path when file was removed from disk.
+      } else if (!asset.path) {
         issues.push({
           assetId: asset.id,
           field: 'path',

@@ -3,6 +3,7 @@ import {
   EMPTY_STATE_NO_ENTRIES_ASSET_ID,
   getBaseStageManifestAssetId,
   getManifestAssetObjectPosition,
+  getLegacyCodexBossManifestAssetId,
   getSeasonBossManifestAssetId,
   getSeasonRewardManifestAssetId,
   ONBOARDING_CORE_AWAKENING_ASSET_ID,
@@ -26,6 +27,9 @@ describe('manifestAssetUi', () => {
   it('exposes batch 2 asset id constants', () => {
     expect(EMPTY_STATE_NO_ENTRIES_ASSET_ID).toBe('empty-state-no-entries');
     expect(PLATEAU_ARTIFACT_PASS_STONE_ASSET_ID).toBe('plateau-artifact-pass-stone');
+    expect(getLegacyCodexBossManifestAssetId('lord_of_empty_day')).toBe(
+      'season-boss-01-empty-day-lord',
+    );
   });
 
   it('provides object-position hints for wired assets', () => {

@@ -84,7 +84,6 @@ const MOBS = [
 ];
 
 const LEGACY_BOSSES = [
-  ['boss-lord-of-empty-day', 'lord_of_empty_day', 'Владыка Пустого Дня', 'lord-of-empty-day.png'],
   ['boss-divan-king', 'divan_king', 'Диванный Король', 'divan-king.png'],
   ['boss-misty-baron', 'misty_baron', 'Туманный Барон', 'misty-baron.png'],
   ['boss-resource-devourer', 'resource_devourer', 'Пожиратель Ресурса', 'resource-devourer.png'],
@@ -372,7 +371,29 @@ for (const [id, entityId, title, file] of MOBS) {
   );
 }
 
-// Legacy codex bosses (PNG in repo)
+// Legacy codex bosses (PNG in repo; lord_of_empty_day superseded by Batch 2 webp)
+assets.push(
+  entry({
+    id: 'boss-lord-of-empty-day',
+    type: 'boss-legacy',
+    category: 'chapterBosses',
+    title: 'Босс (codex) — Владыка Пустого Дня',
+    priority: 'P1',
+    status: 'done',
+    promptStatus: 'ready',
+    fileStatus: 'missing',
+    manifestStatus: 'registered',
+    usedIn: ['superseded-by season-boss-01-empty-day-lord'],
+    relatedEntityId: 'lord_of_empty_day',
+    theme: 'darkFantasy',
+    source: 'Leonardo',
+    date: '2026-05',
+    legacyStatus: 'superseded',
+    notes:
+      'Legacy PNG removed. Codex/Journey use season-boss-01-empty-day-lord via getBossPublicPath().',
+  }),
+);
+
 for (const [id, entityId, title, file] of LEGACY_BOSSES) {
   assets.push(
     inApp({
@@ -406,9 +427,18 @@ for (const [seasonId, slug, title] of SEASON_MINI_BOSSES) {
           title: `Сезон 1 — ${title}`,
           priority: 'P1',
           targetPath: `/game-assets/bosses/seasons/season-boss-01-empty-day-lord.webp`,
-          usedIn: ['SeasonTodayCard', 'SeasonDashboardSummary', 'bossConfig'],
+          usedIn: [
+            'SeasonTodayCard',
+            'SeasonDashboardSummary',
+            'bossConfig',
+            'Codex',
+            'assetRegistry',
+            'JourneyBossMini',
+            'getBossPublicPath',
+          ],
           relatedEntityId: 'season_mini_01',
-          notes: 'Dark MVP Priority Pack v1. Emoji in UI until file exists.',
+          notes:
+            'Batch 2 in-app. Replaces legacy boss-lord-of-empty-day for codex and journey.',
         })
       : needed({
           id: `season-boss-${n}`,

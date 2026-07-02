@@ -80,7 +80,7 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 |----|------------|----------|--------|-------------|-------------|
 | `empty-state-no-entries` | `public/game-assets/empty-states/no-entries.webp` | P0 | **in-app** | [`empty-state-no-entries.md`](../prompts/assets/empty-state-no-entries.md) | Dashboard path empty, Measurements chart empty |
 | `plateau-artifact-pass-stone` | `public/game-assets/artifacts/plateau-pass-stone.webp` | P1 | **in-app** | [`plateau-artifact-pass-stone.md`](../prompts/assets/plateau-artifact-pass-stone.md) | `PlateauDashboardSummary`, `PlateauTodayCard` |
-| `season-boss-01-empty-day-lord` | `public/game-assets/bosses/seasons/season-boss-01-empty-day-lord.webp` | P1 | **in-app** | [`season-boss-01-empty-day-lord.md`](../prompts/assets/season-boss-01-empty-day-lord.md) | `SeasonTodayCard`, `SeasonDashboardSummary` |
+| `season-boss-01-empty-day-lord` | `public/game-assets/bosses/seasons/season-boss-01-empty-day-lord.webp` | P1 | **in-app** | [`season-boss-01-empty-day-lord.md`](../prompts/assets/season-boss-01-empty-day-lord.md) | `SeasonTodayCard`, `SeasonDashboardSummary`, Codex, `JourneyBossMini`, `getBossPublicPath` |
 
 **Не в Batch 2:** `body-ability-icon-set-v1` (12 иконок) — отдельный mini-batch.
 
@@ -93,7 +93,9 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 |----|-----|--------|
 | `empty-state-no-entries` | `DashboardPathEmptyState`, `MeasurementsPage` empty chart | in-app |
 | `plateau-artifact-pass-stone` | `PlateauDashboardSummary`, `PlateauTodayCard` | in-app |
-| `season-boss-01-empty-day-lord` | `SeasonTodayCard`, `SeasonDashboardSummary` boss row | in-app |
+| `season-boss-01-empty-day-lord` | `SeasonTodayCard`, `SeasonDashboardSummary`, Codex, `JourneyBossMini`, `getBossPublicPath` | in-app |
+
+**Superseded:** `boss-lord-of-empty-day` (legacy PNG removed) → `season-boss-01-empty-day-lord`.
 
 **Visual QA:** отдельный спринт после wire.
 
