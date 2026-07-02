@@ -8,9 +8,10 @@ import { GameAssetImage } from './GameAssetImage';
 type DailyMobCardProps = {
   mobId: MobId;
   compact?: boolean;
+  contextLine?: string;
 };
 
-export function DailyMobCard({ mobId, compact = false }: DailyMobCardProps) {
+export function DailyMobCard({ mobId, compact = false, contextLine }: DailyMobCardProps) {
   const meta = getMobMeta(mobId);
   const settings = useAppStore((s) => s.settings);
 
@@ -42,6 +43,9 @@ export function DailyMobCard({ mobId, compact = false }: DailyMobCardProps) {
           <p className="mt-2 text-xs font-medium text-[var(--app-text)]">
             {getMobWeaknessText(meta.weakness, { settings, mobId })}
           </p>
+          {contextLine ? (
+            <p className="mt-1 text-xs text-[var(--app-text-muted)]">{contextLine}</p>
+          ) : null}
         </div>
       </div>
     </Card>

@@ -32,7 +32,11 @@ import { CARD_ACCENT } from '../constants/cardTheme';
 import { Card } from '../components/ui/Card';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { DailyMobCard } from '../components/game/DailyMobCard';
-import { getOrCreateDailyMob } from '../game/dailyMobEngine';
+import { getOrCreateDailyMobForEntry } from '../game/dailyMobEngine';
+import { getDailyMobContextLine } from '../utils/todayMobContext';
+import { getTodaySaveReaction, type TodaySaveReaction } from '../utils/todayDayReaction';
+import { TodayMinimalQuickCard } from '../components/today/TodayMinimalQuickCard';
+import { TodaySaveReactionCard } from '../components/today/TodaySaveReactionCard';
 import { NutritionDayCard } from '../components/nutrition/NutritionDayCard';
 import { NutritionRecoverySuggestionCard } from '../components/nutrition/NutritionRecoverySuggestionCard';
 import { shouldSuggestNutritionRecovery, isNutritionTrackingEnabled } from '../utils/nutritionEngine';
@@ -65,11 +69,13 @@ export function TodayPage() {
   const [momentumHelpDismissed, setMomentumHelpDismissed] = useState(() =>
     isMomentumHelpDismissed(today),
   );
+  const [saveReaction, setSaveReaction] = useState<TodaySaveReaction | null>(null);
 
   useEffect(() => {
     const found = dailyEntries.find((e) => e.date === selectedDate);
     setEntry(found ?? emptyDaily(selectedDate));
     setDirty(false);
+    setSaveReaction(null);
   }, [selectedDate, dailyEntries]);
 
   const selectDay = useCallback(
@@ -164,6 +170,18 @@ export function TodayPage() {
     getDayMode(entry.dayMode) === 'normal' &&
     (momentumSummary.recoverySuggested || momentumSummary.minimalModeSuggested);
 
+  const applySaveReaction = (savedEntry: DailyEntry) => {
+    setSaveReaction(
+      getTodaySaveReaction({
+        entry: savedEntry,
+        settings,
+        questDone: stats.done,
+        questTotal: stats.total,
+        points,
+      }),
+    );
+  };
+
   const acceptRecoverySuggestion = async () => {
     const updated: DailyEntry = {
       ...entry,
@@ -176,6 +194,7 @@ export function TodayPage() {
     try {
       await updateDaily(updated);
       setDirty(false);
+      applySaveReaction(updated);
       setRecoveryToast('День восстановления включён');
       setTimeout(() => setRecoveryToast(null), 4000);
     } finally {
@@ -200,6 +219,7 @@ export function TodayPage() {
     try {
       await updateDaily(updated);
       setDirty(false);
+      applySaveReaction(updated);
       setRecoveryToast('День восстановления включён');
       setTimeout(() => setRecoveryToast(null), 4000);
     } finally {
@@ -219,6 +239,7 @@ export function TodayPage() {
     try {
       await updateDaily(updated);
       setDirty(false);
+      applySaveReaction(updated);
       setRecoveryToast('Минимальный день включён');
       setTimeout(() => setRecoveryToast(null), 4000);
     } finally {
@@ -239,18 +260,48 @@ export function TodayPage() {
   const mainQuests = quests.filter((q) => q.category === 'main' && q.id !== 'nutrition');
   const mediumQuests = quests.filter((q) => q.category === 'medium');
   const bonusQuests = quests.filter((q) => q.category === 'bonus');
-  const dailyMobId = isEditingToday ? getOrCreateDailyMob(today) : null;
+  const dailyMobId = isEditingToday
+    ? getOrCreateDailyMobForEntry(today, entry, settings)
+    : null;
+  const dailyMobContext =
+    dailyMobId && isEditingToday
+      ? getDailyMobContextLine(dailyMobId, entry, settings)
+      : undefined;
+  const dayMode = getDayMode(entry.dayMode);
 
   const patch = (partial: Partial<DailyEntry>) => {
     setEntry((prev) => ({ ...prev, ...partial, date: selectedDate }));
     setDirty(true);
+    setSaveReaction(null);
   };
 
   const saveDay = async () => {
     setSaving(true);
     try {
-      await updateDaily({ ...entry, date: selectedDate });
+      const saved = { ...entry, date: selectedDate };
+      await updateDaily(saved);
       setDirty(false);
+      applySaveReaction(saved);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const enableMinimalDay = async () => {
+    const updated: DailyEntry = {
+      ...entry,
+      date: selectedDate,
+      dayMode: 'minimal',
+      energyLevel: entry.energyLevel ?? 2,
+    };
+    setEntry(updated);
+    setSaving(true);
+    try {
+      await updateDaily(updated);
+      setDirty(false);
+      applySaveReaction(updated);
+      setRecoveryToast('Минимальный день включён');
+      setTimeout(() => setRecoveryToast(null), 4000);
     } finally {
       setSaving(false);
     }
@@ -264,13 +315,20 @@ export function TodayPage() {
       await deleteDaily(selectedDate);
       setEntry(emptyDaily(selectedDate));
       setDirty(false);
+      setSaveReaction(null);
     } finally {
       setSaving(false);
     }
   };
 
+  const saveButtonLabel = saving
+    ? 'Сохранение…'
+    : dirty
+      ? 'Сохранить ход'
+      : 'Сохранено';
+
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-5 overflow-x-hidden pb-24 lg:space-y-6 lg:pb-8">
       {routeWelcome ? (
         <div
           data-testid="route-opened-banner"
@@ -293,7 +351,7 @@ export function TodayPage() {
         </div>
       ) : null}
       <header className="flex flex-wrap items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0 flex-1">
           <h1 className="text-2xl font-bold text-[var(--app-text)]">Квесты дня</h1>
           <p className="text-sm text-[var(--app-text-muted)]">{formatDateFull(selectedDate)}</p>
           {!isEditingToday && (
@@ -302,18 +360,26 @@ export function TodayPage() {
             </p>
           )}
           <p className="mt-1 text-sm font-medium text-[var(--app-primary)]">{dayStatus}</p>
+          {dayMode !== 'normal' && isEditingToday ? (
+            <p className="mt-1 text-xs text-[var(--app-gold)]">
+              {dayMode === 'minimal' ? 'Минимальный день' : 'День восстановления'}
+            </p>
+          ) : null}
         </div>
-        <div className="flex flex-col items-end gap-2">
-          {dirty && (
-            <span className="text-xs text-amber-700">Есть несохранённые изменения</span>
+        <div className="hidden flex-col items-end gap-2 lg:flex">
+          {dirty ? (
+            <span className="text-xs text-amber-600">Есть несохранённые изменения</span>
+          ) : (
+            <span className="text-xs text-[var(--app-text-muted)]">Все изменения сохранены</span>
           )}
           <button
             type="button"
+            data-testid="today-save-desktop"
             onClick={() => void saveDay()}
             disabled={saving || !dirty}
             className="rounded-xl bg-[var(--app-primary)] px-5 py-2.5 text-sm font-semibold text-slate-950 disabled:opacity-40 hover:brightness-105"
           >
-            {saving ? 'Сохранение…' : 'Сохранить день'}
+            {saveButtonLabel}
           </button>
           {existing && (
             <button
@@ -328,7 +394,24 @@ export function TodayPage() {
         </div>
       </header>
 
-      {dailyMobId ? <DailyMobCard mobId={dailyMobId} compact /> : null}
+      {saveReaction && !dirty ? (
+        <TodaySaveReactionCard
+          reaction={saveReaction}
+          onDismiss={() => setSaveReaction(null)}
+        />
+      ) : null}
+
+      {isEditingToday && dayMode !== 'recovery' ? (
+        <TodayMinimalQuickCard
+          entry={entry}
+          onEnableMinimal={() => void enableMinimalDay()}
+          saving={saving}
+        />
+      ) : null}
+
+      {dailyMobId ? (
+        <DailyMobCard mobId={dailyMobId} compact contextLine={dailyMobContext} />
+      ) : null}
 
       <Card>
         <p className="mb-3 text-sm font-medium text-[var(--app-text)]">День недели</p>
@@ -440,9 +523,10 @@ export function TodayPage() {
         </div>
       </Card>
 
-      {dayEmpty && isEditingToday && recoveryState === 'normal' && (
+      {dayEmpty && isEditingToday && recoveryState === 'normal' && dayMode === 'normal' && (
         <p className="rounded-2xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-4 text-center text-sm text-[var(--app-text-muted)]">
-          День ещё пустой. Начни с одного квеста — питание, шаги или день без алкоголя.
+          День ещё пустой — начни с одного квеста или включи минимальный день. Маршрут не требует
+          идеала.
         </p>
       )}
 
@@ -516,6 +600,23 @@ export function TodayPage() {
           />
         </label>
       </Card>
+
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--app-border)] bg-[var(--app-bg)]/95 px-4 py-3 backdrop-blur-sm lg:hidden">
+        <div className="mx-auto flex max-w-lg items-center gap-3">
+          <div className="min-w-0 flex-1 text-xs text-[var(--app-text-muted)]">
+            {dirty ? 'Есть изменения' : saveReaction ? 'Ход сохранён' : 'Готово к сохранению'}
+          </div>
+          <button
+            type="button"
+            data-testid="today-save-mobile"
+            onClick={() => void saveDay()}
+            disabled={saving || !dirty}
+            className="btn-primary shrink-0 rounded-xl px-5 py-3 text-sm font-semibold disabled:opacity-45"
+          >
+            {saveButtonLabel}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

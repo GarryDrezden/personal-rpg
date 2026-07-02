@@ -1,8 +1,9 @@
 import type { MobId, MobWeakness } from '../types/gameAssets';
-import type { AppSettings } from '../types';
+import type { AppSettings, DailyEntry } from '../types';
 import { MOB_IDS } from '../types/gameAssets';
 import { getDailyMobId, setDailyMobId } from './gameAssetStorage';
 import { getNutritionWeaknessText } from '../utils/nutritionEngine';
+import { resolveDailyMobForEntry } from '../utils/todayMobContext';
 
 export function getRandomMobId(): MobId {
   const index = Math.floor(Math.random() * MOB_IDS.length);
@@ -13,6 +14,18 @@ export function getOrCreateDailyMob(date: string): MobId {
   const existing = getDailyMobId(date);
   if (existing) return existing;
   const mobId = getRandomMobId();
+  setDailyMobId(date, mobId);
+  return mobId;
+}
+
+export function getOrCreateDailyMobForEntry(
+  date: string,
+  entry: DailyEntry,
+  settings: AppSettings,
+): MobId {
+  const existing = getDailyMobId(date);
+  if (existing) return existing;
+  const mobId = resolveDailyMobForEntry(entry, settings);
   setDailyMobId(date, mobId);
   return mobId;
 }

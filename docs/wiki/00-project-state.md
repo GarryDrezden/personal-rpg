@@ -127,7 +127,16 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Core Loop Polish** |
+| Следующий спринт | **Seasons v1** |
+
+### Core Loop Polish v1 — Today ✅
+
+- **Быстрый минимальный день:** карточка «Быстрый ход» + одно нажатие «Включить минимальный день» (сохранение сразу)
+- **Реакция игры после сохранения:** `TodaySaveReactionCard` с RPG-копирайтом по состоянию дня (minimal / recovery / ресурс / шаги / питание / квесты)
+- **Save UX:** «Сохранить ход», dirty/saved статус, sticky CTA на mobile (375px), desktop save в header
+- **Daily mob по состоянию дня:** `getOrCreateDailyMobForEntry` + контекстная строка в `DailyMobCard`
+- **Mobile:** `overflow-x-hidden`, `pb-24` под sticky save bar
+- Storage / DB schema **без изменений**
 
 ### Onboarding v1 — Пробуждение ядра ✅ (QA polish)
 
@@ -153,13 +162,13 @@
 - SPA: `index.html` + assets — OK по HTTP
 - **HTTPS** (`https://fit-rpg.ru`) → 404 nginx — **не блокер**, future hardening после выпуска сертификата
 
-### Готовность к Core Loop Polish
+### Готовность к Seasons v1
 
-**Можно начинать** после деплоя Onboarding v1 на HTTP production.
+**Можно начинать** после деплоя Core Loop Polish v1 на HTTP production.
 
 ## Следующий приоритет
 
-**Core Loop Polish** → Asset Registry 2.0 visual polish → Seasons v1.
+**Seasons v1** → Asset Registry 2.0 visual polish → Body Abilities v1.
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

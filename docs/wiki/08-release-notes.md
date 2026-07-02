@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Core Loop Polish v1 — Today:** improved daily Today flow; save reaction card; minimal/recovery day quick path; contextual daily mob; sticky mobile save CTA.
 - **Onboarding v1 — Пробуждение ядра:** first-start flow at `/start` for new users (weights, hero, theme, companion, route focus); `OnboardingGate`; remote persist via profile + `customSettingsBackup`; redirect to Today after completion.
 - **Stabilize — Remote Sidecar Persist:** achievements, coins and momentum sync to remote `user_data` via `sidecarSync.ts` (debounced save, hydrate on init, merge guards).
 - Documented long-term campaign structure for 12–24 month body transformation (`03-game-systems.md`: time layers, acts, parallel progress roads, seasons, plateau mode, body abilities, camp/base).
@@ -52,6 +53,16 @@
 ### Removed
 
 - —
+
+---
+
+## Core Loop Polish v1 — Today
+
+- Improved daily Today flow.
+- Added clearer save feedback and game reaction after saving.
+- Improved minimal/recovery day presentation.
+- Polished mobile Today experience.
+- Kept storage and database schema unchanged.
 
 ---
 
