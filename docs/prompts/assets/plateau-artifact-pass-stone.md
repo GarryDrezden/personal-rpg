@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Артефакт плато — `PlateauDashboardSummary`, achievement «Страж перевала». Символ **удержания маршрута** на перевале, когда вес стоит. Не образ провала.
+Артефакт режима плато / «Удержание перевала» — `PlateauDashboardSummary`, achievement «Страж перевала». Символ устойчивости на перевале, когда вес стоит. Не провал — камень, который держит путь.
 
 ## Style
 
@@ -16,35 +16,38 @@
 - not anime
 - not flat vector
 - not corporate illustration
+- no text
+- no UI
 
 ## Composition
 
-- **Format:** 1:1 artifact icon / small hero object
-- **Subject:** гладкий **камень перевала** с мягкой **печатью удержания** (круговая руна, не крест и не кандалы)
-- **Material:** тёмный river stone + тёплая золотая инкрустация в канавках руны
-- **Light:** внутреннее спокойное свечение руны — steady, not flashing
+- **Format:** 1:1 reward/artifact icon
+- **Subject:** каменный артефакт / печать удержания на холодном перевале
+- **Material:** тёмный river stone, древняя круговая руна (не крест, не кандалы)
+- **Light:** тёплая **трещина света внутри** камня — steady ember glow, не вспышка
+- **Environment hint:** холодный перевал, лёгкий иней или туман на заднем плане (shallow depth)
 - **Optional:** тонкий след тропы, выгравированный вокруг камня
 
 ## Mood
 
-Спокойный, устойчивый. «Перевал — участок пути». Достоинство без напряжения.
+Спокойный, устойчивый. «Вес стоит, но персонаж не стоит». Выдержка, достоинство без напряжения. Перевал — участок пути.
 
 ## Details
 
-- No cracks implying “broken” or “failed”
-- No scales, no downward arrows, no red warning
-- Stone feels ancient and reassuring — milestone, not tombstone
-- Slight moss on one edge — time passing, patience
+- Камень **целый** — не сломанный, не треснувший от провала
+- No scales, no downward arrows, no red warning, no tombstone vibe
+- Лёгкий мох на одном краю — время и терпение
+- Читаемо на 64px в artifact card
 
 ## Format
 
 - **Target:** `.webp`
-- **Aspect:** 1:1 (512×512)
-- **Background:** transparent for artifact card overlay
+- **Aspect:** 1:1 (512×512 master)
+- **Background:** transparent preferred for artifact card overlay
 
 ## Negative prompt
 
-tombstone, skull, failure stamp, red X, broken chain, horror, gore, anime, flat vector, medical, weight scale, text, watermark
+tombstone, skull, failure stamp, red X, broken chain, broken stone, horror, gore, anime, flat vector, medical, weight scale, downward arrow, text, watermark
 
 ## Output path
 

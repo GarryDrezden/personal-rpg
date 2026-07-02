@@ -68,4 +68,5 @@
 ## Исключено из Batch 1
 
 - Cozy Campaign Variant (future P2/P3)
-- `empty-state-no-entries`, `body-ability-icon-set-v1`, `plateau-artifact-pass-stone`, `season-boss-01-empty-day-lord` — следующие батчи Priority Pack v1
+- Batch 2 assets (`empty-state-no-entries`, `plateau-artifact-pass-stone`, `season-boss-01-empty-day-lord`) — см. [`BATCH-02-nano-banana-queue.md`](BATCH-02-nano-banana-queue.md)
+- `body-ability-icon-set-v1` — отдельный mini-batch (не Batch 2)

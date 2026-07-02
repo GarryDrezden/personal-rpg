@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Сезонный мини-босс 1 — `SeasonTodayCard`, `SeasonDashboardSummary`. Образ **пустоты и застоя**: сопротивление «ничего не делать», дни без отметок. Не мерзкий horror.
+Первый сезонный мини-босс — `SeasonTodayCard`, `SeasonDashboardSummary`, `bossConfig`. Образ **инерции и пустого дня**: сопротивление маршрута, а не наказание игрока. Не horror, не мерзкий.
 
 ## Style
 
@@ -10,41 +10,44 @@
 - dark fantasy + cozy
 - premium mobile RPG feel
 - cinematic lighting
-- readable at mobile boss line (~80px height)
+- readable at mobile boss card (~80px height)
 - not horror
 - not gore
 - not anime
 - not flat vector
 - not corporate illustration
+- no text
+- no UI
 
 ## Composition
 
-- **Format:** 1:1 or 4:5 portrait bust / figure
-- **Figure:** высокий **полый силуэт** — плащ из серого тумана, лицо не детализировано (пустота вместо черт)
-- **Motif:** исчезающие **следы на земле**, пустые страницы календаря, рассеивающийся дым
-- **Hands:** вытянуты — не угрожают, а **стирают** следы
-- **Environment hint:** twilight ruins edge in background — shallow depth
+- **Format:** 16:9 card art (preferred); 4:3 acceptable
+- **Figure:** тёмная фигура / сущность из **тумана**, **пустого плаща**, холодной тени или застывшего воздуха
+- **Silhouette:** высокий полый силуэт — лицо не детализировано (пустота вместо черт)
+- **Motif:** исчезающие следы, пустые страницы, рассеивающийся дым — **стирание**, не угроза когтями
+- **Hope crack:** слабые **искры маршрута** внутри или вокруг фигуры — трещины по пустоте, тёплый ember против холода
+- **Environment:** twilight edge, soft fog, shallow depth — no jump-scare face
 
 ## Mood
 
-Сопротивление без отвращения. «Пустой день держит территорию» — но один сохранённый день уже оставляет трещину. Игрок чувствует: **это можно ослабить**.
+Внушительный, но не отвратительный. «Пустой день держит территорию» — и игрок чувствует: **это можно ослабить**. Сопротивление без стыда.
 
 ## Details
 
-- Palette: ash gray, cold blue, single warm crack of light on chest (hope)
-- No rotting flesh, no insects, no screaming mouth
-- Silhouette strong — works small in Today card
+- Palette: ash gray, cold blue, single warm crack of route-light (hope)
+- No rotting flesh, no insects, no screaming mouth, no skull pile
+- Silhouette strong — works small in Today season line
 - Dark fantasy lord of **absence**, not monster of gore
 
 ## Format
 
 - **Target:** `.webp`
-- **Aspect:** 1:1 (1024×1024) — crops to card
-- **Background:** transparent or soft vignette for dark UI
+- **Aspect:** 16:9 (1600×900 master recommended)
+- **Background:** soft vignette for dark UI cards; transparent optional
 
 ## Negative prompt
 
-horror, gore, zombie, rotting, insects, slime, screaming, anime villain, chibi, cute, flat icon, text, watermark, jump scare, skeleton gore
+gore, blood, skull pile, torture, demonic horror, grotesque monster, jump scare, zombie, rotting, insects, slime, screaming, anime villain, chibi, flat icon, text, watermark, cute mascot
 
 ## Output path
 
@@ -53,3 +56,7 @@ horror, gore, zombie, rotting, insects, slime, screaming, anime villain, chibi, 
 ## Manifest id
 
 `season-boss-01-empty-day-lord`
+
+## Campaign copy hook (for review)
+
+«Даже один сохранённый день оставляет трещину.»

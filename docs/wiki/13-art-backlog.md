@@ -47,7 +47,7 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 | id | Название | Категория | P | Где используется | Статус | Prompt file | Expected path | Комментарий |
 |----|----------|-----------|---|------------------|--------|-------------|---------------|-------------|
 | `onboarding-core-awakening` | Пробуждение ядра | onboardingArt | P0 | `/start`, OnboardingGate | processed | [`onboarding-core-awakening.md`](../prompts/assets/onboarding-core-awakening.md) | `public/game-assets/onboarding/core-awakening.webp` | Старт кампании, ядро в руинах |
-| `empty-state-no-entries` | Нет записей | emptyStates | P0 | Dashboard, Measurements | prompt-ready | [`empty-state-no-entries.md`](../prompts/assets/empty-state-no-entries.md) | `public/game-assets/ui/empty-no-entries.webp` | Без стыда — «первые следы» |
+| `empty-state-no-entries` | Нет записей | emptyStates | P0 | Dashboard, Measurements | prompt-ready | [`empty-state-no-entries.md`](../prompts/assets/empty-state-no-entries.md) | `public/game-assets/empty-states/no-entries.webp` | Без стыда — «первые следы» |
 | `body-ability-icon-set-v1` | Иконки способностей ×12 | bodyAbilities | P0 | `/growth/abilities` | prompt-ready | [`body-ability-icon-set-v1.md`](../prompts/assets/body-ability-icon-set-v1.md) | `public/game-assets/abilities/ability-*.webp` | RPG tokens, not medical |
 | `camp-base-stage-01-ember-camp` | Тлеющий костёр | campBase | P0 | BaseDashboardSummary, `/growth/camp` | processed | [`camp-base-stage-01-ember-camp.md`](../prompts/assets/camp-base-stage-01-ember-camp.md) | `public/game-assets/base/base-stage-01-ember-camp.webp` | Место возвращения |
 | `camp-base-stage-02-shelter` | Укрытие | campBase | P0 | BaseDashboardSummary, `/growth/camp` | processed | [`camp-base-stage-02-shelter.md`](../prompts/assets/camp-base-stage-02-shelter.md) | `public/game-assets/base/base-stage-02-trail-shelter.webp` | Ранний путь, надёжнее огонь |
@@ -69,7 +69,20 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 | `camp-base-stage-02-shelter` | P0 | [prompt](../prompts/assets/camp-base-stage-02-shelter.md) | `base/base-stage-02-trail-shelter.webp` | in-app | `/growth/camp`, `BaseStageRail` |
 | `season-01-reward-core-spark` | P1 | [prompt](../prompts/assets/season-01-reward-core-spark.md) | `rewards/season-01-core-spark.webp` | in-app | `SeasonDashboardSummary` (сезон 1) |
 
-**Не в Batch 1:** empty-state, body abilities, plateau artifact, season boss 1 — следующий дроп Priority Pack.
+**Не в Batch 1:** empty-state, plateau artifact, season boss 1 — **Batch 2** (см. ниже). Body ability icons — отдельный mini-batch.
+
+### Dark MVP Batch 2 — prepared
+
+> **Очередь:** [`BATCH-02-nano-banana-queue.md`](../prompts/assets/BATCH-02-nano-banana-queue.md)
+> **Статус:** `prompt-ready` / `fileStatus: needed` — generation pending. UI wire — отдельный спринт.
+
+| id | targetPath | priority | status | prompt file | intended UI |
+|----|------------|----------|--------|-------------|-------------|
+| `empty-state-no-entries` | `public/game-assets/empty-states/no-entries.webp` | P0 | prompt-ready | [`empty-state-no-entries.md`](../prompts/assets/empty-state-no-entries.md) | Dashboard, Measurements, Today history |
+| `plateau-artifact-pass-stone` | `public/game-assets/artifacts/plateau-pass-stone.webp` | P1 | prompt-ready | [`plateau-artifact-pass-stone.md`](../prompts/assets/plateau-artifact-pass-stone.md) | `PlateauDashboardSummary` |
+| `season-boss-01-empty-day-lord` | `public/game-assets/bosses/seasons/season-boss-01-empty-day-lord.webp` | P1 | prompt-ready | [`season-boss-01-empty-day-lord.md`](../prompts/assets/season-boss-01-empty-day-lord.md) | `SeasonTodayCard`, `SeasonDashboardSummary` |
+
+**Не в Batch 2:** `body-ability-icon-set-v1` (12 иконок) — отдельный mini-batch.
 
 ---
 

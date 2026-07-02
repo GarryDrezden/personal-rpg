@@ -129,7 +129,30 @@ prompt-ready → Nano Banana → public/ → build-asset-manifest.mjs → in-app
 
 `GAME_ASSET_VERSION` = **20**. Fallback: emoji/gradient если `getManifestAssetUrl()` → null.
 
-**Visual QA (2026-06):** Batch 1 connected and polished — onboarding art только шаг 0; camp thumbnails с dim locked; season reward icon row + «в конце сезона».
+**Visual QA (2026-06):** Batch 1 connected and polished — onboarding art только шаг 0; camp thumbnails с dim locked; season reward full-width banner.
+
+## Dark MVP Asset Generation Batch 2
+
+Второй **дроп генерации** (3 ассета): empty state + plateau artifact + season 1 boss. **Generation pending** — prompt-ready, файлов на диске нет.
+
+| Документ | Назначение |
+|----------|------------|
+| [`BATCH-02-nano-banana-queue.md`](../prompts/assets/BATCH-02-nano-banana-queue.md) | Generation queue: id, prompt, ratio, output path |
+| `manifest.darkMvpAssetGenerationBatch2` | Машиночитаемый статус батча |
+
+**Pipeline (Batch 2 — prepared):**
+
+```
+prompt-ready → generate → public/ → build-asset-manifest.mjs → processed → UI wire (later)
+```
+
+| id | targetPath | P |
+|----|------------|---|
+| `empty-state-no-entries` | `empty-states/no-entries.webp` | P0 |
+| `plateau-artifact-pass-stone` | `artifacts/plateau-pass-stone.webp` | P1 |
+| `season-boss-01-empty-day-lord` | `bosses/seasons/season-boss-01-empty-day-lord.webp` | P1 |
+
+**Исключено:** `body-ability-icon-set-v1` — отдельный mini-batch. Cozy Campaign — не в scope.
 
 ## Workflow
 

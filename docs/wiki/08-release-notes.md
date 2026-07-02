@@ -8,6 +8,7 @@
 - **Dark MVP Visual Priority Pack v1:** 8 prompt-ready Dark Campaign assets with Nano Banana briefs; manifest `prompt-ready` status; Future Cozy Campaign explicitly excluded from pack. No asset generation or UI wire.
 - **Dark MVP Batch 1 — UI Wire:** connected 4 processed assets via `ManifestArtScene` and `getManifestAssetUrl()`; manifest `in-app`; `GAME_ASSET_VERSION` 20.
 - **Dark MVP Asset Generation Batch 1:** Nano Banana queue for 4 assets (onboarding, camp×2, season reward); disk sync in `build-asset-manifest.mjs`.
+- **Dark MVP Batch 2 Preparation:** generation queue for 3 assets (empty-state, plateau artifact, season 1 boss); manifest `prompt-ready`; body ability icon set excluded (separate mini-batch). No generation, no UI wire.
 - **Boss Campaign v1:** boss catalog; derived boss progress from season/daily/plateau/body ability/base signals; Today season boss line; Dashboard summary; Journey chapter boss labels; achievement «Первая трещина». Combat, DB schema, new daily metrics and boss art kept out of scope.
 - **Campaign Integration QA v1:** reviewed Today/Dashboard/Growth/Freedom integration; grouped campaign summaries; compact cards; Today hint de-duplication; confirmed readiness for Boss Campaign v1.
 - **Camp/Base Progression v1:** 8-stage hero camp; derived base score from existing daily, season, body ability and plateau signals; Dashboard base card; Growth `/growth/camp` section; lightweight Today save feedback. DB schema, new economy, manual building and Boss Campaign kept out of scope.
@@ -96,6 +97,14 @@
 - Nano Banana queue for onboarding, camp stages 1–2, and season 1 reward.
 - Disk sync sets `processed` when `.webp` lands; `in-app` when `BATCH_1_IN_APP` in build script.
 - Cozy Campaign Variant excluded.
+
+## Dark MVP Batch 2 Preparation
+
+- Generation queue for 3 assets: `empty-state-no-entries`, `plateau-artifact-pass-stone`, `season-boss-01-empty-day-lord`.
+- Prompt files and `BATCH-02-nano-banana-queue.md`; manifest `darkMvpAssetGenerationBatch2` with `prompt-ready` / `fileStatus: needed`.
+- Updated `empty-state-no-entries` target path to `empty-states/no-entries.webp`.
+- `body-ability-icon-set-v1` excluded — separate mini-batch.
+- No asset generation, no UI wire, no mechanics or DB changes.
 
 ---
 

@@ -613,7 +613,7 @@ assets.push(
     category: 'emptyStates',
     title: 'Empty state — нет записей',
     priority: 'P0',
-    targetPath: '/game-assets/ui/empty-no-entries.webp',
+    targetPath: '/game-assets/empty-states/no-entries.webp',
     usedIn: ['Dashboard', 'Measurements', 'Today history', 'generic lists'],
     notes: 'Dark MVP Priority Pack v1. Inviting, not shameful — first traces will appear here.',
   }),
@@ -717,6 +717,33 @@ const batch1OnDisk = syncBatch1FromDisk(assets);
 const batch1InApp =
   BATCH_1_IN_APP && batch1OnDisk === DARK_MVP_BATCH_1_IDS.length;
 
+/** Dark MVP Asset Generation Batch 2 — prompt-ready; body ability icons excluded. */
+const DARK_MVP_BATCH_2_IDS = [
+  'empty-state-no-entries',
+  'plateau-artifact-pass-stone',
+  'season-boss-01-empty-day-lord',
+];
+
+function syncBatch2FromDisk(assetList) {
+  let onDisk = 0;
+  for (const id of DARK_MVP_BATCH_2_IDS) {
+    const asset = assetList.find((a) => a.id === id);
+    if (!asset?.targetPath) continue;
+    const diskPath = join(root, 'public', asset.targetPath.replace(/^\//, ''));
+    if (!existsSync(diskPath)) continue;
+    onDisk += 1;
+    const ext = extname(diskPath).toLowerCase();
+    asset.path = asset.targetPath;
+    asset.fileStatus = 'ready';
+    asset.promptStatus = 'ready';
+    asset.status = ext === '.webp' ? 'processed' : 'generated';
+    asset.notes = `${asset.notes || ''} Batch 2 on disk (${ext}); not in-app until UI wire.`.trim();
+  }
+  return onDisk;
+}
+
+const batch2OnDisk = syncBatch2FromDisk(assets);
+
 const manifest = {
   version: 2,
   schema: 'asset-registry-2.0',
@@ -753,6 +780,23 @@ const manifest = {
     workflow:
       'Generate → place in public/game-assets/ → node scripts/build-asset-manifest.mjs → in-app when BATCH_1_IN_APP',
   },
+  darkMvpAssetGenerationBatch2: {
+    updated: '2026-06-06',
+    status:
+      batch2OnDisk === DARK_MVP_BATCH_2_IDS.length
+        ? 'files-on-disk'
+        : 'awaiting-generation',
+    description:
+      'Second Dark MVP generation drop: empty state + plateau artifact + season 1 boss. Body ability icon set excluded (separate mini-batch). Cozy variant excluded.',
+    assetIds: DARK_MVP_BATCH_2_IDS,
+    filesOnDisk: batch2OnDisk,
+    filesExpected: DARK_MVP_BATCH_2_IDS.length,
+    inApp: false,
+    promptQueue: 'docs/prompts/assets/BATCH-02-nano-banana-queue.md',
+    workflow:
+      'Generate → place in public/game-assets/ → node scripts/build-asset-manifest.mjs → processed; UI wire in separate sprint',
+    excludedFromBatch: ['body-ability-icon-set-v1'],
+  },
   conventions: {
     naming:
       'lowercase kebab-case: {entity-type}-{index}-{semantic-name}.webp under public/game-assets/{category-folder}/',
@@ -778,3 +822,4 @@ const outPath = join(root, 'docs/assets/manifest.json');
 writeFileSync(outPath, JSON.stringify(manifest, null, 2) + '\n', 'utf-8');
 console.log(`Wrote ${assets.length} assets to ${outPath}`);
 console.log(`Dark MVP Batch 1: ${batch1OnDisk}/${DARK_MVP_BATCH_1_IDS.length} files on disk`);
+console.log(`Dark MVP Batch 2: ${batch2OnDisk}/${DARK_MVP_BATCH_2_IDS.length} files on disk`);

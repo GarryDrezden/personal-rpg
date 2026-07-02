@@ -38,7 +38,7 @@ describe('asset manifest helpers', () => {
     const entry = getEntityAsset('season_mini_01');
     expect(entry?.id).toBe('season-boss-01-empty-day-lord');
     expect(entry?.category).toBe('seasonBosses');
-    expect(entry?.status).toBe('prompt-ready');
+    expect(entry?.status).toBe('processed');
   });
 
   it('getAssetPlaceholder returns safe fallback', () => {
@@ -55,7 +55,7 @@ describe('asset manifest helpers', () => {
     expect(url).toMatch(/\/game-assets\/onboarding\/core-awakening\.webp\?v=20$/);
   });
 
-  it('getManifestAssetUrl returns null for prompt-ready assets', () => {
+  it('getManifestAssetUrl returns null for processed (not in-app) assets', () => {
     expect(getManifestAssetUrl('season-boss-01-empty-day-lord')).toBeNull();
   });
 });
