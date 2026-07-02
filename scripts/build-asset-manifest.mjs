@@ -790,8 +790,23 @@ function syncBatch2FromDisk(assetList) {
 
 const BODY_ABILITY_ICON_IDS = BODY_ABILITIES.map(([entityId]) => `ability-${entityId}`);
 
+/** First visual group — skill board wired via BodyAbilityArtMedallion. */
+const BODY_ABILITY_ICON_GROUP1_ENTITY_IDS = [
+  'tie_shoes_easier',
+  'stand_from_floor',
+  'stairs_breath',
+  'long_route',
+];
+const BODY_ABILITY_ICON_GROUP1_IDS = BODY_ABILITY_ICON_GROUP1_ENTITY_IDS.map(
+  (entityId) => `ability-${entityId}`,
+);
+
+/** Set true when group-1 icons are on disk and wired in /growth/abilities skill board. */
+const BODY_ABILITY_ICON_GROUP1_IN_APP = true;
+
 function syncBodyAbilityIconsFromDisk(assetList) {
   let onDisk = 0;
+  let inApp = 0;
   for (const id of BODY_ABILITY_ICON_IDS) {
     const asset = assetList.find((a) => a.id === id);
     if (!asset?.targetPath) continue;
@@ -802,14 +817,25 @@ function syncBodyAbilityIconsFromDisk(assetList) {
     asset.path = asset.targetPath;
     asset.fileStatus = 'ready';
     asset.promptStatus = 'ready';
-    asset.status = ext === '.webp' ? 'processed' : 'generated';
-    asset.notes = `${asset.notes || ''} Icon on disk (${ext}); not in-app until UI wire.`.trim();
+    const group1 = BODY_ABILITY_ICON_GROUP1_IDS.includes(id);
+    if (group1 && BODY_ABILITY_ICON_GROUP1_IN_APP) {
+      asset.status = 'in-app';
+      inApp += 1;
+      asset.notes = `${asset.notes || ''} Body ability icon group 1 connected in skill board (${ext}).`.trim();
+    } else {
+      asset.status = ext === '.webp' ? 'processed' : 'generated';
+      asset.notes = `${asset.notes || ''} Icon on disk (${ext}); not in-app until UI wire.`.trim();
+    }
   }
-  return onDisk;
+  return { onDisk, inApp };
 }
 
 const batch2OnDisk = syncBatch2FromDisk(assets);
-const bodyAbilityIconsOnDisk = syncBodyAbilityIconsFromDisk(assets);
+const { onDisk: bodyAbilityIconsOnDisk, inApp: bodyAbilityIconsInApp } =
+  syncBodyAbilityIconsFromDisk(assets);
+const bodyAbilityIconsGroup1InApp =
+  BODY_ABILITY_ICON_GROUP1_IN_APP &&
+  bodyAbilityIconsInApp === BODY_ABILITY_ICON_GROUP1_IDS.length;
 const batch2InApp =
   BATCH_2_IN_APP && batch2OnDisk === DARK_MVP_BATCH_2_IDS.length;
 
@@ -817,7 +843,7 @@ const manifest = {
   version: 2,
   schema: 'asset-registry-2.0',
   updated: '2026-06-06',
-  gameAssetVersion: '21',
+  gameAssetVersion: bodyAbilityIconsGroup1InApp ? '22' : '21',
   darkMvpVisualPriorityPackV1: {
     updated: '2026-06-06',
     description: 'Dark MVP Priority Pack v1 — Batch 1 (4 assets) in-app',
@@ -870,20 +896,31 @@ const manifest = {
   bodyAbilityIconsMiniBatch: {
     updated: '2026-06-06',
     status:
-      bodyAbilityIconsOnDisk === BODY_ABILITY_ICON_IDS.length
-        ? 'files-on-disk'
-        : 'prepared',
+      bodyAbilityIconsInApp === BODY_ABILITY_ICON_IDS.length
+        ? 'in-app'
+        : bodyAbilityIconsInApp > 0
+          ? 'partial-in-app'
+          : bodyAbilityIconsOnDisk === BODY_ABILITY_ICON_IDS.length
+            ? 'files-on-disk'
+            : bodyAbilityIconsOnDisk > 0
+              ? 'partial-on-disk'
+              : 'prepared',
     description:
-      'Body Ability Icons mini-batch: 12 RPG tokens for Body Abilities v1. Prompt-ready; generation pending. UI wire later. Cozy variant excluded.',
+      bodyAbilityIconsGroup1InApp
+        ? 'Body Ability Icons mini-batch: group 1 (4/12) in-app on skill board; remaining 8 prompt-ready with emoji fallback. Cozy variant excluded.'
+        : 'Body Ability Icons mini-batch: 12 RPG tokens for Body Abilities v1. Prompt-ready; generation pending. UI wire later. Cozy variant excluded.',
     setAssetId: 'body-ability-icon-set-v1',
     assetIds: BODY_ABILITY_ICON_IDS,
     filesOnDisk: bodyAbilityIconsOnDisk,
     filesExpected: BODY_ABILITY_ICON_IDS.length,
-    inApp: false,
+    filesInApp: bodyAbilityIconsInApp,
+    inApp: bodyAbilityIconsInApp === BODY_ABILITY_ICON_IDS.length,
     promptQueue: 'docs/prompts/assets/BODY-ABILITY-ICONS-mini-batch-queue.md',
     workflow:
-      'Generate per prompt → public/game-assets/abilities/ → node scripts/build-asset-manifest.mjs → processed; UI wire in separate sprint',
+      'Generate per prompt → public/game-assets/abilities/ → node scripts/build-asset-manifest.mjs → in-app when BODY_ABILITY_ICON_GROUP1_IN_APP (per group)',
     source: 'src/game/bodyAbilities/bodyAbilityConfig.ts',
+    group1InApp: bodyAbilityIconsGroup1InApp,
+    group1AssetIds: BODY_ABILITY_ICON_GROUP1_IDS,
   },
   conventions: {
     naming:
@@ -912,5 +949,5 @@ console.log(`Wrote ${assets.length} assets to ${outPath}`);
 console.log(`Dark MVP Batch 1: ${batch1OnDisk}/${DARK_MVP_BATCH_1_IDS.length} files on disk`);
 console.log(`Dark MVP Batch 2: ${batch2OnDisk}/${DARK_MVP_BATCH_2_IDS.length} files on disk`);
 console.log(
-  `Body Ability Icons mini-batch: ${bodyAbilityIconsOnDisk}/${BODY_ABILITY_ICON_IDS.length} files on disk (prepared)`,
+  `Body Ability Icons mini-batch: ${bodyAbilityIconsOnDisk}/${BODY_ABILITY_ICON_IDS.length} on disk, ${bodyAbilityIconsInApp} in-app`,
 );

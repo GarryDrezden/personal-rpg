@@ -127,7 +127,7 @@ prompt-ready → Nano Banana → public/ → build-asset-manifest.mjs → in-app
 | `camp-base-stage-02-shelter` | `/growth/camp`, `BaseStageRail` (stage shelter) |
 | `season-01-reward-core-spark` | `SeasonDashboardSummary` (сезон 1) |
 
-`GAME_ASSET_VERSION` = **21**. Fallback: emoji/gradient если `getManifestAssetUrl()` → null.
+`GAME_ASSET_VERSION` = **22**. Fallback: emoji/gradient если `getManifestAssetUrl()` → null.
 
 **Visual QA (2026-06):** Batch 1 connected and polished — onboarding art только шаг 0; camp thumbnails с dim locked; season reward full-width banner.
 
@@ -157,20 +157,29 @@ generate → optimize → public/ → build-asset-manifest.mjs → in-app (BATCH
 
 **Исключено:** `body-ability-icon-set-v1` — отдельный mini-batch. Cozy Campaign — не в scope.
 
-## Body Ability Icons Mini-Batch (prepared)
+## Body Ability Icons Mini-Batch (partial in-app)
 
-12 иконок Body Abilities v1 — **prompt-ready**, generation pending, **not in-app**.
+12 иконок Body Abilities v1 — **4/12 in-app** (group 1), **8/12 prompt-ready** with emoji fallback.
 
 | Документ | Назначение |
 |----------|------------|
 | [`BODY-ABILITY-ICONS-mini-batch-queue.md`](../prompts/assets/BODY-ABILITY-ICONS-mini-batch-queue.md) | Queue: 12 ability icons |
 | `ability-{entityId}.md` | Per-ability Nano Banana prompts |
-| `manifest.bodyAbilityIconsMiniBatch` | Batch metadata |
+| `manifest.bodyAbilityIconsMiniBatch` | Batch metadata (`partial-in-app`, 4/12 on disk) |
+
+**Group 1 in-app (2026-06):**
+
+| Ability id | File |
+|------------|------|
+| `tie_shoes_easier` | `ability-mobility-shoes.webp` |
+| `stand_from_floor` | `ability-mobility-floor.webp` |
+| `stairs_breath` | `ability-endurance-stairs.webp` |
+| `long_route` | `ability-endurance-route.webp` |
 
 **Visual rule:** RPG artifacts / badges / tokens — **not** medical, hospital, or fitness pictograms.  
 **Format:** 1:1, readable at **48–64px**, dark fantasy + cozy, ember/gold accent.
 
-**UI (later):** `BodyAbilitySkillBoard`, `/growth/abilities` — emoji/manifest fallback until icons in-app. **Art not final approved.**
+**UI:** `BodyAbilitySkillBoard`, `/growth/abilities` — manifest art for group 1; emoji fallback for remaining 8.
 
 ## Body Abilities — RPG skill board (2026-06)
 
@@ -179,7 +188,8 @@ generate → optimize → public/ → build-asset-manifest.mjs → in-app (BATCH
 - 12 large medallion cards (128–160px art zone)
 - states: locked / discovered / unlocked / recentlyUnlocked (derived; ≤21 days since unlock)
 - manifest via `getBodyAbilityManifestAssetId()` + safe emoji fallback
-- first visual group: mobility/endurance quartet (tie shoes, floor, stairs breath, long route)
+- **group 1 in-app:** mobility/endurance quartet (tie shoes, floor, stairs breath, long route)
+- **remaining 8:** emoji fallback until generated
 
 ## Workflow
 

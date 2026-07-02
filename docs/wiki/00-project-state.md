@@ -44,13 +44,13 @@
 | Frontend | React 19, TypeScript, Vite 6, Tailwind CSS 4, Zustand, React Router |
 | Backend (production) | PHP 8.2 + PDO + MySQL в `api/` |
 | Backend (experimental) | Node/Express/Prisma в `backend/` — VPS-only |
-| Game assets | `public/game-assets/`, `GAME_ASSET_VERSION=21` |
+| Game assets | `public/game-assets/`, `GAME_ASSET_VERSION=22` |
 
 ## Текущая версия
 
 - **README:** v1.4 (пользовательская документация)
 - **package.json:** 1.0.0
-- **GAME_ASSET_VERSION:** 21
+- **GAME_ASSET_VERSION:** 22
 
 ## Sprint 1 — Accounts & Storage ✅ (production: PHP + MySQL)
 
@@ -129,8 +129,8 @@
 - **Dark MVP Visual Priority Pack v1** ✅ — 8 prompt-ready ассетов, Nano Banana briefs в `docs/prompts/assets/`
 - **Dark MVP Asset Generation Batch 1** ✅ — 4/4 in-app; **Visual QA** (2026-06) — reward banner polish
 - **Dark MVP Asset Generation Batch 2** ✅ — 3/3 in-app; optimized webp + UI wire (empty state, plateau artifact, season 1 boss)
-- **Body Ability Icons Mini-Batch** — prepared (12 prompt-ready entries, queue + per-icon prompts; not in-app)
-- **Body Abilities UI** — RPG skill board layout on `/growth/abilities` (emoji/manifest fallback; art not final)
+- **Body Ability Icons Mini-Batch** — **4/12 in-app** (group 1 on disk + skill board); remaining 8 prompt-ready / emoji fallback
+- **Body Abilities UI** — RPG skill board layout on `/growth/abilities` (manifest art for group 1; emoji fallback for rest)
 - **Runtime:** `src/game/assetManifest.ts` — `getAssetById`, `getEntityAsset`, `getAssetPlaceholder`
 - **Validation:** `assetManifest.test.ts` — unique ids, paths for in-app, categories
 - **Prompts:** pack files + `_template-nano-banana-asset.md`, `_template-boss.md`
@@ -149,7 +149,7 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий visual priority | **Generate Body Ability Icons mini-batch** → process files → wire manifest art into skill board |
+| Следующий visual priority | **Generate remaining Body Ability Icons (8/12)** → process → wire next group into skill board |
 
 ### Boss Campaign v1 ✅
 
@@ -242,7 +242,7 @@ Asset Registry 2.0 готов: manifest, backlog, naming, placeholders зафи�
 
 ## Следующий приоритет
 
-**Batch 2 preparation** (empty-state, plateau artifact, season boss) → **processed + UI wire** → **Body Ability Icons mini-batch prepared** → generate icons → UI wire → **Boss Campaign v2** (later).
+**Batch 2 preparation** (empty-state, plateau artifact, season boss) → **processed + UI wire** → **Body Ability Icons group 1 (4/12) in-app** → generate remaining 8 icons → **Boss Campaign v2** (later).
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

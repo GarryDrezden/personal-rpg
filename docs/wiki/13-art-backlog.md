@@ -103,26 +103,26 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 
 ---
 
-## Body Ability Icons Mini-Batch — prepared
+## Body Ability Icons Mini-Batch — partial in-app (4/12)
 
 > **Очередь:** [`BODY-ABILITY-ICONS-mini-batch-queue.md`](../prompts/assets/BODY-ABILITY-ICONS-mini-batch-queue.md)  
 > **Источник:** `src/game/bodyAbilities/bodyAbilityConfig.ts` (12 abilities)  
-> **Статус:** `prompt-ready` / `fileStatus: needed` — generation pending. UI wire — отдельный спринт. Emoji fallback остаётся.
+> **Статус:** group 1 **in-app** on skill board; remaining 8 **prompt-ready** / emoji fallback.
 
-| Asset id | Ability id | Title | Category | Prompt | Target path | P |
-|----------|------------|-------|----------|--------|-------------|---|
-| `ability-tie_shoes_easier` | `tie_shoes_easier` | Легче завязать обувь | mobility | [`ability-tie_shoes_easier.md`](../prompts/assets/ability-tie_shoes_easier.md) | `public/game-assets/abilities/ability-mobility-shoes.webp` | P0 |
-| `ability-stand_from_floor` | `stand_from_floor` | Легче встать с пола | mobility | [`ability-stand_from_floor.md`](../prompts/assets/ability-stand_from_floor.md) | `public/game-assets/abilities/ability-mobility-floor.webp` | P0 |
-| `ability-stairs_breath` | `stairs_breath` | Меньше одышки после лестницы | endurance | [`ability-stairs_breath.md`](../prompts/assets/ability-stairs_breath.md) | `public/game-assets/abilities/ability-endurance-stairs.webp` | P0 |
-| `ability-long_route` | `long_route` | Проще пройти длинный маршрут | endurance | [`ability-long_route.md`](../prompts/assets/ability-long_route.md) | `public/game-assets/abilities/ability-endurance-route.webp` | P0 |
-| `ability-stand_easier` | `stand_easier` | Проще стоять | mobility | [`ability-stand_easier.md`](../prompts/assets/ability-stand_easier.md) | `public/game-assets/abilities/ability-mobility-stand.webp` | P0 |
-| `ability-car_easier` | `car_easier` | Проще ездить в машине | dailyLife | [`ability-car_easier.md`](../prompts/assets/ability-car_easier.md) | `public/game-assets/abilities/ability-daily-car.webp` | P0 |
-| `ability-clothing_freer` | `clothing_freer` | Одежда сидит свободнее | clothing | [`ability-clothing_freer.md`](../prompts/assets/ability-clothing_freer.md) | `public/game-assets/abilities/ability-clothing-freer.webp` | P0 |
-| `ability-household_easier` | `household_easier` | Проще заниматься бытом | dailyLife | [`ability-household_easier.md`](../prompts/assets/ability-household_easier.md) | `public/game-assets/abilities/ability-daily-household.webp` | P0 |
-| `ability-movement_confidence` | `movement_confidence` | Больше уверенности в движении | confidence | [`ability-movement_confidence.md`](../prompts/assets/ability-movement_confidence.md) | `public/game-assets/abilities/ability-confidence-movement.webp` | P0 |
-| `ability-recovery_awareness` | `recovery_awareness` | Мягче возвращаться после усталости | recovery | [`ability-recovery_awareness.md`](../prompts/assets/ability-recovery_awareness.md) | `public/game-assets/abilities/ability-recovery-awareness.webp` | P0 |
-| `ability-journal_clarity` | `journal_clarity` | Яснее видеть свой день | confidence | [`ability-journal_clarity.md`](../prompts/assets/ability-journal_clarity.md) | `public/game-assets/abilities/ability-confidence-journal.webp` | P0 |
-| `ability-stairs_easier` | `stairs_easier` | Легче подниматься по лестнице | endurance | [`ability-stairs_easier.md`](../prompts/assets/ability-stairs_easier.md) | `public/game-assets/abilities/ability-endurance-stairs-up.webp` | P0 |
+| Asset id | Ability id | Title | Category | Prompt | Target path | P | Status |
+|----------|------------|-------|----------|--------|-------------|---|--------|
+| `ability-tie_shoes_easier` | `tie_shoes_easier` | Легче завязать обувь | mobility | [`ability-tie_shoes_easier.md`](../prompts/assets/ability-tie_shoes_easier.md) | `public/game-assets/abilities/ability-mobility-shoes.webp` | P0 | **in-app** |
+| `ability-stand_from_floor` | `stand_from_floor` | Легче встать с пола | mobility | [`ability-stand_from_floor.md`](../prompts/assets/ability-stand_from_floor.md) | `public/game-assets/abilities/ability-mobility-floor.webp` | P0 | **in-app** |
+| `ability-stairs_breath` | `stairs_breath` | Меньше одышки после лестницы | endurance | [`ability-stairs_breath.md`](../prompts/assets/ability-stairs_breath.md) | `public/game-assets/abilities/ability-endurance-stairs.webp` | P0 | **in-app** |
+| `ability-long_route` | `long_route` | Проще пройти длинный маршрут | endurance | [`ability-long_route.md`](../prompts/assets/ability-long_route.md) | `public/game-assets/abilities/ability-endurance-route.webp` | P0 | **in-app** |
+| `ability-stand_easier` | `stand_easier` | Проще стоять | mobility | [`ability-stand_easier.md`](../prompts/assets/ability-stand_easier.md) | `public/game-assets/abilities/ability-mobility-stand.webp` | P0 | prompt-ready |
+| `ability-car_easier` | `car_easier` | Проще ездить в машине | dailyLife | [`ability-car_easier.md`](../prompts/assets/ability-car_easier.md) | `public/game-assets/abilities/ability-daily-car.webp` | P0 | prompt-ready |
+| `ability-clothing_freer` | `clothing_freer` | Одежда сидит свободнее | clothing | [`ability-clothing_freer.md`](../prompts/assets/ability-clothing_freer.md) | `public/game-assets/abilities/ability-clothing-freer.webp` | P0 | prompt-ready |
+| `ability-household_easier` | `household_easier` | Проще заниматься бытом | dailyLife | [`ability-household_easier.md`](../prompts/assets/ability-household_easier.md) | `public/game-assets/abilities/ability-daily-household.webp` | P0 | prompt-ready |
+| `ability-movement_confidence` | `movement_confidence` | Больше уверенности в движении | confidence | [`ability-movement_confidence.md`](../prompts/assets/ability-movement_confidence.md) | `public/game-assets/abilities/ability-confidence-movement.webp` | P0 | prompt-ready |
+| `ability-recovery_awareness` | `recovery_awareness` | Мягче возвращаться после усталости | recovery | [`ability-recovery_awareness.md`](../prompts/assets/ability-recovery_awareness.md) | `public/game-assets/abilities/ability-recovery-awareness.webp` | P0 | prompt-ready |
+| `ability-journal_clarity` | `journal_clarity` | Яснее видеть свой день | confidence | [`ability-journal_clarity.md`](../prompts/assets/ability-journal_clarity.md) | `public/game-assets/abilities/ability-confidence-journal.webp` | P0 | prompt-ready |
+| `ability-stairs_easier` | `stairs_easier` | Легче подниматься по лестнице | endurance | [`ability-stairs_easier.md`](../prompts/assets/ability-stairs_easier.md) | `public/game-assets/abilities/ability-endurance-stairs-up.webp` | P0 | prompt-ready |
 
 **Set entry:** `body-ability-icon-set-v1` — cohesive RPG token system (not medical icons).
 
@@ -131,9 +131,9 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 ### Body Abilities — RPG skill board UI (2026-06)
 
 - `/growth/abilities` → `BodyAbilitySkillBoard` (large medallion cards, hero + footer).
-- Manifest ids wired via `getBodyAbilityManifestAssetId()`; **emoji fallback** when `.webp` absent.
-- Mini-batch entries remain **prompt-ready / not in-app** — generated art is not final approved.
-- Featured visual group: `tie_shoes_easier`, `stand_from_floor`, `stairs_breath`, `long_route`.
+- Manifest ids wired via `getBodyAbilityManifestAssetId()`; **emoji fallback** when `.webp` absent or not in-app.
+- **Group 1 (4/12) in-app:** `tie_shoes_easier`, `stand_from_floor`, `stairs_breath`, `long_route`.
+- Remaining 8: prompt-ready / emoji fallback.
 
 ---
 
@@ -149,7 +149,7 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 | Male stages 04–18 (variant) | hero-stage | assetPaths fallback | heroStages | in-app | P0 | ready | ready | registered | `variants/dark-fantasy/` |
 | Journey chapter 1–9 | journey-chapter-bg | Journey Map v3 | journeyChapterVisuals | in-app | P0 | ready | ready | registered | `.webp` в `maps/chapters/` |
 | Companions ×4 | companion | Onboarding, Codex | assetRegistry | in-app | P0 | ready | ready | registered | PNG approved |
-| Body ability icons ×12 | body-ability-icon | Growth abilities | bodyAbilityConfig | prompt-ready | P0 | prompt-ready | needed | registered | Emoji placeholder; mini-batch prepared |
+| Body ability icons ×12 | body-ability-icon | Growth abilities | bodyAbilityConfig | partial-in-app | P0 | prompt-ready | 4/12 ready | registered | Group 1 in-app; 8 emoji fallback |
 | Camp base stage 1 (ember) | camp-base-scene | Dashboard, /growth/camp | baseProgressionConfig | needed | P0 | ready | missing | registered | Prompt template ready |
 | Season boss (current) | season-mini-boss | SeasonTodayCard | bossCampaign v1 | needed | P0 | ready* | missing | registered | Emoji until art; *S01–02 prompts first |
 | Onboarding core awakening | onboarding-hero | /start | Onboarding v1 | needed | P0 | ready | missing | registered | Text ritual OK without image |
