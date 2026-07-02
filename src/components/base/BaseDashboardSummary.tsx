@@ -4,10 +4,11 @@ import { ProgressBar } from '../ui/ProgressBar';
 
 type BaseDashboardSummaryProps = {
   snapshot: BaseProgressionSnapshot;
+  compact?: boolean;
 };
 
-export function BaseDashboardSummary({ snapshot }: BaseDashboardSummaryProps) {
-  const { currentStage, nextStage, progressPercent, recentContributors, flavorText } = snapshot;
+export function BaseDashboardSummary({ snapshot, compact = false }: BaseDashboardSummaryProps) {
+  const { currentStage, nextStage, progressPercent, flavorText } = snapshot;
 
   return (
     <section
@@ -39,16 +40,20 @@ export function BaseDashboardSummary({ snapshot }: BaseDashboardSummaryProps) {
         </div>
       ) : null}
 
-      <p className="mt-2 text-xs text-[var(--app-text-muted)]">
-        Маршрут укрепился: {recentContributors.join(', ')}.
+      <p className="mt-2 text-xs text-[var(--app-text-muted)] line-clamp-2">
+        {compact
+          ? `Маршрут: ${snapshot.recentContributors.slice(0, 2).join(', ')}.`
+          : `Маршрут укрепился: ${snapshot.recentContributors.join(', ')}.`}
       </p>
-      <p className="mt-1 text-xs text-[var(--app-text-muted)] line-clamp-2">{flavorText}</p>
+      {!compact ? (
+        <p className="mt-1 text-xs text-[var(--app-text-muted)] line-clamp-2">{flavorText}</p>
+      ) : null}
 
       <Link
         to="/growth/camp"
         className="mt-2 inline-block text-xs font-semibold text-[var(--app-primary)] hover:underline"
       >
-        Все стадии лагеря
+        {compact ? 'Стадии лагеря' : 'Все стадии лагеря'}
       </Link>
     </section>
   );

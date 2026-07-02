@@ -3,9 +3,10 @@ import { ProgressBar } from '../ui/ProgressBar';
 
 type SeasonDashboardSummaryProps = {
   season: SeasonSnapshotWithRecap;
+  compact?: boolean;
 };
 
-export function SeasonDashboardSummary({ season }: SeasonDashboardSummaryProps) {
+export function SeasonDashboardSummary({ season, compact = false }: SeasonDashboardSummaryProps) {
   return (
     <section
       data-testid="season-dashboard-summary"
@@ -30,14 +31,16 @@ export function SeasonDashboardSummary({ season }: SeasonDashboardSummaryProps) 
       <div className="mt-2">
         <ProgressBar value={season.completedQuestCount} max={season.quests.length} />
         <p className="mt-1 text-xs text-[var(--app-text-muted)]">
-          {season.completedQuestCount} из {season.quests.length} квестов ·{' '}
-          {season.questsNearCompletion > 0
-            ? `${season.questsNearCompletion} близко к закрытию`
-            : 'путь продолжается'}
+          {season.completedQuestCount} из {season.quests.length} квестов
+          {!compact && season.questsNearCompletion > 0
+            ? ` · ${season.questsNearCompletion} близко к закрытию`
+            : ''}
         </p>
       </div>
 
-      <p className="mt-2 text-xs text-[var(--app-text-muted)] line-clamp-2">{season.recapText}</p>
+      {!compact ? (
+        <p className="mt-2 text-xs text-[var(--app-text-muted)] line-clamp-2">{season.recapText}</p>
+      ) : null}
     </section>
   );
 }

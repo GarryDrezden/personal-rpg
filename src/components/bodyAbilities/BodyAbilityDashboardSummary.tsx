@@ -3,9 +3,13 @@ import type { BodyAbilityV1Summary } from '../../types/bodyAbilityV1';
 
 type BodyAbilityDashboardSummaryProps = {
   summary: BodyAbilityV1Summary;
+  compact?: boolean;
 };
 
-export function BodyAbilityDashboardSummary({ summary }: BodyAbilityDashboardSummaryProps) {
+export function BodyAbilityDashboardSummary({
+  summary,
+  compact = false,
+}: BodyAbilityDashboardSummaryProps) {
   return (
     <section
       data-testid="body-ability-dashboard-summary"
@@ -24,13 +28,20 @@ export function BodyAbilityDashboardSummary({ summary }: BodyAbilityDashboardSum
           to="/growth/abilities"
           className="shrink-0 text-xs font-semibold text-[var(--app-primary)] hover:underline"
         >
-          Посмотреть способности
+          {compact ? 'Открыть' : 'Посмотреть способности'}
         </Link>
       </div>
-      <p className="mt-2 text-xs text-[var(--app-text-muted)]">{summary.progressLine}</p>
+      {!compact ? (
+        <p className="mt-2 text-xs text-[var(--app-text-muted)]">{summary.progressLine}</p>
+      ) : null}
       {summary.nextSuggested ? (
+        <p className={`text-xs text-[var(--app-text-muted)] ${compact ? 'mt-1' : 'mt-1'}`}>
+          {compact ? 'Возможно: ' : 'Следующая возможная: '}
+          {summary.nextSuggested.title}
+        </p>
+      ) : compact && summary.unlockedCount === 0 ? (
         <p className="mt-1 text-xs text-[var(--app-text-muted)]">
-          Следующая возможная: {summary.nextSuggested.title}
+          Отмечай улучшения в жизни — без давления на вес.
         </p>
       ) : null}
     </section>

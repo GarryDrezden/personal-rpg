@@ -129,6 +129,19 @@
 
 ---
 
+## 7b. Campaign Integration QA ✅
+
+- [x] Today block order and de-duplication
+- [x] Dashboard campaign section grouping
+- [x] Growth Hub navigation to abilities/camp
+- [x] Freedom dedup with Growth links
+- [x] Empty/progressed user copy review
+- [x] Mobile layout polish (compact summaries)
+- [x] Onboarding gate verified
+- [x] Ready for Boss Campaign v1
+
+---
+
 ## 8. Boss Campaign
 
 **Только после пунктов 1–6.** Не ближайший этап.

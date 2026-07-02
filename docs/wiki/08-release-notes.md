@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Campaign Integration QA v1:** reviewed Today/Dashboard/Growth/Freedom integration; grouped campaign summaries; compact cards; Today hint de-duplication; confirmed readiness for Boss Campaign v1.
 - **Camp/Base Progression v1:** 8-stage hero camp; derived base score from existing daily, season, body ability and plateau signals; Dashboard base card; Growth `/growth/camp` section; lightweight Today save feedback. DB schema, new economy, manual building and Boss Campaign kept out of scope.
 - **Plateau Mode v1 — Удержание перевала:** soft and active plateau detection; manual «Я на перевале» state; route-holding snapshot from existing daily entries; Today plateau card and Dashboard summary; Body Abilities connection as non-weight progress; achievement «Страж перевала». Medical analytics, DB schema changes and new daily metrics kept out of scope.
 - **Core Loop Polish v1 — Today:** improved daily Today flow; save reaction card; minimal/recovery day quick path; contextual daily mob; sticky mobile save CTA.
@@ -57,6 +58,16 @@
 ### Removed
 
 - —
+
+---
+
+## Campaign Integration QA v1
+
+- Reviewed integration of Today, Seasons, Body Abilities, Plateau and Camp/Base.
+- Grouped Dashboard campaign summaries; compact card mode; Today hint de-duplication.
+- Polished Growth Hub and Freedom navigation/copy.
+- Checked empty and progressed user states.
+- Confirmed project is ready for Boss Campaign v1.
 
 ---
 

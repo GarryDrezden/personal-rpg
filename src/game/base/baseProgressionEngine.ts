@@ -287,7 +287,7 @@ export function getBaseProgressionSnapshot(params: {
     today,
   });
   const flavorText =
-    plateau.mode !== 'none'
+    plateau.mode === 'active'
       ? `${stageInfo.currentStage.flavorText} На перевале лагерь крепнет от маршрута, не от веса.`
       : stageInfo.currentStage.flavorText;
 

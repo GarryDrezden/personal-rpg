@@ -199,13 +199,13 @@
 - SPA: `index.html` + assets — OK по HTTP
 - **HTTPS** (`https://fit-rpg.ru`) → 404 nginx — **не блокер**, future hardening после выпуска сертификата
 
-### Готовность к Boss Campaign
+### Готовность к Boss Campaign v1
 
-Camp/Base v1 готов к деплою на HTTP production.
+Campaign Integration QA v1 пройден. Основные годовые системы интегрированы без перегруза Today/Dashboard.
 
 ## Следующий приоритет
 
-**Boss Campaign** (после Camp/Base) → Asset Registry 2.0 (параллельно) → New Game+ / Maintenance (later).
+**Boss Campaign v1** → Asset Registry 2.0 (параллельно) → New Game+ / Maintenance (later).
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

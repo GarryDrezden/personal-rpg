@@ -198,7 +198,10 @@ export function getBodyAbilityV1Summary(params: {
     unlockedCount,
     totalCount: BODY_ABILITIES_V1.length,
     nextSuggested,
-    progressLine: 'Тело возвращает свободу не только на весах.',
+    progressLine:
+      unlockedCount > 0
+        ? 'Тело возвращает способности — даже когда вес стоит.'
+        : 'Отмечай улучшения в жизни, когда заметишь их.',
   };
 }
 

@@ -4,35 +4,14 @@ import type { PlateauSnapshot } from '../../types/plateauV1';
 type PlateauDashboardSummaryProps = {
   snapshot: PlateauSnapshot;
   onToggleManual: () => void;
+  compact?: boolean;
 };
 
 export function PlateauDashboardSummary({
   snapshot,
   onToggleManual,
+  compact = false,
 }: PlateauDashboardSummaryProps) {
-  if (snapshot.mode === 'none' && !snapshot.hasWeightData) {
-    return (
-      <section
-        data-testid="plateau-dashboard-summary"
-        className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-card)]/60 px-4 py-3"
-      >
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
-          Перевал
-        </p>
-        <p className="mt-1 text-sm text-[var(--app-text-muted)]">
-          Когда появятся замеры веса, игра сможет мягко подсказать режим удержания перевала.
-        </p>
-        <button
-          type="button"
-          onClick={onToggleManual}
-          className="mt-2 text-xs font-semibold text-[var(--app-primary)] hover:underline"
-        >
-          Я на перевале
-        </button>
-      </section>
-    );
-  }
-
   if (snapshot.mode === 'none') return null;
 
   const rh = snapshot.routeHolding;
@@ -55,10 +34,10 @@ export function PlateauDashboardSummary({
           </span>
         ) : null}
       </div>
-      <p className="mt-2 text-xs text-[var(--app-text-muted)]">
-        Перевал удерживается: {rh.routeHeldDays} дней маршрута за последние {rh.windowDays}.
+      <p className="mt-2 text-xs text-[var(--app-text-muted)] line-clamp-2">
+        Маршрут: {rh.routeHeldDays} дн. за {rh.windowDays}
+        {compact ? '' : ` · ${snapshot.supportiveLine}`}
       </p>
-      <p className="mt-1 text-xs text-[var(--app-text-muted)]">{snapshot.supportiveLine}</p>
       <div className="mt-2 flex flex-wrap items-center gap-3">
         <button
           type="button"

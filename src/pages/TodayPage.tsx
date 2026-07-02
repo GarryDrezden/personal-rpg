@@ -46,6 +46,7 @@ import { getOrCreateDailyMobForEntry } from '../game/dailyMobEngine';
 import { getDailyMobContextLine } from '../utils/todayMobContext';
 import { getTodaySaveReaction, type TodaySaveReaction } from '../utils/todayDayReaction';
 import { getBaseSaveSparkLine } from '../game/base/baseProgressionEngine';
+import { shouldShowBodyAbilityHintOnToday } from '../utils/campaignIntegration';
 import { TodayMinimalQuickCard } from '../components/today/TodayMinimalQuickCard';
 import { TodaySaveReactionCard } from '../components/today/TodaySaveReactionCard';
 import { NutritionDayCard } from '../components/nutrition/NutritionDayCard';
@@ -454,13 +455,6 @@ export function TodayPage() {
         </div>
       </header>
 
-      {saveReaction && !dirty ? (
-        <TodaySaveReactionCard
-          reaction={saveReaction}
-          onDismiss={() => setSaveReaction(null)}
-        />
-      ) : null}
-
       {isEditingToday && dayMode !== 'recovery' ? (
         <TodayMinimalQuickCard
           entry={entry}
@@ -475,7 +469,9 @@ export function TodayPage() {
 
       {isEditingToday ? <SeasonTodayCard season={seasonSnapshot} /> : null}
 
-      {bodyAbilityHint ? <BodyAbilityTodayHint hint={bodyAbilityHint} /> : null}
+      {bodyAbilityHint && shouldShowBodyAbilityHintOnToday(plateauSnapshot.mode) ? (
+        <BodyAbilityTodayHint hint={bodyAbilityHint} />
+      ) : null}
 
       {isEditingToday && plateauSnapshot.mode !== 'none' ? (
         <PlateauTodayCard
@@ -487,6 +483,15 @@ export function TodayPage() {
           onDismissHint={() => void handleDismissPlateauHint()}
         />
       ) : null}
+
+      {saveReaction && !dirty ? (
+        <TodaySaveReactionCard
+          reaction={saveReaction}
+          onDismiss={() => setSaveReaction(null)}
+        />
+      ) : null}
+
+      <div className="hidden h-px bg-[var(--app-border)]/60 lg:block" aria-hidden />
 
       <Card>
         <p className="mb-3 text-sm font-medium text-[var(--app-text)]">День недели</p>

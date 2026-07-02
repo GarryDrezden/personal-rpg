@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import { BookOpen, Gauge, Route } from 'lucide-react';
+import { BookOpen, Gauge, Route, TrendingUp } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 const links: { to: string; label: string; icon: LucideIcon }[] = [
+  { to: '/growth/camp', label: 'Лагерь', icon: TrendingUp },
   { to: '/journey', label: 'Путь', icon: Route },
   { to: '/momentum', label: 'Инерция', icon: Gauge },
   { to: '/codex', label: 'Кодекс', icon: BookOpen },

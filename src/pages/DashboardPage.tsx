@@ -37,15 +37,11 @@ import { getJourneyMapSummary } from '../utils/journeyMapEngine';
 
 import { getSeasonSnapshotWithRecap } from '../game/seasons/seasonEngine';
 
-import { SeasonDashboardSummary } from '../components/season/SeasonDashboardSummary';
-
+import { getPlateauSnapshot, setManualPlateauActive } from '../game/plateau/plateauEngine';
+import { getBaseProgressionSnapshot } from '../game/base/baseProgressionEngine';
+import { CampaignProgressDashboardSection } from '../components/dashboard/CampaignProgressDashboardSection';
 import { getNextBodyAbilities } from '../utils/bodyAbilityEngine';
 import { getBodyAbilityV1Summary } from '../game/bodyAbilities/bodyAbilityV1Engine';
-import { BodyAbilityDashboardSummary } from '../components/bodyAbilities/BodyAbilityDashboardSummary';
-import { getPlateauSnapshot, setManualPlateauActive } from '../game/plateau/plateauEngine';
-import { PlateauDashboardSummary } from '../components/plateau/PlateauDashboardSummary';
-import { getBaseProgressionSnapshot } from '../game/base/baseProgressionEngine';
-import { BaseDashboardSummary } from '../components/base/BaseDashboardSummary';
 import { useAchievementStore } from '../store/achievementStore';
 
 import { useAppTheme } from '../hooks/useAppTheme';
@@ -388,16 +384,13 @@ export function DashboardPage() {
 
       />
 
-      <SeasonDashboardSummary season={seasonSnapshot} />
-
-      <BodyAbilityDashboardSummary summary={bodyAbilitySummary} />
-
-      <PlateauDashboardSummary
-        snapshot={plateauSnapshot}
-        onToggleManual={() => void handleTogglePlateauManual()}
+      <CampaignProgressDashboardSection
+        season={seasonSnapshot}
+        bodyAbilitySummary={bodyAbilitySummary}
+        plateauSnapshot={plateauSnapshot}
+        baseSnapshot={baseSnapshot}
+        onTogglePlateauManual={() => void handleTogglePlateauManual()}
       />
-
-      <BaseDashboardSummary snapshot={baseSnapshot} />
 
       <DashboardSummaryStrip />
 
