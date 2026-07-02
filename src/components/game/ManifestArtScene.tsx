@@ -13,6 +13,7 @@ export type ManifestArtLayout =
   | 'reward-icon'
   | 'reward-banner'
   | 'empty-state'
+  | 'empty-state-tall'
   | 'artifact-icon'
   | 'boss-compact';
 
@@ -48,6 +49,8 @@ function frameClass(layout: ManifestArtLayout): string {
       return 'w-full h-[5.25rem] sm:h-[7.5rem] md:h-[10rem]';
     case 'empty-state':
       return 'w-full h-[7rem] sm:h-[8rem]';
+    case 'empty-state-tall':
+      return 'w-full h-[14rem] sm:h-[16rem]';
     case 'artifact-icon':
       return 'h-12 w-12 shrink-0 rounded-lg';
     case 'boss-compact':

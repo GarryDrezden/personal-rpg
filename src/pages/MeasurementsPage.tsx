@@ -303,7 +303,7 @@ export function MeasurementsPage() {
             <ManifestArtScene
               assetId={EMPTY_STATE_NO_ENTRIES_ASSET_ID}
               alt="Здесь появятся первые следы замеров"
-              layout="empty-state"
+              layout="empty-state-tall"
               testId="empty-state-no-entries-art"
               className="rounded-none border-0 shadow-none"
             />
