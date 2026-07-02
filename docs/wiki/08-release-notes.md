@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Plateau Mode v1 — Удержание перевала:** soft and active plateau detection; manual «Я на перевале» state; route-holding snapshot from existing daily entries; Today plateau card and Dashboard summary; Body Abilities connection as non-weight progress; achievement «Страж перевала». Medical analytics, DB schema changes and new daily metrics kept out of scope.
 - **Core Loop Polish v1 — Today:** improved daily Today flow; save reaction card; minimal/recovery day quick path; contextual daily mob; sticky mobile save CTA.
 - **Seasons v1:** 28-day season engine; 13 season configs; quest progress from daily entries; partial success; compact season card on Today and Dashboard.
 - **Body Abilities v1:** body abilities catalog; manual unlock; soft hints; Dashboard summary; Growth/Freedom integration.
@@ -55,6 +56,18 @@
 ### Removed
 
 - —
+
+---
+
+## Plateau Mode v1 — Удержание перевала
+
+- Added soft and active plateau detection (10 / 21 days without new best weight).
+- Added manual «Я на перевале» state in `settings.plateauState`.
+- Added route-holding snapshot from existing daily entries.
+- Added Today plateau card and Dashboard summary.
+- Connected Plateau Mode with Body Abilities as non-weight progress.
+- Added achievement «Страж перевала».
+- Kept medical analytics, DB schema changes and new daily metrics out of scope.
 
 ---
 

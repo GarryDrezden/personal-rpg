@@ -134,6 +134,7 @@ export const ICON_EMOJI_MAP: Record<string, string> = {
   'boss-3-streak': '🔥',
   'boss-month': '👑',
   'recovery-minimal': '🛡️',
+  'plateau-guardian': '⛰️',
   'minimal-day-completed': '🛡️',
   'recovery-not-robot': '🤝',
   'recovery-heard': '🔋',
@@ -259,6 +260,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: 'boss_4_streak', title: 'Месяц побед', description: 'Победить 4 недельных босса подряд', category: 'boss', tier: 'epic', iconKey: 'boss-month', conditionType: 'streak', target: 4 },
 
   { id: 'recovery_minimal_day', title: 'День удержан', description: 'Выполнить минимальный день', category: 'recovery', tier: 'bronze', iconKey: 'recovery-minimal', conditionType: 'instant' },
+  { id: 'plateau_route_guardian', title: 'Страж перевала', description: 'Удержал маршрут во время плато', category: 'recovery', tier: 'silver', iconKey: 'plateau-guardian', conditionType: 'instant' },
   { id: 'recovery_heard_body', title: 'Услышал тело', description: 'Впервые отметить низкий ресурс или восстановление', category: 'recovery', tier: 'bronze', iconKey: 'recovery-heard', conditionType: 'instant' },
   { id: 'recovery_smart', title: 'Восстановился грамотно', description: 'День восстановления/минимальный с калориями и без алкоголя', category: 'recovery', tier: 'silver', iconKey: 'recovery-smart', conditionType: 'instant' },
   { id: 'recovery_not_robot', title: 'Не робот, но стараюсь', description: 'После слабой недели выполнить 60% следующей', category: 'recovery', tier: 'silver', iconKey: 'recovery-not-robot', conditionType: 'combo' },

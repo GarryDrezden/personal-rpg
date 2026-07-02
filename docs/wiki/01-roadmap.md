@@ -103,12 +103,16 @@
 
 ---
 
-## 6. Plateau Mode
+## 6. Plateau Mode ✅
 
-- [ ] Plateau detection (10–21 дней без улучшения веса)
-- [ ] Copy: «Удержание перевала»
-- [ ] Route holding rewards
-- [ ] Achievement: Страж перевала
+- [x] Plateau detection (10–21 дней без улучшения веса)
+- [x] Copy: «Удержание перевала»
+- [x] Route holding rewards (snapshot из existing daily data)
+- [x] Achievement: Страж перевала
+- [x] Manual flag «Я на перевале»
+- [x] Today card + Dashboard summary
+
+**Критерий готовности v1:** мягкий режим без тона провала; route holding из существующих метрик; без DB migration.
 
 ---
 

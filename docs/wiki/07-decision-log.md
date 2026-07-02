@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-06-06 — Plateau Mode v1 (game-support state, not medical diagnosis)
+
+### Context
+
+Weight plateaus are common in long campaigns. The app must help users continue without panic or shame — without medical claims or punitive framing.
+
+### Decision
+
+- Plateau Mode is a **game-support state** based on lack of new best weight (10/21 day thresholds) and/or manual user flag «Я на перевале».
+- **Route holding** is rewarded via snapshot from existing daily entries — no new mandatory metrics.
+- Persist `plateauState` in existing `AppSettings` — **no DB migration**.
+- Achievement «Страж перевала» uses simple route-held conditions during active plateau.
+
+### Consequences
+
+Freedom/Week `PlateauCard` delegates to v1 engine. Deeper Freedom Score integration and Plateau achievements v2 deferred.
+
+---
+
 ## 2026-06-06 — Body Abilities v1 (user-observed, not medical)
 
 ### Context

@@ -7,6 +7,12 @@ import { getSeasonSnapshotWithRecap } from '../game/seasons/seasonEngine';
 import { SeasonTodayCard } from '../components/season/SeasonTodayCard';
 import { getTopBodyAbilityV1Hint } from '../game/bodyAbilities/bodyAbilityV1Engine';
 import { BodyAbilityTodayHint } from '../components/bodyAbilities/BodyAbilityTodayHint';
+import {
+  dismissPlateauSoftHint,
+  getPlateauSnapshot,
+  setManualPlateauActive,
+} from '../game/plateau/plateauEngine';
+import { PlateauTodayCard } from '../components/plateau/PlateauTodayCard';
 import { getWeeklySettingsForDate, getDayStatus } from '../utils/points';
 import {
   calculateMomentumHistory,
@@ -46,7 +52,8 @@ import { NutritionRecoverySuggestionCard } from '../components/nutrition/Nutriti
 import { shouldSuggestNutritionRecovery, isNutritionTrackingEnabled } from '../utils/nutritionEngine';
 
 export function TodayPage() {
-  const { dailyEntries, measurements, settings, updateDaily, deleteDaily } = useAppStore();
+  const { dailyEntries, measurements, settings, updateDaily, deleteDaily, saveSettings } =
+    useAppStore();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [routeWelcome, setRouteWelcome] = useState(
@@ -283,6 +290,16 @@ export function TodayPage() {
         : null,
     [isEditingToday, settings, dailyEntries, measurements],
   );
+  const plateauSnapshot = useMemo(
+    () =>
+      getPlateauSnapshot({
+        dailyEntries: entriesForQuests,
+        measurements,
+        settings,
+        today,
+      }),
+    [entriesForQuests, measurements, settings, today],
+  );
 
   const patch = (partial: Partial<DailyEntry>) => {
     setEntry((prev) => ({ ...prev, ...partial, date: selectedDate }));
@@ -317,6 +334,33 @@ export function TodayPage() {
       applySaveReaction(updated);
       setRecoveryToast('Минимальный день включён');
       setTimeout(() => setRecoveryToast(null), 4000);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleMarkPlateau = async () => {
+    setSaving(true);
+    try {
+      await saveSettings(setManualPlateauActive(settings, true));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleClearPlateau = async () => {
+    setSaving(true);
+    try {
+      await saveSettings(setManualPlateauActive(settings, false));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDismissPlateauHint = async () => {
+    setSaving(true);
+    try {
+      await saveSettings(dismissPlateauSoftHint(settings));
     } finally {
       setSaving(false);
     }
@@ -431,6 +475,17 @@ export function TodayPage() {
       {isEditingToday ? <SeasonTodayCard season={seasonSnapshot} /> : null}
 
       {bodyAbilityHint ? <BodyAbilityTodayHint hint={bodyAbilityHint} /> : null}
+
+      {isEditingToday && plateauSnapshot.mode !== 'none' ? (
+        <PlateauTodayCard
+          snapshot={plateauSnapshot}
+          saving={saving}
+          onEnableMinimal={() => void enableMinimalDay()}
+          onMarkPlateau={() => void handleMarkPlateau()}
+          onClearPlateau={() => void handleClearPlateau()}
+          onDismissHint={() => void handleDismissPlateauHint()}
+        />
+      ) : null}
 
       <Card>
         <p className="mb-3 text-sm font-medium text-[var(--app-text)]">День недели</p>

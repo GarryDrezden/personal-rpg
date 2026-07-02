@@ -830,36 +830,58 @@ Design rules:
 
 ## Plateau Mode — Удержание перевала
 
-Plateaus are expected and must be treated as part of the campaign.
+**Status:** Plateau Mode v1 implemented.
 
-Trigger example:
+Plateaus are expected and must be treated as part of the campaign — not as failure.
 
-- weight does not improve for 10–21 days;
-- or user manually marks plateau.
+### Detection (v1)
+
+- **Soft hint:** 10–20 дней без нового лучшего веса (>0.05 кг улучшения)
+- **Active plateau:** 21+ день без нового лучшего веса **или** manual flag «Я на перевале»
+- **Dismiss:** soft hint можно скрыть до перехода в active
+- **No medical claims:** игровой режим удержания маршрута, не диагноз
+
+Engine: `src/game/plateau/plateauEngine.ts`. State: `settings.plateauState`.
+
+### Route holding (v1)
+
+Snapshot за 10 дней из existing daily entries:
+
+- route-held days (saved day / minimal / recovery / nutrition quest)
+- nutrition, movement, resource, alcohol-free, journal
+- Body Abilities unlocked during plateau
+- season quest progress
+
+### UI (v1)
+
+- **Today:** compact `PlateauTodayCard` (active или soft hint)
+- **Dashboard:** `PlateauDashboardSummary` + manual toggle
+- **Freedom / Body Abilities:** мягкая связь с не-весовым прогрессом
+
+### Achievement
+
+**Страж перевала** — active plateau + 4 route-held days за 7 дней (или 3 + 1 minimal/recovery).
 
 Plateau copy:
 
 > Вес стоит. Это не тупик, а перевал.  
 > На перевале важны не рывки, а удержание маршрута.
 
-During plateau mode, the game rewards:
+During plateau mode, the game emphasizes (not punishes):
 
-- sleep;
-- resource;
+- sleep / resource;
 - steps;
 - nutrition tracking;
 - no alcohol;
 - recovery/minimal days;
-- measurements;
-- returning after difficult days.
-
-Possible achievement:
-Страж перевала — удержал маршрут во время плато.
+- Body Abilities and season progress.
 
 Design rule:
 
 Plateau Mode must never imply failure.
-It should reframe stagnation as a defensive phase.
+It should reframe stagnation as a defensive phase — «персонаж не стоит».
+
+**Not in v1:** Boss Campaign, Camp/Base, medical analytics, new daily metrics, DB migrations.
 
 ---
 

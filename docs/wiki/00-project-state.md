@@ -127,7 +127,16 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Plateau Mode** |
+| Следующий спринт | **Camp/Base Progression** |
+
+### Plateau Mode v1 ✅
+
+- **Detection engine:** `src/game/plateau/plateauEngine.ts` — soft hint после 10 дней без нового лучшего веса, active после 21 дня или manual flag
+- **State:** `settings.plateauState` (manual, dismissed hint) — без DB migration
+- **Route holding:** snapshot из existing daily entries (питание, шаги, ресурс, minimal/recovery, alcohol-free, journal, Body Abilities, season)
+- **UI:** `PlateauTodayCard` на Today, `PlateauDashboardSummary` на Dashboard; связь с Freedom и Body Abilities
+- **Achievement:** «Страж перевала» (`plateau_route_guardian`) — умеренное условие по route-held days
+- **Не в scope v1:** медицинская аналитика, Boss Campaign, Camp/Base, новые daily metrics
 
 ### Body Abilities v1 ✅
 
@@ -181,13 +190,13 @@
 - SPA: `index.html` + assets — OK по HTTP
 - **HTTPS** (`https://fit-rpg.ru`) → 404 nginx — **не блокер**, future hardening после выпуска сертификата
 
-### Готовность к Plateau Mode
+### Готовность к Camp/Base Progression
 
-**Можно начинать** после деплоя Body Abilities v1 на HTTP production.
+Plateau Mode v1 готов к деплою на HTTP production.
 
 ## Следующий приоритет
 
-**Plateau Mode** → Camp/Base Progression (later) → Boss Campaign (later).
+**Camp/Base Progression** → Boss Campaign (later) → New Game+ / Maintenance (later).
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

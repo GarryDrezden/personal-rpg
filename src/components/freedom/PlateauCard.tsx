@@ -8,18 +8,21 @@ type PlateauCardProps = {
 export function PlateauCard({ result }: PlateauCardProps) {
   if (result.status === 'none') return null;
 
-  const isActive = result.status === 'plateau_but_system_active';
+  const isStrongActive = result.status === 'plateau_but_system_active';
+  const isSoftHint = result.status === 'possible_plateau';
 
   return (
     <Card
       className={
-        isActive
+        isStrongActive
           ? 'border-[color-mix(in_srgb,var(--app-success)_35%,var(--app-border))] bg-[color-mix(in_srgb,var(--app-success)_8%,var(--app-card))]'
-          : 'border-[color-mix(in_srgb,var(--app-secondary)_35%,var(--app-border))] bg-[color-mix(in_srgb,var(--app-secondary)_8%,var(--app-card))]'
+          : isSoftHint
+            ? 'border-[var(--app-gold)]/25 bg-[var(--app-primary-soft)]/35'
+            : 'border-[color-mix(in_srgb,var(--app-secondary)_35%,var(--app-border))] bg-[color-mix(in_srgb,var(--app-secondary)_8%,var(--app-card))]'
       }
     >
       <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
-        Плато-режим
+        Удержание перевала
       </p>
       <h2 className="mt-2 text-lg font-bold text-[var(--app-text)]">{result.title}</h2>
       <p className="mt-1 text-sm text-[var(--app-text-muted)]">{result.description}</p>
@@ -27,7 +30,7 @@ export function PlateauCard({ result }: PlateauCardProps) {
       {result.positiveSignals.length > 0 ? (
         <div className="mt-4">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
-            {isActive ? 'Система держится' : 'Сигналы'}
+            {isStrongActive ? 'Система держится' : 'Сигналы'}
           </p>
           <ul className="space-y-1 text-sm text-[var(--app-text)]">
             {result.positiveSignals.map((s) => (
@@ -43,7 +46,7 @@ export function PlateauCard({ result }: PlateauCardProps) {
       {result.suggestions.length > 0 ? (
         <div className="mt-4">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
-            {isActive ? 'Что дальше' : 'Мягкие шаги'}
+            {isStrongActive ? 'Что дальше' : 'Мягкие шаги'}
           </p>
           <ul className="space-y-1 text-sm text-[var(--app-text-muted)]">
             {result.suggestions.map((s) => (
@@ -57,9 +60,7 @@ export function PlateauCard({ result }: PlateauCardProps) {
       ) : null}
 
       <p className="mt-3 text-xs text-[var(--app-text-muted)]">
-        За {result.daysChecked} дней вес изменился на{' '}
-        {result.weightChangeKg >= 0 ? '+' : ''}
-        {result.weightChangeKg.toFixed(1)} кг
+        Дней без нового лучшего веса: {result.daysChecked}
       </p>
     </Card>
   );

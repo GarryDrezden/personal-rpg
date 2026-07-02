@@ -44,6 +44,7 @@ import {
   calcMomentumBonusXp,
 } from './momentumEngine';
 import { getBonusXpTotal } from './xpTransactionStorage';
+import { getPlateauSnapshot } from '../game/plateau/plateauEngine';
 
 export type AchievementEngineParams = {
   dailyEntries: DailyEntry[];
@@ -337,6 +338,11 @@ function buildMetrics(params: AchievementEngineParams): AchievementMetrics {
   const momentumMetrics = buildMomentumAchievementMetrics(
     calculateMomentumHistory({ dailyEntries: entries, settings }),
   );
+  const plateauSnapshot = getPlateauSnapshot({
+    dailyEntries: entries,
+    measurements,
+    settings,
+  });
 
   const m: AchievementMetrics = {
     hasAnyEntry: entries.some((e) => hasDayData(e)),
@@ -441,6 +447,7 @@ function buildMetrics(params: AchievementEngineParams): AchievementMetrics {
     maxCognitiveBreakStreak: getMaxCognitiveBreakStreak(entries),
     maxRestHighStreak: getMaxRestHighStreak(entries),
     restMarkerDays: countRestMarkerDays(entries),
+    hasPlateauRouteGuardian: plateauSnapshot.routeGuardianEligible,
   };
 
   return m;
@@ -487,6 +494,7 @@ function evaluateAchievement(achievement: Achievement, m: AchievementMetrics): {
     boss_first_defeat: (m.defeatedBosses as number) >= 1,
     boss_perfect_win: (m.perfectBosses as number) >= 1,
     recovery_minimal_day: !!m.hasMinimalDay,
+    plateau_route_guardian: !!m.hasPlateauRouteGuardian,
     recovery_not_robot: !!m.hasRecoveryAfterBadWeek,
     momentum_first_positive: !!m.momentumExitedNegative,
     momentum_stable: !!m.momentumReachedStable,

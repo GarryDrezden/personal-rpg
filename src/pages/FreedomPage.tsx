@@ -12,6 +12,7 @@ import {
 } from '../utils/freedomScoreEngine';
 import { calculateRemovedLoad } from '../utils/removedLoadEngine';
 import { detectPlateau } from '../utils/plateauEngine';
+import { getPlateauSnapshot } from '../game/plateau/plateauEngine';
 import { getWeeklyStoryHistory } from '../utils/weeklyStoryHistoryEngine';
 import { getBodyAbilityV1Summary } from '../game/bodyAbilities/bodyAbilityV1Engine';
 import { BodyAbilityDashboardSummary } from '../components/bodyAbilities/BodyAbilityDashboardSummary';
@@ -39,6 +40,10 @@ export function FreedomPage() {
     () => getBodyAbilityV1Summary(engineParams),
     [engineParams],
   );
+  const plateauSnapshot = useMemo(
+    () => getPlateauSnapshot(engineParams),
+    [engineParams],
+  );
 
   return (
     <div className="space-y-8 pb-4">
@@ -52,6 +57,12 @@ export function FreedomPage() {
 
       <FreedomScoreCard result={freedomScore} hasData={hasData} />
       <BodyAbilityDashboardSummary summary={bodyAbilitySummary} />
+      {plateauSnapshot.mode !== 'none' ? (
+        <p className="-mt-4 text-sm text-[var(--app-text-muted)]">
+          На перевале особенно важны не-весовые признаки прогресса — способности тела, сезон и
+          удержание маршрута.
+        </p>
+      ) : null}
       <p className="-mt-4 text-sm">
         <Link to="/momentum" className="font-medium text-[var(--app-primary)] hover:underline">
           Посмотреть историю инерции →

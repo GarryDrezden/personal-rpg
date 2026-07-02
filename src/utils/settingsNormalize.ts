@@ -1,6 +1,7 @@
 import { DEFAULT_APP_SETTINGS, DEFAULT_WEIGHT_GOAL_KG } from '../constants/defaults';
 import type { AppSettings } from '../types';
 import { normalizeBodyAbilityState } from '../game/bodyAbilities/bodyAbilityV1Engine';
+import { normalizePlateauState } from '../game/plateau/plateauEngine';
 
 /** Синхронизирует weightGoal / targetWeight после загрузки или сохранения через API. */
 export function normalizeAppSettings(
@@ -38,5 +39,6 @@ export function normalizeAppSettings(
     bodyAbilityState: normalizeBodyAbilityState(
       settings.bodyAbilityState ?? fallback.bodyAbilityState,
     ),
+    plateauState: normalizePlateauState(settings.plateauState ?? fallback.plateauState),
   };
 }

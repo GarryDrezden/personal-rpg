@@ -12,6 +12,7 @@ import {
   getBranchEmptyHint,
   hasEnoughDataForBodyAbilities,
 } from '../utils/bodyAbilityEngine';
+import { getPlateauSnapshot } from '../game/plateau/plateauEngine';
 import type { BodyAbilityBranch } from '../types/bodyAbilities';
 
 export function BodyAbilitiesPage({ embedded = false }: { embedded?: boolean }) {
@@ -34,6 +35,10 @@ export function BodyAbilitiesPage({ embedded = false }: { embedded?: boolean }) 
   );
 
   const stats = useMemo(() => getBodyAbilityStats(engineParams), [engineParams]);
+  const plateauSnapshot = useMemo(
+    () => getPlateauSnapshot(engineParams),
+    [engineParams],
+  );
   const hasData = hasEnoughDataForBodyAbilities({ dailyEntries, measurements });
   const hasWeightMeasurements = measurements.some(
     (m) => m.weight !== null && m.weight > 0,
@@ -77,6 +82,13 @@ export function BodyAbilitiesPage({ embedded = false }: { embedded?: boolean }) 
       ) : null}
 
       <BodyAbilityV1Section />
+
+      {plateauSnapshot.mode !== 'none' && stats.unlocked > 0 ? (
+        <p className="rounded-xl border border-[var(--app-gold)]/20 bg-[var(--app-primary-soft)]/30 px-4 py-3 text-sm text-[var(--app-text-muted)]">
+          На перевале особенно важны не-весовые признаки прогресса. Открыто способностей:{' '}
+          {stats.unlocked} — персонаж не стоит.
+        </p>
+      ) : null}
 
       <section>
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">

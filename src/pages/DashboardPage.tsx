@@ -42,6 +42,8 @@ import { SeasonDashboardSummary } from '../components/season/SeasonDashboardSumm
 import { getNextBodyAbilities } from '../utils/bodyAbilityEngine';
 import { getBodyAbilityV1Summary } from '../game/bodyAbilities/bodyAbilityV1Engine';
 import { BodyAbilityDashboardSummary } from '../components/bodyAbilities/BodyAbilityDashboardSummary';
+import { getPlateauSnapshot, setManualPlateauActive } from '../game/plateau/plateauEngine';
+import { PlateauDashboardSummary } from '../components/plateau/PlateauDashboardSummary';
 
 import { useAppTheme } from '../hooks/useAppTheme';
 
@@ -56,7 +58,7 @@ import { Link } from 'react-router-dom';
 
 export function DashboardPage() {
 
-  const { dailyEntries, measurements, settings, updateDaily } = useAppStore();
+  const { dailyEntries, measurements, settings, updateDaily, saveSettings } = useAppStore();
 
   const { profile } = useAuth();
   const showStartRouteBanner = needsOnboarding(settings, profile);
@@ -213,6 +215,15 @@ export function DashboardPage() {
     [settings, dailyEntries, measurements],
   );
 
+  const plateauSnapshot = useMemo(
+    () => getPlateauSnapshot({ dailyEntries, measurements, settings, today }),
+    [dailyEntries, measurements, settings, today],
+  );
+
+  const handleTogglePlateauManual = useCallback(async () => {
+    await saveSettings(setManualPlateauActive(settings, !plateauSnapshot.manualActive));
+  }, [saveSettings, settings, plateauSnapshot.manualActive]);
+
   const nextAbilities = useMemo(
 
     () => getNextBodyAbilities({ dailyEntries, measurements, settings, limit: 1 }),
@@ -364,6 +375,11 @@ export function DashboardPage() {
       <SeasonDashboardSummary season={seasonSnapshot} />
 
       <BodyAbilityDashboardSummary summary={bodyAbilitySummary} />
+
+      <PlateauDashboardSummary
+        snapshot={plateauSnapshot}
+        onToggleManual={() => void handleTogglePlateauManual()}
+      />
 
       <DashboardSummaryStrip />
 

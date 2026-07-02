@@ -182,6 +182,8 @@ export interface AppSettings {
   startDate?: string;
   /** Способности тела v1 — ручные наблюдения пользователя */
   bodyAbilityState?: import('./bodyAbilityV1').BodyAbilityState;
+  /** Plateau Mode v1 — удержание перевала */
+  plateauState?: import('./plateauV1').PlateauState;
 }
 
 export interface AppData {
