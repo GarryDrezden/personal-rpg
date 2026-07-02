@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Boss Campaign v1:** boss catalog; derived boss progress from season/daily/plateau/body ability/base signals; Today season boss line; Dashboard summary; Journey chapter boss labels; achievement «Первая трещина». Combat, DB schema, new daily metrics and boss art kept out of scope.
 - **Campaign Integration QA v1:** reviewed Today/Dashboard/Growth/Freedom integration; grouped campaign summaries; compact cards; Today hint de-duplication; confirmed readiness for Boss Campaign v1.
 - **Camp/Base Progression v1:** 8-stage hero camp; derived base score from existing daily, season, body ability and plateau signals; Dashboard base card; Growth `/growth/camp` section; lightweight Today save feedback. DB schema, new economy, manual building and Boss Campaign kept out of scope.
 - **Plateau Mode v1 — Удержание перевала:** soft and active plateau detection; manual «Я на перевале» state; route-holding snapshot from existing daily entries; Today plateau card and Dashboard summary; Body Abilities connection as non-weight progress; achievement «Страж перевала». Medical analytics, DB schema changes and new daily metrics kept out of scope.
@@ -58,6 +59,16 @@
 ### Removed
 
 - —
+
+---
+
+## Boss Campaign v1
+
+- Added boss catalog for season mini-bosses, chapter bosses and act bosses.
+- Added derived boss progress from season, daily, plateau, body ability and base signals.
+- Integrated current boss into Today season card, Dashboard campaign section and Journey chapter detail.
+- Added achievement «Первая трещина» at 50% boss progress.
+- Kept combat mechanics, DB schema changes, new daily metrics and boss art out of scope.
 
 ---
 

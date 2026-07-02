@@ -4,6 +4,7 @@ import { resolveJourneyStageText } from '../../../types/journeyMap';
 import { JourneyConditionRow } from '../JourneyConditionRow';
 import { JourneyBossMini } from './JourneyBossMini';
 import { getJourneyMapStageConfig } from '../../../constants/journeyMapConfig';
+import { getChapterBossByChapterId } from '../../../game/bosses/bossConfig';
 
 type JourneyChapterDetailPanelProps = {
   progress: JourneyStageProgress;
@@ -17,14 +18,6 @@ const STATUS_LABEL = {
   locked: 'Впереди',
 } as const;
 
-const BOSS_LABELS: Record<string, string> = {
-  lord_of_empty_day: 'Владыка Пустого Дня',
-  divan_king: 'Диванный король',
-  misty_baron: 'Туманный барон',
-  resource_devourer: 'Пожиратель ресурсов',
-  old_form_guardian: 'Страж старой формы',
-};
-
 export function JourneyChapterDetailPanel({
   progress,
   themeId,
@@ -32,6 +25,7 @@ export function JourneyChapterDetailPanel({
 }: JourneyChapterDetailPanelProps) {
   const text = resolveJourneyStageText(progress.stage, themeId);
   const config = getJourneyMapStageConfig(progress.stage.id);
+  const chapterBoss = getChapterBossByChapterId(progress.stage.order);
   const { status, progressPercent } = progress;
   const isCurrent = status === 'current';
   const chapterBadge =
@@ -76,13 +70,28 @@ export function JourneyChapterDetailPanel({
           </div>
         ) : null}
 
-        {config.bossId ? (
-          <div className="journey-chapter-panel__boss-row">
+        {chapterBoss ? (
+          <div className="journey-chapter-panel__boss-row" data-testid="journey-chapter-boss">
             <div>
               <p className="journey-chapter-panel__boss-label">Босс главы</p>
               <p className="journey-chapter-panel__boss-name">
-                {BOSS_LABELS[config.bossId] ?? 'Страж пути'}
+                {chapterBoss.icon} {chapterBoss.title}
               </p>
+              <p className="mt-1 text-xs text-[var(--app-text-muted)]">{chapterBoss.weaknessText}</p>
+            </div>
+            {config.bossId ? (
+              <JourneyBossMini bossId={config.bossId} status={status} size="md" />
+            ) : (
+              <span className="text-2xl" aria-hidden>
+                {chapterBoss.icon}
+              </span>
+            )}
+          </div>
+        ) : config.bossId ? (
+          <div className="journey-chapter-panel__boss-row">
+            <div>
+              <p className="journey-chapter-panel__boss-label">Босс главы</p>
+              <p className="journey-chapter-panel__boss-name">Страж пути</p>
             </div>
             <JourneyBossMini bossId={config.bossId} status={status} size="md" />
           </div>

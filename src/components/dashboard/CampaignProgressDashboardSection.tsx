@@ -3,6 +3,7 @@ import type { SeasonSnapshotWithRecap } from '../../game/seasons/seasonEngine';
 import type { BodyAbilityV1Summary } from '../../types/bodyAbilityV1';
 import type { PlateauSnapshot } from '../../types/plateauV1';
 import type { BaseProgressionSnapshot } from '../../types/baseV1';
+import type { BossCampaignSnapshot } from '../../game/bosses/bossTypes';
 import { shouldShowPlateauDashboardSummary } from '../../utils/campaignIntegration';
 import { SeasonDashboardSummary } from '../season/SeasonDashboardSummary';
 import { BodyAbilityDashboardSummary } from '../bodyAbilities/BodyAbilityDashboardSummary';
@@ -14,6 +15,7 @@ type CampaignProgressDashboardSectionProps = {
   bodyAbilitySummary: BodyAbilityV1Summary;
   plateauSnapshot: PlateauSnapshot;
   baseSnapshot: BaseProgressionSnapshot;
+  bossSnapshot: BossCampaignSnapshot;
   onTogglePlateauManual: () => void;
 };
 
@@ -22,6 +24,7 @@ export function CampaignProgressDashboardSection({
   bodyAbilitySummary,
   plateauSnapshot,
   baseSnapshot,
+  bossSnapshot,
   onTogglePlateauManual,
 }: CampaignProgressDashboardSectionProps) {
   const showPlateau = shouldShowPlateauDashboardSummary(plateauSnapshot.mode);
@@ -39,10 +42,13 @@ export function CampaignProgressDashboardSection({
           <Link to="/growth/camp" className="font-medium text-[var(--app-primary)] hover:underline">
             Лагерь
           </Link>
+          <Link to="/journey" className="font-medium text-[var(--app-primary)] hover:underline">
+            Путь
+          </Link>
         </div>
       </div>
       <div className="grid gap-2 sm:grid-cols-2">
-        <SeasonDashboardSummary season={season} compact />
+        <SeasonDashboardSummary season={season} compact boss={bossSnapshot} />
         <BaseDashboardSummary snapshot={baseSnapshot} compact />
         <BodyAbilityDashboardSummary summary={bodyAbilitySummary} compact />
         {showPlateau ? (

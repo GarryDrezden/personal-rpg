@@ -135,6 +135,7 @@ export const ICON_EMOJI_MAP: Record<string, string> = {
   'boss-month': '👑',
   'recovery-minimal': '🛡️',
   'plateau-guardian': '⛰️',
+  'boss-first-crack': '💥',
   'minimal-day-completed': '🛡️',
   'recovery-not-robot': '🤝',
   'recovery-heard': '🔋',
@@ -261,6 +262,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 
   { id: 'recovery_minimal_day', title: 'День удержан', description: 'Выполнить минимальный день', category: 'recovery', tier: 'bronze', iconKey: 'recovery-minimal', conditionType: 'instant' },
   { id: 'plateau_route_guardian', title: 'Страж перевала', description: 'Удержал маршрут во время плато', category: 'recovery', tier: 'silver', iconKey: 'plateau-guardian', conditionType: 'instant' },
+  { id: 'boss_first_crack', title: 'Первая трещина', description: 'Ослабил первого сезонного босса', category: 'boss', tier: 'bronze', iconKey: 'boss-first-crack', conditionType: 'instant' },
   { id: 'recovery_heard_body', title: 'Услышал тело', description: 'Впервые отметить низкий ресурс или восстановление', category: 'recovery', tier: 'bronze', iconKey: 'recovery-heard', conditionType: 'instant' },
   { id: 'recovery_smart', title: 'Восстановился грамотно', description: 'День восстановления/минимальный с калориями и без алкоголя', category: 'recovery', tier: 'silver', iconKey: 'recovery-smart', conditionType: 'instant' },
   { id: 'recovery_not_robot', title: 'Не робот, но стараюсь', description: 'После слабой недели выполнить 60% следующей', category: 'recovery', tier: 'silver', iconKey: 'recovery-not-robot', conditionType: 'combo' },

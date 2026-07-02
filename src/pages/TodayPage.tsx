@@ -46,6 +46,7 @@ import { getOrCreateDailyMobForEntry } from '../game/dailyMobEngine';
 import { getDailyMobContextLine } from '../utils/todayMobContext';
 import { getTodaySaveReaction, type TodaySaveReaction } from '../utils/todayDayReaction';
 import { getBaseSaveSparkLine } from '../game/base/baseProgressionEngine';
+import { getBossCampaignSnapshot } from '../game/bosses/bossCampaignEngine';
 import { shouldShowBodyAbilityHintOnToday } from '../utils/campaignIntegration';
 import { TodayMinimalQuickCard } from '../components/today/TodayMinimalQuickCard';
 import { TodaySaveReactionCard } from '../components/today/TodaySaveReactionCard';
@@ -285,6 +286,18 @@ export function TodayPage() {
     () => getSeasonSnapshotWithRecap({ settings, dailyEntries, today }),
     [settings, dailyEntries, today],
   );
+  const bossSnapshot = useMemo(
+    () =>
+      isEditingToday
+        ? getBossCampaignSnapshot({
+            dailyEntries: entriesForQuests,
+            measurements,
+            settings,
+            today,
+          })
+        : null,
+    [isEditingToday, entriesForQuests, measurements, settings, today],
+  );
   const bodyAbilityHint = useMemo(
     () =>
       isEditingToday
@@ -467,7 +480,7 @@ export function TodayPage() {
         <DailyMobCard mobId={dailyMobId} compact contextLine={dailyMobContext} />
       ) : null}
 
-      {isEditingToday ? <SeasonTodayCard season={seasonSnapshot} /> : null}
+      {isEditingToday ? <SeasonTodayCard season={seasonSnapshot} boss={bossSnapshot} /> : null}
 
       {bodyAbilityHint && shouldShowBodyAbilityHintOnToday(plateauSnapshot.mode) ? (
         <BodyAbilityTodayHint hint={bodyAbilityHint} />

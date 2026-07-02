@@ -1,14 +1,16 @@
 import type { SeasonSnapshotWithRecap } from '../../game/seasons/seasonEngine';
+import type { BossCampaignSnapshot } from '../../game/bosses/bossTypes';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
 
 type SeasonTodayCardProps = {
   season: SeasonSnapshotWithRecap;
+  boss?: BossCampaignSnapshot | null;
 };
 
 const VISIBLE_QUESTS = 3;
 
-export function SeasonTodayCard({ season }: SeasonTodayCardProps) {
+export function SeasonTodayCard({ season, boss }: SeasonTodayCardProps) {
   const topQuests = season.quests
     .filter((q) => !q.completed)
     .sort((a, b) => b.current / b.target - a.current / a.target)
@@ -67,9 +69,35 @@ export function SeasonTodayCard({ season }: SeasonTodayCardProps) {
         ))}
       </ul>
 
-      <p className="mt-3 text-xs text-[var(--app-text-muted)]">
-        {season.config.miniBossName} {season.config.miniBossHint}.
-      </p>
+      <div
+        className="mt-3 rounded-lg border border-[var(--app-border)]/80 bg-[var(--app-card)]/50 px-3 py-2.5"
+        data-testid="season-boss-line"
+      >
+        {boss ? (
+          <>
+            <p className="text-xs font-semibold text-[var(--app-text)]">
+              <span aria-hidden className="mr-1">
+                {boss.currentBoss.icon}
+              </span>
+              {boss.currentBoss.title}
+            </p>
+            <p className="mt-0.5 text-xs text-[var(--app-gold)]">{boss.bossStatusLabel}</p>
+            <p className="mt-1 text-xs text-[var(--app-text-muted)]">{boss.nextWeaknessHint}</p>
+            {boss.weaknessSignals.length > 0 ? (
+              <p className="mt-1 text-xs text-[var(--app-text-muted)]">
+                {boss.weaknessSignals.join(' · ')}
+              </p>
+            ) : null}
+            <div className="mt-2">
+              <ProgressBar value={boss.bossProgressPercent} max={100} />
+            </div>
+          </>
+        ) : (
+          <p className="text-xs text-[var(--app-text-muted)]">
+            {season.config.miniBossName} {season.config.miniBossHint}.
+          </p>
+        )}
+      </div>
     </Card>
   );
 }

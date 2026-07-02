@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-06-06 — Boss Campaign v1 (narrative derived layer, not combat)
+
+### Context
+
+After Seasons, Plateau, Body Abilities and Camp/Base, the campaign needed a unifying antagonist layer that reflects real resistance patterns without new player obligations.
+
+### Decision
+
+- Boss Campaign v1 is a **narrative derived layer** — bosses weaken from existing actions (season quests, route-held days, abilities, plateau, camp).
+- **No combat system**, HP economy, or separate boss screen in v1.
+- Current season → season mini-boss; Journey chapter → chapter boss label (narrative only for chapters).
+- Act bosses in config for future; no act progression engine in v1.
+
+### Consequences
+
+Boss art, history page, act progression and weekly elites deferred to v2 / Asset Registry 2.0.
+
+---
+
 ## 2026-06-06 — Camp/Base v1 (derived meta-progression, not building sim)
 
 ### Context

@@ -45,6 +45,7 @@ import {
 } from './momentumEngine';
 import { getBonusXpTotal } from './xpTransactionStorage';
 import { getPlateauSnapshot } from '../game/plateau/plateauEngine';
+import { getBossCampaignSnapshot, isBossFirstCrackEligible } from '../game/bosses/bossCampaignEngine';
 
 export type AchievementEngineParams = {
   dailyEntries: DailyEntry[];
@@ -343,6 +344,11 @@ function buildMetrics(params: AchievementEngineParams): AchievementMetrics {
     measurements,
     settings,
   });
+  const bossSnapshot = getBossCampaignSnapshot({
+    dailyEntries: entries,
+    measurements,
+    settings,
+  });
 
   const m: AchievementMetrics = {
     hasAnyEntry: entries.some((e) => hasDayData(e)),
@@ -448,6 +454,7 @@ function buildMetrics(params: AchievementEngineParams): AchievementMetrics {
     maxRestHighStreak: getMaxRestHighStreak(entries),
     restMarkerDays: countRestMarkerDays(entries),
     hasPlateauRouteGuardian: plateauSnapshot.routeGuardianEligible,
+    hasBossFirstCrack: isBossFirstCrackEligible(bossSnapshot),
   };
 
   return m;
@@ -495,6 +502,7 @@ function evaluateAchievement(achievement: Achievement, m: AchievementMetrics): {
     boss_perfect_win: (m.perfectBosses as number) >= 1,
     recovery_minimal_day: !!m.hasMinimalDay,
     plateau_route_guardian: !!m.hasPlateauRouteGuardian,
+    boss_first_crack: !!m.hasBossFirstCrack,
     recovery_not_robot: !!m.hasRecoveryAfterBadWeek,
     momentum_first_positive: !!m.momentumExitedNegative,
     momentum_stable: !!m.momentumReachedStable,

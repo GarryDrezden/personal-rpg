@@ -39,6 +39,7 @@ import { getSeasonSnapshotWithRecap } from '../game/seasons/seasonEngine';
 
 import { getPlateauSnapshot, setManualPlateauActive } from '../game/plateau/plateauEngine';
 import { getBaseProgressionSnapshot } from '../game/base/baseProgressionEngine';
+import { getBossCampaignSnapshot } from '../game/bosses/bossCampaignEngine';
 import { CampaignProgressDashboardSection } from '../components/dashboard/CampaignProgressDashboardSection';
 import { getNextBodyAbilities } from '../utils/bodyAbilityEngine';
 import { getBodyAbilityV1Summary } from '../game/bodyAbilities/bodyAbilityV1Engine';
@@ -236,6 +237,18 @@ export function DashboardPage() {
     [dailyEntries, measurements, settings, today, unlockedAchievements],
   );
 
+  const bossSnapshot = useMemo(
+    () =>
+      getBossCampaignSnapshot({
+        dailyEntries,
+        measurements,
+        settings,
+        today,
+        baseScore: baseSnapshot.baseScore,
+      }),
+    [dailyEntries, measurements, settings, today, baseSnapshot.baseScore],
+  );
+
   const nextAbilities = useMemo(
 
     () => getNextBodyAbilities({ dailyEntries, measurements, settings, limit: 1 }),
@@ -389,6 +402,7 @@ export function DashboardPage() {
         bodyAbilitySummary={bodyAbilitySummary}
         plateauSnapshot={plateauSnapshot}
         baseSnapshot={baseSnapshot}
+        bossSnapshot={bossSnapshot}
         onTogglePlateauManual={() => void handleTogglePlateauManual()}
       />
 

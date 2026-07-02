@@ -1,12 +1,17 @@
 import type { SeasonSnapshotWithRecap } from '../../game/seasons/seasonEngine';
+import type { BossCampaignSnapshot } from '../../game/bosses/bossTypes';
 import { ProgressBar } from '../ui/ProgressBar';
 
 type SeasonDashboardSummaryProps = {
   season: SeasonSnapshotWithRecap;
   compact?: boolean;
+  boss?: BossCampaignSnapshot | null;
 };
-
-export function SeasonDashboardSummary({ season, compact = false }: SeasonDashboardSummaryProps) {
+export function SeasonDashboardSummary({
+  season,
+  compact = false,
+  boss,
+}: SeasonDashboardSummaryProps) {
   return (
     <section
       data-testid="season-dashboard-summary"
@@ -40,6 +45,23 @@ export function SeasonDashboardSummary({ season, compact = false }: SeasonDashbo
 
       {!compact ? (
         <p className="mt-2 text-xs text-[var(--app-text-muted)] line-clamp-2">{season.recapText}</p>
+      ) : null}
+
+      {boss ? (
+        <div className="mt-2 border-t border-[var(--app-border)]/60 pt-2" data-testid="dashboard-boss-summary">
+          <p className="text-xs font-medium text-[var(--app-text)]">
+            {boss.currentBoss.icon} {boss.currentBoss.shortTitle}
+          </p>
+          <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">{boss.bossStatusLabel}</p>
+          <div className="mt-1.5">
+            <ProgressBar value={boss.bossProgressPercent} max={100} />
+          </div>
+          {boss.weaknessSignals[0] ? (
+            <p className="mt-1 text-xs text-[var(--app-text-muted)] line-clamp-1">
+              {boss.weaknessSignals[0]}
+            </p>
+          ) : null}
+        </div>
       ) : null}
     </section>
   );

@@ -127,7 +127,15 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Boss Campaign v1** (готовность подтверждена QA) |
+| Следующий спринт | **Asset Registry 2.0** / **New Game+** (параллельно) |
+
+### Boss Campaign v1 ✅
+
+- **Каталог:** `src/game/bosses/bossConfig.ts` — 13 season mini-bosses, 9 chapter bosses, 3 act bosses
+- **Engine:** `src/game/bosses/bossCampaignEngine.ts` — derived progress (не combat), статусы untouched → sealed
+- **UI:** boss line в `SeasonTodayCard`; summary в `SeasonDashboardSummary`; chapter boss в `JourneyChapterDetailPanel`
+- **Achievement:** «Первая трещина» (`boss_first_crack`) при 50% progress
+- **Не в scope v1:** combat/HP, boss art, отдельный экран, DB migration, новые daily metrics
 
 ### Campaign Integration QA v1 ✅
 
@@ -206,13 +214,13 @@
 - SPA: `index.html` + assets — OK по HTTP
 - **HTTPS** (`https://fit-rpg.ru`) → 404 nginx — **не блокер**, future hardening после выпуска сертификата
 
-### Готовность к Boss Campaign v1
+### Готовность к Asset Registry 2.0 / New Game+
 
-Campaign Integration QA v1 пройден. Основные годовые системы интегрированы без перегруза Today/Dashboard.
+Boss Campaign v1 готов к деплою на HTTP production.
 
 ## Следующий приоритет
 
-**Boss Campaign v1** → Asset Registry 2.0 (параллельно) → New Game+ / Maintenance (later).
+**Asset Registry 2.0** (boss art) → **Boss Campaign v2** (history page) → **New Game+ / Maintenance** (later).
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 
