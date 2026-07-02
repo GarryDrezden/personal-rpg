@@ -4,11 +4,10 @@ import { useAppTheme } from '../hooks/useAppTheme';
 import { BODY_ABILITY_BRANCHES } from '../constants/bodyAbilities';
 import { BodyAbilityBranchCard } from '../components/bodyAbilities/BodyAbilityBranchCard';
 import { BodyAbilityCard } from '../components/bodyAbilities/BodyAbilityCard';
-import { BodyAbilityV1Section } from '../components/bodyAbilities/BodyAbilityV1Section';
+import { BodyAbilitySkillBoard } from '../components/bodyAbilities/BodyAbilitySkillBoard';
 import {
   getAllBodyAbilityProgress,
   getBodyAbilityBranchSummaries,
-  getBodyAbilityStats,
   getBranchEmptyHint,
   hasEnoughDataForBodyAbilities,
 } from '../utils/bodyAbilityEngine';
@@ -34,7 +33,6 @@ export function BodyAbilitiesPage({ embedded = false }: { embedded?: boolean }) 
     [engineParams],
   );
 
-  const stats = useMemo(() => getBodyAbilityStats(engineParams), [engineParams]);
   const plateauSnapshot = useMemo(
     () => getPlateauSnapshot(engineParams),
     [engineParams],
@@ -55,108 +53,93 @@ export function BodyAbilitiesPage({ embedded = false }: { embedded?: boolean }) 
     return map;
   }, [allProgress]);
 
+  const unlockedLegacyCount = allProgress.filter((p) => p.unlocked).length;
+
   return (
-    <div className="space-y-8 pb-4">
-      {!embedded ? (
-        <header>
-          <h1 className="text-2xl font-bold text-[var(--app-text)]">Способности тела</h1>
-          <p className="mt-2 max-w-2xl text-sm text-[var(--app-text-muted)]">
-            Вес важен, но не единственный прогресс. Отмечай способности, которые заметил в жизни —
-            и смотри, как данные поддерживают путь.
-          </p>
-          <p className="mt-2 text-sm font-medium text-[var(--app-primary)]">
-            Открыто способностей: {stats.unlocked} / {stats.total}
-          </p>
-        </header>
-      ) : (
-        <p className="text-sm font-medium text-[var(--app-primary)]">
-          Открыто способностей: {stats.unlocked} / {stats.total}
-        </p>
-      )}
+    <div className="space-y-10 pb-4">
+      <BodyAbilitySkillBoard showPageHero={!embedded} />
 
-      {!hasData ? (
-        <p className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-6 text-center text-sm text-[var(--app-text-muted)]">
-          Пока мало данных для открытия способностей. Начни с простого: внеси вес, калории или
-          шаги за сегодняшний день.
-        </p>
-      ) : null}
-
-      <BodyAbilityV1Section />
-
-      {plateauSnapshot.mode !== 'none' && stats.unlocked > 0 ? (
+      {plateauSnapshot.mode !== 'none' && unlockedLegacyCount > 0 ? (
         <p className="rounded-xl border border-[var(--app-gold)]/20 bg-[var(--app-primary-soft)]/30 px-4 py-3 text-sm text-[var(--app-text-muted)]">
-          На перевале особенно важны не-весовые признаки прогресса. Открыто способностей:{' '}
-          {stats.unlocked} — персонаж не стоит.
+          На перевале особенно важны не-весовые признаки прогресса — персонаж продолжает путь.
         </p>
       ) : null}
 
-      <section>
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
-          Прогресс по данным
-        </h2>
-        <p className="mb-4 text-sm text-[var(--app-text-muted)]">
-          Дополнительные способности открываются по шагам, весу и учёту — автоматически, когда
-          порог достигнут.
-        </p>
-      </section>
+      <section className="space-y-6 border-t border-[var(--app-border)]/50 pt-8">
+        <div>
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
+            Прогресс по данным
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-[var(--app-text-muted)]">
+            Дополнительные способности открываются по шагам, весу и учёту — когда порог
+            достигнут. Это отдельный слой от наблюдений в жизни выше.
+          </p>
+        </div>
 
-      <section>
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
-          Ветки
-        </h2>
+        {!hasData ? (
+          <p className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-6 text-center text-sm text-[var(--app-text-muted)]">
+            Пока мало записей для автоматического прогресса. Минимальный день с весом, шагами
+            или калориями поможет маршруту увидеть больше.
+          </p>
+        ) : null}
+
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {branchSummaries.map((summary) => (
             <BodyAbilityBranchCard key={summary.branch} summary={summary} />
           ))}
         </div>
-      </section>
 
-      <section className="space-y-8">
-        {BODY_ABILITY_BRANCHES.map((branchMeta) => {
-          const items = grouped.get(branchMeta.branch) ?? [];
-          const branchSummary = branchSummaries.find((s) => s.branch === branchMeta.branch);
-          const emptyHint = getBranchEmptyHint(branchMeta.branch);
+        <div className="space-y-8">
+          {BODY_ABILITY_BRANCHES.map((branchMeta) => {
+            const items = grouped.get(branchMeta.branch) ?? [];
+            const branchSummary = branchSummaries.find((s) => s.branch === branchMeta.branch);
+            const emptyHint = getBranchEmptyHint(branchMeta.branch);
 
-          return (
-            <div key={branchMeta.branch} id={`branch-${branchMeta.branch}`}>
-              <div className="mb-3 flex items-center gap-2">
-                <span className="text-xl" aria-hidden>
-                  {branchMeta.icon}
-                </span>
-                <div>
-                  <h2 className="text-lg font-semibold text-[var(--app-text)]">
-                    {branchMeta.title}
-                  </h2>
-                  {branchSummary ? (
-                    <p className="text-xs text-[var(--app-text-muted)]">
-                      {branchSummary.unlockedCount} / {branchSummary.totalCount} открыто
-                    </p>
-                  ) : null}
+            return (
+              <div key={branchMeta.branch} id={`branch-${branchMeta.branch}`}>
+                <div className="mb-3 flex items-center gap-2">
+                  <span className="text-xl" aria-hidden>
+                    {branchMeta.icon}
+                  </span>
+                  <div>
+                    <h3 className="text-base font-semibold text-[var(--app-text)]">
+                      {branchMeta.title}
+                    </h3>
+                    {branchSummary ? (
+                      <p className="text-xs text-[var(--app-text-muted)]">
+                        {branchSummary.unlockedCount} / {branchSummary.totalCount} открыто
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+
+                {branchMeta.branch === 'lightness' && !hasWeightMeasurements && emptyHint ? (
+                  <p className="mb-3 rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-3 text-sm text-[var(--app-text-muted)]">
+                    {emptyHint}
+                  </p>
+                ) : null}
+
+                {branchMeta.branch === 'endurance' &&
+                !dailyEntries.some((e) => e.steps !== null && e.steps > 0) &&
+                emptyHint ? (
+                  <p className="mb-3 rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-3 text-sm text-[var(--app-text-muted)]">
+                    {emptyHint}
+                  </p>
+                ) : null}
+
+                <div className="grid gap-3 md:grid-cols-2">
+                  {items.map((progress) => (
+                    <BodyAbilityCard
+                      key={progress.ability.id}
+                      progress={progress}
+                      themeId={themeId}
+                    />
+                  ))}
                 </div>
               </div>
-
-              {branchMeta.branch === 'lightness' && !hasWeightMeasurements && emptyHint ? (
-                <p className="mb-3 rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-3 text-sm text-[var(--app-text-muted)]">
-                  {emptyHint}
-                </p>
-              ) : null}
-
-              {branchMeta.branch === 'endurance' &&
-              !dailyEntries.some((e) => e.steps !== null && e.steps > 0) &&
-              emptyHint ? (
-                <p className="mb-3 rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-3 text-sm text-[var(--app-text-muted)]">
-                  {emptyHint}
-                </p>
-              ) : null}
-
-              <div className="grid gap-3 md:grid-cols-2">
-                {items.map((progress) => (
-                  <BodyAbilityCard key={progress.ability.id} progress={progress} themeId={themeId} />
-                ))}
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </section>
     </div>
   );

@@ -17,7 +17,8 @@ export type ManifestArtLayout =
   | 'artifact-icon'
   | 'boss-compact'
   | 'boss-codex'
-  | 'boss-codex-compact';
+  | 'boss-codex-compact'
+  | 'body-ability-medallion';
 
 type ManifestArtSceneProps = {
   assetId: string;
@@ -61,9 +62,15 @@ function frameClass(layout: ManifestArtLayout): string {
       return 'aspect-video w-full max-h-[13.75rem] sm:max-h-[16.25rem]';
     case 'boss-codex-compact':
       return 'aspect-video w-full max-h-[11rem]';
+    case 'body-ability-medallion':
+      return 'h-32 w-32 shrink-0 sm:h-40 sm:w-40 rounded-full';
     default:
       return 'aspect-[16/9] w-full max-h-[22rem] sm:max-h-[25rem]';
   }
+}
+
+function frameRadiusClass(layout: ManifestArtLayout): string {
+  return layout === 'body-ability-medallion' ? 'rounded-full' : 'rounded-xl';
 }
 
 export function ManifestArtScene({
@@ -83,7 +90,9 @@ export function ManifestArtScene({
   const resolvedLayout = resolveLayout(layout, compact);
   const crop = objectPosition ?? getManifestAssetObjectPosition(assetId);
   const imageFitClass =
-    resolvedLayout === 'reward-icon' || resolvedLayout === 'artifact-icon'
+    resolvedLayout === 'reward-icon' ||
+    resolvedLayout === 'artifact-icon' ||
+    resolvedLayout === 'body-ability-medallion'
       ? 'object-cover object-center scale-110'
       : 'object-cover';
 
@@ -107,7 +116,7 @@ export function ManifestArtScene({
     return (
       <div
         data-testid={testId}
-        className={`flex items-center justify-center rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] ${frameClass(resolvedLayout)} ${className}`}
+        className={`flex items-center justify-center border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] ${frameRadiusClass(resolvedLayout)} ${frameClass(resolvedLayout)} ${className}`}
       >
         <span className="text-3xl opacity-80" aria-hidden>
           {placeholder}
@@ -120,7 +129,7 @@ export function ManifestArtScene({
   return (
     <div
       data-testid={testId}
-      className={`relative overflow-hidden rounded-xl border border-[var(--app-border)] shadow-[0_4px_20px_rgba(0,0,0,0.28)] ${frameClass(resolvedLayout)} ${dimmed ? 'opacity-70' : ''} ${className}`}
+      className={`relative overflow-hidden border border-[var(--app-border)] shadow-[0_4px_20px_rgba(0,0,0,0.28)] ${frameRadiusClass(resolvedLayout)} ${frameClass(resolvedLayout)} ${dimmed ? 'opacity-70' : ''} ${className}`}
     >
       <div
         className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#12101c] via-[#0e0c16] to-[#08070f]"

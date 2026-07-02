@@ -157,6 +157,30 @@ generate → optimize → public/ → build-asset-manifest.mjs → in-app (BATCH
 
 **Исключено:** `body-ability-icon-set-v1` — отдельный mini-batch. Cozy Campaign — не в scope.
 
+## Body Ability Icons Mini-Batch (prepared)
+
+12 иконок Body Abilities v1 — **prompt-ready**, generation pending, **not in-app**.
+
+| Документ | Назначение |
+|----------|------------|
+| [`BODY-ABILITY-ICONS-mini-batch-queue.md`](../prompts/assets/BODY-ABILITY-ICONS-mini-batch-queue.md) | Queue: 12 ability icons |
+| `ability-{entityId}.md` | Per-ability Nano Banana prompts |
+| `manifest.bodyAbilityIconsMiniBatch` | Batch metadata |
+
+**Visual rule:** RPG artifacts / badges / tokens — **not** medical, hospital, or fitness pictograms.  
+**Format:** 1:1, readable at **48–64px**, dark fantasy + cozy, ember/gold accent.
+
+**UI (later):** `BodyAbilitySkillBoard`, `/growth/abilities` — emoji/manifest fallback until icons in-app. **Art not final approved.**
+
+## Body Abilities — RPG skill board (2026-06)
+
+`/growth/abilities` uses `BodyAbilitySkillBoard`:
+- hero header («Прогресс — это не только вес»)
+- 12 large medallion cards (128–160px art zone)
+- states: locked / discovered / unlocked / recentlyUnlocked (derived; ≤21 days since unlock)
+- manifest via `getBodyAbilityManifestAssetId()` + safe emoji fallback
+- first visual group: mobility/endurance quartet (tie shoes, floor, stairs breath, long route)
+
 ## Workflow
 
 ```
@@ -175,7 +199,7 @@ Backlog (13-art-backlog.md)
 node scripts/build-asset-manifest.mjs
 ```
 
-Валидация (tests): `src/game/assetManifest.test.ts`, `src/game/assetBatch1.test.ts`
+Валидация (tests): `src/game/assetManifest.test.ts`, `src/game/assetBatch1.test.ts`, `src/game/bodyAbilityAssetBatch.test.ts`
 
 ## Privacy
 

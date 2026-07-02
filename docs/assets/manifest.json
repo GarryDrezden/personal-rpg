@@ -2523,8 +2523,12 @@
       "priority": "P0",
       "targetPath": "/game-assets/abilities/ability-mobility-shoes.webp",
       "usedIn": [
+        "BodyAbilitySkillBoard",
+        "BodyAbilitySkillCard",
+        "BodyAbilityArtMedallion",
         "BodyAbilityV1Section",
-        "BodyAbilityDashboardSummary"
+        "BodyAbilityDashboardSummary",
+        "BodyAbilitiesPage"
       ],
       "relatedEntityId": "tie_shoes_easier"
     },
@@ -2541,8 +2545,12 @@
       "priority": "P0",
       "targetPath": "/game-assets/abilities/ability-mobility-floor.webp",
       "usedIn": [
+        "BodyAbilitySkillBoard",
+        "BodyAbilitySkillCard",
+        "BodyAbilityArtMedallion",
         "BodyAbilityV1Section",
-        "BodyAbilityDashboardSummary"
+        "BodyAbilityDashboardSummary",
+        "BodyAbilitiesPage"
       ],
       "relatedEntityId": "stand_from_floor"
     },
@@ -2559,8 +2567,12 @@
       "priority": "P0",
       "targetPath": "/game-assets/abilities/ability-endurance-stairs.webp",
       "usedIn": [
+        "BodyAbilitySkillBoard",
+        "BodyAbilitySkillCard",
+        "BodyAbilityArtMedallion",
         "BodyAbilityV1Section",
-        "BodyAbilityDashboardSummary"
+        "BodyAbilityDashboardSummary",
+        "BodyAbilitiesPage"
       ],
       "relatedEntityId": "stairs_breath"
     },
@@ -2577,8 +2589,12 @@
       "priority": "P0",
       "targetPath": "/game-assets/abilities/ability-endurance-route.webp",
       "usedIn": [
+        "BodyAbilitySkillBoard",
+        "BodyAbilitySkillCard",
+        "BodyAbilityArtMedallion",
         "BodyAbilityV1Section",
-        "BodyAbilityDashboardSummary"
+        "BodyAbilityDashboardSummary",
+        "BodyAbilitiesPage"
       ],
       "relatedEntityId": "long_route"
     },
@@ -2595,8 +2611,12 @@
       "priority": "P0",
       "targetPath": "/game-assets/abilities/ability-mobility-stand.webp",
       "usedIn": [
+        "BodyAbilitySkillBoard",
+        "BodyAbilitySkillCard",
+        "BodyAbilityArtMedallion",
         "BodyAbilityV1Section",
-        "BodyAbilityDashboardSummary"
+        "BodyAbilityDashboardSummary",
+        "BodyAbilitiesPage"
       ],
       "relatedEntityId": "stand_easier"
     },
@@ -2613,8 +2633,12 @@
       "priority": "P0",
       "targetPath": "/game-assets/abilities/ability-daily-car.webp",
       "usedIn": [
+        "BodyAbilitySkillBoard",
+        "BodyAbilitySkillCard",
+        "BodyAbilityArtMedallion",
         "BodyAbilityV1Section",
-        "BodyAbilityDashboardSummary"
+        "BodyAbilityDashboardSummary",
+        "BodyAbilitiesPage"
       ],
       "relatedEntityId": "car_easier"
     },
@@ -2631,8 +2655,12 @@
       "priority": "P0",
       "targetPath": "/game-assets/abilities/ability-clothing-freer.webp",
       "usedIn": [
+        "BodyAbilitySkillBoard",
+        "BodyAbilitySkillCard",
+        "BodyAbilityArtMedallion",
         "BodyAbilityV1Section",
-        "BodyAbilityDashboardSummary"
+        "BodyAbilityDashboardSummary",
+        "BodyAbilitiesPage"
       ],
       "relatedEntityId": "clothing_freer"
     },
@@ -2649,8 +2677,12 @@
       "priority": "P0",
       "targetPath": "/game-assets/abilities/ability-daily-household.webp",
       "usedIn": [
+        "BodyAbilitySkillBoard",
+        "BodyAbilitySkillCard",
+        "BodyAbilityArtMedallion",
         "BodyAbilityV1Section",
-        "BodyAbilityDashboardSummary"
+        "BodyAbilityDashboardSummary",
+        "BodyAbilitiesPage"
       ],
       "relatedEntityId": "household_easier"
     },
@@ -2667,8 +2699,12 @@
       "priority": "P0",
       "targetPath": "/game-assets/abilities/ability-confidence-movement.webp",
       "usedIn": [
+        "BodyAbilitySkillBoard",
+        "BodyAbilitySkillCard",
+        "BodyAbilityArtMedallion",
         "BodyAbilityV1Section",
-        "BodyAbilityDashboardSummary"
+        "BodyAbilityDashboardSummary",
+        "BodyAbilitiesPage"
       ],
       "relatedEntityId": "movement_confidence"
     },
@@ -2685,8 +2721,12 @@
       "priority": "P0",
       "targetPath": "/game-assets/abilities/ability-recovery-awareness.webp",
       "usedIn": [
+        "BodyAbilitySkillBoard",
+        "BodyAbilitySkillCard",
+        "BodyAbilityArtMedallion",
         "BodyAbilityV1Section",
-        "BodyAbilityDashboardSummary"
+        "BodyAbilityDashboardSummary",
+        "BodyAbilitiesPage"
       ],
       "relatedEntityId": "recovery_awareness"
     },
@@ -2703,8 +2743,12 @@
       "priority": "P0",
       "targetPath": "/game-assets/abilities/ability-confidence-journal.webp",
       "usedIn": [
+        "BodyAbilitySkillBoard",
+        "BodyAbilitySkillCard",
+        "BodyAbilityArtMedallion",
         "BodyAbilityV1Section",
-        "BodyAbilityDashboardSummary"
+        "BodyAbilityDashboardSummary",
+        "BodyAbilitiesPage"
       ],
       "relatedEntityId": "journal_clarity"
     },
@@ -2721,8 +2765,12 @@
       "priority": "P0",
       "targetPath": "/game-assets/abilities/ability-endurance-stairs-up.webp",
       "usedIn": [
+        "BodyAbilitySkillBoard",
+        "BodyAbilitySkillCard",
+        "BodyAbilityArtMedallion",
         "BodyAbilityV1Section",
-        "BodyAbilityDashboardSummary"
+        "BodyAbilityDashboardSummary",
+        "BodyAbilitiesPage"
       ],
       "relatedEntityId": "stairs_easier"
     },

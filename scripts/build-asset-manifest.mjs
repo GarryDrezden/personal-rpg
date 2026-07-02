@@ -568,7 +568,14 @@ for (const [entityId, slug, title] of BODY_ABILITIES) {
       title: `Способность — ${title}`,
       priority: 'P0',
       targetPath: `/game-assets/abilities/ability-${slug}.webp`,
-      usedIn: ['BodyAbilityV1Section', 'BodyAbilityDashboardSummary'],
+      usedIn: [
+        'BodyAbilitySkillBoard',
+        'BodyAbilitySkillCard',
+        'BodyAbilityArtMedallion',
+        'BodyAbilityV1Section',
+        'BodyAbilityDashboardSummary',
+        'BodyAbilitiesPage',
+      ],
       relatedEntityId: entityId,
       notes:
         'Body Ability Icons mini-batch prepared. UI uses emoji from bodyAbilityConfig until icon ships.',

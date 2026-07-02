@@ -128,6 +128,20 @@
 - Empty Day Lord now appears as a larger boss art block instead of a small square thumbnail.
 - Kept legacy boss replacement and manifest routing intact.
 
+## Body Ability Icons Mini-Batch Preparation
+
+- Prepared manifest entries and prompt files for 12 body ability icons from `bodyAbilityConfig.ts`.
+- Created `BODY-ABILITY-ICONS-mini-batch-queue.md` and per-ability prompt files (`ability-{id}.md`).
+- Icons will replace emoji placeholders after generation and UI wire.
+- Kept body ability mechanics, unlock logic, and rewards unchanged.
+
+## Body Abilities — RPG Skill Board UI
+
+- Redesigned `/growth/abilities` as premium RPG skill board (`BodyAbilitySkillBoard`).
+- Large medallion cards, supportive copy, visual states without punishment tone.
+- Manifest art via `getBodyAbilityManifestAssetId()`; emoji glow fallback when files absent.
+- Mini-batch art remains **prepared / not final** — not marked in-app.
+
 ## Measurements empty-state banner height
 
 - Tuned `empty-state-tall` layout on MeasurementsPage (21rem / 24rem sm).
