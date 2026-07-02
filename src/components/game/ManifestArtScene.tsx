@@ -31,7 +31,7 @@ function frameClass(layout: ManifestArtLayout): string {
     case 'onboarding':
       return 'aspect-[16/9] w-full max-h-[9rem] sm:max-h-[10rem]';
     case 'hero':
-      return 'aspect-[16/9] w-full max-h-[11rem] sm:max-h-[12.5rem]';
+      return 'aspect-[16/9] w-full max-h-[22rem] sm:max-h-[25rem]';
     case 'thumbnail':
       return 'h-16 w-24 shrink-0';
     case 'reward-icon':
@@ -39,7 +39,7 @@ function frameClass(layout: ManifestArtLayout): string {
     case 'reward-banner':
       return 'w-full h-[5.25rem] sm:h-[7.5rem] md:h-[10rem]';
     default:
-      return 'aspect-[16/9] w-full max-h-[11rem]';
+      return 'aspect-[16/9] w-full max-h-[22rem] sm:max-h-[25rem]';
   }
 }
 
