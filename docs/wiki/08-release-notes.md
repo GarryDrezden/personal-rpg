@@ -65,6 +65,8 @@
 
 ---
 
+## Stabilize — Remote Sidecar Persist
+
 - Connected local sidecar progress to remote `user_data` storage.
 - Achievements, coins and momentum now survive reload/login/device changes.
 - Added guard against hydrate → save loops (`isSidecarHydrating`).
