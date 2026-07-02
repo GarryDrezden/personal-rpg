@@ -12,7 +12,7 @@ import type {
 export const GAME_ASSET_BASE_PATH = '/game-assets';
 
 /** Bump when replacing PNGs so browsers reload public assets */
-export const GAME_ASSET_VERSION = '20';
+export const GAME_ASSET_VERSION = '21';
 
 /** Folder names under heroes/{gender}/variants/ */
 export type HeroAssetVariantFolder = 'dark-fantasy' | 'light';

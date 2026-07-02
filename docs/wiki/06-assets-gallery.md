@@ -127,30 +127,33 @@ prompt-ready → Nano Banana → public/ → build-asset-manifest.mjs → in-app
 | `camp-base-stage-02-shelter` | `/growth/camp`, `BaseStageRail` (stage shelter) |
 | `season-01-reward-core-spark` | `SeasonDashboardSummary` (сезон 1) |
 
-`GAME_ASSET_VERSION` = **20**. Fallback: emoji/gradient если `getManifestAssetUrl()` → null.
+`GAME_ASSET_VERSION` = **21**. Fallback: emoji/gradient если `getManifestAssetUrl()` → null.
 
 **Visual QA (2026-06):** Batch 1 connected and polished — onboarding art только шаг 0; camp thumbnails с dim locked; season reward full-width banner.
 
 ## Dark MVP Asset Generation Batch 2
 
-Второй **дроп генерации** (3 ассета): empty state + plateau artifact + season 1 boss. **Generation pending** — prompt-ready, файлов на диске нет.
+Второй **дроп генерации** (3 ассета): empty state + plateau artifact + season 1 boss. **In-app** (2026-06).
 
 | Документ | Назначение |
 |----------|------------|
 | [`BATCH-02-nano-banana-queue.md`](../prompts/assets/BATCH-02-nano-banana-queue.md) | Generation queue: id, prompt, ratio, output path |
+| `scripts/optimize-batch2-webp.mjs` | Resize + webp recompress in place |
 | `manifest.darkMvpAssetGenerationBatch2` | Машиночитаемый статус батча |
 
-**Pipeline (Batch 2 — prepared):**
+**Pipeline (Batch 2 — done):**
 
 ```
-prompt-ready → generate → public/ → build-asset-manifest.mjs → processed → UI wire (later)
+generate → optimize → public/ → build-asset-manifest.mjs → in-app (BATCH_2_IN_APP)
 ```
 
-| id | targetPath | P |
-|----|------------|---|
-| `empty-state-no-entries` | `empty-states/no-entries.webp` | P0 |
-| `plateau-artifact-pass-stone` | `artifacts/plateau-pass-stone.webp` | P1 |
-| `season-boss-01-empty-day-lord` | `bosses/seasons/season-boss-01-empty-day-lord.webp` | P1 |
+| id | UI | P |
+|----|-----|---|
+| `empty-state-no-entries` | `DashboardPathEmptyState`, `MeasurementsPage` | P0 |
+| `plateau-artifact-pass-stone` | `PlateauDashboardSummary`, `PlateauTodayCard` | P1 |
+| `season-boss-01-empty-day-lord` | `SeasonTodayCard`, `SeasonDashboardSummary` | P1 |
+
+**Optimization (2026-06):** ~2 MB sources → ~85 KB / ~45 KB / ~100 KB webp.
 
 **Исключено:** `body-ability-icon-set-v1` — отдельный mini-batch. Cozy Campaign — не в scope.
 

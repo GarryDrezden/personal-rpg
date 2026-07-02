@@ -6,7 +6,15 @@ import {
 import { getManifestAssetObjectPosition } from '../../game/manifestAssetUi';
 import { GameAssetImage } from './GameAssetImage';
 
-export type ManifestArtLayout = 'onboarding' | 'hero' | 'thumbnail' | 'reward-icon' | 'reward-banner';
+export type ManifestArtLayout =
+  | 'onboarding'
+  | 'hero'
+  | 'thumbnail'
+  | 'reward-icon'
+  | 'reward-banner'
+  | 'empty-state'
+  | 'artifact-icon'
+  | 'boss-compact';
 
 type ManifestArtSceneProps = {
   assetId: string;
@@ -38,6 +46,12 @@ function frameClass(layout: ManifestArtLayout): string {
       return 'mx-auto h-14 w-14 shrink-0 rounded-lg';
     case 'reward-banner':
       return 'w-full h-[5.25rem] sm:h-[7.5rem] md:h-[10rem]';
+    case 'empty-state':
+      return 'w-full h-[7rem] sm:h-[8rem]';
+    case 'artifact-icon':
+      return 'h-12 w-12 shrink-0 rounded-lg';
+    case 'boss-compact':
+      return 'h-14 w-[5.25rem] shrink-0';
     default:
       return 'aspect-[16/9] w-full max-h-[22rem] sm:max-h-[25rem]';
   }
@@ -60,16 +74,20 @@ export function ManifestArtScene({
   const resolvedLayout = resolveLayout(layout, compact);
   const crop = objectPosition ?? getManifestAssetObjectPosition(assetId);
   const imageFitClass =
-    resolvedLayout === 'reward-icon' ? 'object-cover object-center scale-110' : 'object-cover';
+    resolvedLayout === 'reward-icon' || resolvedLayout === 'artifact-icon'
+      ? 'object-cover object-center scale-110'
+      : 'object-cover';
 
   if (!src) {
-    if (resolvedLayout === 'reward-icon') {
+    if (resolvedLayout === 'reward-icon' || resolvedLayout === 'artifact-icon') {
       return (
         <div
           data-testid={testId}
-          className={`flex h-14 w-14 items-center justify-center rounded-lg border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] ${className}`}
+          className={`flex ${
+            resolvedLayout === 'artifact-icon' ? 'h-12 w-12' : 'h-14 w-14'
+          } items-center justify-center rounded-lg border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] ${className}`}
         >
-          <span className="text-2xl opacity-80" aria-hidden>
+          <span className={`${resolvedLayout === 'artifact-icon' ? 'text-xl' : 'text-2xl'} opacity-80`} aria-hidden>
             {placeholder}
           </span>
           <span className="sr-only">{alt}</span>

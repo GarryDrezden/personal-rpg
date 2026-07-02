@@ -26,6 +26,8 @@ import { MeasurementsChartFallback } from '../components/measurements/Measuremen
 import { MeasurementMetricSelector } from '../components/measurements/MeasurementMetricSelector';
 import { MeasurementOverlayMetricSelector } from '../components/measurements/MeasurementOverlayMetricSelector';
 import { MeasurementDualAxisMetricSelector } from '../components/measurements/MeasurementDualAxisMetricSelector';
+import { ManifestArtScene } from '../components/game/ManifestArtScene';
+import { EMPTY_STATE_NO_ENTRIES_ASSET_ID } from '../game/manifestAssetUi';
 import type { MeasurementEntry } from '../types';
 
 const MeasurementsLineChart = lazy(() => import('../components/measurements/MeasurementsLineChart'));
@@ -294,9 +296,21 @@ export function MeasurementsPage() {
         )}
 
         {!canRenderChart ? (
-          <p className="mt-4 rounded-xl border border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-8 text-center text-sm text-[var(--app-text-muted)]">
-            {emptyMessage}
-          </p>
+          <div
+            className="mt-4 overflow-hidden rounded-xl border border-[var(--app-border)] bg-[var(--app-bg-soft)]"
+            data-testid="measurements-empty-state"
+          >
+            <ManifestArtScene
+              assetId={EMPTY_STATE_NO_ENTRIES_ASSET_ID}
+              alt="Здесь появятся первые следы замеров"
+              layout="empty-state"
+              testId="empty-state-no-entries-art"
+              className="rounded-none border-0 shadow-none"
+            />
+            <p className="px-4 py-3 text-center text-sm text-[var(--app-text-muted)]">
+              {emptyMessage}
+            </p>
+          </div>
         ) : (
           <div
             className="mt-4"

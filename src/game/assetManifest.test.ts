@@ -38,7 +38,7 @@ describe('asset manifest helpers', () => {
     const entry = getEntityAsset('season_mini_01');
     expect(entry?.id).toBe('season-boss-01-empty-day-lord');
     expect(entry?.category).toBe('seasonBosses');
-    expect(entry?.status).toBe('processed');
+    expect(entry?.status).toBe('in-app');
   });
 
   it('getAssetPlaceholder returns safe fallback', () => {
@@ -52,10 +52,22 @@ describe('asset manifest helpers', () => {
 
   it('getManifestAssetUrl returns versioned path for in-app batch 1 assets', () => {
     const url = getManifestAssetUrl('onboarding-core-awakening');
-    expect(url).toMatch(/\/game-assets\/onboarding\/core-awakening\.webp\?v=20$/);
+    expect(url).toMatch(/\/game-assets\/onboarding\/core-awakening\.webp\?v=21$/);
   });
 
-  it('getManifestAssetUrl returns null for processed (not in-app) assets', () => {
-    expect(getManifestAssetUrl('season-boss-01-empty-day-lord')).toBeNull();
+  it('getManifestAssetUrl returns versioned path for in-app batch 2 assets', () => {
+    expect(getManifestAssetUrl('empty-state-no-entries')).toMatch(
+      /\/game-assets\/empty-states\/no-entries\.webp\?v=21$/,
+    );
+    expect(getManifestAssetUrl('plateau-artifact-pass-stone')).toMatch(
+      /\/game-assets\/artifacts\/plateau-pass-stone\.webp\?v=21$/,
+    );
+    expect(getManifestAssetUrl('season-boss-01-empty-day-lord')).toMatch(
+      /\/game-assets\/bosses\/seasons\/season-boss-01-empty-day-lord\.webp\?v=21$/,
+    );
+  });
+
+  it('getManifestAssetUrl returns null for needed assets without in-app status', () => {
+    expect(getManifestAssetUrl('body-ability-icon-set-v1')).toBeNull();
   });
 });

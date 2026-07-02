@@ -1,7 +1,10 @@
 import type { SeasonSnapshotWithRecap } from '../../game/seasons/seasonEngine';
 import type { BossCampaignSnapshot } from '../../game/bosses/bossTypes';
 import { ManifestArtScene } from '../game/ManifestArtScene';
-import { getSeasonRewardManifestAssetId } from '../../game/manifestAssetUi';
+import {
+  getSeasonBossManifestAssetId,
+  getSeasonRewardManifestAssetId,
+} from '../../game/manifestAssetUi';
 import { ProgressBar } from '../ui/ProgressBar';
 
 type SeasonDashboardSummaryProps = {
@@ -9,12 +12,14 @@ type SeasonDashboardSummaryProps = {
   compact?: boolean;
   boss?: BossCampaignSnapshot | null;
 };
+
 export function SeasonDashboardSummary({
   season,
   compact = false,
   boss,
 }: SeasonDashboardSummaryProps) {
   const rewardArtId = getSeasonRewardManifestAssetId(season.seasonIndex);
+  const bossArtId = boss ? getSeasonBossManifestAssetId(season.seasonIndex) : undefined;
 
   return (
     <section
@@ -69,24 +74,39 @@ export function SeasonDashboardSummary({
 
         {boss ? (
           <div className="mt-2 border-t border-[var(--app-border)]/60 pt-2" data-testid="dashboard-boss-summary">
-            <p className="text-xs font-medium text-[var(--app-text)]">
-              {boss.currentBoss.icon} {boss.currentBoss.shortTitle}
-            </p>
-            <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">{boss.bossStatusLabel}</p>
-            <div className="mt-1.5">
-              <ProgressBar value={boss.bossProgressPercent} max={100} />
+            <div className="flex items-start gap-3">
+              {bossArtId ? (
+                <ManifestArtScene
+                  assetId={bossArtId}
+                  alt={boss.currentBoss.shortTitle}
+                  layout="boss-compact"
+                  testId="season-boss-art"
+                />
+              ) : (
+                <span aria-hidden className="shrink-0 text-base">
+                  {boss.currentBoss.icon}
+                </span>
+              )}
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-medium text-[var(--app-text)]">
+                  {boss.currentBoss.shortTitle}
+                </p>
+                <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">{boss.bossStatusLabel}</p>
+                <div className="mt-1.5">
+                  <ProgressBar value={boss.bossProgressPercent} max={100} />
+                </div>
+                {boss.weaknessSignals.length > 0 ? (
+                  <p className="mt-1 text-xs text-[var(--app-text-muted)]">
+                    {boss.weaknessSignals.join(' · ')}
+                  </p>
+                ) : (
+                  <p className="mt-1 text-xs text-[var(--app-text-muted)]">{boss.nextWeaknessHint}</p>
+                )}
+              </div>
             </div>
-            {boss.weaknessSignals.length > 0 ? (
-              <p className="mt-1 text-xs text-[var(--app-text-muted)]">
-                {boss.weaknessSignals.join(' · ')}
-              </p>
-            ) : (
-              <p className="mt-1 text-xs text-[var(--app-text-muted)]">{boss.nextWeaknessHint}</p>
-            )}
           </div>
         ) : null}
       </div>
     </section>
   );
 }
-

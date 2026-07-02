@@ -44,13 +44,13 @@
 | Frontend | React 19, TypeScript, Vite 6, Tailwind CSS 4, Zustand, React Router |
 | Backend (production) | PHP 8.2 + PDO + MySQL в `api/` |
 | Backend (experimental) | Node/Express/Prisma в `backend/` — VPS-only |
-| Game assets | `public/game-assets/`, `GAME_ASSET_VERSION=20` |
+| Game assets | `public/game-assets/`, `GAME_ASSET_VERSION=21` |
 
 ## Текущая версия
 
 - **README:** v1.4 (пользовательская документация)
 - **package.json:** 1.0.0
-- **GAME_ASSET_VERSION:** 20
+- **GAME_ASSET_VERSION:** 21
 
 ## Sprint 1 — Accounts & Storage ✅ (production: PHP + MySQL)
 
@@ -128,7 +128,7 @@
 - **Art Backlog:** [`13-art-backlog.md`](13-art-backlog.md) — P0/P1/P2/P3 без генерации
 - **Dark MVP Visual Priority Pack v1** ✅ — 8 prompt-ready ассетов, Nano Banana briefs в `docs/prompts/assets/`
 - **Dark MVP Asset Generation Batch 1** ✅ — 4/4 in-app; **Visual QA** (2026-06) — reward banner polish
-- **Dark MVP Asset Generation Batch 2** ✅ — prepared (3 assets prompt-ready; generation pending; body abilities excluded)
+- **Dark MVP Asset Generation Batch 2** ✅ — 3/3 in-app; optimized webp + UI wire (empty state, plateau artifact, season 1 boss)
 - **Runtime:** `src/game/assetManifest.ts` — `getAssetById`, `getEntityAsset`, `getAssetPlaceholder`
 - **Validation:** `assetManifest.test.ts` — unique ids, paths for in-app, categories
 - **Prompts:** pack files + `_template-nano-banana-asset.md`, `_template-boss.md`
@@ -147,7 +147,7 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий visual priority | **Сгенерировать Batch 2** (empty-state, plateau artifact, season boss) → processed → UI wire отдельным спринтом. Body ability icons — mini-batch позже |
+| Следующий visual priority | **Batch 2 Visual QA** или **Body Ability Icons mini-batch** |
 
 ### Boss Campaign v1 ✅
 

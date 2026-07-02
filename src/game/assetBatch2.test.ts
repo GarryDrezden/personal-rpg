@@ -1,8 +1,9 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { AssetManifestV2 } from './assetManifestTypes';
 import { validateAssetManifest } from './assetManifestValidation';
+import { getManifestAssetUrl } from './assetManifest';
 
 const BATCH_2_IDS = [
   'empty-state-no-entries',
@@ -22,6 +23,9 @@ const TARGET_PATHS: Record<(typeof BATCH_2_IDS)[number], string> = {
   'season-boss-01-empty-day-lord':
     'public/game-assets/bosses/seasons/season-boss-01-empty-day-lord.webp',
 };
+
+/** Soft guard — optimized Batch 2 should stay under ~1 MB each. */
+const MAX_FILE_BYTES = 1_000_000;
 
 const manifest = JSON.parse(
   readFileSync(join(process.cwd(), 'docs/assets/manifest.json'), 'utf-8'),
@@ -46,31 +50,35 @@ describe('Dark MVP Asset Generation Batch 2', () => {
     );
   });
 
-  it('batch 2 metadata reflects files-on-disk (not in-app)', () => {
+  it('batch 2 metadata reflects in-app wired state', () => {
     const batch = manifest.darkMvpAssetGenerationBatch2;
     expect(batch?.filesExpected).toBe(3);
     expect(batch?.filesOnDisk).toBe(3);
-    expect(batch?.inApp).toBe(false);
-    expect(batch?.status).toBe('files-on-disk');
+    expect(batch?.inApp).toBe(true);
+    expect(batch?.status).toBe('in-app');
   });
 
   for (const id of BATCH_2_IDS) {
-    it(`${id} is processed on disk with path = targetPath`, () => {
+    it(`${id} is in-app on disk with prompt file and targetPath`, () => {
       const asset = manifest.assets.find((a) => a.id === id);
       expect(asset).toBeDefined();
-      expect(asset?.status).toBe('processed');
+      expect(asset?.status).toBe('in-app');
       expect(asset?.promptStatus).toBe('ready');
       expect(asset?.fileStatus).toBe('ready');
       expect(asset?.path).toBe(asset?.targetPath);
       expect(asset?.targetPath).toMatch(/^\/game-assets\//);
       const diskPath = join(process.cwd(), TARGET_PATHS[id]);
       expect(existsSync(diskPath)).toBe(true);
+      expect(statSync(diskPath).size).toBeLessThan(MAX_FILE_BYTES);
       const promptPath = join(process.cwd(), 'docs/prompts/assets', PROMPT_FILES[id]);
       expect(existsSync(promptPath)).toBe(true);
+      const url = getManifestAssetUrl(id);
+      expect(url).toContain('?v=21');
+      expect(url).toContain(asset?.path?.replace(/^\//, '') ?? '');
     });
   }
 
-  it('manifest validation passes (batch 2 not in-app)', () => {
+  it('manifest validation passes including in-app file paths', () => {
     const issues = validateAssetManifest(manifest, {
       publicRoot,
       fileExists: existsSync,

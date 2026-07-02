@@ -78,11 +78,24 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 
 | id | targetPath | priority | status | prompt file | intended UI |
 |----|------------|----------|--------|-------------|-------------|
-| `empty-state-no-entries` | `public/game-assets/empty-states/no-entries.webp` | P0 | prompt-ready | [`empty-state-no-entries.md`](../prompts/assets/empty-state-no-entries.md) | Dashboard, Measurements, Today history |
-| `plateau-artifact-pass-stone` | `public/game-assets/artifacts/plateau-pass-stone.webp` | P1 | prompt-ready | [`plateau-artifact-pass-stone.md`](../prompts/assets/plateau-artifact-pass-stone.md) | `PlateauDashboardSummary` |
-| `season-boss-01-empty-day-lord` | `public/game-assets/bosses/seasons/season-boss-01-empty-day-lord.webp` | P1 | prompt-ready | [`season-boss-01-empty-day-lord.md`](../prompts/assets/season-boss-01-empty-day-lord.md) | `SeasonTodayCard`, `SeasonDashboardSummary` |
+| `empty-state-no-entries` | `public/game-assets/empty-states/no-entries.webp` | P0 | **in-app** | [`empty-state-no-entries.md`](../prompts/assets/empty-state-no-entries.md) | Dashboard path empty, Measurements chart empty |
+| `plateau-artifact-pass-stone` | `public/game-assets/artifacts/plateau-pass-stone.webp` | P1 | **in-app** | [`plateau-artifact-pass-stone.md`](../prompts/assets/plateau-artifact-pass-stone.md) | `PlateauDashboardSummary`, `PlateauTodayCard` |
+| `season-boss-01-empty-day-lord` | `public/game-assets/bosses/seasons/season-boss-01-empty-day-lord.webp` | P1 | **in-app** | [`season-boss-01-empty-day-lord.md`](../prompts/assets/season-boss-01-empty-day-lord.md) | `SeasonTodayCard`, `SeasonDashboardSummary` |
 
 **Не в Batch 2:** `body-ability-icon-set-v1` (12 иконок) — отдельный mini-batch.
+
+### Dark MVP Batch 2 — in-app (2026-06)
+
+> **Очередь:** [`BATCH-02-nano-banana-queue.md`](../prompts/assets/BATCH-02-nano-banana-queue.md)
+> **Optimization:** `node scripts/optimize-batch2-webp.mjs` — resize + webp recompress (~85–100 KB banners, ~45 KB artifact).
+
+| id | UI | Status |
+|----|-----|--------|
+| `empty-state-no-entries` | `DashboardPathEmptyState`, `MeasurementsPage` empty chart | in-app |
+| `plateau-artifact-pass-stone` | `PlateauDashboardSummary`, `PlateauTodayCard` | in-app |
+| `season-boss-01-empty-day-lord` | `SeasonTodayCard`, `SeasonDashboardSummary` boss row | in-app |
+
+**Visual QA:** отдельный спринт после wire.
 
 ---
 

@@ -724,6 +724,9 @@ const DARK_MVP_BATCH_2_IDS = [
   'season-boss-01-empty-day-lord',
 ];
 
+/** Set true after Batch 2 assets are wired in empty state, plateau, and season boss UI. */
+const BATCH_2_IN_APP = true;
+
 function syncBatch2FromDisk(assetList) {
   let onDisk = 0;
   for (const id of DARK_MVP_BATCH_2_IDS) {
@@ -736,19 +739,26 @@ function syncBatch2FromDisk(assetList) {
     asset.path = asset.targetPath;
     asset.fileStatus = 'ready';
     asset.promptStatus = 'ready';
-    asset.status = ext === '.webp' ? 'processed' : 'generated';
-    asset.notes = `${asset.notes || ''} Batch 2 on disk (${ext}); not in-app until UI wire.`.trim();
+    if (BATCH_2_IN_APP) {
+      asset.status = 'in-app';
+      asset.notes = `${asset.notes || ''} Batch 2 connected in UI (${ext}).`.trim();
+    } else {
+      asset.status = ext === '.webp' ? 'processed' : 'generated';
+      asset.notes = `${asset.notes || ''} Batch 2 on disk (${ext}); not in-app until UI wire.`.trim();
+    }
   }
   return onDisk;
 }
 
 const batch2OnDisk = syncBatch2FromDisk(assets);
+const batch2InApp =
+  BATCH_2_IN_APP && batch2OnDisk === DARK_MVP_BATCH_2_IDS.length;
 
 const manifest = {
   version: 2,
   schema: 'asset-registry-2.0',
   updated: '2026-06-06',
-  gameAssetVersion: '20',
+  gameAssetVersion: '21',
   darkMvpVisualPriorityPackV1: {
     updated: '2026-06-06',
     description: 'Dark MVP Priority Pack v1 — Batch 1 (4 assets) in-app',
@@ -782,8 +792,9 @@ const manifest = {
   },
   darkMvpAssetGenerationBatch2: {
     updated: '2026-06-06',
-    status:
-      batch2OnDisk === DARK_MVP_BATCH_2_IDS.length
+    status: batch2InApp
+      ? 'in-app'
+      : batch2OnDisk === DARK_MVP_BATCH_2_IDS.length
         ? 'files-on-disk'
         : 'awaiting-generation',
     description:
@@ -791,7 +802,7 @@ const manifest = {
     assetIds: DARK_MVP_BATCH_2_IDS,
     filesOnDisk: batch2OnDisk,
     filesExpected: DARK_MVP_BATCH_2_IDS.length,
-    inApp: false,
+    inApp: batch2InApp,
     promptQueue: 'docs/prompts/assets/BATCH-02-nano-banana-queue.md',
     workflow:
       'Generate → place in public/game-assets/ → node scripts/build-asset-manifest.mjs → processed; UI wire in separate sprint',

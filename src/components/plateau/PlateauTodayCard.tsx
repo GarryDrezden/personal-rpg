@@ -1,4 +1,6 @@
 import type { PlateauSnapshot } from '../../types/plateauV1';
+import { ManifestArtScene } from '../game/ManifestArtScene';
+import { PLATEAU_ARTIFACT_PASS_STONE_ASSET_ID } from '../../game/manifestAssetUi';
 import { Card } from '../ui/Card';
 
 type PlateauTodayCardProps = {
@@ -29,12 +31,22 @@ export function PlateauTodayCard({
         data-testid="plateau-today-card"
         className="border-[var(--app-gold)]/20 bg-[var(--app-primary-soft)]/25 px-4 py-3"
       >
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--app-gold)]">
-          Возможный перевал
-        </p>
-        <p className="mt-1 text-sm text-[var(--app-text)]">{snapshot.title}</p>
-        <p className="mt-1 text-xs text-[var(--app-text-muted)]">{snapshot.supportiveLine}</p>
-        <div className="mt-2 flex flex-wrap gap-2">
+        <div className="flex items-start gap-3">
+          <ManifestArtScene
+            assetId={PLATEAU_ARTIFACT_PASS_STONE_ASSET_ID}
+            alt="Камень перевала"
+            layout="artifact-icon"
+            testId="plateau-artifact-art"
+          />
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--app-gold)]">
+              Возможный перевал
+            </p>
+            <p className="mt-1 text-sm text-[var(--app-text)]">{snapshot.title}</p>
+            <p className="mt-1 text-xs text-[var(--app-text-muted)]">{snapshot.supportiveLine}</p>
+          </div>
+        </div>
+        <div className="mt-2 flex flex-wrap gap-2 pl-[3.75rem]">
           <button
             type="button"
             disabled={saving}
@@ -61,12 +73,22 @@ export function PlateauTodayCard({
       data-testid="plateau-today-card"
       className="border-[var(--app-gold)]/25 bg-[var(--app-primary-soft)]/35"
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--app-gold)]">
-        {isActive ? 'Удержание перевала' : 'Возможный перевал'}
-      </p>
-      <h2 className="mt-1 text-base font-semibold text-[var(--app-text)]">{snapshot.title}</h2>
-      <p className="mt-1 text-sm text-[var(--app-text-muted)]">{snapshot.description}</p>
-      <p className="mt-2 text-sm text-[var(--app-text)]">{snapshot.supportiveLine}</p>
+      <div className="flex items-start gap-3">
+        <ManifestArtScene
+          assetId={PLATEAU_ARTIFACT_PASS_STONE_ASSET_ID}
+          alt="Камень перевала — удержание маршрута"
+          layout="artifact-icon"
+          testId="plateau-artifact-art"
+        />
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--app-gold)]">
+            {isActive ? 'Удержание перевала' : 'Возможный перевал'}
+          </p>
+          <h2 className="mt-1 text-base font-semibold text-[var(--app-text)]">{snapshot.title}</h2>
+          <p className="mt-1 text-sm text-[var(--app-text-muted)]">{snapshot.description}</p>
+          <p className="mt-2 text-sm text-[var(--app-text)]">{snapshot.supportiveLine}</p>
+        </div>
+      </div>
 
       {snapshot.routeHolding.signalLines.length > 0 ? (
         <ul className="mt-3 space-y-1 text-xs text-[var(--app-text-muted)]">

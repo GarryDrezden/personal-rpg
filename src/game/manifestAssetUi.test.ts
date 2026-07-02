@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
+  EMPTY_STATE_NO_ENTRIES_ASSET_ID,
   getBaseStageManifestAssetId,
   getManifestAssetObjectPosition,
+  getSeasonBossManifestAssetId,
   getSeasonRewardManifestAssetId,
   ONBOARDING_CORE_AWAKENING_ASSET_ID,
+  PLATEAU_ARTIFACT_PASS_STONE_ASSET_ID,
 } from './manifestAssetUi';
 
 describe('manifestAssetUi', () => {
@@ -13,13 +16,21 @@ describe('manifestAssetUi', () => {
     expect(getBaseStageManifestAssetId('trail')).toBeUndefined();
   });
 
-  it('maps season 1 reward only', () => {
+  it('maps season 1 reward and boss only', () => {
     expect(getSeasonRewardManifestAssetId(1)).toBe('season-01-reward-core-spark');
     expect(getSeasonRewardManifestAssetId(2)).toBeUndefined();
+    expect(getSeasonBossManifestAssetId(1)).toBe('season-boss-01-empty-day-lord');
+    expect(getSeasonBossManifestAssetId(2)).toBeUndefined();
   });
 
-  it('provides object-position hints for batch 1 assets', () => {
+  it('exposes batch 2 asset id constants', () => {
+    expect(EMPTY_STATE_NO_ENTRIES_ASSET_ID).toBe('empty-state-no-entries');
+    expect(PLATEAU_ARTIFACT_PASS_STONE_ASSET_ID).toBe('plateau-artifact-pass-stone');
+  });
+
+  it('provides object-position hints for wired assets', () => {
     expect(getManifestAssetObjectPosition(ONBOARDING_CORE_AWAKENING_ASSET_ID)).toContain('center');
+    expect(getManifestAssetObjectPosition(EMPTY_STATE_NO_ENTRIES_ASSET_ID)).toContain('center');
     expect(getManifestAssetObjectPosition('unknown')).toBe('center');
   });
 });
