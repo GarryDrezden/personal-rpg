@@ -127,7 +127,16 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Seasons v1** |
+| Следующий спринт | **Body Abilities v1** |
+
+### Seasons v1 ✅
+
+- **28-дневный engine:** `src/game/seasons/` — season index/day из `settings.startDate`, progress derived from `dailyEntries`
+- **13 season configs:** каталог из wiki + 3–5 квестов на сезон (existing daily fields only)
+- **Partial success:** started → marked → held → cleared → empowered (без тона провала)
+- **UI:** `SeasonTodayCard` (компактно на Today), `SeasonDashboardSummary` на Dashboard
+- **Recap stub:** `getSeasonRecapText()` — текст по статусу, без отдельного экрана
+- **Не в scope v1:** Boss Campaign боёвка, season history screen, DB schema, новые daily metrics
 
 ### Core Loop Polish v1 — Today ✅
 
@@ -162,13 +171,13 @@
 - SPA: `index.html` + assets — OK по HTTP
 - **HTTPS** (`https://fit-rpg.ru`) → 404 nginx — **не блокер**, future hardening после выпуска сертификата
 
-### Готовность к Seasons v1
+### Готовность к Body Abilities v1
 
-**Можно начинать** после деплоя Core Loop Polish v1 на HTTP production.
+**Можно начинать** после деплоя Seasons v1 на HTTP production.
 
 ## Следующий приоритет
 
-**Seasons v1** → Asset Registry 2.0 visual polish → Body Abilities v1.
+**Body Abilities v1** → Plateau Mode → Asset Registry 2.0 visual polish.
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

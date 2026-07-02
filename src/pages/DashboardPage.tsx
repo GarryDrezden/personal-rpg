@@ -35,6 +35,10 @@ import { getNextBestAction } from '../utils/nextBestActionEngine';
 
 import { getJourneyMapSummary } from '../utils/journeyMapEngine';
 
+import { getSeasonSnapshotWithRecap } from '../game/seasons/seasonEngine';
+
+import { SeasonDashboardSummary } from '../components/season/SeasonDashboardSummary';
+
 import { getNextBodyAbilities } from '../utils/bodyAbilityEngine';
 
 import { useAppTheme } from '../hooks/useAppTheme';
@@ -197,7 +201,10 @@ export function DashboardPage() {
 
   const journeySummary = useMemo(() => getJourneyMapSummary(engineParams), [engineParams]);
 
-
+  const seasonSnapshot = useMemo(
+    () => getSeasonSnapshotWithRecap({ settings, dailyEntries, today }),
+    [settings, dailyEntries, today],
+  );
 
   const nextAbilities = useMemo(
 
@@ -347,7 +354,7 @@ export function DashboardPage() {
 
       />
 
-
+      <SeasonDashboardSummary season={seasonSnapshot} />
 
       <DashboardSummaryStrip />
 

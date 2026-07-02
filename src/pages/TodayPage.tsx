@@ -3,6 +3,8 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import type { DailyEntry } from '../types';
 import { useAppStore, emptyDaily } from '../store/appStore';
 import { todayISO, formatDateFull, weekStart, weekDays } from '../utils/dates';
+import { getSeasonSnapshotWithRecap } from '../game/seasons/seasonEngine';
+import { SeasonTodayCard } from '../components/season/SeasonTodayCard';
 import { getWeeklySettingsForDate, getDayStatus } from '../utils/points';
 import {
   calculateMomentumHistory,
@@ -268,6 +270,10 @@ export function TodayPage() {
       ? getDailyMobContextLine(dailyMobId, entry, settings)
       : undefined;
   const dayMode = getDayMode(entry.dayMode);
+  const seasonSnapshot = useMemo(
+    () => getSeasonSnapshotWithRecap({ settings, dailyEntries, today }),
+    [settings, dailyEntries, today],
+  );
 
   const patch = (partial: Partial<DailyEntry>) => {
     setEntry((prev) => ({ ...prev, ...partial, date: selectedDate }));
@@ -412,6 +418,8 @@ export function TodayPage() {
       {dailyMobId ? (
         <DailyMobCard mobId={dailyMobId} compact contextLine={dailyMobContext} />
       ) : null}
+
+      {isEditingToday ? <SeasonTodayCard season={seasonSnapshot} /> : null}
 
       <Card>
         <p className="mb-3 text-sm font-medium text-[var(--app-text)]">День недели</p>

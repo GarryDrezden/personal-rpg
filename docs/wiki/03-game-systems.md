@@ -620,7 +620,7 @@ Purpose:
 - keep the game interesting for 1–2 years (~13 seasons/year);
 - give story and rewards without depending only on weight.
 
-**Status:** design documented; implementation in roadmap after Core Loop Polish.
+**Status:** implemented (Seasons v1). Boss Campaign / season history — later.
 
 Design rules:
 

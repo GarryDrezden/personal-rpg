@@ -4,6 +4,26 @@
 
 ---
 
+## 2026-06-06 — Seasons v1 (derived progress, no DB)
+
+### Context
+
+Year campaign needs 28-day arcs without adding daily obligations or schema migrations. Core Loop Polish made Today fast enough to layer seasonal narrative on top.
+
+### Decision
+
+- Season progress **derived** from existing `dailyEntries` + `settings.startDate` (onboarding sets startDate).
+- 13 season configs in code (`src/game/seasons/seasonConfig.ts`); 3–5 quests per season from existing daily field types.
+- Partial success statuses (started → empowered); no «season failed» logic.
+- Mini-boss names are **narrative labels only** in v1 — no Boss Campaign combat.
+- Compact UI on Today + Dashboard only; no dedicated Season page in v1.
+
+### Consequences
+
+No `seasons` table or migration. Season recap is text stub, not a screen. Weekly quests and season history deferred to v2.
+
+---
+
 ## 2026-07-02 — Onboarding gate (Пробуждение ядра)
 
 ### Context

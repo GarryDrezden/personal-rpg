@@ -5,6 +5,7 @@
 ### Added
 
 - **Core Loop Polish v1 — Today:** improved daily Today flow; save reaction card; minimal/recovery day quick path; contextual daily mob; sticky mobile save CTA.
+- **Seasons v1:** 28-day season engine; 13 season configs; quest progress from daily entries; partial success; compact season card on Today and Dashboard.
 - **Onboarding v1 — Пробуждение ядра:** first-start flow at `/start` for new users (weights, hero, theme, companion, route focus); `OnboardingGate`; remote persist via profile + `customSettingsBackup`; redirect to Today after completion.
 - **Stabilize — Remote Sidecar Persist:** achievements, coins and momentum sync to remote `user_data` via `sidecarSync.ts` (debounced save, hydrate on init, merge guards).
 - Documented long-term campaign structure for 12–24 month body transformation (`03-game-systems.md`: time layers, acts, parallel progress roads, seasons, plateau mode, body abilities, camp/base).
@@ -53,6 +54,17 @@
 ### Removed
 
 - —
+
+---
+
+## Seasons v1
+
+- Added 28-day season engine.
+- Added 13 season configs.
+- Added season quest progress from existing daily entries.
+- Added partial success statuses.
+- Added compact current season card to Today and Dashboard.
+- Kept Boss Campaign, DB schema and new metrics out of scope.
 
 ---
 
