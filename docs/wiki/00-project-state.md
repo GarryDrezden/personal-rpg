@@ -127,7 +127,15 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Onboarding + Asset Registry 2.0** |
+| Следующий спринт | **Core Loop Polish** |
+
+### Onboarding v1 — Пробуждение ядра ✅
+
+- Маршрут `/start`: 5 шагов (пробуждение → вес/рост → герой/тема → спутник → ритм/фокус)
+- Gate `OnboardingGate`: новый пользователь → `/start`, завершивший → приложение
+- Данные: `PATCH /api/profile` + `customSettingsBackup` (`onboardingCompleted`, `routeMode`, `firstFocus`, draft/step)
+- После завершения → Today с баннером «Ядро пробуждено»
+- Без DB migrations; legacy-профили с весом/полом пропускают onboarding
 
 ### Stabilize — sidecar remote persist ✅
 
@@ -145,13 +153,13 @@
 - SPA: `index.html` + assets — OK по HTTP
 - **HTTPS** (`https://fit-rpg.ru`) → 404 nginx — **не блокер**, future hardening после выпуска сертификата
 
-### Готовность к Onboarding
+### Готовность к Core Loop Polish
 
-**Можно начинать** на текущем HTTP production. После SSL: включить HTTPS redirect, `secure_cookie => true`, обновить `allowed_origin`.
+**Можно начинать** после деплоя Onboarding v1 на HTTP production.
 
 ## Следующий приоритет
 
-**После Stabilize:** Onboarding + Asset Registry 2.0 → Core Loop Polish → Seasons v1.
+**Core Loop Polish** → Asset Registry 2.0 visual polish → Seasons v1.
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

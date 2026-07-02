@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Onboarding v1 — Пробуждение ядра:** first-start flow at `/start` for new users (weights, hero, theme, companion, route focus); `OnboardingGate`; remote persist via profile + `customSettingsBackup`; redirect to Today after completion.
 - **Stabilize — Remote Sidecar Persist:** achievements, coins and momentum sync to remote `user_data` via `sidecarSync.ts` (debounced save, hydrate on init, merge guards).
 - Documented long-term campaign structure for 12–24 month body transformation (`03-game-systems.md`: time layers, acts, parallel progress roads, seasons, plateau mode, body abilities, camp/base).
 - Added planned systems to roadmap: Seasons v1, Body Abilities v1, Plateau Mode, Camp/Base Progression, Boss Campaign.
@@ -51,6 +52,15 @@
 ### Removed
 
 - —
+
+---
+
+## Onboarding v1 — Пробуждение ядра
+
+- Added first-start flow for new users at `/start` (user-facing: «Пробуждение ядра», not «Onboarding»).
+- Collected start weight, target weight, height, hero style, companion and first route focus.
+- Redirected new users to Today after route setup with welcome banner.
+- Preserved existing storage architecture without DB migrations (`user_profiles` + `customSettingsBackup`).
 
 ---
 

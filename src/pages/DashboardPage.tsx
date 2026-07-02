@@ -42,6 +42,7 @@ import { useAppTheme } from '../hooks/useAppTheme';
 import { getRecoveryState } from '../utils/recoveryEngine';
 
 import { useAuth } from '../auth/useAuth';
+import { needsOnboarding } from '../utils/onboardingState';
 
 import { Link } from 'react-router-dom';
 
@@ -52,6 +53,7 @@ export function DashboardPage() {
   const { dailyEntries, measurements, settings, updateDaily } = useAppStore();
 
   const { profile } = useAuth();
+  const showStartRouteBanner = needsOnboarding(settings, profile);
 
   const { themeId } = useAppTheme();
 
@@ -263,11 +265,11 @@ export function DashboardPage() {
 
     <div data-testid="dashboard-page" className="space-y-3 pb-2">
 
-      {!profile?.displayName && !profile?.heroGender ? (
+      {showStartRouteBanner ? (
         <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)]/60 px-4 py-3 text-sm text-[var(--app-text-muted)]">
-          Настрой профиль героя в{' '}
-          <Link to="/settings" className="text-[var(--app-gold)] hover:underline">
-            настройках
+          Пробуди ядро маршрута в{' '}
+          <Link to="/start" className="text-[var(--app-gold)] hover:underline">
+            первом старте
           </Link>
           .
         </div>

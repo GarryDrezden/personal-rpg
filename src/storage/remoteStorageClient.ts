@@ -59,6 +59,9 @@ function mergeRemoteSettings(
     nutritionTrackingMode:
       (serverSettings.nutritionTrackingMode as AppSettings['nutritionTrackingMode']) ??
       base.nutritionTrackingMode,
+    activeCompanionId:
+      (serverSettings.activeCompanionId as AppSettings['activeCompanionId']) ??
+      base.activeCompanionId,
     avatarSettings: base.avatarSettings,
   });
 }

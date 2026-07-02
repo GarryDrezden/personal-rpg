@@ -125,10 +125,12 @@ export type CharacterGender = 'male' | 'female';
 import type { AvatarSettings } from './avatar';
 import type { AppThemeId } from './theme';
 import type { HabitConfig } from './habits';
+import type { FirstFocusId, OnboardingDraft, RouteMode } from './onboarding';
 
 export type { AvatarSettings } from './avatar';
 export type { AppThemeId } from './theme';
 export type { HabitConfig, CustomHabitDefinition, BuiltinHabitId, HabitCardColorId } from './habits';
+export type { FirstFocusId, OnboardingDraft, RouteMode } from './onboarding';
 
 export interface AppSettings {
   defaultCaloriesLimit: number;
@@ -161,6 +163,14 @@ export interface AppSettings {
   dailyCalorieLimit?: number | null;
   nutritionMediumOverThreshold?: number;
   nutritionHeavyOverThreshold?: number;
+  /** Пробуждение ядра — первый старт маршрута */
+  onboardingCompleted?: boolean;
+  onboardingCompletedAt?: string;
+  onboardingStep?: number;
+  onboardingDraft?: OnboardingDraft;
+  routeMode?: RouteMode;
+  firstFocus?: FirstFocusId;
+  startDate?: string;
 }
 
 export interface AppData {

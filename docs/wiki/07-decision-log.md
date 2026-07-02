@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-07-02 — Onboarding gate (Пробуждение ядра)
+
+### Context
+
+New users landed on Dashboard with empty profile. Settings page was not a guided RPG start. Stabilize + HTTP smoke unblocked first-start work.
+
+### Decision
+
+- Route `/start` with 5-step wizard (no new DB fields).
+- Completion flag + draft in existing `customSettingsBackup` (`AppSettings`).
+- Body metrics in `user_profiles` via `PATCH /api/profile`.
+- `OnboardingGate` redirects incomplete users; legacy profiles with weight + gender skip automatically.
+
+### Consequences
+
+No schema migration. Settings page unchanged. Asset Registry 2.0 polish deferred. Login still goes to `/`; gate sends new users to `/start`.
+
+---
+
 ## 2026-06-06 — Sidecar remote persist (Stabilize)
 
 ### Context

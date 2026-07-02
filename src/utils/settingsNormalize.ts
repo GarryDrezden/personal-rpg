@@ -27,5 +27,12 @@ export function normalizeAppSettings(
     activeCompanionId: settings.activeCompanionId ?? fallback.activeCompanionId,
     enableSleepTracking:
       settings.enableSleepTracking ?? fallback.enableSleepTracking ?? false,
+    onboardingCompleted: settings.onboardingCompleted ?? fallback.onboardingCompleted,
+    onboardingCompletedAt: settings.onboardingCompletedAt ?? fallback.onboardingCompletedAt,
+    onboardingStep: settings.onboardingStep ?? fallback.onboardingStep,
+    onboardingDraft: settings.onboardingDraft ?? fallback.onboardingDraft,
+    routeMode: settings.routeMode ?? fallback.routeMode,
+    firstFocus: settings.firstFocus ?? fallback.firstFocus,
+    startDate: settings.startDate ?? fallback.startDate,
   };
 }

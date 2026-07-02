@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import type { DailyEntry } from '../types';
 import { useAppStore, emptyDaily } from '../store/appStore';
 import { todayISO, formatDateFull, weekStart, weekDays } from '../utils/dates';
@@ -39,7 +39,11 @@ import { shouldSuggestNutritionRecovery, isNutritionTrackingEnabled } from '../u
 
 export function TodayPage() {
   const { dailyEntries, settings, updateDaily, deleteDaily } = useAppStore();
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [routeWelcome, setRouteWelcome] = useState(
+    () => (location.state as { routeOpened?: boolean } | null)?.routeOpened === true,
+  );
   const today = todayISO();
   const currentWeekDays = useMemo(() => weekDays(weekStart(today)), [today]);
   const dateParam = searchParams.get('date');
@@ -267,6 +271,24 @@ export function TodayPage() {
 
   return (
     <div className="space-y-6 pb-8">
+      {routeWelcome ? (
+        <div
+          data-testid="route-opened-banner"
+          className="rounded-2xl border border-[var(--app-gold)]/30 bg-[var(--app-primary-soft)]/50 px-4 py-3 text-sm text-[var(--app-text)]"
+        >
+          <p className="font-semibold text-[var(--app-gold)]">Ядро пробуждено</p>
+          <p className="mt-1 text-[var(--app-text-muted)]">
+            Маршрут открыт. Сегодня не нужно быть идеальным — достаточно удержать первый шаг.
+          </p>
+          <button
+            type="button"
+            onClick={() => setRouteWelcome(false)}
+            className="mt-2 text-xs font-medium text-[var(--app-primary)] hover:underline"
+          >
+            Понятно
+          </button>
+        </div>
+      ) : null}
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-[var(--app-text)]">Квесты дня</h1>

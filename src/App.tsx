@@ -6,6 +6,8 @@ import { AuthProvider } from './auth/AuthProvider';
 
 import { ProtectedRoute, GuestRoute } from './auth/ProtectedRoute';
 
+import { OnboardingGate } from './auth/OnboardingGate';
+
 import { AppShell } from './components/layout/AppShell';
 
 import { DashboardPage } from './pages/DashboardPage';
@@ -15,6 +17,8 @@ import { TodayPage } from './pages/TodayPage';
 import { LoginPage } from './pages/LoginPage';
 
 import { RegisterPage } from './pages/RegisterPage';
+
+import { StartRoutePage } from './pages/StartRoutePage';
 
 import { AchievementToastHost } from './components/achievements/AchievementToastHost';
 
@@ -198,7 +202,15 @@ function AuthenticatedApp() {
 
       <Routes>
 
-        <Route element={<AppShell />}>
+        <Route path="/start" element={<StartRoutePage />} />
+
+        <Route
+          element={
+            <OnboardingGate>
+              <AppShell />
+            </OnboardingGate>
+          }
+        >
 
           <Route path="/" element={<DashboardPage />} />
 
