@@ -6,7 +6,7 @@ import {
 import { getManifestAssetObjectPosition } from '../../game/manifestAssetUi';
 import { GameAssetImage } from './GameAssetImage';
 
-export type ManifestArtLayout = 'onboarding' | 'hero' | 'thumbnail' | 'reward-icon';
+export type ManifestArtLayout = 'onboarding' | 'hero' | 'thumbnail' | 'reward-icon' | 'reward-banner';
 
 type ManifestArtSceneProps = {
   assetId: string;
@@ -36,6 +36,8 @@ function frameClass(layout: ManifestArtLayout): string {
       return 'h-16 w-24 shrink-0';
     case 'reward-icon':
       return 'mx-auto h-14 w-14 shrink-0 rounded-lg';
+    case 'reward-banner':
+      return 'w-full h-[5.25rem] sm:h-[7.5rem] md:h-[10rem]';
     default:
       return 'aspect-[16/9] w-full max-h-[11rem]';
   }
