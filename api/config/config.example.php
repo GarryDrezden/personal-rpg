@@ -19,7 +19,8 @@ return [
         'same_site' => 'Lax',
     ],
     'app' => [
-        'allowed_origin' => 'https://fit-rpg.ru',
+        // Current production: http://fit-rpg.ru (no SSL yet). Switch to https:// after certificate.
+        'allowed_origin' => 'http://fit-rpg.ru',
         'debug' => false,
     ],
 ];

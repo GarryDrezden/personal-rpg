@@ -125,10 +125,9 @@
 
 | Приоритет | Задача |
 |-----------|--------|
-| **Блокер** | Production smoke на fit-rpg.ru — автопроверка: `404 nginx` (деплой/routing на хостинге) |
-| Средний | Auth/session hardening на shared hosting (cookie Path `/`, Bearer fallback, re-init on login) |
+| Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Onboarding + Asset Registry 2.0** — после успешного production smoke |
+| Следующий спринт | **Onboarding + Asset Registry 2.0** |
 
 ### Stabilize — sidecar remote persist ✅
 
@@ -137,18 +136,18 @@
 - Guard: пустой remote не затирает local; hydrate не создаёт save loop
 - Local fallback для legacy/unauthenticated режима
 
-### Stabilize — auth/session (code) ⚠️
+### Stabilize — auth/session + production smoke (HTTP) ✅
 
-- Cookie: `Path=/`, `HttpOnly`, `SameSite=Lax`, auto HTTPS / `X-Forwarded-Proto`
-- Dual auth: cookie `pr_session` + Bearer token в `sessionStorage` (fallback для LSAPI)
-- `/api/auth/me` после login/register; logout очищает cookie + token
-- `AuthenticatedApp`: re-init при `authenticated`, guard от гонки init
-- `/api/health.php`: маршрут через `index.php` + прямой файл в `.htaccess`
-- **Production smoke:** с этой машины `https://fit-rpg.ru` → 404 nginx (SPA/API не отвечают) — нужна ручная проверка после деплоя на хостинге
+- Production URL сейчас: **`http://fit-rpg.ru`** (SSL ещё не настроен — это ожидаемо)
+- Cookie: `Path=/`, `HttpOnly`, `SameSite=Lax`, **без `Secure`** на HTTP (`secure_cookie => false` на сервере)
+- Dual auth: cookie `pr_session` + Bearer token в `sessionStorage`
+- Automated API smoke (2026-07-02): register, login, logout, `/api/auth/me`, `dailyEntries`, achievements, `coinTransactions`, `momentumHistory` — OK
+- SPA: `index.html` + assets — OK по HTTP
+- **HTTPS** (`https://fit-rpg.ru`) → 404 nginx — **не блокер**, future hardening после выпуска сертификата
 
 ### Готовность к Onboarding
 
-**Пока рано** — сначала подтвердить production smoke (register, Today save, sidecar reload) на живом домене.
+**Можно начинать** на текущем HTTP production. После SSL: включить HTTPS redirect, `secure_cookie => true`, обновить `allowed_origin`.
 
 ## Следующий приоритет
 

@@ -18,6 +18,17 @@ React (dist/)  →  /api/*  →  api/index.php  →  MySQL
 
 ---
 
+## Production URL (current)
+
+| Phase | URL | Status |
+|-------|-----|--------|
+| **Current** | `http://fit-rpg.ru` | Active — use for smoke tests and daily use |
+| **Future** | `https://fit-rpg.ru` | SSL not configured yet — 404 nginx is expected until certificate is issued |
+
+Do **not** treat HTTPS 404 as a deploy blocker while HTTP works.
+
+---
+
 ## Чеклист после deploy
 
 1. [ ] Deploy зелёный (GitHub Actions)
@@ -26,12 +37,41 @@ React (dist/)  →  /api/*  →  api/index.php  →  MySQL
 4. [ ] В ispmanager создана БД `vh388565_rpg` (+ пользователь)
 5. [ ] В phpMyAdmin выполнен SQL из `api/migrations/001_create_accounts_tables.sql`
 6. [ ] Создан `api/config/config.php` по шаблону
-7. [ ] Открыть `https://fit-rpg.ru/api/health.php` — `"ok": true`
+7. [ ] Открыть `http://fit-rpg.ru/api/health.php` — `"ok": true`
 8. [ ] Регистрация на сайте работает
+
+### HTTP cookie settings (current)
+
+На HTTP production **`secure_cookie` должен быть `false`** в `api/config/config.php`:
+
+```php
+'auth' => [
+    'cookie_name' => 'pr_session',
+    'session_days' => 30,
+    'secure_cookie' => false,  // required on http:// until SSL
+    'same_site' => 'Lax',
+],
+'app' => [
+    'allowed_origin' => 'http://fit-rpg.ru',
+],
+```
+
+Проверка: после register в Network → `Set-Cookie: pr_session=...; path=/; HttpOnly; SameSite=Lax` — **без** флага `Secure`.
+
+### Future: HTTPS / SSL hardening
+
+После выпуска сертификата в ispmanager:
+
+1. Проверить `https://fit-rpg.ru/api/health.php` → OK
+2. В `config.php`: `'secure_cookie' => true`, `'allowed_origin' => 'https://fit-rpg.ru'`
+3. Включить редирект HTTP → HTTPS в панели
+4. Повторить smoke на HTTPS
 
 ### Production smoke (auth + user_data + sidecars)
 
-После пунктов 1–8, на production-домене:
+Тестировать на **`http://fit-rpg.ru`** (не https, пока нет SSL).
+
+После пунктов 1–8:
 
 1. Register нового пользователя
 2. Today: заполнить и сохранить день
@@ -41,8 +81,6 @@ React (dist/)  →  /api/*  →  api/index.php  →  MySQL
 6. Login → данные восстановились
 7. Другой браузер / инкогнито → login → те же sidecars
 8. Network: нет 401 на `/api/data/*` после login
-
-Если `/api/health.php` или `/api/auth/me` отдают **404 nginx** — проверить FTP deploy, document root и rewrite (Apache `.htaccess` или nginx → PHP).
 
 ---
 
@@ -90,11 +128,11 @@ return [
     'auth' => [
         'cookie_name' => 'pr_session',
         'session_days' => 30,
-        'secure_cookie' => true,
+        'secure_cookie' => false,
         'same_site' => 'Lax',
     ],
     'app' => [
-        'allowed_origin' => 'https://fit-rpg.ru',
+        'allowed_origin' => 'http://fit-rpg.ru',
         'debug' => false,
     ],
 ];
@@ -109,7 +147,7 @@ return [
 Открыть в браузере:
 
 ```text
-https://fit-rpg.ru/api/health.php
+http://fit-rpg.ru/api/health.php
 ```
 
 Ожидаемый результат:
@@ -158,8 +196,9 @@ RewriteRule . /index.html [L]
 
 ### 401 на всех страницах после login
 
-- Cookie не ставится → проверь HTTPS и `secure_cookie => true`
-- Неверный домен в `allowed_origin`
+- Cookie не ставится → на HTTP проверь `secure_cookie => false` (не `true` без SSL)
+- После SSL: `secure_cookie => true` и HTTPS redirect
+- Неверный домен в `allowed_origin` (сейчас `http://fit-rpg.ru`)
 
 ### 503 API configuration error
 

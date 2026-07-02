@@ -21,7 +21,8 @@
 - [x] Resource & Rest v1
 - [ ] PHP auth/session stabilization (cookie, `/api/auth/me` flow)
 - [ ] Sidecar sync: achievements, coins, momentum → remote `user_data`
-- [ ] Production smoke tests на fit-rpg.ru (блокер: 2026-06-06 автопроверка — 404 nginx; нужен ручной smoke после деплоя)
+- [x] Production smoke tests на `http://fit-rpg.ru` (API: 2026-07-02 — OK)
+- [ ] HTTPS / SSL certificate + redirect (future hardening)
 - [ ] Journey Map v3 — polish (mobile QA, chapter art tuning)
 - [ ] Mobile layout polish
 
