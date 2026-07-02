@@ -1,6 +1,5 @@
 import type { AppThemeId } from '../../types/theme';
 import { APP_THEMES } from '../../constants/themes';
-import { Badge } from '../ui/Badge';
 
 type ThemeSelectorProps = {
   value: AppThemeId;
@@ -48,17 +47,14 @@ export function ThemeSelector({ value, onChange }: ThemeSelectorProps) {
                 : 'border-[var(--app-border)] bg-[var(--app-card)]'
             }`}
           >
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">{theme.previewEmoji}</span>
-                <div>
-                  <h3 className="font-semibold text-[var(--app-text)]">{theme.title}</h3>
-                  <p className="mt-1 text-sm text-[var(--app-text-muted)]">
-                    {theme.description}
-                  </p>
-                </div>
+            <div className="flex items-start gap-2">
+              <span className="text-2xl">{theme.previewEmoji}</span>
+              <div>
+                <h3 className="font-semibold text-[var(--app-text)]">{theme.title}</h3>
+                <p className="mt-1 text-sm text-[var(--app-text-muted)]">
+                  {theme.description}
+                </p>
               </div>
-              {active && <Badge variant="gold">Активна</Badge>}
             </div>
 
             <ThemePreview themeId={theme.id} />
