@@ -66,6 +66,8 @@ medical cross, hospital, syringe, anatomy diagram, muscle diagram, anime eyes, c
 
 `public/game-assets/abilities/ability-{slug}.webp` — 12 files per table above
 
+**Per-icon prompts:** [`BODY-ABILITY-ICONS-mini-batch-queue.md`](BODY-ABILITY-ICONS-mini-batch-queue.md) → `ability-{entityId}.md` (12 files)
+
 ## Manifest id
 
 `body-ability-icon-set-v1`
