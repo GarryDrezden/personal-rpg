@@ -17,6 +17,21 @@
       "season-boss-01-empty-day-lord"
     ]
   },
+  "darkMvpAssetGenerationBatch1": {
+    "updated": "2026-06-06",
+    "status": "awaiting-generation",
+    "description": "First Dark MVP generation drop: onboarding + camp stages 1–2 + season 1 reward. Cozy variant excluded.",
+    "assetIds": [
+      "onboarding-core-awakening",
+      "camp-base-stage-01-ember-camp",
+      "camp-base-stage-02-shelter",
+      "season-01-reward-core-spark"
+    ],
+    "filesOnDisk": 0,
+    "filesExpected": 4,
+    "promptQueue": "docs/prompts/assets/BATCH-01-nano-banana-queue.md",
+    "workflow": "Generate → place in public/game-assets/ → node scripts/build-asset-manifest.mjs → processed (not in-app)"
+  },
   "conventions": {
     "naming": "lowercase kebab-case: {entity-type}-{index}-{semantic-name}.webp under public/game-assets/{category-folder}/",
     "preferredFormat": "webp for runtime; png legacy allowed; heavy sources not in public/",

@@ -103,6 +103,24 @@ Legacy v1 статусы (`approved`, `draft`, …) сохранены в пол
 
 **Future Cozy Campaign** — не входит в этот пакет. См. [`13-art-backlog.md`](13-art-backlog.md) → Future Cozy Campaign Variant.
 
+## Dark MVP Asset Generation Batch 1
+
+Первый **дроп генерации** (4 ассета): onboarding + camp 1–2 + season 1 reward.
+
+| Документ | Назначение |
+|----------|------------|
+| [`BATCH-01-nano-banana-queue.md`](../prompts/assets/BATCH-01-nano-banana-queue.md) | Очередь для Nano Banana: id, prompt, ratio, output path |
+| `manifest.darkMvpAssetGenerationBatch1` | Машиночитаемый статус батча |
+
+**Pipeline:**
+
+```
+prompt-ready → (Nano Banana) → file in public/ → node scripts/build-asset-manifest.mjs
+  → generated (.png) or processed (.webp) → in-app only after UI wire sprint
+```
+
+**Правило:** `processed` ≠ `in-app`. Файл на диске готов к подключению, но UI пока на placeholders.
+
 ## Workflow
 
 ```
@@ -110,7 +128,7 @@ Backlog (13-art-backlog.md)
   → prompt (docs/prompts/assets/{id}.md)
   → generate (manual, Nano Banana)
   → public/game-assets/
-  → manifest status in-app
+  → manifest status processed (Batch 1) or in-app (after UI wire)
   → bump GAME_ASSET_VERSION
   → deploy
 ```
@@ -121,7 +139,7 @@ Backlog (13-art-backlog.md)
 node scripts/build-asset-manifest.mjs
 ```
 
-Валидация (tests): `src/game/assetManifest.test.ts`
+Валидация (tests): `src/game/assetManifest.test.ts`, `src/game/assetBatch1.test.ts`
 
 ## Privacy
 

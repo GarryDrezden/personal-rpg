@@ -57,6 +57,21 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 
 **Workflow после генерации:** `generated` → `processed` (webp) → `in-app` (файл в `public/`) → bump `GAME_ASSET_VERSION` → optional UI wire.
 
+### Dark MVP Asset Generation Batch 1 (active)
+
+> **Очередь:** [`BATCH-01-nano-banana-queue.md`](../prompts/assets/BATCH-01-nano-banana-queue.md)
+> **Статус:** `awaiting-generation` — 0/4 файлов на диске.
+> После размещения файлов: `node scripts/build-asset-manifest.mjs` → `processed` (не `in-app`).
+
+| id | P | Prompt | Expected path | Manifest status |
+|----|---|--------|---------------|-----------------|
+| `onboarding-core-awakening` | P0 | [`onboarding-core-awakening.md`](../prompts/assets/onboarding-core-awakening.md) | `public/game-assets/onboarding/core-awakening.webp` | prompt-ready |
+| `camp-base-stage-01-ember-camp` | P0 | [`camp-base-stage-01-ember-camp.md`](../prompts/assets/camp-base-stage-01-ember-camp.md) | `public/game-assets/base/base-stage-01-ember-camp.webp` | prompt-ready |
+| `camp-base-stage-02-shelter` | P0 | [`camp-base-stage-02-shelter.md`](../prompts/assets/camp-base-stage-02-shelter.md) | `public/game-assets/base/base-stage-02-trail-shelter.webp` | prompt-ready |
+| `season-01-reward-core-spark` | P1 | [`season-01-reward-core-spark.md`](../prompts/assets/season-01-reward-core-spark.md) | `public/game-assets/rewards/season-01-core-spark.webp` | prompt-ready |
+
+**Не в Batch 1:** empty-state, body abilities, plateau artifact, season boss 1 — следующий дроп Priority Pack.
+
 ---
 
 ## P0 — MVP Visual Core

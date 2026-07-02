@@ -3,8 +3,8 @@
  * Builds docs/assets/manifest.json (Asset Registry 2.0).
  * Run: node scripts/build-asset-manifest.mjs
  */
-import { writeFileSync } from 'node:fs';
-import { join, dirname } from 'node:path';
+import { existsSync, writeFileSync } from 'node:fs';
+import { join, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -677,6 +677,36 @@ assets.push(
   }),
 );
 
+/** Dark MVP Asset Generation Batch 1 — disk sync never sets in-app (UI wire is separate). */
+const DARK_MVP_BATCH_1_IDS = [
+  'onboarding-core-awakening',
+  'camp-base-stage-01-ember-camp',
+  'camp-base-stage-02-shelter',
+  'season-01-reward-core-spark',
+];
+
+function syncBatch1FromDisk(assetList) {
+  let onDisk = 0;
+  for (const id of DARK_MVP_BATCH_1_IDS) {
+    const asset = assetList.find((a) => a.id === id);
+    if (!asset?.targetPath) continue;
+    const diskPath = join(root, 'public', asset.targetPath.replace(/^\//, ''));
+    if (!existsSync(diskPath)) {
+      continue;
+    }
+    onDisk += 1;
+    const ext = extname(diskPath).toLowerCase();
+    asset.path = asset.targetPath;
+    asset.fileStatus = 'ready';
+    asset.promptStatus = 'ready';
+    asset.status = ext === '.webp' ? 'processed' : 'generated';
+    asset.notes = `${asset.notes || ''} Batch 1 on disk (${ext}); not in-app until UI wire.`.trim();
+  }
+  return onDisk;
+}
+
+const batch1OnDisk = syncBatch1FromDisk(assets);
+
 const manifest = {
   version: 2,
   schema: 'asset-registry-2.0',
@@ -695,6 +725,18 @@ const manifest = {
       'season-01-reward-core-spark',
       'season-boss-01-empty-day-lord',
     ],
+  },
+  darkMvpAssetGenerationBatch1: {
+    updated: '2026-06-06',
+    status: batch1OnDisk === DARK_MVP_BATCH_1_IDS.length ? 'files-on-disk' : 'awaiting-generation',
+    description:
+      'First Dark MVP generation drop: onboarding + camp stages 1–2 + season 1 reward. Cozy variant excluded.',
+    assetIds: DARK_MVP_BATCH_1_IDS,
+    filesOnDisk: batch1OnDisk,
+    filesExpected: DARK_MVP_BATCH_1_IDS.length,
+    promptQueue: 'docs/prompts/assets/BATCH-01-nano-banana-queue.md',
+    workflow:
+      'Generate → place in public/game-assets/ → node scripts/build-asset-manifest.mjs → processed (not in-app)',
   },
   conventions: {
     naming:
@@ -720,3 +762,4 @@ const manifest = {
 const outPath = join(root, 'docs/assets/manifest.json');
 writeFileSync(outPath, JSON.stringify(manifest, null, 2) + '\n', 'utf-8');
 console.log(`Wrote ${assets.length} assets to ${outPath}`);
+console.log(`Dark MVP Batch 1: ${batch1OnDisk}/${DARK_MVP_BATCH_1_IDS.length} files on disk`);
