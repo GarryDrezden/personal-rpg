@@ -62,10 +62,8 @@
 
 | Этап | status | fileStatus | path в manifest |
 |------|--------|------------|-----------------|
-| Сейчас | `prompt-ready` | `needed` | нет |
-| Файл получен (png) | `generated` | `ready` | `targetPath` |
-| Файл webp готов | `processed` | `ready` | `targetPath` |
-| UI подключён (later) | `in-app` | `ready` | `targetPath` |
+| ~~Сейчас~~ Batch 1 done | `processed` | `ready` | `targetPath` |
+| UI подключён (next) | `in-app` | `ready` | `targetPath` |
 
 ## Исключено из Batch 1
 

@@ -19,7 +19,7 @@
   },
   "darkMvpAssetGenerationBatch1": {
     "updated": "2026-06-06",
-    "status": "awaiting-generation",
+    "status": "files-on-disk",
     "description": "First Dark MVP generation drop: onboarding + camp stages 1–2 + season 1 reward. Cozy variant excluded.",
     "assetIds": [
       "onboarding-core-awakening",
@@ -27,7 +27,7 @@
       "camp-base-stage-02-shelter",
       "season-01-reward-core-spark"
     ],
-    "filesOnDisk": 0,
+    "filesOnDisk": 4,
     "filesExpected": 4,
     "promptQueue": "docs/prompts/assets/BATCH-01-nano-banana-queue.md",
     "workflow": "Generate → place in public/game-assets/ → node scripts/build-asset-manifest.mjs → processed (not in-app)"
@@ -2287,11 +2287,11 @@
       "relatedEntityId": "act_III"
     },
     {
-      "promptStatus": "prompt-ready",
-      "fileStatus": "needed",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Dark MVP Priority Pack v1. Return place, not base-building UI.",
-      "status": "prompt-ready",
+      "notes": "Dark MVP Priority Pack v1. Return place, not base-building UI. Batch 1 on disk (.webp); not in-app until UI wire.",
+      "status": "processed",
       "id": "camp-base-stage-01-ember-camp",
       "type": "camp-base-scene",
       "category": "campBase",
@@ -2303,14 +2303,15 @@
         "/growth/camp",
         "baseProgressionConfig"
       ],
-      "relatedEntityId": "ember"
+      "relatedEntityId": "ember",
+      "path": "/game-assets/base/base-stage-01-ember-camp.webp"
     },
     {
-      "promptStatus": "prompt-ready",
-      "fileStatus": "needed",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Dark MVP Priority Pack v1. Early shelter — fire more reliable.",
-      "status": "prompt-ready",
+      "notes": "Dark MVP Priority Pack v1. Early shelter — fire more reliable. Batch 1 on disk (.webp); not in-app until UI wire.",
+      "status": "processed",
       "id": "camp-base-stage-02-shelter",
       "type": "camp-base-scene",
       "category": "campBase",
@@ -2322,7 +2323,8 @@
         "/growth/camp",
         "baseProgressionConfig"
       ],
-      "relatedEntityId": "shelter"
+      "relatedEntityId": "shelter",
+      "path": "/game-assets/base/base-stage-02-trail-shelter.webp"
     },
     {
       "promptStatus": "planned",
@@ -2673,11 +2675,11 @@
       "relatedEntityId": "stairs_easier"
     },
     {
-      "promptStatus": "prompt-ready",
-      "fileStatus": "needed",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Dark MVP Priority Pack v1. Small reward for igniting the system.",
-      "status": "prompt-ready",
+      "notes": "Dark MVP Priority Pack v1. Small reward for igniting the system. Batch 1 on disk (.webp); not in-app until UI wire.",
+      "status": "processed",
       "id": "season-01-reward-core-spark",
       "type": "season-reward",
       "category": "seasonRewards",
@@ -2688,7 +2690,8 @@
         "seasonConfig",
         "SeasonDashboardSummary"
       ],
-      "relatedEntityId": "season_01_reward"
+      "relatedEntityId": "season_01_reward",
+      "path": "/game-assets/rewards/season-01-core-spark.webp"
     },
     {
       "promptStatus": "planned",
@@ -2925,11 +2928,11 @@
       "relatedEntityId": "plateau_route_guardian"
     },
     {
-      "promptStatus": "prompt-ready",
-      "fileStatus": "needed",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Dark MVP Priority Pack v1. Route has begun — core light in ruins.",
-      "status": "prompt-ready",
+      "notes": "Dark MVP Priority Pack v1. Route has begun — core light in ruins. Batch 1 on disk (.webp); not in-app until UI wire.",
+      "status": "processed",
       "id": "onboarding-core-awakening",
       "type": "onboarding-hero",
       "category": "onboardingArt",
@@ -2940,7 +2943,8 @@
         "/start",
         "OnboardingGate",
         "StartRoutePage"
-      ]
+      ],
+      "path": "/game-assets/onboarding/core-awakening.webp"
     },
     {
       "promptStatus": "prompt-ready",

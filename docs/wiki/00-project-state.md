@@ -127,7 +127,7 @@
 - **Manifest v2:** категории hero → uiIcons, приоритеты P0–P3, lifecycle statuses
 - **Art Backlog:** [`13-art-backlog.md`](13-art-backlog.md) — P0/P1/P2/P3 без генерации
 - **Dark MVP Visual Priority Pack v1** ✅ — 8 prompt-ready ассетов, Nano Banana briefs в `docs/prompts/assets/`
-- **Dark MVP Asset Generation Batch 1** ✅ — очередь 4 ассетов, `BATCH-01-nano-banana-queue.md`, disk sync; **awaiting-generation** (0/4 files)
+- **Dark MVP Asset Generation Batch 1** ✅ — 4/4 webp на диске, manifest `processed`; **UI wire** (следующий шаг)
 - **Runtime:** `src/game/assetManifest.ts` — `getAssetById`, `getEntityAsset`, `getAssetPlaceholder`
 - **Validation:** `assetManifest.test.ts` — unique ids, paths for in-app, categories
 - **Prompts:** pack files + `_template-nano-banana-asset.md`, `_template-boss.md`
@@ -146,7 +146,7 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Nano Banana Batch 1 generation** (4 assets) → UI wire (later) |
+| Следующий спринт | **Batch 1 UI wire** (4 assets → `in-app`) → Priority Pack batch 2 |
 
 ### Boss Campaign v1 ✅
 
@@ -239,7 +239,7 @@ Asset Registry 2.0 готов: manifest, backlog, naming, placeholders зафи�
 
 ## Следующий приоритет
 
-**Nano Banana Batch 1 generation** (4 assets per queue) → place files → `processed` status → **UI wire** (later) → **Boss Campaign v2** (later).
+**Batch 1 UI wire** (4 processed assets) → `in-app` + `GAME_ASSET_VERSION` bump → **Priority Pack batch 2** → **Boss Campaign v2** (later).
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

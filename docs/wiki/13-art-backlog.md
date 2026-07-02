@@ -46,13 +46,13 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 
 | id | Название | Категория | P | Где используется | Статус | Prompt file | Expected path | Комментарий |
 |----|----------|-----------|---|------------------|--------|-------------|---------------|-------------|
-| `onboarding-core-awakening` | Пробуждение ядра | onboardingArt | P0 | `/start`, OnboardingGate | prompt-ready | [`onboarding-core-awakening.md`](../prompts/assets/onboarding-core-awakening.md) | `public/game-assets/onboarding/core-awakening.webp` | Старт кампании, ядро в руинах |
+| `onboarding-core-awakening` | Пробуждение ядра | onboardingArt | P0 | `/start`, OnboardingGate | processed | [`onboarding-core-awakening.md`](../prompts/assets/onboarding-core-awakening.md) | `public/game-assets/onboarding/core-awakening.webp` | Старт кампании, ядро в руинах |
 | `empty-state-no-entries` | Нет записей | emptyStates | P0 | Dashboard, Measurements | prompt-ready | [`empty-state-no-entries.md`](../prompts/assets/empty-state-no-entries.md) | `public/game-assets/ui/empty-no-entries.webp` | Без стыда — «первые следы» |
 | `body-ability-icon-set-v1` | Иконки способностей ×12 | bodyAbilities | P0 | `/growth/abilities` | prompt-ready | [`body-ability-icon-set-v1.md`](../prompts/assets/body-ability-icon-set-v1.md) | `public/game-assets/abilities/ability-*.webp` | RPG tokens, not medical |
-| `camp-base-stage-01-ember-camp` | Тлеющий костёр | campBase | P0 | BaseDashboardSummary, `/growth/camp` | prompt-ready | [`camp-base-stage-01-ember-camp.md`](../prompts/assets/camp-base-stage-01-ember-camp.md) | `public/game-assets/base/base-stage-01-ember-camp.webp` | Место возвращения |
-| `camp-base-stage-02-shelter` | Укрытие | campBase | P0 | BaseDashboardSummary, `/growth/camp` | prompt-ready | [`camp-base-stage-02-shelter.md`](../prompts/assets/camp-base-stage-02-shelter.md) | `public/game-assets/base/base-stage-02-trail-shelter.webp` | Ранний путь, надёжнее огонь |
+| `camp-base-stage-01-ember-camp` | Тлеющий костёр | campBase | P0 | BaseDashboardSummary, `/growth/camp` | processed | [`camp-base-stage-01-ember-camp.md`](../prompts/assets/camp-base-stage-01-ember-camp.md) | `public/game-assets/base/base-stage-01-ember-camp.webp` | Место возвращения |
+| `camp-base-stage-02-shelter` | Укрытие | campBase | P0 | BaseDashboardSummary, `/growth/camp` | processed | [`camp-base-stage-02-shelter.md`](../prompts/assets/camp-base-stage-02-shelter.md) | `public/game-assets/base/base-stage-02-trail-shelter.webp` | Ранний путь, надёжнее огонь |
 | `plateau-artifact-pass-stone` | Камень перевала | plateauArtifacts | P1 | PlateauDashboardSummary | prompt-ready | [`plateau-artifact-pass-stone.md`](../prompts/assets/plateau-artifact-pass-stone.md) | `public/game-assets/artifacts/plateau-pass-stone.webp` | Удержание, не провал |
-| `season-01-reward-core-spark` | Искра ядра | seasonRewards | P1 | SeasonDashboardSummary | prompt-ready | [`season-01-reward-core-spark.md`](../prompts/assets/season-01-reward-core-spark.md) | `public/game-assets/rewards/season-01-core-spark.webp` | Награда сезона 1 |
+| `season-01-reward-core-spark` | Искра ядра | seasonRewards | P1 | SeasonDashboardSummary | processed | [`season-01-reward-core-spark.md`](../prompts/assets/season-01-reward-core-spark.md) | `public/game-assets/rewards/season-01-core-spark.webp` | Награда сезона 1 |
 | `season-boss-01-empty-day-lord` | Владыка Пустого Дня | seasonBosses | P1 | SeasonTodayCard | prompt-ready | [`season-boss-01-empty-day-lord.md`](../prompts/assets/season-boss-01-empty-day-lord.md) | `public/game-assets/bosses/seasons/season-boss-01-empty-day-lord.webp` | Сопротивление пустому дню |
 
 **Workflow после генерации:** `generated` → `processed` (webp) → `in-app` (файл в `public/`) → bump `GAME_ASSET_VERSION` → optional UI wire.
@@ -60,15 +60,15 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 ### Dark MVP Asset Generation Batch 1 (active)
 
 > **Очередь:** [`BATCH-01-nano-banana-queue.md`](../prompts/assets/BATCH-01-nano-banana-queue.md)
-> **Статус:** `awaiting-generation` — 0/4 файлов на диске.
-> После размещения файлов: `node scripts/build-asset-manifest.mjs` → `processed` (не `in-app`).
+> **Статус:** `files-on-disk` — **4/4** webp в `public/`; manifest `processed` / `fileStatus: ready`; **не in-app** (UI wire отдельно).
+> После UI wire: `in-app` → bump `GAME_ASSET_VERSION`.
 
-| id | P | Prompt | Expected path | Manifest status |
-|----|---|--------|---------------|-----------------|
-| `onboarding-core-awakening` | P0 | [`onboarding-core-awakening.md`](../prompts/assets/onboarding-core-awakening.md) | `public/game-assets/onboarding/core-awakening.webp` | prompt-ready |
-| `camp-base-stage-01-ember-camp` | P0 | [`camp-base-stage-01-ember-camp.md`](../prompts/assets/camp-base-stage-01-ember-camp.md) | `public/game-assets/base/base-stage-01-ember-camp.webp` | prompt-ready |
-| `camp-base-stage-02-shelter` | P0 | [`camp-base-stage-02-shelter.md`](../prompts/assets/camp-base-stage-02-shelter.md) | `public/game-assets/base/base-stage-02-trail-shelter.webp` | prompt-ready |
-| `season-01-reward-core-spark` | P1 | [`season-01-reward-core-spark.md`](../prompts/assets/season-01-reward-core-spark.md) | `public/game-assets/rewards/season-01-core-spark.webp` | prompt-ready |
+| id | P | Prompt | Expected path | Manifest status | fileStatus |
+|----|---|--------|---------------|-----------------|------------|
+| `onboarding-core-awakening` | P0 | [`onboarding-core-awakening.md`](../prompts/assets/onboarding-core-awakening.md) | `public/game-assets/onboarding/core-awakening.webp` | processed | ready |
+| `camp-base-stage-01-ember-camp` | P0 | [`camp-base-stage-01-ember-camp.md`](../prompts/assets/camp-base-stage-01-ember-camp.md) | `public/game-assets/base/base-stage-01-ember-camp.webp` | processed | ready |
+| `camp-base-stage-02-shelter` | P0 | [`camp-base-stage-02-shelter.md`](../prompts/assets/camp-base-stage-02-shelter.md) | `public/game-assets/base/base-stage-02-trail-shelter.webp` | processed | ready |
+| `season-01-reward-core-spark` | P1 | [`season-01-reward-core-spark.md`](../prompts/assets/season-01-reward-core-spark.md) | `public/game-assets/rewards/season-01-core-spark.webp` | processed | ready |
 
 **Не в Batch 1:** empty-state, body abilities, plateau artifact, season boss 1 — следующий дроп Priority Pack.
 
