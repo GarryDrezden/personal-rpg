@@ -13,6 +13,8 @@ import {
 import { calculateRemovedLoad } from '../utils/removedLoadEngine';
 import { detectPlateau } from '../utils/plateauEngine';
 import { getWeeklyStoryHistory } from '../utils/weeklyStoryHistoryEngine';
+import { getBodyAbilityV1Summary } from '../game/bodyAbilities/bodyAbilityV1Engine';
+import { BodyAbilityDashboardSummary } from '../components/bodyAbilities/BodyAbilityDashboardSummary';
 
 export function FreedomPage() {
   const { dailyEntries, measurements, settings } = useAppStore();
@@ -33,6 +35,11 @@ export function FreedomPage() {
     [engineParams],
   );
 
+  const bodyAbilitySummary = useMemo(
+    () => getBodyAbilityV1Summary(engineParams),
+    [engineParams],
+  );
+
   return (
     <div className="space-y-8 pb-4">
       <header>
@@ -44,6 +51,7 @@ export function FreedomPage() {
       </header>
 
       <FreedomScoreCard result={freedomScore} hasData={hasData} />
+      <BodyAbilityDashboardSummary summary={bodyAbilitySummary} />
       <p className="-mt-4 text-sm">
         <Link to="/momentum" className="font-medium text-[var(--app-primary)] hover:underline">
           Посмотреть историю инерции →

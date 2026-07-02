@@ -4,6 +4,7 @@ import { useAppTheme } from '../hooks/useAppTheme';
 import { BODY_ABILITY_BRANCHES } from '../constants/bodyAbilities';
 import { BodyAbilityBranchCard } from '../components/bodyAbilities/BodyAbilityBranchCard';
 import { BodyAbilityCard } from '../components/bodyAbilities/BodyAbilityCard';
+import { BodyAbilityV1Section } from '../components/bodyAbilities/BodyAbilityV1Section';
 import {
   getAllBodyAbilityProgress,
   getBodyAbilityBranchSummaries,
@@ -55,8 +56,8 @@ export function BodyAbilitiesPage({ embedded = false }: { embedded?: boolean }) 
         <header>
           <h1 className="text-2xl font-bold text-[var(--app-text)]">Способности тела</h1>
           <p className="mt-2 max-w-2xl text-sm text-[var(--app-text-muted)]">
-            Это не просто цифры. Каждый устойчивый шаг возвращает персонажу движение, контроль и
-            ясность.
+            Вес важен, но не единственный прогресс. Отмечай способности, которые заметил в жизни —
+            и смотри, как данные поддерживают путь.
           </p>
           <p className="mt-2 text-sm font-medium text-[var(--app-primary)]">
             Открыто способностей: {stats.unlocked} / {stats.total}
@@ -74,6 +75,18 @@ export function BodyAbilitiesPage({ embedded = false }: { embedded?: boolean }) 
           шаги за сегодняшний день.
         </p>
       ) : null}
+
+      <BodyAbilityV1Section />
+
+      <section>
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
+          Прогресс по данным
+        </h2>
+        <p className="mb-4 text-sm text-[var(--app-text-muted)]">
+          Дополнительные способности открываются по шагам, весу и учёту — автоматически, когда
+          порог достигнут.
+        </p>
+      </section>
 
       <section>
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">

@@ -89,12 +89,17 @@
 
 ---
 
-## 5. Body Abilities v1
+## 5. Body Abilities v1 ✅
 
-- [ ] Ability categories
-- [ ] Manual unlock: «Я заметил улучшение»
-- [ ] Automatic hints
-- [ ] Freedom Score integration
+- [x] Ability categories (mobility, endurance, dailyLife, confidence, clothing, recovery)
+- [x] Manual unlock: «Я заметил улучшение»
+- [x] Automatic soft hints from existing data
+- [x] Storage in `settings.bodyAbilityState` (no DB migration)
+- [x] Dashboard + Today hint + Growth/Freedom integration
+- [ ] Deeper Freedom Score integration (v2)
+- [ ] Ability art/icons (later)
+
+**Критерий готовности v1:** пользователь отмечает наблюдения в жизни; hints не звучат как диагноз; прогресс сохраняется remote/local.
 
 ---
 

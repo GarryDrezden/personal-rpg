@@ -40,6 +40,8 @@ import { getSeasonSnapshotWithRecap } from '../game/seasons/seasonEngine';
 import { SeasonDashboardSummary } from '../components/season/SeasonDashboardSummary';
 
 import { getNextBodyAbilities } from '../utils/bodyAbilityEngine';
+import { getBodyAbilityV1Summary } from '../game/bodyAbilities/bodyAbilityV1Engine';
+import { BodyAbilityDashboardSummary } from '../components/bodyAbilities/BodyAbilityDashboardSummary';
 
 import { useAppTheme } from '../hooks/useAppTheme';
 
@@ -206,6 +208,11 @@ export function DashboardPage() {
     [settings, dailyEntries, today],
   );
 
+  const bodyAbilitySummary = useMemo(
+    () => getBodyAbilityV1Summary({ settings, dailyEntries, measurements }),
+    [settings, dailyEntries, measurements],
+  );
+
   const nextAbilities = useMemo(
 
     () => getNextBodyAbilities({ dailyEntries, measurements, settings, limit: 1 }),
@@ -355,6 +362,8 @@ export function DashboardPage() {
       />
 
       <SeasonDashboardSummary season={seasonSnapshot} />
+
+      <BodyAbilityDashboardSummary summary={bodyAbilitySummary} />
 
       <DashboardSummaryStrip />
 

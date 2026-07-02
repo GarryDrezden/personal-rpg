@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-06-06 — Body Abilities v1 (user-observed, not medical)
+
+### Context
+
+Weight alone is insufficient for long-term motivation. Users need to mark subjective improvements («легче завязать обувь») without the app making medical claims.
+
+### Decision
+
+- Body Abilities v1 catalog = user-observed improvements; **manual unlock is primary**.
+- Automatic hints only suggest «возможно, тело уже отвечает» when existing daily/measurement data matches signals — never assert medical outcomes.
+- Persist `bodyAbilityState` in existing `AppSettings` / remote settings — **no DB migration**.
+- Moderate coin/XP reward once per ability via existing sidecar stores.
+
+### Consequences
+
+Metric-based legacy abilities remain as secondary «Прогресс по данным». Deeper Freedom Score weighting deferred.
+
+---
+
 ## 2026-06-06 — Seasons v1 (derived progress, no DB)
 
 ### Context

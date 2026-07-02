@@ -865,30 +865,19 @@ It should reframe stagnation as a defensive phase.
 
 ## Body Abilities Long-Term System
 
-Body abilities are subjective or semi-objective improvements that show the body is becoming freer.
+**Status:** Body Abilities v1 implemented.
 
-Examples:
+Body abilities are **user-observed improvements** — not medical claims. The game may suggest a hint when existing data shows consistency, but the user confirms: «Я заметил улучшение».
 
-- easier to tie shoes;
-- easier to stand up;
-- less breathlessness;
-- easier stairs;
-- easier walking;
-- easier car trips;
-- easier clothes choice;
-- easier household tasks;
-- more comfortable standing;
-- more confidence in movement.
+### v1 (implemented)
 
-Abilities can be unlocked by:
+- Catalog in `src/game/bodyAbilities/bodyAbilityConfig.ts`
+- Manual unlock primary; soft hints from steps, weight, waist, recovery, journal
+- State in `AppSettings.bodyAbilityState` (unlocked ids, unlock records, dismissed hints)
+- UI: Growth `/growth/abilities`, Dashboard summary, optional Today hint
+- Legacy metric-based abilities remain under «Прогресс по данным»
 
-- weight milestones;
-- steps consistency;
-- waist reduction;
-- gym/mobility;
-- manual user confirmation: «Я заметил улучшение».
-
-Design rule:
+### Design rule (unchanged)
 
 Body abilities help the game remain meaningful even when weight progress is slow.
 

@@ -127,7 +127,17 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Body Abilities v1** |
+| Следующий спринт | **Plateau Mode** |
+
+### Body Abilities v1 ✅
+
+- **Каталог наблюдений:** 12 способностей в `src/game/bodyAbilities/bodyAbilityConfig.ts` (mobility, endurance, dailyLife, confidence, clothing, recovery)
+- **Ручное открытие:** «Я заметил улучшение» — основной способ v1; хранение в `settings.bodyAbilityState` (remote via settings API)
+- **Мягкие hints:** сигналы из шагов, веса, талии, recovery, дневника — без медицинских утверждений
+- **UI:** `BodyAbilityV1Section` на `/growth/abilities`, `BodyAbilityDashboardSummary`, `BodyAbilityTodayHint`
+- **Награда:** умеренные coins + XP при первом открытии (once per ability)
+- Legacy metric-based abilities сохранены в секции «Прогресс по данным»
+- DB schema **без изменений**
 
 ### Seasons v1 ✅
 
@@ -171,13 +181,13 @@
 - SPA: `index.html` + assets — OK по HTTP
 - **HTTPS** (`https://fit-rpg.ru`) → 404 nginx — **не блокер**, future hardening после выпуска сертификата
 
-### Готовность к Body Abilities v1
+### Готовность к Plateau Mode
 
-**Можно начинать** после деплоя Seasons v1 на HTTP production.
+**Можно начинать** после деплоя Body Abilities v1 на HTTP production.
 
 ## Следующий приоритет
 
-**Body Abilities v1** → Plateau Mode → Asset Registry 2.0 visual polish.
+**Plateau Mode** → Camp/Base Progression (later) → Boss Campaign (later).
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

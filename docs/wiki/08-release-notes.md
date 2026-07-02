@@ -6,6 +6,7 @@
 
 - **Core Loop Polish v1 — Today:** improved daily Today flow; save reaction card; minimal/recovery day quick path; contextual daily mob; sticky mobile save CTA.
 - **Seasons v1:** 28-day season engine; 13 season configs; quest progress from daily entries; partial success; compact season card on Today and Dashboard.
+- **Body Abilities v1:** body abilities catalog; manual unlock; soft hints; Dashboard summary; Growth/Freedom integration.
 - **Onboarding v1 — Пробуждение ядра:** first-start flow at `/start` for new users (weights, hero, theme, companion, route focus); `OnboardingGate`; remote persist via profile + `customSettingsBackup`; redirect to Today after completion.
 - **Stabilize — Remote Sidecar Persist:** achievements, coins and momentum sync to remote `user_data` via `sidecarSync.ts` (debounced save, hydrate on init, merge guards).
 - Documented long-term campaign structure for 12–24 month body transformation (`03-game-systems.md`: time layers, acts, parallel progress roads, seasons, plateau mode, body abilities, camp/base).
@@ -54,6 +55,17 @@
 ### Removed
 
 - —
+
+---
+
+## Body Abilities v1
+
+- Added body abilities catalog.
+- Added manual unlock flow: «Я заметил улучшение».
+- Added soft ability hints from existing data.
+- Added Dashboard summary.
+- Integrated body abilities into Freedom/Growth area.
+- Kept medical analytics, DB schema changes and new daily metrics out of scope.
 
 ---
 

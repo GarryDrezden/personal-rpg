@@ -131,6 +131,15 @@ export type { AvatarSettings } from './avatar';
 export type { AppThemeId } from './theme';
 export type { HabitConfig, CustomHabitDefinition, BuiltinHabitId, HabitCardColorId } from './habits';
 export type { FirstFocusId, OnboardingDraft, RouteMode } from './onboarding';
+export type {
+  BodyAbilityState,
+  BodyAbilityUnlockRecord,
+  BodyAbilityV1Category,
+  BodyAbilityV1Def,
+  BodyAbilityV1Hint,
+  BodyAbilityV1Item,
+  BodyAbilityV1Summary,
+} from './bodyAbilityV1';
 
 export interface AppSettings {
   defaultCaloriesLimit: number;
@@ -171,6 +180,8 @@ export interface AppSettings {
   routeMode?: RouteMode;
   firstFocus?: FirstFocusId;
   startDate?: string;
+  /** Способности тела v1 — ручные наблюдения пользователя */
+  bodyAbilityState?: import('./bodyAbilityV1').BodyAbilityState;
 }
 
 export interface AppData {

@@ -1,5 +1,6 @@
 import { DEFAULT_APP_SETTINGS, DEFAULT_WEIGHT_GOAL_KG } from '../constants/defaults';
 import type { AppSettings } from '../types';
+import { normalizeBodyAbilityState } from '../game/bodyAbilities/bodyAbilityV1Engine';
 
 /** Синхронизирует weightGoal / targetWeight после загрузки или сохранения через API. */
 export function normalizeAppSettings(
@@ -34,5 +35,8 @@ export function normalizeAppSettings(
     routeMode: settings.routeMode ?? fallback.routeMode,
     firstFocus: settings.firstFocus ?? fallback.firstFocus,
     startDate: settings.startDate ?? fallback.startDate,
+    bodyAbilityState: normalizeBodyAbilityState(
+      settings.bodyAbilityState ?? fallback.bodyAbilityState,
+    ),
   };
 }

@@ -5,6 +5,8 @@ import { useAppStore, emptyDaily } from '../store/appStore';
 import { todayISO, formatDateFull, weekStart, weekDays } from '../utils/dates';
 import { getSeasonSnapshotWithRecap } from '../game/seasons/seasonEngine';
 import { SeasonTodayCard } from '../components/season/SeasonTodayCard';
+import { getTopBodyAbilityV1Hint } from '../game/bodyAbilities/bodyAbilityV1Engine';
+import { BodyAbilityTodayHint } from '../components/bodyAbilities/BodyAbilityTodayHint';
 import { getWeeklySettingsForDate, getDayStatus } from '../utils/points';
 import {
   calculateMomentumHistory,
@@ -44,7 +46,7 @@ import { NutritionRecoverySuggestionCard } from '../components/nutrition/Nutriti
 import { shouldSuggestNutritionRecovery, isNutritionTrackingEnabled } from '../utils/nutritionEngine';
 
 export function TodayPage() {
-  const { dailyEntries, settings, updateDaily, deleteDaily } = useAppStore();
+  const { dailyEntries, measurements, settings, updateDaily, deleteDaily } = useAppStore();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [routeWelcome, setRouteWelcome] = useState(
@@ -274,6 +276,13 @@ export function TodayPage() {
     () => getSeasonSnapshotWithRecap({ settings, dailyEntries, today }),
     [settings, dailyEntries, today],
   );
+  const bodyAbilityHint = useMemo(
+    () =>
+      isEditingToday
+        ? getTopBodyAbilityV1Hint({ settings, dailyEntries, measurements })
+        : null,
+    [isEditingToday, settings, dailyEntries, measurements],
+  );
 
   const patch = (partial: Partial<DailyEntry>) => {
     setEntry((prev) => ({ ...prev, ...partial, date: selectedDate }));
@@ -420,6 +429,8 @@ export function TodayPage() {
       ) : null}
 
       {isEditingToday ? <SeasonTodayCard season={seasonSnapshot} /> : null}
+
+      {bodyAbilityHint ? <BodyAbilityTodayHint hint={bodyAbilityHint} /> : null}
 
       <Card>
         <p className="mb-3 text-sm font-medium text-[var(--app-text)]">День недели</p>
