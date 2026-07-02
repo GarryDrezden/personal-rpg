@@ -50,7 +50,7 @@ function frameClass(layout: ManifestArtLayout): string {
     case 'empty-state':
       return 'w-full h-[7rem] sm:h-[8rem]';
     case 'empty-state-tall':
-      return 'w-full h-[14rem] sm:h-[16rem]';
+      return 'w-full h-[21rem] sm:h-[24rem]';
     case 'artifact-icon':
       return 'h-12 w-12 shrink-0 rounded-lg';
     case 'boss-compact':
