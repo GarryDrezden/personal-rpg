@@ -127,7 +127,14 @@
 |-----------|--------|
 | Средний | **HTTPS / SSL** — сертификат в ispmanager, `secure_cookie => true`, `allowed_origin` → `https://` (future hardening, не блокер) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Boss Campaign** (или Asset Registry 2.0 параллельно) |
+| Следующий спринт | **Boss Campaign v1** (готовность подтверждена QA) |
+
+### Campaign Integration QA v1 ✅
+
+- **Today:** порядок minimal → mob → season → hints → save reaction; body ability hint скрывается при plateau
+- **Dashboard:** секция «Кампания» (2-col grid) вместо четырёх разрозненных карточек
+- **Growth / Freedom:** навигация и copy к способностям и лагерю без дублей
+- **Готовность:** Boss Campaign v1 можно начинать
 
 ### Camp/Base Progression v1 ✅
 
