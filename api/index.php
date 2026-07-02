@@ -6,6 +6,11 @@ require_once __DIR__ . '/lib/routes.php';
 $method = getRequestMethod();
 $uri = getApiRoute();
 
+if ($uri === '/health.php' && $method === 'GET') {
+    require __DIR__ . '/health.php';
+    exit;
+}
+
 if (isAccountsApiRoute($uri)) {
     require_once __DIR__ . '/lib/session.php';
     authSessionStart();

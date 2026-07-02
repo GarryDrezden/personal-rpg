@@ -14,6 +14,7 @@ return [
     'auth' => [
         'cookie_name' => 'pr_session',
         'session_days' => 30,
+        // On HTTPS production: omit or set true; auto-detect also checks HTTPS / X-Forwarded-Proto.
         'secure_cookie' => false,
         'same_site' => 'Lax',
     ],

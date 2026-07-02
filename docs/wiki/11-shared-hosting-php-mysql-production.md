@@ -29,6 +29,21 @@ React (dist/)  →  /api/*  →  api/index.php  →  MySQL
 7. [ ] Открыть `https://fit-rpg.ru/api/health.php` — `"ok": true`
 8. [ ] Регистрация на сайте работает
 
+### Production smoke (auth + user_data + sidecars)
+
+После пунктов 1–8, на production-домене:
+
+1. Register нового пользователя
+2. Today: заполнить и сохранить день
+3. Спровоцировать achievement / coins / momentum (обычный сценарий)
+4. Reload — daily data + sidecars на месте
+5. Logout → `/api/auth/me` = 401
+6. Login → данные восстановились
+7. Другой браузер / инкогнито → login → те же sidecars
+8. Network: нет 401 на `/api/data/*` после login
+
+Если `/api/health.php` или `/api/auth/me` отдают **404 nginx** — проверить FTP deploy, document root и rewrite (Apache `.htaccess` или nginx → PHP).
+
 ---
 
 ## 1. База данных в ispmanager

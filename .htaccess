@@ -2,7 +2,9 @@ RewriteEngine On
 # Pass Authorization header to PHP (Apache / LSAPI)
 RewriteCond %{HTTP:Authorization} .
 RewriteRule ^api/.* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-# API → PHP
+# Health check — direct PHP file (also routed via index.php as fallback)
+RewriteRule ^api/health\.php$ api/health.php [L]
+# API → PHP front controller
 RewriteRule ^api(/.*)?$ api/index.php [L,QSA]
 # SPA: все остальное → index.html
 RewriteCond %{REQUEST_FILENAME} !-f

@@ -125,10 +125,10 @@
 
 | Приоритет | Задача |
 |-----------|--------|
-| Высокий | Стабилизация PHP auth / session на shared hosting |
-| Высокий | Production smoke tests на fit-rpg.ru |
+| **Блокер** | Production smoke на fit-rpg.ru — автопроверка: `404 nginx` (деплой/routing на хостинге) |
+| Средний | Auth/session hardening на shared hosting (cookie Path `/`, Bearer fallback, re-init on login) |
 | Средний | Journey Map v3 — polish (mobile QA, art tuning) |
-| Следующий спринт | **Onboarding + Asset Registry 2.0** (после Stabilize) |
+| Следующий спринт | **Onboarding + Asset Registry 2.0** — после успешного production smoke |
 
 ### Stabilize — sidecar remote persist ✅
 
@@ -136,6 +136,19 @@
 - Hydrate при login/init; debounced save при изменениях
 - Guard: пустой remote не затирает local; hydrate не создаёт save loop
 - Local fallback для legacy/unauthenticated режима
+
+### Stabilize — auth/session (code) ⚠️
+
+- Cookie: `Path=/`, `HttpOnly`, `SameSite=Lax`, auto HTTPS / `X-Forwarded-Proto`
+- Dual auth: cookie `pr_session` + Bearer token в `sessionStorage` (fallback для LSAPI)
+- `/api/auth/me` после login/register; logout очищает cookie + token
+- `AuthenticatedApp`: re-init при `authenticated`, guard от гонки init
+- `/api/health.php`: маршрут через `index.php` + прямой файл в `.htaccess`
+- **Production smoke:** с этой машины `https://fit-rpg.ru` → 404 nginx (SPA/API не отвечают) — нужна ручная проверка после деплоя на хостинге
+
+### Готовность к Onboarding
+
+**Пока рано** — сначала подтвердить production smoke (register, Today save, sidecar reload) на живом домене.
 
 ## Следующий приоритет
 

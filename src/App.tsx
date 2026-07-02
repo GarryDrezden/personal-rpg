@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy, Suspense } from 'react';
+import { useEffect, useRef, useState, lazy, Suspense } from 'react';
 
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 
@@ -162,33 +162,24 @@ function AuthenticatedApp() {
   const { init, loading, error } = useAppStore();
 
   const [sessionReady, setSessionReady] = useState(false);
-
-
+  const initRunRef = useRef(0);
 
   useEffect(() => {
-
     if (!authenticated) {
-
       setSessionReady(false);
-
       return;
-
     }
 
+    const runId = ++initRunRef.current;
+
     void (async () => {
-
       setSessionReady(false);
-
       await init();
-
-      setSessionReady(true);
-
+      if (initRunRef.current === runId) {
+        setSessionReady(true);
+      }
     })();
-
   }, [init, authenticated]);
-
-
-
   if (!authenticated) {
 
     return null;

@@ -54,7 +54,16 @@
 
 ---
 
-## Stabilize — Remote Sidecar Persist
+## Stabilize — Production Smoke / Auth Session
+
+- Code review: cookie `Path=/`, `SameSite=Lax`, HttpOnly, HTTPS auto-detect; Bearer + cookie dual auth.
+- Fixed `/api/health.php` routing (`.htaccess` + `api/index.php` fallback).
+- Logout clears local auth state even if API request fails.
+- `AuthenticatedApp` init race guard; re-init on login via `authenticated` dependency.
+- **Automated production check (2026-06-06):** `https://fit-rpg.ru` returns `404 nginx` for `/`, `/api/health.php`, `/api/auth/me` — deploy/routing blocker; manual smoke on hosting required before Onboarding.
+- Manual smoke checklist: register → Today save → sidecar persist → reload → logout → login → incognito (see [`11-shared-hosting-php-mysql-production.md`](wiki/11-shared-hosting-php-mysql-production.md)).
+
+---
 
 - Connected local sidecar progress to remote `user_data` storage.
 - Achievements, coins and momentum now survive reload/login/device changes.

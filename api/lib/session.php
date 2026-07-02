@@ -111,6 +111,7 @@ function clearSessionCookie(): void
         'httponly' => true,
         'samesite' => $sameSite,
     ]);
+    unset($_COOKIE[$name]);
 }
 
 function createAuthSession(PDO $pdo, int $userId): string
