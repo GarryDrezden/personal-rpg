@@ -2,7 +2,7 @@
   "version": 2,
   "schema": "asset-registry-2.0",
   "updated": "2026-06-06",
-  "gameAssetVersion": "22",
+  "gameAssetVersion": "23",
   "darkMvpVisualPriorityPackV1": {
     "updated": "2026-06-06",
     "description": "Dark MVP Priority Pack v1 — Batch 1 (4 assets) in-app",
@@ -54,7 +54,7 @@
   "bodyAbilityIconsMiniBatch": {
     "updated": "2026-06-06",
     "status": "partial-in-app",
-    "description": "Body Ability Icons mini-batch: group 1 (4/12) in-app on skill board; remaining 8 prompt-ready with emoji fallback. Cozy variant excluded.",
+    "description": "Body Ability Icons mini-batch: groups 1–2 (8/12) in-app on skill board; remaining 4 prompt-ready with glyph fallback. Cozy variant excluded.",
     "setAssetId": "body-ability-icon-set-v1",
     "assetIds": [
       "ability-tie_shoes_easier",
@@ -70,12 +70,12 @@
       "ability-journal_clarity",
       "ability-stairs_easier"
     ],
-    "filesOnDisk": 4,
+    "filesOnDisk": 8,
     "filesExpected": 12,
-    "filesInApp": 4,
+    "filesInApp": 8,
     "inApp": false,
     "promptQueue": "docs/prompts/assets/BODY-ABILITY-ICONS-mini-batch-queue.md",
-    "workflow": "Generate per prompt → public/game-assets/abilities/ → node scripts/build-asset-manifest.mjs → in-app when BODY_ABILITY_ICON_GROUP1_IN_APP (per group)",
+    "workflow": "Generate per prompt → public/game-assets/abilities/ → node scripts/build-asset-manifest.mjs → in-app per group when GROUP1/GROUP2 flags set",
     "source": "src/game/bodyAbilities/bodyAbilityConfig.ts",
     "group1InApp": true,
     "group1AssetIds": [
@@ -83,6 +83,13 @@
       "ability-stand_from_floor",
       "ability-stairs_breath",
       "ability-long_route"
+    ],
+    "group2InApp": true,
+    "group2AssetIds": [
+      "ability-stand_easier",
+      "ability-car_easier",
+      "ability-clothing_freer",
+      "ability-household_easier"
     ]
   },
   "conventions": {
@@ -2611,11 +2618,11 @@
       "path": "/game-assets/abilities/ability-endurance-route.webp"
     },
     {
-      "promptStatus": "prompt-ready",
-      "fileStatus": "needed",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Body Ability Icons mini-batch prepared. UI uses emoji from bodyAbilityConfig until icon ships.",
-      "status": "prompt-ready",
+      "notes": "Body Ability Icons mini-batch prepared. UI uses emoji from bodyAbilityConfig until icon ships. Body ability icon group 2 connected in skill board (.webp).",
+      "status": "in-app",
       "id": "ability-stand_easier",
       "type": "body-ability-icon",
       "category": "bodyAbilities",
@@ -2630,14 +2637,15 @@
         "BodyAbilityDashboardSummary",
         "BodyAbilitiesPage"
       ],
-      "relatedEntityId": "stand_easier"
+      "relatedEntityId": "stand_easier",
+      "path": "/game-assets/abilities/ability-mobility-stand.webp"
     },
     {
-      "promptStatus": "prompt-ready",
-      "fileStatus": "needed",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Body Ability Icons mini-batch prepared. UI uses emoji from bodyAbilityConfig until icon ships.",
-      "status": "prompt-ready",
+      "notes": "Body Ability Icons mini-batch prepared. UI uses emoji from bodyAbilityConfig until icon ships. Body ability icon group 2 connected in skill board (.webp).",
+      "status": "in-app",
       "id": "ability-car_easier",
       "type": "body-ability-icon",
       "category": "bodyAbilities",
@@ -2652,14 +2660,15 @@
         "BodyAbilityDashboardSummary",
         "BodyAbilitiesPage"
       ],
-      "relatedEntityId": "car_easier"
+      "relatedEntityId": "car_easier",
+      "path": "/game-assets/abilities/ability-daily-car.webp"
     },
     {
-      "promptStatus": "prompt-ready",
-      "fileStatus": "needed",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Body Ability Icons mini-batch prepared. UI uses emoji from bodyAbilityConfig until icon ships.",
-      "status": "prompt-ready",
+      "notes": "Body Ability Icons mini-batch prepared. UI uses emoji from bodyAbilityConfig until icon ships. Body ability icon group 2 connected in skill board (.webp).",
+      "status": "in-app",
       "id": "ability-clothing_freer",
       "type": "body-ability-icon",
       "category": "bodyAbilities",
@@ -2674,14 +2683,15 @@
         "BodyAbilityDashboardSummary",
         "BodyAbilitiesPage"
       ],
-      "relatedEntityId": "clothing_freer"
+      "relatedEntityId": "clothing_freer",
+      "path": "/game-assets/abilities/ability-clothing-freer.webp"
     },
     {
-      "promptStatus": "prompt-ready",
-      "fileStatus": "needed",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Body Ability Icons mini-batch prepared. UI uses emoji from bodyAbilityConfig until icon ships.",
-      "status": "prompt-ready",
+      "notes": "Body Ability Icons mini-batch prepared. UI uses emoji from bodyAbilityConfig until icon ships. Body ability icon group 2 connected in skill board (.webp).",
+      "status": "in-app",
       "id": "ability-household_easier",
       "type": "body-ability-icon",
       "category": "bodyAbilities",
@@ -2696,7 +2706,8 @@
         "BodyAbilityDashboardSummary",
         "BodyAbilitiesPage"
       ],
-      "relatedEntityId": "household_easier"
+      "relatedEntityId": "household_easier",
+      "path": "/game-assets/abilities/ability-daily-household.webp"
     },
     {
       "promptStatus": "prompt-ready",

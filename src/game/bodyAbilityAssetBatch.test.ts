@@ -19,6 +19,7 @@ const manifest = JSON.parse(
     filesInApp?: number;
     inApp?: boolean;
     group1InApp?: boolean;
+    group2InApp?: boolean;
     promptQueue: string;
   };
 };
@@ -34,6 +35,22 @@ function manifestAssetId(abilityId: string): string {
 
 const GROUP1_IDS = [...BODY_ABILITY_FEATURED_IDS];
 
+const GROUP2_IDS = [
+  'stand_easier',
+  'car_easier',
+  'clothing_freer',
+  'household_easier',
+] as const;
+
+const IN_APP_IDS = [...GROUP1_IDS, ...GROUP2_IDS];
+
+const GROUP2_TARGET_FILES: Record<(typeof GROUP2_IDS)[number], string> = {
+  stand_easier: 'ability-mobility-stand.webp',
+  car_easier: 'ability-daily-car.webp',
+  clothing_freer: 'ability-clothing-freer.webp',
+  household_easier: 'ability-daily-household.webp',
+};
+
 describe('Body Ability Icons mini-batch', () => {
   it('bodyAbilityConfig defines exactly 12 abilities', () => {
     expect(BODY_ABILITIES_V1).toHaveLength(12);
@@ -42,10 +59,11 @@ describe('Body Ability Icons mini-batch', () => {
   it('manifest defines bodyAbilityIconsMiniBatch metadata', () => {
     const batch = manifest.bodyAbilityIconsMiniBatch;
     expect(batch?.filesExpected).toBe(12);
-    expect(batch?.filesOnDisk).toBe(4);
-    expect(batch?.filesInApp).toBe(4);
+    expect(batch?.filesOnDisk).toBe(8);
+    expect(batch?.filesInApp).toBe(8);
     expect(batch?.inApp).toBe(false);
     expect(batch?.group1InApp).toBe(true);
+    expect(batch?.group2InApp).toBe(true);
     expect(batch?.status).toBe('partial-in-app');
     expect(batch?.setAssetId).toBe('body-ability-icon-set-v1');
     expect(batch?.promptQueue).toBe('docs/prompts/assets/BODY-ABILITY-ICONS-mini-batch-queue.md');
@@ -60,8 +78,8 @@ describe('Body Ability Icons mini-batch', () => {
     expect(getManifestAssetUrl('body-ability-icon-set-v1')).toBeNull();
   });
 
-  for (const abilityId of GROUP1_IDS) {
-    it(`group 1: ${abilityId} is in-app with file on disk`, () => {
+  for (const abilityId of IN_APP_IDS) {
+    it(`in-app: ${abilityId} has manifest art on disk`, () => {
       const assetId = manifestAssetId(abilityId);
       const asset = manifest.assets.find((a) => a.id === assetId);
       expect(asset, assetId).toBeDefined();
@@ -83,12 +101,19 @@ describe('Body Ability Icons mini-batch', () => {
       const url = getManifestAssetUrl(assetId);
       expect(url).not.toBeNull();
       expect(url).toContain('/game-assets/abilities/');
-      expect(url).toContain('?v=22');
+      expect(url).toContain('?v=23');
     });
   }
 
-  for (const ability of BODY_ABILITIES_V1.filter((a) => !GROUP1_IDS.includes(a.id))) {
-    it(`remaining: ${ability.id} has prompt-ready manifest entry and emoji fallback`, () => {
+  for (const abilityId of GROUP2_IDS) {
+    it(`group 2: ${abilityId} maps to expected webp file`, () => {
+      const asset = manifest.assets.find((a) => a.id === manifestAssetId(abilityId));
+      expect(asset?.path).toContain(GROUP2_TARGET_FILES[abilityId]);
+    });
+  }
+
+  for (const ability of BODY_ABILITIES_V1.filter((a) => !IN_APP_IDS.includes(a.id as (typeof IN_APP_IDS)[number]))) {
+    it(`remaining: ${ability.id} has prompt-ready manifest entry and glyph fallback`, () => {
       const assetId = manifestAssetId(ability.id);
       const asset = manifest.assets.find((a) => a.id === assetId);
       expect(asset, assetId).toBeDefined();
@@ -118,7 +143,7 @@ describe('Body Ability Icons mini-batch', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it('manifest validation passes with group 1 body ability files on disk', () => {
+  it('manifest validation passes with groups 1–2 body ability files on disk', () => {
     const issues = validateAssetManifest(manifest, {
       publicRoot,
       fileExists: existsSync,
