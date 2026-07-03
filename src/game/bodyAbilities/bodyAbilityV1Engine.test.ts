@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_APP_SETTINGS } from '../../constants/defaults';
 import type { DailyEntry } from '../../types';
 import { emptyDaily } from '../../store/appStore';
-import { BODY_ABILITIES_V1 } from './bodyAbilityConfig';
+import { getActiveBodyAbilities } from './bodyAbilityConfig';
 import {
   dismissBodyAbilityHint,
   getBodyAbilityV1Hints,
@@ -18,14 +18,27 @@ function entry(date: string, partial: Partial<DailyEntry> = {}): DailyEntry {
 }
 
 describe('body ability v1 catalog', () => {
-  it('has valid abilities with categories and tiers', () => {
-    expect(BODY_ABILITIES_V1.length).toBeGreaterThanOrEqual(10);
-    for (const ability of BODY_ABILITIES_V1) {
+  it('has valid active abilities with categories and tiers', () => {
+    expect(getActiveBodyAbilities()).toHaveLength(12);
+    for (const ability of getActiveBodyAbilities()) {
       expect(ability.id).toBeTruthy();
       expect(ability.title).toBeTruthy();
       expect(ability.hintSignals.length).toBeGreaterThan(0);
       expect(ability.unlockMode).toBe('manual');
+      expect(ability.availability).toBe('active');
     }
+  });
+
+  it('future abilities are not hint-eligible', () => {
+    const entries = Array.from({ length: 6 }, (_, i) =>
+      entry(`2026-06-${String(i + 1).padStart(2, '0')}`, { steps: 6000 }),
+    );
+    const hints = getBodyAbilityV1Hints({
+      dailyEntries: entries,
+      measurements: [],
+      settings: DEFAULT_APP_SETTINGS,
+    });
+    expect(hints.every((h) => h.ability.availability === 'active')).toBe(true);
   });
 });
 
@@ -97,7 +110,8 @@ describe('summary', () => {
       measurements: [],
     });
     expect(summary.unlockedCount).toBe(1);
-    expect(summary.totalCount).toBe(BODY_ABILITIES_V1.length);
+    expect(summary.totalCount).toBe(12);
+    expect(summary.futureCount).toBe(24);
   });
 
   it('safe defaults with no data', () => {
@@ -106,6 +120,7 @@ describe('summary', () => {
       dailyEntries: [],
       measurements: [],
     });
+    expect(items).toHaveLength(12);
     expect(items.every((i) => !i.unlocked)).toBe(true);
     const summary = getBodyAbilityV1Summary({
       settings: DEFAULT_APP_SETTINGS,

@@ -7,7 +7,12 @@ import type {
   BodyAbilityV1Summary,
   BodyAbilityHintSignal,
 } from '../../types/bodyAbilityV1';
-import { BODY_ABILITIES_V1 } from './bodyAbilityConfig';
+import {
+  BODY_ABILITIES_ACTIVE_COUNT,
+  BODY_ABILITIES_FUTURE_COUNT,
+  getActiveBodyAbilities,
+  getBodyAbilityV1ById,
+} from './bodyAbilityConfig';
 import { getWeightLossKg, getWaistLossCm } from '../../utils/bodyAbilityEngine';
 import { getDayMode, isStepsNormalDone } from '../../utils/stepsEngine';
 
@@ -37,6 +42,9 @@ export function unlockBodyAbilityV1(
   abilityId: string,
   source: 'manual' | 'hint' = 'manual',
 ): AppSettings {
+  const ability = getBodyAbilityV1ById(abilityId);
+  if (!ability || ability.availability !== 'active') return settings;
+
   const state = getBodyAbilityState(settings);
   if (state.unlockedAbilityIds.includes(abilityId)) return settings;
 
@@ -126,6 +134,7 @@ function isHintEligible(
     settings: AppSettings;
   },
 ): boolean {
+  if (ability.availability !== 'active') return false;
   if (isBodyAbilityV1Unlocked(params.settings, ability.id)) return false;
   const dismissed = getBodyAbilityState(params.settings).dismissedAbilityHintIds ?? [];
   if (dismissed.includes(ability.id)) return false;
@@ -137,7 +146,9 @@ export function getBodyAbilityV1Hints(params: {
   measurements: MeasurementEntry[];
   settings: AppSettings;
 }): BodyAbilityV1Hint[] {
-  return BODY_ABILITIES_V1.filter((ability) => isHintEligible(ability, params)).map(
+  return getActiveBodyAbilities()
+    .filter((ability) => isHintEligible(ability, params))
+    .map(
     (ability) => ({
       ability,
       message: ability.hint || HINT_MESSAGE,
@@ -164,7 +175,7 @@ export function getBodyAbilityV1Items(params: {
     (state.abilityUnlocks ?? []).map((u) => [u.abilityId, u.unlockedAt]),
   );
 
-  return BODY_ABILITIES_V1.map((ability) => ({
+  return getActiveBodyAbilities().map((ability) => ({
     ability,
     unlocked: state.unlockedAbilityIds.includes(ability.id),
     unlockedAt: unlockMap.get(ability.id),
@@ -174,12 +185,12 @@ export function getBodyAbilityV1Items(params: {
 
 export function getUnlockedBodyAbilitiesV1(settings: AppSettings): BodyAbilityV1Def[] {
   const ids = new Set(getBodyAbilityState(settings).unlockedAbilityIds);
-  return BODY_ABILITIES_V1.filter((a) => ids.has(a.id));
+  return getActiveBodyAbilities().filter((a) => ids.has(a.id));
 }
 
 export function getLockedBodyAbilitiesV1(settings: AppSettings): BodyAbilityV1Def[] {
   const ids = new Set(getBodyAbilityState(settings).unlockedAbilityIds);
-  return BODY_ABILITIES_V1.filter((a) => !ids.has(a.id));
+  return getActiveBodyAbilities().filter((a) => !ids.has(a.id));
 }
 
 export function getBodyAbilityV1Summary(params: {
@@ -196,7 +207,8 @@ export function getBodyAbilityV1Summary(params: {
 
   return {
     unlockedCount,
-    totalCount: BODY_ABILITIES_V1.length,
+    totalCount: BODY_ABILITIES_ACTIVE_COUNT,
+    futureCount: BODY_ABILITIES_FUTURE_COUNT,
     nextSuggested,
     progressLine:
       unlockedCount > 0

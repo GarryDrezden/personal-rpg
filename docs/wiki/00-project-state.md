@@ -186,10 +186,14 @@
 
 ### Body Abilities v1 ✅
 
-- **Каталог наблюдений:** 12 способностей в `src/game/bodyAbilities/bodyAbilityConfig.ts` (mobility, endurance, dailyLife, confidence, clothing, recovery)
-- **Ручное открытие:** «Я заметил улучшение» — основной способ v1; хранение в `settings.bodyAbilityState` (remote via settings API)
-- **Мягкие hints:** сигналы из шагов, веса, талии, recovery, дневника — без медицинских утверждений
-- **UI:** `BodyAbilitySkillBoard` на `/growth/abilities`, `BodyAbilityDashboardSummary`, `BodyAbilityTodayHint`
+- **Roadmap catalog:** 36 entries in `src/game/bodyAbilities/bodyAbilityConfig.ts` — **12 active** (unlock/hints) + **24 future** (text + glyph placeholders)
+- **Progression rings:** `early_signals` (12 active, in-app icons v1), `stable_form` (12 future), `new_mobility` (12 future)
+- **Active v1:** mobility, endurance, dailyLife, confidence, clothing, recovery (+ strength category for future entries)
+- **Ручное открытие:** «Я заметил улучшение» — только для 12 active; future без CTA и без unlock
+- **Мягкие hints:** сигналы из шагов, веса, талии, recovery, дневника — только active abilities
+- **UI:** `BodyAbilitySkillBoard` на `/growth/abilities` — 3 секции (первая раскрыта; future свёрнуты по умолчанию); counters «X из 12 активных / на маршруте / в дальнем пути: 24»
+- **Art:** icon set v1 — 12/12 in-app; future 24 — glyph placeholders only (Body Ability Icons v2/v3 later)
+- **UI:** `BodyAbilityDashboardSummary`, `BodyAbilityTodayHint`
 - **Награда:** умеренные coins + XP при первом открытии (once per ability)
 - Legacy metric-based abilities сохранены в секции «Прогресс по данным»
 - DB schema **без изменений**

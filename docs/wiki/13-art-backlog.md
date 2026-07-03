@@ -106,8 +106,10 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 ## Body Ability Icons v1 — complete (12/12 in-app)
 
 > **Очередь:** [`BODY-ABILITY-ICONS-mini-batch-queue.md`](../prompts/assets/BODY-ABILITY-ICONS-mini-batch-queue.md)  
-> **Источник:** `src/game/bodyAbilities/bodyAbilityConfig.ts` (12 abilities)  
-> **Статус:** **12/12 in-app** on skill board — visual icon set v1 complete. Future Body Abilities may expand to 24–36 (separate roadmap).
+> **Источник:** `src/game/bodyAbilities/bodyAbilityConfig.ts` (36 roadmap entries; 12 with art)  
+> **Статус:** **12/12 in-app** on skill board — visual icon set v1 complete. **24 future** entries — text/glyph only on skill board (no manifest, no art batch yet).
+
+### Active v1 (12) — in-app icons
 
 | Asset id | Ability id | Title | Category | Prompt | Target path | P | Status |
 |----------|------------|-------|----------|--------|-------------|---|--------|
@@ -128,14 +130,23 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 
 **Later (not in scope):** ability icon lightbox / full view.
 
+### Future roadmap (24) — text/glyph placeholders only
+
+> **Ring `stable_form` (12) + `new_mobility` (12)** — visible on skill board as quiet future cards. No manifest entries, no unlock, no art batch. Future: Body Ability Icons v2/v3.
+
+| Ring | Count | Art status | Unlock |
+|------|-------|------------|--------|
+| `stable_form` | 12 | glyph placeholder | future only |
+| `new_mobility` | 12 | glyph placeholder | future only |
+
 ### Body Abilities — RPG skill board UI (2026-06)
 
-- `/growth/abilities` → `BodyAbilitySkillBoard` (large medallion cards, hero + footer).
-- Manifest ids wired via `getBodyAbilityManifestAssetId()`; **glyph safety fallback** when `.webp` absent or not in-app.
-- **12/12 in-app:** full skill board manifest art v1.
-- Future Body Abilities catalog expansion (24–36) is separate from icon set v1.
-- **Polish (2026-06):** larger medallions (128–164px), lighter overlay on in-app art, counters «Открыто / На маршруте / Осталось проявиться», supportive state copy, featured row label.
-- **Polish (2026-06, pass 2):** RPG-style lucide glyph fallback (no emoji); CTA only on discovered/hintActive cards.
+- `/growth/abilities` → `BodyAbilitySkillBoard` — **3 sections** by progression ring.
+- Active 12: large medallion cards, manifest art v1, unlock CTA when hint active.
+- Future 24: compact quiet cards, glyph only, «Дальняя способность. Проявится позже на маршруте.»
+- Counters: «Открыто X из 12 активных / На маршруте / В дальнем пути: 24»
+- Manifest ids wired via `getBodyAbilityManifestAssetId()`; **glyph safety fallback** for placeholders.
+- **12/12 in-app:** active set only; future art = v2/v3 backlog.
 
 ---
 

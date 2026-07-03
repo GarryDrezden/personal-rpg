@@ -18,10 +18,15 @@ type BodyAbilityArtMedallionProps = {
   title: string;
   category: BodyAbilityV1Category;
   visualState: BodyAbilityVisualState;
+  size?: 'default' | 'compact';
+  /** Skip manifest art even if registered (future roadmap placeholders). */
+  forceGlyph?: boolean;
 };
 
-const MEDALLION_SIZE =
+const MEDALLION_SIZE_DEFAULT =
   'h-[128px] w-[128px] min-h-[112px] min-w-[112px] md:h-[148px] md:w-[148px] lg:h-[164px] lg:w-[164px]';
+
+const MEDALLION_SIZE_COMPACT = 'h-[72px] w-[72px] min-h-[64px] min-w-[64px]';
 
 const RING_CLASS: Record<BodyAbilityVisualState, string> = {
   locked: 'ring-2 ring-violet-400/25 shadow-[0_0_28px_rgba(139,92,246,0.12)]',
@@ -52,15 +57,22 @@ export function BodyAbilityArtMedallion({
   title,
   category,
   visualState,
+  size = 'default',
+  forceGlyph = false,
 }: BodyAbilityArtMedallionProps) {
   const assetId = getBodyAbilityManifestAssetId(abilityId);
-  const manifestUrl = getManifestAssetUrl(assetId);
+  const manifestUrl = forceGlyph ? null : getManifestAssetUrl(assetId);
   const ring = RING_CLASS[visualState];
   const CategoryIcon = getBodyAbilityCategoryIcon(category);
+  const medallionSize = size === 'compact' ? MEDALLION_SIZE_COMPACT : MEDALLION_SIZE_DEFAULT;
+  const iconSize =
+    size === 'compact'
+      ? 'h-7 w-7'
+      : 'h-11 w-11 md:h-12 md:w-12 lg:h-[3.25rem] lg:w-[3.25rem]';
 
   return (
     <div
-      className={`relative mx-auto flex shrink-0 items-center justify-center rounded-full ${MEDALLION_SIZE} ${ring}`}
+      className={`relative mx-auto flex shrink-0 items-center justify-center rounded-full ${medallionSize} ${ring}`}
       data-testid={`body-ability-medallion-${abilityId}`}
     >
       {visualState === 'recentlyUnlocked' ? (
@@ -93,10 +105,14 @@ export function BodyAbilityArtMedallion({
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(212,165,55,0.14),transparent_58%)]" />
           <div className="pointer-events-none absolute inset-[18%] rounded-full border border-violet-400/15" />
           <CategoryIcon
-            className={`relative h-11 w-11 md:h-12 md:w-12 lg:h-[3.25rem] lg:w-[3.25rem] ${GLYPH_CLASS[visualState]}`}
+            className={`relative ${iconSize} ${GLYPH_CLASS[visualState]}`}
             strokeWidth={1.35}
           />
-          <span className="pointer-events-none absolute bottom-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-violet-300/35">
+          <span
+            className={`pointer-events-none absolute text-[9px] font-semibold uppercase tracking-[0.2em] text-violet-300/35 ${
+              size === 'compact' ? 'bottom-1.5 text-[7px]' : 'bottom-3'
+            }`}
+          >
             {getBodyAbilityCategoryGlyph(category)}
           </span>
         </div>

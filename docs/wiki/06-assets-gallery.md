@@ -161,6 +161,8 @@ generate → optimize → public/ → build-asset-manifest.mjs → in-app (BATCH
 
 12 иконок Body Abilities v1 — **12/12 in-app** on skill board. Visual icon set v1 complete.
 
+**Roadmap (2026-06):** catalog expanded to **36 entries** on skill board — only these 12 have art. Additional 24 future abilities use glyph placeholders (no manifest entries). Future icon batches: v2/v3.
+
 | Документ | Назначение |
 |----------|------------|
 | [`BODY-ABILITY-ICONS-mini-batch-queue.md`](../prompts/assets/BODY-ABILITY-ICONS-mini-batch-queue.md) | Queue: 12 ability icons |
@@ -191,7 +193,7 @@ generate → optimize → public/ → build-asset-manifest.mjs → in-app (BATCH
 **Visual rule:** RPG artifacts / badges / tokens — **not** medical, hospital, or fitness pictograms.  
 **Format:** 1:1, readable at **48–64px**, dark fantasy + cozy, ember/gold accent.
 
-**UI:** `BodyAbilitySkillBoard`, `/growth/abilities` — all 12 use manifest art; lucide glyph fallback for missing/future assets only.
+**UI:** `BodyAbilitySkillBoard`, `/growth/abilities` — active 12 use manifest art; future 24 use glyph placeholders; 3 progression rings; lucide glyph safety fallback for missing/future assets.
 
 ## Body Abilities — RPG skill board (2026-06)
 

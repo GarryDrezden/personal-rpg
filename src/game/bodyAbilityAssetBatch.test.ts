@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { BODY_ABILITIES_V1 } from './bodyAbilities/bodyAbilityConfig';
+import { BODY_ABILITIES_V1, getActiveBodyAbilities } from './bodyAbilities/bodyAbilityConfig';
 import { BODY_ABILITY_SKILL_BOARD_DISPLAY_ORDER } from './bodyAbilityAssetUi';
 import type { AssetManifestV2 } from './assetManifestTypes';
 import { validateAssetManifest } from './assetManifestValidation';
@@ -58,8 +58,9 @@ const ABILITY_TARGET_FILES: Record<string, string> = {
 };
 
 describe('Body Ability Icons mini-batch', () => {
-  it('bodyAbilityConfig defines exactly 12 abilities', () => {
-    expect(BODY_ABILITIES_V1).toHaveLength(12);
+  it('bodyAbilityConfig defines 36 roadmap entries (12 active + 24 future)', () => {
+    expect(BODY_ABILITIES_V1).toHaveLength(36);
+    expect(getActiveBodyAbilities()).toHaveLength(12);
   });
 
   it('manifest defines bodyAbilityIconsMiniBatch metadata — v1 complete', () => {

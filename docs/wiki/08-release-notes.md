@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Body Abilities roadmap — 36 entries:** expanded catalog to 36 body abilities across 3 progression rings (`early_signals`, `stable_form`, `new_mobility`); only first 12 remain active with unlock/hints and in-app icons v1; additional 24 are future text/glyph placeholders on skill board — distant route orientation, not daily obligations. Future art can ship as Body Ability Icons v2/v3.
 - **Body Ability Icons — visual variety pass:** redesigned `movement_confidence` (confident step / movement compass) and `stairs_breath` (calm breath / air flow after exertion) to reduce duplicate route and stair motifs on the skill board; `long_route` and `stairs_easier` unchanged.
 - **Body Ability Icons v1 complete:** all 12 ability medallions on disk and wired into the RPG Skill Board; `GAME_ASSET_VERSION` 24. Closes visual icon set v1; Body Abilities system may expand later (24–36). Glyph fallback remains as safety for missing assets.
 - **Body Ability Icons — Group 2 in-app:** integrated second 4 body ability icons (`stand_easier`, `car_easier`, `clothing_freer`, `household_easier`) on disk and wired into skill board via manifest `in-app`; `GAME_ASSET_VERSION` 23. **8/12** in-app total; remaining 4 stay prompt-ready with glyph fallback. Set not done.

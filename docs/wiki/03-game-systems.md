@@ -917,11 +917,17 @@ Body abilities are **user-observed improvements** — not medical claims. The ga
 
 ### v1 (implemented)
 
-- Catalog in `src/game/bodyAbilities/bodyAbilityConfig.ts`
-- Manual unlock primary; soft hints from steps, weight, waist, recovery, journal
+- Catalog in `src/game/bodyAbilities/bodyAbilityConfig.ts` — **36 roadmap entries** (12 active + 24 future placeholders)
+- **Active v1 (12):** manual unlock primary; soft hints from steps, weight, waist, recovery, journal; in-app icon set v1
+- **Future roadmap (24):** text + category glyph placeholders; no unlock, no CTA, no manifest art — distant route, not daily obligations
+- **Progression rings:** `early_signals` → `stable_form` → `new_mobility` (UI sections on skill board)
 - State in `AppSettings.bodyAbilityState` (unlocked ids, unlock records, dismissed hints)
-- UI: Growth `/growth/abilities`, Dashboard summary, optional Today hint
+- UI: Growth `/growth/abilities` (3 sections), Dashboard summary (active count only), optional Today hint
 - Legacy metric-based abilities remain under «Прогресс по данным»
+
+### Roadmap expansion (2026-06)
+
+Year-long campaign vision: 36 body abilities as orientation, not a checklist. Only first 12 are playable in v1. Future art can ship as Body Ability Icons v2/v3 without changing unlock engine.
 
 ### Design rule (unchanged)
 

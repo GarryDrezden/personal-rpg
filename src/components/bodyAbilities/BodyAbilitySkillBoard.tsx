@@ -1,58 +1,75 @@
+import { ChevronDown } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useAppStore } from '../../store/appStore';
-import { BODY_ABILITIES_V1 } from '../../game/bodyAbilities/bodyAbilityConfig';
+import {
+  getBodyAbilitiesByRing,
+  getBodyAbilityV1ById,
+} from '../../game/bodyAbilities/bodyAbilityConfig';
 import {
   getBodyAbilityV1Items,
   getBodyAbilityV1Summary,
 } from '../../game/bodyAbilities/bodyAbilityV1Engine';
 import {
+  BODY_ABILITY_SKILL_BOARD_SECTIONS,
   isBodyAbilityFeaturedOnSkillBoard,
   sortBodyAbilitySkillBoardItems,
 } from '../../game/bodyAbilityAssetUi';
 import { useBodyAbilityV1Actions } from '../../hooks/useBodyAbilityV1Actions';
+import { BodyAbilityFutureSkillCard } from './BodyAbilityFutureSkillCard';
 import { BodyAbilitySkillCard } from './BodyAbilitySkillCard';
 
 type BodyAbilitySkillBoardProps = {
   showPageHero?: boolean;
 };
 
+function orderAbilitiesByDisplayOrder(
+  abilities: ReturnType<typeof getBodyAbilitiesByRing>,
+  displayOrder: readonly string[],
+) {
+  const byId = new Map(abilities.map((a) => [a.id, a]));
+  return displayOrder
+    .map((id) => byId.get(id))
+    .filter((a): a is NonNullable<typeof a> => a != null);
+}
+
 export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillBoardProps) {
   const { dailyEntries, measurements, settings } = useAppStore();
   const { unlockAbility } = useBodyAbilityV1Actions();
   const [unlockingId, setUnlockingId] = useState<string | null>(null);
   const [reaction, setReaction] = useState<string | null>(null);
+  const [expandedRings, setExpandedRings] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(
+      BODY_ABILITY_SKILL_BOARD_SECTIONS.map((s) => [s.ring, s.defaultExpanded]),
+    ),
+  );
 
   const params = useMemo(
     () => ({ settings, dailyEntries, measurements }),
     [settings, dailyEntries, measurements],
   );
 
-  const items = useMemo(() => getBodyAbilityV1Items(params), [params]);
+  const activeItems = useMemo(() => getBodyAbilityV1Items(params), [params]);
   const summary = useMemo(() => getBodyAbilityV1Summary(params), [params]);
 
   const onRouteCount = useMemo(
-    () => items.filter((i) => !i.unlocked && i.hintActive).length,
-    [items],
-  );
-  const remainingCount = useMemo(
-    () => items.filter((i) => !i.unlocked && !i.hintActive).length,
-    [items],
+    () => activeItems.filter((i) => !i.unlocked && i.hintActive).length,
+    [activeItems],
   );
 
-  const displayItems = useMemo(
-    () => sortBodyAbilitySkillBoardItems(items),
-    [items],
-  );
+  const activeItemsByRing = useMemo(() => {
+    const earlySection = BODY_ABILITY_SKILL_BOARD_SECTIONS[0];
+    return sortBodyAbilitySkillBoardItems(activeItems, earlySection.displayOrder);
+  }, [activeItems]);
 
   const lastUnlocked = useMemo(() => {
-    const unlocked = items.filter((i) => i.unlocked && i.unlockedAt);
+    const unlocked = activeItems.filter((i) => i.unlocked && i.unlockedAt);
     if (unlocked.length === 0) return null;
     return unlocked.sort((a, b) => (b.unlockedAt ?? '').localeCompare(a.unlockedAt ?? ''))[0];
-  }, [items]);
+  }, [activeItems]);
 
   const handleUnlock = async (abilityId: string) => {
-    const ability = BODY_ABILITIES_V1.find((a) => a.id === abilityId);
-    if (!ability) return;
+    const ability = getBodyAbilityV1ById(abilityId);
+    if (!ability || ability.availability !== 'active') return;
     setUnlockingId(abilityId);
     try {
       const result = await unlockAbility(ability, 'manual');
@@ -60,6 +77,10 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
     } finally {
       setUnlockingId(null);
     }
+  };
+
+  const toggleRing = (ring: string) => {
+    setExpandedRings((prev) => ({ ...prev, [ring]: !prev[ring] }));
   };
 
   return (
@@ -101,54 +122,124 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
         </p>
       ) : null}
 
-      <section>
-        <div className="mb-5 space-y-3">
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--app-text)]">
-              Способности тела
-            </h2>
-            {!showPageHero ? (
-              <>
-                <p className="mt-1.5 text-sm font-medium text-[var(--app-text)]">
-                  Вес стоит, но персонаж не стоит.
-                </p>
-                <p className="mt-1 text-xs leading-relaxed text-[var(--app-text-muted)]">
-                  Способности показывают прогресс, который не всегда виден на весах.
-                </p>
-              </>
-            ) : null}
+      <div className="mb-5 space-y-3">
+        <div>
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--app-text)]">
+            Способности тела
+          </h2>
+          {!showPageHero ? (
+            <>
+              <p className="mt-1.5 text-sm font-medium text-[var(--app-text)]">
+                Вес стоит, но персонаж не стоит.
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-[var(--app-text-muted)]">
+                Способности показывают прогресс, который не всегда виден на весах.
+              </p>
+            </>
+          ) : null}
+        </div>
+
+        <dl className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+          <div className="flex items-baseline gap-1.5">
+            <dt className="text-[var(--app-text-muted)]">Открыто:</dt>
+            <dd className="font-semibold text-[var(--app-text)]">
+              {summary.unlockedCount} из {summary.totalCount} активных
+            </dd>
           </div>
+          <div className="flex items-baseline gap-1.5">
+            <dt className="text-[var(--app-text-muted)]">На маршруте:</dt>
+            <dd className="font-semibold text-[var(--app-gold)]">{onRouteCount}</dd>
+          </div>
+          <div className="flex items-baseline gap-1.5">
+            <dt className="text-[var(--app-text-muted)]">В дальнем пути:</dt>
+            <dd className="font-semibold text-violet-200/60">{summary.futureCount}</dd>
+          </div>
+        </dl>
+      </div>
 
-          <dl className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
-            <div className="flex items-baseline gap-1.5">
-              <dt className="text-[var(--app-text-muted)]">Открыто:</dt>
-              <dd className="font-semibold text-[var(--app-text)]">
-                {summary.unlockedCount} из {summary.totalCount}
-              </dd>
-            </div>
-            <div className="flex items-baseline gap-1.5">
-              <dt className="text-[var(--app-text-muted)]">На маршруте:</dt>
-              <dd className="font-semibold text-[var(--app-gold)]">{onRouteCount}</dd>
-            </div>
-            <div className="flex items-baseline gap-1.5">
-              <dt className="text-[var(--app-text-muted)]">Осталось проявиться:</dt>
-              <dd className="font-semibold text-violet-200/80">{remainingCount}</dd>
-            </div>
-          </dl>
-        </div>
+      <div className="space-y-6">
+        {BODY_ABILITY_SKILL_BOARD_SECTIONS.map((section) => {
+          const isFuture = section.ring !== 'early_signals';
+          const expanded = expandedRings[section.ring] ?? section.defaultExpanded;
+          const futureAbilities = isFuture
+            ? orderAbilitiesByDisplayOrder(
+                getBodyAbilitiesByRing(section.ring),
+                section.displayOrder,
+              )
+            : [];
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 auto-rows-fr">
-          {displayItems.map((item) => (
-            <BodyAbilitySkillCard
-              key={item.ability.id}
-              item={item}
-              featured={isBodyAbilityFeaturedOnSkillBoard(item.ability.id)}
-              unlocking={unlockingId === item.ability.id}
-              onUnlock={() => void handleUnlock(item.ability.id)}
-            />
-          ))}
-        </div>
-      </section>
+          return (
+            <section
+              key={section.ring}
+              data-testid={`body-ability-ring-${section.ring}`}
+              className={
+                isFuture
+                  ? 'rounded-2xl border border-violet-500/12 bg-[#0a0810]/40 px-4 py-4 sm:px-5'
+                  : undefined
+              }
+            >
+              <div className="mb-4">
+                {isFuture ? (
+                  <button
+                    type="button"
+                    onClick={() => toggleRing(section.ring)}
+                    className="flex w-full items-start justify-between gap-3 text-left"
+                    aria-expanded={expanded}
+                  >
+                    <div>
+                      <h3 className="text-sm font-semibold uppercase tracking-widest text-violet-200/55">
+                        {section.title}
+                      </h3>
+                      <p className="mt-1 max-w-2xl text-xs leading-relaxed text-[var(--app-text-muted)]/50">
+                        {section.subtitle}
+                      </p>
+                    </div>
+                    <ChevronDown
+                      className={`mt-0.5 h-4 w-4 shrink-0 text-violet-300/35 transition-transform ${
+                        expanded ? 'rotate-180' : ''
+                      }`}
+                      aria-hidden
+                    />
+                  </button>
+                ) : (
+                  <>
+                    <h3 className="text-sm font-semibold uppercase tracking-widest text-[var(--app-text)]">
+                      {section.title}
+                    </h3>
+                    <p className="mt-1 max-w-2xl text-xs leading-relaxed text-[var(--app-text-muted)]">
+                      {section.subtitle}
+                    </p>
+                  </>
+                )}
+              </div>
+
+              {(!isFuture || expanded) && (
+                <div
+                  className={
+                    isFuture
+                      ? 'grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 auto-rows-fr'
+                      : 'grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 auto-rows-fr'
+                  }
+                >
+                  {isFuture
+                    ? futureAbilities.map((ability) => (
+                        <BodyAbilityFutureSkillCard key={ability.id} ability={ability} />
+                      ))
+                    : activeItemsByRing.map((item) => (
+                        <BodyAbilitySkillCard
+                          key={item.ability.id}
+                          item={item}
+                          featured={isBodyAbilityFeaturedOnSkillBoard(item.ability.id)}
+                          unlocking={unlockingId === item.ability.id}
+                          onUnlock={() => void handleUnlock(item.ability.id)}
+                        />
+                      ))}
+                </div>
+              )}
+            </section>
+          );
+        })}
+      </div>
 
       <footer className="rounded-2xl border border-violet-500/20 bg-gradient-to-br from-[#101522]/80 via-[#0e0c16]/90 to-[#08070f] px-5 py-5 sm:px-6">
         <h2 className="text-lg font-semibold text-[var(--app-text)]">Тело — твой фундамент</h2>
@@ -164,7 +255,7 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
                 Открыто
               </dt>
               <dd className="mt-0.5 text-sm font-semibold text-[var(--app-text)]">
-                {summary.unlockedCount} из {summary.totalCount}
+                {summary.unlockedCount} из {summary.totalCount} активных
               </dd>
             </div>
             {summary.nextSuggested ? (

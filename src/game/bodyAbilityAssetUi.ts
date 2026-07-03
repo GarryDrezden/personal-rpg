@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
-import { Compass, Footprints, Home, Moon, Route, Shirt } from 'lucide-react';
-import type { BodyAbilityV1Category } from '../types/bodyAbilityV1';
+import { Compass, Dumbbell, Footprints, Home, Moon, Route, Shirt } from 'lucide-react';
+import type { BodyAbilityProgressionRing, BodyAbilityV1Category } from '../types/bodyAbilityV1';
+import { BODY_ABILITY_PROGRESSION_RING_LABELS } from './bodyAbilities/bodyAbilityConfig';
 
 /** Manifest asset id for a body ability v1 entry (`ability-{entityId}`). */
 export function getBodyAbilityManifestAssetId(abilityId: string): string {
@@ -31,18 +32,77 @@ export const BODY_ABILITY_SKILL_BOARD_DISPLAY_ORDER = [
   'stairs_easier',
 ] as const;
 
-const SKILL_BOARD_ORDER_INDEX = new Map<string, number>(
-  BODY_ABILITY_SKILL_BOARD_DISPLAY_ORDER.map((id, index) => [id, index]),
-);
+/** Stable form ring — future roadmap display order. */
+export const BODY_ABILITY_STABLE_FORM_DISPLAY_ORDER = [
+  'walk_without_planning',
+  'longer_standing_tasks',
+  'less_joint_pressure',
+  'smoother_morning_start',
+  'better_pace_control',
+  'less_after_walk_fatigue',
+  'easier_shower_routine',
+  'easier_bag_carrying',
+  'better_balance',
+  'calmer_evening_body',
+  'easier_public_routes',
+  'waist_freedom',
+] as const;
 
-/** Sort skill board items by explicit display order; unknown ids trail config order. */
+/** New mobility ring — future roadmap display order. */
+export const BODY_ABILITY_NEW_MOBILITY_DISPLAY_ORDER = [
+  'choose_longer_route',
+  'stairs_without_pause',
+  'active_day_capacity',
+  'travel_comfort',
+  'clothing_choice_confidence',
+  'body_trust',
+  'movement_without_shame',
+  'recovery_self_control',
+  'stable_week_body',
+  'strength_in_daily_life',
+  'free_movement_identity',
+  'new_body_baseline',
+] as const;
+
+export type BodyAbilitySkillBoardSection = {
+  ring: BodyAbilityProgressionRing;
+  title: string;
+  subtitle: string;
+  displayOrder: readonly string[];
+  defaultExpanded: boolean;
+};
+
+export const BODY_ABILITY_SKILL_BOARD_SECTIONS: BodyAbilitySkillBoardSection[] = [
+  {
+    ring: 'early_signals',
+    ...BODY_ABILITY_PROGRESSION_RING_LABELS.early_signals,
+    displayOrder: BODY_ABILITY_SKILL_BOARD_DISPLAY_ORDER,
+    defaultExpanded: true,
+  },
+  {
+    ring: 'stable_form',
+    ...BODY_ABILITY_PROGRESSION_RING_LABELS.stable_form,
+    displayOrder: BODY_ABILITY_STABLE_FORM_DISPLAY_ORDER,
+    defaultExpanded: false,
+  },
+  {
+    ring: 'new_mobility',
+    ...BODY_ABILITY_PROGRESSION_RING_LABELS.new_mobility,
+    displayOrder: BODY_ABILITY_NEW_MOBILITY_DISPLAY_ORDER,
+    defaultExpanded: false,
+  },
+];
+
+/** Sort skill board items by explicit display order within a section. */
 export function sortBodyAbilitySkillBoardItems<T extends { ability: { id: string } }>(
   items: T[],
+  displayOrder: readonly string[] = BODY_ABILITY_SKILL_BOARD_DISPLAY_ORDER,
 ): T[] {
+  const orderIndex = new Map(displayOrder.map((id, index) => [id, index]));
   return [...items].sort(
     (a, b) =>
-      (SKILL_BOARD_ORDER_INDEX.get(a.ability.id) ?? Number.MAX_SAFE_INTEGER) -
-      (SKILL_BOARD_ORDER_INDEX.get(b.ability.id) ?? Number.MAX_SAFE_INTEGER),
+      (orderIndex.get(a.ability.id) ?? Number.MAX_SAFE_INTEGER) -
+      (orderIndex.get(b.ability.id) ?? Number.MAX_SAFE_INTEGER),
   );
 }
 
@@ -57,6 +117,7 @@ const CATEGORY_GLYPH: Record<BodyAbilityV1Category, string> = {
   confidence: '✦',
   clothing: '◆',
   recovery: '◉',
+  strength: '⬡',
 };
 
 const CATEGORY_ROAD: Record<BodyAbilityV1Category, string> = {
@@ -66,6 +127,7 @@ const CATEGORY_ROAD: Record<BodyAbilityV1Category, string> = {
   confidence: 'confidence',
   clothing: 'clothing',
   recovery: 'recovery',
+  strength: 'strength',
 };
 
 /** Monochrome RPG sigils for skill board when manifest art is absent. */
@@ -76,6 +138,7 @@ export const BODY_ABILITY_CATEGORY_ICON: Record<BodyAbilityV1Category, LucideIco
   clothing: Shirt,
   confidence: Compass,
   recovery: Moon,
+  strength: Dumbbell,
 };
 
 export function getBodyAbilityCategoryIcon(category: BodyAbilityV1Category): LucideIcon {

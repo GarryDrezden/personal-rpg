@@ -21,7 +21,7 @@ export function BodyAbilityDashboardSummary({
             Способности тела
           </p>
           <p className="mt-1 text-sm font-medium text-[var(--app-text)]">
-            {summary.unlockedCount} открыто из {summary.totalCount}
+            {summary.unlockedCount} открыто из {summary.totalCount} активных
           </p>
         </div>
         <Link

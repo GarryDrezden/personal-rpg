@@ -4,9 +4,19 @@ export type BodyAbilityV1Category =
   | 'dailyLife'
   | 'confidence'
   | 'clothing'
-  | 'recovery';
+  | 'recovery'
+  | 'strength';
 
 export type BodyAbilityV1Tier = 'early' | 'middle' | 'late';
+
+export type BodyAbilityProgressionRing =
+  | 'early_signals'
+  | 'stable_form'
+  | 'new_mobility';
+
+export type BodyAbilityAvailability = 'active' | 'future';
+
+export type BodyAbilityArtStatus = 'inApp' | 'placeholder';
 
 export type BodyAbilityV1UnlockMode = 'manual';
 
@@ -26,6 +36,9 @@ export type BodyAbilityV1Def = {
   description: string;
   category: BodyAbilityV1Category;
   tier: BodyAbilityV1Tier;
+  progressionRing: BodyAbilityProgressionRing;
+  availability: BodyAbilityAvailability;
+  artStatus: BodyAbilityArtStatus;
   unlockMode: BodyAbilityV1UnlockMode;
   hint: string;
   hintSignals: BodyAbilityHintSignal[];
@@ -59,7 +72,9 @@ export type BodyAbilityV1Hint = {
 
 export type BodyAbilityV1Summary = {
   unlockedCount: number;
+  /** Active v1 abilities only (12). */
   totalCount: number;
+  futureCount: number;
   nextSuggested: BodyAbilityV1Def | null;
   progressLine: string;
 };
