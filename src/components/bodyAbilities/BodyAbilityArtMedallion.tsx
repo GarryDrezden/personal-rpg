@@ -2,6 +2,7 @@ import type { BodyAbilityV1Category } from '../../types/bodyAbilityV1';
 import { getManifestAssetUrl } from '../../game/assetManifest';
 import {
   getBodyAbilityCategoryGlyph,
+  getBodyAbilityCategoryIcon,
   getBodyAbilityManifestAssetId,
 } from '../../game/bodyAbilityAssetUi';
 import { ManifestArtScene } from '../game/ManifestArtScene';
@@ -15,7 +16,6 @@ export type BodyAbilityVisualState =
 type BodyAbilityArtMedallionProps = {
   abilityId: string;
   title: string;
-  emoji: string;
   category: BodyAbilityV1Category;
   visualState: BodyAbilityVisualState;
 };
@@ -40,17 +40,23 @@ const PANEL_CLASS: Record<BodyAbilityVisualState, string> = {
   recentlyUnlocked: 'from-[#18120a]/90 via-[#14101c] to-[#0a0810]',
 };
 
+const GLYPH_CLASS: Record<BodyAbilityVisualState, string> = {
+  locked: 'text-violet-300/45 drop-shadow-[0_0_10px_rgba(139,92,246,0.2)]',
+  discovered: 'text-[var(--app-gold)]/65 drop-shadow-[0_0_14px_rgba(212,165,55,0.28)]',
+  unlocked: 'text-emerald-300/60 drop-shadow-[0_0_12px_rgba(52,211,153,0.22)]',
+  recentlyUnlocked: 'text-[var(--app-gold)]/75 drop-shadow-[0_0_16px_rgba(212,165,55,0.35)]',
+};
+
 export function BodyAbilityArtMedallion({
   abilityId,
   title,
-  emoji,
   category,
   visualState,
 }: BodyAbilityArtMedallionProps) {
   const assetId = getBodyAbilityManifestAssetId(abilityId);
   const manifestUrl = getManifestAssetUrl(assetId);
   const ring = RING_CLASS[visualState];
-  const fallbackDimmed = visualState === 'locked';
+  const CategoryIcon = getBodyAbilityCategoryIcon(category);
 
   return (
     <div
@@ -81,16 +87,16 @@ export function BodyAbilityArtMedallion({
         />
       ) : (
         <div
-          className={`relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border border-violet-500/20 bg-gradient-to-br ${PANEL_CLASS[visualState]}`}
+          className={`body-ability-glyph-fallback relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border border-violet-500/25 bg-gradient-to-br ${PANEL_CLASS[visualState]}`}
           aria-hidden
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(212,165,55,0.1),transparent_62%)]" />
-          <span
-            className={`text-5xl md:text-6xl ${fallbackDimmed ? 'opacity-55 saturate-75' : 'opacity-90'}`}
-          >
-            {emoji}
-          </span>
-          <span className="pointer-events-none absolute bottom-3 text-[10px] font-semibold uppercase tracking-widest text-violet-300/40">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(212,165,55,0.14),transparent_58%)]" />
+          <div className="pointer-events-none absolute inset-[18%] rounded-full border border-violet-400/15" />
+          <CategoryIcon
+            className={`relative h-11 w-11 md:h-12 md:w-12 lg:h-[3.25rem] lg:w-[3.25rem] ${GLYPH_CLASS[visualState]}`}
+            strokeWidth={1.35}
+          />
+          <span className="pointer-events-none absolute bottom-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-violet-300/35">
             {getBodyAbilityCategoryGlyph(category)}
           </span>
         </div>

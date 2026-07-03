@@ -1,3 +1,5 @@
+import type { LucideIcon } from 'lucide-react';
+import { Compass, Footprints, Home, Moon, Route, Shirt } from 'lucide-react';
 import type { BodyAbilityV1Category } from '../types/bodyAbilityV1';
 
 /** Manifest asset id for a body ability v1 entry (`ability-{entityId}`). */
@@ -30,6 +32,20 @@ const CATEGORY_ROAD: Record<BodyAbilityV1Category, string> = {
   clothing: 'clothing',
   recovery: 'recovery',
 };
+
+/** Monochrome RPG sigils for skill board when manifest art is absent. */
+export const BODY_ABILITY_CATEGORY_ICON: Record<BodyAbilityV1Category, LucideIcon> = {
+  mobility: Footprints,
+  endurance: Route,
+  dailyLife: Home,
+  clothing: Shirt,
+  confidence: Compass,
+  recovery: Moon,
+};
+
+export function getBodyAbilityCategoryIcon(category: BodyAbilityV1Category): LucideIcon {
+  return BODY_ABILITY_CATEGORY_ICON[category];
+}
 
 export function getBodyAbilityCategoryGlyph(category: BodyAbilityV1Category): string {
   return CATEGORY_GLYPH[category];

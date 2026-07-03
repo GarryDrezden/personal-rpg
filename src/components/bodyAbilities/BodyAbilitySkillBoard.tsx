@@ -144,7 +144,7 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
 
         <div className="space-y-6">
           <div>
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--app-gold)]/75">
+            <p className="body-ability-group-label mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--app-gold)]/88">
               Первые сигналы тела
             </p>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

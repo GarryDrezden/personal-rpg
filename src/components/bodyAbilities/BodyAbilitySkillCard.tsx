@@ -35,13 +35,6 @@ const CARD_SHELL: Record<BodyAbilityVisualState, string> = {
     'border-[var(--app-gold)]/40 bg-gradient-to-br from-[#18120a]/35 via-[#14101f]/95 to-[#0a0810]/95 shadow-[0_0_28px_rgba(212,165,55,0.14)] ring-1 ring-[var(--app-gold)]/25',
 };
 
-const STATUS_CAPTION: Record<BodyAbilityVisualState, string> = {
-  locked: 'Тело ещё не подало сигнал — это нормально.',
-  discovered: 'Сигнал тела замечен на маршруте.',
-  unlocked: 'Возвращение возможности — персонаж продолжает путь.',
-  recentlyUnlocked: 'Тело отвечает — свежий знак свободы.',
-};
-
 function progressPercent(state: BodyAbilityVisualState): number {
   switch (state) {
     case 'locked':
@@ -52,6 +45,55 @@ function progressPercent(state: BodyAbilityVisualState): number {
     case 'recentlyUnlocked':
       return 100;
   }
+}
+
+function CardAction({
+  visualState,
+  hintActive,
+  unlocked,
+  unlocking,
+  onUnlock,
+}: {
+  visualState: BodyAbilityVisualState;
+  hintActive: boolean;
+  unlocked: boolean;
+  unlocking: boolean;
+  onUnlock: () => void;
+}) {
+  if (visualState === 'recentlyUnlocked') {
+    return (
+      <p className="mt-2 text-center text-[11px] font-medium text-[var(--app-gold)]/90">
+        Недавно открыто.
+      </p>
+    );
+  }
+
+  if (visualState === 'unlocked') {
+    return (
+      <p className="mt-2 text-center text-[11px] font-medium text-emerald-400/85">
+        Способность открыта.
+      </p>
+    );
+  }
+
+  if (hintActive && !unlocked) {
+    return (
+      <button
+        type="button"
+        disabled={unlocking}
+        onClick={onUnlock}
+        className="mt-2 w-full rounded-xl border border-[var(--app-primary)]/35 bg-[var(--app-primary-soft)]/35 px-4 py-2.5 text-sm font-semibold text-[var(--app-text)] hover:brightness-105 disabled:opacity-50"
+      >
+        Я заметил улучшение
+      </button>
+    );
+  }
+
+  return (
+    <p className="mt-2 text-center text-[11px] leading-snug text-[var(--app-text-muted)]/60">
+      Способность ещё проявится на маршруте.
+    </p>
+  );
 }
 
 export function BodyAbilitySkillCard({
@@ -65,26 +107,26 @@ export function BodyAbilitySkillCard({
   const categoryMeta = BODY_ABILITY_V1_CATEGORIES[ability.category];
   const statusLabel = STATUS_LABEL[visualState];
   const progress = progressPercent(visualState);
+  const showHint = hintActive && !unlocked;
 
   return (
     <article
       data-testid={`body-ability-v1-${ability.id}`}
-      className={`relative flex flex-col overflow-hidden rounded-2xl border px-4 py-4 sm:px-5 sm:py-5 ${CARD_SHELL[visualState]} ${
+      className={`relative flex flex-col overflow-hidden rounded-2xl border px-4 py-3.5 sm:px-4 sm:py-4 ${CARD_SHELL[visualState]} ${
         featured ? 'ring-1 ring-[var(--app-gold)]/12' : ''
       } ${visualState === 'recentlyUnlocked' ? 'motion-safe:animate-[body-ability-glow_3s_ease-in-out_infinite]' : ''}`}
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--app-gold)]/20 to-transparent" />
 
       <span className="sr-only">{categoryMeta.label}</span>
-      <span className="absolute right-3 top-3 text-[9px] font-medium uppercase tracking-wider text-violet-300/35">
+      <span className="absolute right-3 top-2.5 text-[9px] font-medium uppercase tracking-wider text-violet-300/35">
         {getBodyAbilityCategoryRoad(ability.category)}
       </span>
 
-      <div className="mb-3 flex flex-col items-center text-center">
+      <div className="mb-2 flex flex-col items-center text-center">
         <BodyAbilityArtMedallion
           abilityId={ability.id}
           title={ability.title}
-          emoji={ability.icon}
           category={ability.category}
           visualState={visualState}
         />
@@ -95,7 +137,7 @@ export function BodyAbilitySkillCard({
       </h3>
 
       <p
-        className={`mt-1.5 text-center text-[11px] font-medium tracking-wide ${
+        className={`mt-1 text-center text-[11px] font-medium tracking-wide ${
           visualState === 'discovered'
             ? 'text-[var(--app-gold)]/85'
             : visualState === 'unlocked' || visualState === 'recentlyUnlocked'
@@ -108,26 +150,22 @@ export function BodyAbilitySkillCard({
         {statusLabel}
       </p>
 
-      <p className="mt-2 line-clamp-3 text-center text-sm leading-snug text-[var(--app-text-muted)]">
+      <p className="mt-1.5 line-clamp-2 text-center text-sm leading-snug text-[var(--app-text-muted)]">
         {ability.description}
       </p>
 
-      {hintActive && !unlocked ? (
-        <p className="mt-2 text-center text-[11px] leading-relaxed text-[var(--app-gold)]/80">
+      {showHint ? (
+        <p className="mt-1 line-clamp-2 text-center text-[10px] leading-snug text-[var(--app-gold)]/75">
           {ability.hint}
         </p>
-      ) : (
-        <p className="mt-2 text-center text-[10px] leading-relaxed text-[var(--app-text-muted)]/55">
-          {STATUS_CAPTION[visualState]}
-        </p>
-      )}
+      ) : null}
 
-      <p className="mt-1 text-center text-[10px] text-[var(--app-text-muted)]/40">
+      <p className="mt-1 text-center text-[10px] text-[var(--app-text-muted)]/35">
         {BODY_ABILITY_V1_TIER_LABELS[ability.tier]}
       </p>
 
-      <div className="mt-3">
-        <div className="h-1 overflow-hidden rounded-full bg-[var(--app-bg-soft)]/60">
+      <div className="mt-2">
+        <div className="h-0.5 overflow-hidden rounded-full bg-[var(--app-bg-soft)]/60">
           <div
             className={`h-full rounded-full transition-all duration-500 ${
               visualState === 'locked'
@@ -141,20 +179,13 @@ export function BodyAbilitySkillCard({
         </div>
       </div>
 
-      {!unlocked ? (
-        <button
-          type="button"
-          disabled={unlocking}
-          onClick={onUnlock}
-          className="mt-3 w-full rounded-xl border border-[var(--app-primary)]/35 bg-[var(--app-primary-soft)]/35 px-4 py-2.5 text-sm font-semibold text-[var(--app-text)] hover:brightness-105 disabled:opacity-50"
-        >
-          Я заметил улучшение
-        </button>
-      ) : (
-        <p className="mt-3 text-center text-[11px] font-medium text-emerald-400/80">
-          Тело отвечает — персонаж продолжает путь.
-        </p>
-      )}
+      <CardAction
+        visualState={visualState}
+        hintActive={hintActive}
+        unlocked={unlocked}
+        unlocking={unlocking}
+        onUnlock={onUnlock}
+      />
     </article>
   );
 }
