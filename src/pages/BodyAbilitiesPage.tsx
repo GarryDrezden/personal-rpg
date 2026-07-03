@@ -56,8 +56,8 @@ export function BodyAbilitiesPage({ embedded = false }: { embedded?: boolean }) 
   const unlockedLegacyCount = allProgress.filter((p) => p.unlocked).length;
 
   return (
-    <div className="space-y-10 pb-4">
-      <BodyAbilitySkillBoard showPageHero={!embedded} />
+    <div className="space-y-10 pb-4" data-testid="growth-abilities-page">
+      <BodyAbilitySkillBoard embedded={embedded} showPageHero={!embedded} />
 
       {plateauSnapshot.mode !== 'none' && unlockedLegacyCount > 0 ? (
         <p className="rounded-xl border border-[var(--app-gold)]/20 bg-[var(--app-primary-soft)]/30 px-4 py-3 text-sm text-[var(--app-text-muted)]">

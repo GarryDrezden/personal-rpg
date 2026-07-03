@@ -65,6 +65,16 @@ Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 - Compact cards when locked with zero progress; avoid shame language
 - Achievement unlock logic unchanged; UI copy in `src/components/achievements/achievementsUi.ts`
 
+## Growth Hub integration (2026-06)
+
+All `/growth/:tab` siblings share dark violet/gold panel language via `src/components/growth/growthHubUi.ts`:
+
+- Hero eyebrows + title per tab (Навыки героя, Способности тела, Лагерь, Награды героя, Коллекция героя, Испытания недели)
+- Tab bar: compact gold-active pills, horizontal scroll on mobile
+- Trials UI uses **угроза / испытание** — not campaign boss language
+- Empty states: soft copy («лавка пока пуста», «в пути»), not «нет данных»
+- Mechanics unchanged across polish passes
+
 ## Journey Map rules
 
 Карта возвращения тела (`/journey`) — **вертикальная хроника пути (v3)**, не горизонтальная карта-мир.

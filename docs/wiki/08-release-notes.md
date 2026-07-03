@@ -4,6 +4,7 @@
 
 ### Added
 
+- Completed Growth Hub integration QA pass after Skills, Body Abilities, Camp, Rewards, Achievements, and Trials polish.
 - Polished Achievements tab into a hero trophy collection with clearer sections, softer locked states, and less checklist pressure.
 - Clarified Growth Trials terminology: weekly challenges are now presented as weekly threats, avoiding conflict with campaign/codex bosses.
 - **Growth Trials tab — weekly threat board:** polished `/growth/trials` into codex-style weekly boss archive; featured active threat panel; softer stat labels; compact fog callouts for future bosses. Weekly boss logic unchanged.

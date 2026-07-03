@@ -5,6 +5,7 @@ import { SKILLS } from '../constants/skills';
 import { SkillCard } from '../components/skills/SkillCard';
 import { SKILL_XP_CODEX_ROWS } from '../components/skills/skillUi';
 import { SkillRoadInlineIcon } from '../components/skills/SkillRoadInlineIcon';
+import { GROWTH_HUB_PANEL, GROWTH_HUB_RADIAL_GOLD, GROWTH_HUB_EYEBROW, GROWTH_HUB_SUMMARY_PANEL } from '../components/growth/growthHubUi';
 
 export function SkillsPage({ embedded = false }: { embedded?: boolean }) {
   const { dailyEntries, measurements, settings } = useAppStore();
@@ -19,23 +20,12 @@ export function SkillsPage({ embedded = false }: { embedded?: boolean }) {
 
   return (
     <div className="space-y-6" data-testid="growth-skills-page">
-      <header
-        className={
-          embedded
-            ? 'relative overflow-hidden rounded-2xl border border-violet-500/20 bg-gradient-to-br from-[#14101f]/90 via-[#0e0c18]/95 to-[#08070f] px-4 py-5 sm:px-6'
-            : undefined
-        }
-      >
+      <header className={embedded ? `${GROWTH_HUB_PANEL} px-4 py-5 sm:px-6` : undefined}>
         {embedded ? (
           <>
-            <div
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,rgba(212,165,55,0.07),transparent_55%)]"
-              aria-hidden
-            />
+            <div className={GROWTH_HUB_RADIAL_GOLD} aria-hidden />
             <div className="relative">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-gold)]/80">
-                Дороги мастерства
-              </p>
+              <p className={GROWTH_HUB_EYEBROW}>Дороги мастерства</p>
               <h1 className="mt-1.5 text-xl font-bold text-[var(--app-text)] sm:text-2xl">
                 Навыки героя
               </h1>
@@ -56,7 +46,7 @@ export function SkillsPage({ embedded = false }: { embedded?: boolean }) {
         )}
       </header>
 
-      <section className="relative overflow-hidden rounded-2xl border border-violet-500/20 bg-gradient-to-br from-[#101522]/80 via-[#0e0c16]/90 to-[#08070f] px-4 py-4 sm:px-5 sm:py-5">
+      <section className={`${GROWTH_HUB_SUMMARY_PANEL} px-4 py-4 sm:px-5 sm:py-5`}>
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_80%_0%,rgba(88,28,135,0.1),transparent_50%)]"
           aria-hidden

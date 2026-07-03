@@ -17,9 +17,16 @@ import {
 import { useBodyAbilityV1Actions } from '../../hooks/useBodyAbilityV1Actions';
 import { BodyAbilityFutureSkillCard } from './BodyAbilityFutureSkillCard';
 import { BodyAbilitySkillCard } from './BodyAbilitySkillCard';
+import {
+  GROWTH_HUB_EYEBROW,
+  GROWTH_HUB_PANEL,
+  GROWTH_HUB_RADIAL_GOLD,
+  GROWTH_HUB_RADIAL_VIOLET,
+} from '../growth/growthHubUi';
 
 type BodyAbilitySkillBoardProps = {
   showPageHero?: boolean;
+  embedded?: boolean;
 };
 
 function orderAbilitiesByDisplayOrder(
@@ -32,7 +39,10 @@ function orderAbilitiesByDisplayOrder(
     .filter((a): a is NonNullable<typeof a> => a != null);
 }
 
-export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillBoardProps) {
+export function BodyAbilitySkillBoard({
+  showPageHero = true,
+  embedded = false,
+}: BodyAbilitySkillBoardProps) {
   const { dailyEntries, measurements, settings } = useAppStore();
   const { unlockAbility } = useBodyAbilityV1Actions();
   const [unlockingId, setUnlockingId] = useState<string | null>(null);
@@ -83,32 +93,44 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
     setExpandedRings((prev) => ({ ...prev, [ring]: !prev[ring] }));
   };
 
+  const showHero = showPageHero || embedded;
+
   return (
     <div data-testid="body-abilities-skill-board" className="space-y-8">
-      {showPageHero ? (
-        <header className="relative overflow-hidden rounded-2xl border border-violet-500/25 bg-gradient-to-br from-[#14101f] via-[#0e0c18] to-[#08070f] px-5 py-6 sm:px-8 sm:py-8">
-          <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,rgba(212,165,55,0.08),transparent_55%)]"
-            aria-hidden
-          />
-          <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_80%_100%,rgba(88,28,135,0.12),transparent_50%)]"
-            aria-hidden
-          />
+      {showHero ? (
+        <header
+          className={
+            embedded
+              ? `${GROWTH_HUB_PANEL} px-4 py-5 sm:px-6`
+              : 'relative overflow-hidden rounded-2xl border border-violet-500/25 bg-gradient-to-br from-[#14101f] via-[#0e0c18] to-[#08070f] px-5 py-6 sm:px-8 sm:py-8'
+          }
+        >
+          <div className={GROWTH_HUB_RADIAL_GOLD} aria-hidden />
+          {!embedded ? (
+            <div className={GROWTH_HUB_RADIAL_VIOLET} aria-hidden />
+          ) : null}
           <div className="relative">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--app-gold)]/90">
+            <p className={embedded ? GROWTH_HUB_EYEBROW : 'text-xs font-semibold uppercase tracking-[0.2em] text-[var(--app-gold)]/90'}>
               Кодекс тела
             </p>
-            <h1 className="mt-2 text-2xl font-bold text-[var(--app-text)] sm:text-3xl">
+            <h1
+              className={
+                embedded
+                  ? 'mt-1.5 text-xl font-bold text-[var(--app-text)] sm:text-2xl'
+                  : 'mt-2 text-2xl font-bold text-[var(--app-text)] sm:text-3xl'
+              }
+            >
               Способности тела
             </h1>
-            <p className="mt-2 max-w-2xl text-base font-medium text-[var(--app-text)]">
-              Вес стоит, но персонаж не стоит.
-            </p>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--app-text-muted)]">
               Способности показывают прогресс, который не всегда виден на весах. Каждая — знак,
               что тело возвращает свободу в обычных действиях.
             </p>
+            {!embedded ? (
+              <p className="mt-2 max-w-2xl text-base font-medium text-[var(--app-text)]">
+                Вес стоит, но персонаж не стоит.
+              </p>
+            ) : null}
           </div>
         </header>
       ) : null}
@@ -127,7 +149,7 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
           <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--app-text)]">
             Способности тела
           </h2>
-          {!showPageHero ? (
+          {!showHero ? (
             <>
               <p className="mt-1.5 text-sm font-medium text-[var(--app-text)]">
                 Вес стоит, но персонаж не стоит.

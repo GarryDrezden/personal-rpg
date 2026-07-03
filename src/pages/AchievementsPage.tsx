@@ -329,7 +329,7 @@ export function AchievementsPage({ embedded = false }: { embedded?: boolean }) {
 
             <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-gold)]/55">
 
-              Growth Hub
+              Трофеи маршрута
 
             </p>
 

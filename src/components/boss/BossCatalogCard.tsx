@@ -186,8 +186,8 @@ export function ArchiveBossCodexCard({ entry }: ArchiveBossCodexCardProps) {
             </div>
           ) : entry.status !== 'active' ? (
             <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-[var(--app-text-muted)]/60">
-              <span>Недель в бою: {entry.encounters}</span>
-              <span>Побед: {entry.defeats}</span>
+              <span>Недель с испытанием: {entry.encounters}</span>
+              <span>Удержано: {entry.defeats}</span>
               {entry.perfects > 0 ? <span>Идеальных: {entry.perfects}</span> : null}
             </div>
           ) : null}

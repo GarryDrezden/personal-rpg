@@ -1,10 +1,16 @@
 import { useMemo } from 'react';
+import { Flame } from 'lucide-react';
 import { useAppStore } from '../store/appStore';
 import { useAchievementStore } from '../store/achievementStore';
 import { getBaseProgressionSnapshot } from '../game/base/baseProgressionEngine';
 import { BaseStageRail } from '../components/base/BaseStageRail';
 import { ManifestArtScene } from '../components/game/ManifestArtScene';
 import { getBaseStageManifestAssetId } from '../game/manifestAssetUi';
+import {
+  GROWTH_HUB_EYEBROW,
+  GROWTH_HUB_PANEL,
+  GROWTH_HUB_RADIAL_GOLD,
+} from '../components/growth/growthHubUi';
 
 export function BaseCampPage({ embedded = false }: { embedded?: boolean }) {
   const { dailyEntries, measurements, settings } = useAppStore();
@@ -24,8 +30,26 @@ export function BaseCampPage({ embedded = false }: { embedded?: boolean }) {
   const stageArtId = getBaseStageManifestAssetId(snapshot.currentStage.id);
 
   return (
-    <div className="space-y-6 pb-4">
-      {!embedded ? (
+    <div className="space-y-6 pb-4" data-testid="growth-camp-page">
+      {embedded ? (
+        <header className={`${GROWTH_HUB_PANEL} px-4 py-5 sm:px-6`}>
+          <div className={GROWTH_HUB_RADIAL_GOLD} aria-hidden />
+          <div className="relative flex items-start gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[var(--app-gold)]/25 bg-[#18120a]/60 text-[var(--app-gold)]/80">
+              <Flame className="h-5 w-5" strokeWidth={1.5} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className={GROWTH_HUB_EYEBROW}>База маршрута</p>
+              <h1 className="mt-1.5 text-xl font-bold text-[var(--app-text)] sm:text-2xl">
+                Лагерь героя
+              </h1>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--app-text-muted)]">
+                Лагерь растёт сам, когда маршрут удержан. Вес стоит — но персонаж продолжает путь.
+              </p>
+            </div>
+          </div>
+        </header>
+      ) : (
         <header>
           <h1 className="text-2xl font-bold text-[var(--app-text)]">Лагерь героя</h1>
           <p className="mt-2 max-w-2xl text-sm text-[var(--app-text-muted)]">
@@ -33,10 +57,6 @@ export function BaseCampPage({ embedded = false }: { embedded?: boolean }) {
             обязанность и не строительная стратегия.
           </p>
         </header>
-      ) : (
-        <p className="text-sm text-[var(--app-text-muted)]">
-          Лагерь растёт сам, когда маршрут удержан. Вес стоит — но персонаж не стоит.
-        </p>
       )}
 
       {stageArtId ? (

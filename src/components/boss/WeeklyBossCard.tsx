@@ -156,7 +156,7 @@ export function WeeklyBossCard({ boss, variant = 'compact' }: WeeklyBossCardProp
 
       <div className={`space-y-2 ${isFull ? 'mt-5' : 'mt-4'}`}>
         <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
-          Условия победы
+          Условия испытания
         </p>
         {(isFull ? boss.conditions : boss.conditions.slice(0, 3)).map((c) => (
           <ConditionRow key={c.id} condition={c} />
@@ -177,20 +177,20 @@ export function WeeklyBossCard({ boss, variant = 'compact' }: WeeklyBossCardProp
       >
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
-            {won ? 'Награда' : 'Награда за победу'}
+            {won ? 'Награда' : 'Награда за удержание маршрута'}
           </p>
           <p className="text-sm font-semibold text-[var(--app-text)]">
             +{boss.rewardXp} XP · +{boss.rewardCoins} 🪙
           </p>
           {boss.status === 'perfect' && (
             <p className="text-xs font-medium text-[var(--app-primary)]">
-              Идеальная победа — бонусная награда
+              Маршрут удержан идеально — бонусная награда
             </p>
           )}
         </div>
         {won && (
           <span className="rounded-full bg-[color-mix(in_srgb,var(--app-success)_18%,var(--app-card-strong))] px-3 py-1 text-sm font-semibold text-[var(--app-success)]">
-            {boss.status === 'perfect' ? 'Идеально!' : 'Победа!'}
+            {boss.status === 'perfect' ? 'Идеально!' : 'Маршрут удержан!'}
           </span>
         )}
       </div>

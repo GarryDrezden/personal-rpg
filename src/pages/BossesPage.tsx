@@ -99,14 +99,14 @@ export function BossesPage({ embedded = false }: { embedded?: boolean }) {
           <div className="rounded-xl border border-violet-500/15 bg-[#0e0c14]/50 px-4 py-3">
             <dt className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-[var(--app-text-muted)]/65">
               <Swords className="h-3.5 w-3.5 text-red-300/60" strokeWidth={1.5} />
-              Недель в бою
+              Недель с испытанием
             </dt>
             <dd className="mt-1.5 text-2xl font-bold text-[var(--app-text)]">{history.length}</dd>
           </div>
           <div className="rounded-xl border border-violet-500/15 bg-[#0e0c14]/50 px-4 py-3">
             <dt className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-[var(--app-text-muted)]/65">
               <Archive className="h-3.5 w-3.5 text-[var(--app-gold)]/70" strokeWidth={1.5} />
-              Побед за кампанию
+              Недель удержано
             </dt>
             <dd className="mt-1.5 text-2xl font-bold text-[var(--app-gold)]/90">
               {countDefeatedBosses(history)}
