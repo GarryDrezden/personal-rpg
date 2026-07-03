@@ -2,13 +2,14 @@ import { Link } from 'react-router-dom';
 import { CloudFog, ScrollText, Skull, Swords } from 'lucide-react';
 import { getBossTemplateById } from '../../constants/bosses';
 import type { BossCatalogEntry } from '../../utils/bossCatalog';
-import { BOSS_CATALOG_STATUS_LABELS } from '../../utils/bossCatalog';
 import { BossPortrait } from './BossPortrait';
 import {
   DEFEAT_HINT_LABEL,
   FOG_CALLOUT,
+  FOG_PENDING_TEXT,
   TRIALS_CARD,
   TRIALS_FEATURED,
+  TRIALS_STATUS_LABELS,
 } from './trialsUi';
 
 function ThreatProgressBar({
@@ -55,7 +56,7 @@ function statusPill(status: BossCatalogEntry['status']) {
     <span
       className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${styles[status]}`}
     >
-      {BOSS_CATALOG_STATUS_LABELS[status]}
+      {TRIALS_STATUS_LABELS[status]}
     </span>
   );
 }
@@ -117,13 +118,13 @@ export function FeaturedWeeklyBossCard({ entry }: FeaturedWeeklyBossCardProps) {
           <div className="mt-5 rounded-xl border border-red-400/15 bg-[#0e0c14]/50 px-4 py-3.5">
             <div className="mb-2 flex items-center justify-between gap-2">
               <span className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]/70">
-                Прогресс недели
+                Сила угрозы
               </span>
-              <span className="text-sm font-bold text-[var(--app-text)]">{boss.hpPercent}% HP</span>
+              <span className="text-sm font-bold text-[var(--app-text)]">{boss.hpPercent}%</span>
             </div>
-            <ThreatProgressBar value={damageDealt} tone="danger" className="h-2.5" />
+            <ThreatProgressBar value={boss.hpPercent} tone="danger" className="h-2.5" />
             <p className="mt-2 text-xs text-[var(--app-text-muted)]/65">
-              Нанесено {damageDealt}% · условий закрыто{' '}
+              Маршрут ослабил угрозу на {damageDealt}% · условий закрыто{' '}
               {boss.conditions.filter((c) => c.completed).length}/{boss.conditions.length}
             </p>
           </div>
@@ -134,10 +135,10 @@ export function FeaturedWeeklyBossCard({ entry }: FeaturedWeeklyBossCardProps) {
               className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-[var(--app-gold)]/35 bg-[var(--app-primary-soft)]/35 px-5 py-2.5 text-sm font-semibold text-[var(--app-text)] hover:brightness-105"
             >
               <Swords className="h-4 w-4 text-[var(--app-gold)]/85" strokeWidth={1.5} />
-              К сражению на неделе
+              Перейти к испытанию недели
             </Link>
             <span className="self-center text-xs text-[var(--app-text-muted)]/55">
-              +{boss.rewardXp} XP · +{boss.rewardCoins} монет за победу
+              +{boss.rewardXp} XP · +{boss.rewardCoins} монет за удержание маршрута
             </span>
           </div>
         </div>
@@ -181,7 +182,7 @@ export function ArchiveBossCodexCard({ entry }: ArchiveBossCodexCardProps) {
           {isPending ? (
             <div className={`${FOG_CALLOUT} mt-3 flex items-start gap-2`}>
               <CloudFog className="mt-0.5 h-3.5 w-3.5 shrink-0 text-violet-300/40" strokeWidth={1.5} />
-              <span>В тумане — появится в одну из ваших недель. Готовься заранее.</span>
+              <span>{FOG_PENDING_TEXT}</span>
             </div>
           ) : entry.status !== 'active' ? (
             <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-[var(--app-text-muted)]/60">

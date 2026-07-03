@@ -1,3 +1,5 @@
+import type { BossCatalogStatus } from '../../utils/bossCatalog';
+
 export const TRIALS_PANEL =
   'relative overflow-hidden rounded-2xl border border-violet-500/20 bg-gradient-to-br from-[#14101f]/90 via-[#0e0c18]/95 to-[#08070f]';
 
@@ -11,3 +13,17 @@ export const FOG_CALLOUT =
   'rounded-lg border border-violet-500/15 bg-[#0e0c14]/60 px-3 py-2 text-xs leading-snug text-[var(--app-text-muted)]/55';
 
 export const DEFEAT_HINT_LABEL = 'Как удержать маршрут';
+
+export const FOG_PENDING_TEXT =
+  'В тумане — проявится в одну из недель. Готовься заранее.';
+
+export const TRIALS_ARCHIVE_HELPER =
+  'Прошлые угрозы и те, что ещё скрыты в тумане.';
+
+export const TRIALS_STATUS_LABELS: Record<BossCatalogStatus, string> = {
+  pending: 'Ещё впереди',
+  active: 'Испытание активно',
+  failed: 'Угроза не отступила',
+  defeated: 'Угроза отступила',
+  perfect: 'Маршрут удержан идеально',
+};

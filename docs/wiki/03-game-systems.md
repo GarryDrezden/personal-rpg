@@ -214,18 +214,18 @@ Fallback: ближайший якорь (1, 2, 19, 20) пока PNG отсутс
 
 **Терминология:**
 
-- **Босс главы** — сюжетная сущность пути (journey); см. [Boss Layers](#boss-layers)
-- **Испытание недели** — weekly challenge (`/growth/trials`), не путать с chapter boss
+- **Босс главы (Campaign Boss)** — сюжетная сущность пути (journey, сезон/глава/акт); см. [Boss Layers](#boss-layers)
+- **Испытания / Trials** — еженедельные угрозы маршрута (`/growth/trials`, Week); не вторая система боссов и не путать с chapter boss
 - **Сезонный мини-босс** — конфликт 28-дневного сезона (планируется в Seasons v1)
 
 ---
 
-## Weekly challenges
+## Weekly challenges (Trials)
 
 **Engine:** `bossEngine.ts`  
 **UI:** Week, `/growth/trials`
 
-Случайный недельный вызов с условиями и наградой. Победа → XP + coins.
+Случайный недельный вызов с условиями и наградой. Победа → XP + coins. В UI — **угрозы недели** и **испытания**, не «боссы кампании».
 
 ---
 

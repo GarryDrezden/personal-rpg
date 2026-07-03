@@ -8,7 +8,11 @@ import {
   ArchiveBossCodexCard,
   FeaturedWeeklyBossCard,
 } from '../components/boss/BossCatalogCard';
-import { TRIALS_PANEL } from '../components/boss/trialsUi';
+import { TRIALS_ARCHIVE_HELPER, TRIALS_PANEL } from '../components/boss/trialsUi';
+import {
+  WEEKLY_TRIAL_LABEL,
+  WEEKLY_TRIALS_ARCHIVE_LABEL,
+} from '../constants/weeklyTrial';
 
 export function BossesPage({ embedded = false }: { embedded?: boolean }) {
   const { dailyEntries, measurements, settings } = useAppStore();
@@ -48,7 +52,7 @@ export function BossesPage({ embedded = false }: { embedded?: boolean }) {
             />
             <div className="relative">
               <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-red-300/55">
-                Архив угроз
+                {WEEKLY_TRIAL_LABEL}
               </p>
               <h1 className="mt-1.5 text-xl font-bold text-[var(--app-text)] sm:text-2xl">
                 Испытания недели
@@ -123,10 +127,10 @@ export function BossesPage({ embedded = false }: { embedded?: boolean }) {
           <div>
             <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-violet-200/55">
               <Archive className="h-4 w-4" strokeWidth={1.5} />
-              Кодекс угроз
+              {WEEKLY_TRIALS_ARCHIVE_LABEL}
             </h2>
             <p className="mt-1 text-xs text-[var(--app-text-muted)]/55">
-              Архив weekly bosses — прошлые победы и угрозы в тумане.
+              {TRIALS_ARCHIVE_HELPER}
             </p>
           </div>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">

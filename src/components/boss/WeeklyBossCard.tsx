@@ -140,7 +140,7 @@ export function WeeklyBossCard({ boss, variant = 'compact' }: WeeklyBossCardProp
 
           <div className="mb-2 flex items-center justify-between gap-2">
             <span className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
-              HP босса
+              Сила угрозы
             </span>
             <Badge variant={statusBadgeVariant(boss.status)}>
               {BOSS_STATUS_LABELS[boss.status]}
@@ -149,7 +149,7 @@ export function WeeklyBossCard({ boss, variant = 'compact' }: WeeklyBossCardProp
 
           <ProgressBar value={boss.hpPercent} color={hpBarColor(boss.status)} />
           <p className="mt-1 text-xs text-[var(--app-text-muted)]">
-            {boss.hpPercent}% здоровья · {completedCount}/{boss.conditions.length} условий
+            {boss.hpPercent}% силы · {completedCount}/{boss.conditions.length} условий
           </p>
         </div>
       </div>

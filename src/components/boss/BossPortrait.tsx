@@ -74,7 +74,7 @@ export function BossPortrait({
         <div
           className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-2 py-1.5 text-center text-[10px] font-bold uppercase tracking-wide text-white"
         >
-          {catalogStatus === 'perfect' ? '★ Идеал' : 'Повержен'}
+          {catalogStatus === 'perfect' ? '★ Идеал' : 'Отступила'}
         </div>
       )}
     </div>

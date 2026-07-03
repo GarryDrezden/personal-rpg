@@ -4,6 +4,7 @@
 
 ### Added
 
+- Clarified Growth Trials terminology: weekly challenges are now presented as weekly threats, avoiding conflict with campaign/codex bosses.
 - **Growth Trials tab — weekly threat board:** polished `/growth/trials` into codex-style weekly boss archive; featured active threat panel; softer stat labels; compact fog callouts for future bosses. Weekly boss logic unchanged.
 - **Growth Rewards tab — hero reward treasury:** polished `/growth/rewards` into treasury/shop feel; hero header with coin balance and piggy bank; softer empty states; RPG sub-tabs; clearer XP vs coins framing. Coin/XP mechanics unchanged.
 - **Growth Skills tab — RPG mastery roads:** polished `/growth/skills` into dark fantasy mastery roads UI; lucide icons instead of emoji; summary labels «Общий ранг / Сильная дорога / Точка роста»; codex footer «Откуда приходит опыт». XP mechanics unchanged.

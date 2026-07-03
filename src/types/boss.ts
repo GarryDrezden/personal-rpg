@@ -42,9 +42,9 @@ export type WeeklyBoss = {
 };
 
 export const BOSS_STATUS_LABELS: Record<WeeklyBossStatus, string> = {
-  not_started: 'Босс ждёт',
-  in_progress: 'В бою',
-  wounded: 'Босс ранен',
-  defeated: 'Босс повержен!',
-  perfect: 'Идеальная победа!',
+  not_started: 'Угроза ждёт',
+  in_progress: 'Испытание активно',
+  wounded: 'Угроза ослаблена',
+  defeated: 'Угроза отступила!',
+  perfect: 'Маршрут удержан идеально!',
 };

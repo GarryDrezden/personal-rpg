@@ -85,8 +85,8 @@ export function getBossCatalog(params: {
 
 export const BOSS_CATALOG_STATUS_LABELS: Record<BossCatalogStatus, string> = {
   pending: 'Ещё впереди',
-  active: 'Сражение сейчас',
-  failed: 'Не побеждён',
-  defeated: 'Повержен',
-  perfect: 'Идеальная победа',
+  active: 'Испытание активно',
+  failed: 'Угроза не отступила',
+  defeated: 'Угроза отступила',
+  perfect: 'Маршрут удержан идеально',
 };
