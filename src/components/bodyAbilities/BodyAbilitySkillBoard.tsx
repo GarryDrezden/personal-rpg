@@ -5,6 +5,7 @@ import {
   getBodyAbilityV1Items,
   getBodyAbilityV1Summary,
 } from '../../game/bodyAbilities/bodyAbilityV1Engine';
+import { BODY_ABILITY_FEATURED_IDS } from '../../game/bodyAbilityAssetUi';
 import { useBodyAbilityV1Actions } from '../../hooks/useBodyAbilityV1Actions';
 import { BodyAbilitySkillCard } from './BodyAbilitySkillCard';
 
@@ -25,6 +26,28 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
 
   const items = useMemo(() => getBodyAbilityV1Items(params), [params]);
   const summary = useMemo(() => getBodyAbilityV1Summary(params), [params]);
+
+  const onRouteCount = useMemo(
+    () => items.filter((i) => !i.unlocked && i.hintActive).length,
+    [items],
+  );
+  const remainingCount = useMemo(
+    () => items.filter((i) => !i.unlocked && !i.hintActive).length,
+    [items],
+  );
+
+  const featuredItems = useMemo(
+    () =>
+      BODY_ABILITY_FEATURED_IDS.map((id) => items.find((i) => i.ability.id === id)).filter(
+        (item): item is (typeof items)[number] => item != null,
+      ),
+    [items],
+  );
+
+  const otherItems = useMemo(
+    () => items.filter((i) => !(BODY_ABILITY_FEATURED_IDS as readonly string[]).includes(i.ability.id)),
+    [items],
+  );
 
   const lastUnlocked = useMemo(() => {
     const unlocked = items.filter((i) => i.unlocked && i.unlockedAt);
@@ -64,13 +87,11 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
               Способности тела
             </h1>
             <p className="mt-2 max-w-2xl text-base font-medium text-[var(--app-text)]">
-              Прогресс — это не только вес.
+              Вес стоит, но персонаж не стоит.
             </p>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--app-text-muted)]">
-              Каждая способность — знак, что тело возвращает свободу в обычных действиях.
-            </p>
-            <p className="mt-3 text-sm font-medium text-[var(--app-primary)]">
-              Вес стоит, но персонаж не стоит.
+              Способности показывают прогресс, который не всегда виден на весах. Каждая — знак,
+              что тело возвращает свободу в обычных действиях.
             </p>
           </div>
         </header>
@@ -86,30 +107,75 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
       ) : null}
 
       <section>
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+        <div className="mb-5 space-y-3">
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
-              Артефакты маршрута
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--app-text)]">
+              Способности тела
             </h2>
-            <p className="mt-1 text-sm text-[var(--app-text-muted)]">
-              Открыто {summary.unlockedCount} из {summary.totalCount}
-            </p>
+            {!showPageHero ? (
+              <>
+                <p className="mt-1.5 text-sm font-medium text-[var(--app-text)]">
+                  Вес стоит, но персонаж не стоит.
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-[var(--app-text-muted)]">
+                  Способности показывают прогресс, который не всегда виден на весах.
+                </p>
+              </>
+            ) : null}
           </div>
+
+          <dl className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            <div className="flex items-baseline gap-1.5">
+              <dt className="text-[var(--app-text-muted)]">Открыто:</dt>
+              <dd className="font-semibold text-[var(--app-text)]">
+                {summary.unlockedCount} из {summary.totalCount}
+              </dd>
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <dt className="text-[var(--app-text-muted)]">На маршруте:</dt>
+              <dd className="font-semibold text-[var(--app-gold)]">{onRouteCount}</dd>
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <dt className="text-[var(--app-text-muted)]">Осталось проявиться:</dt>
+              <dd className="font-semibold text-violet-200/80">{remainingCount}</dd>
+            </div>
+          </dl>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-          {items.map((item) => (
-            <BodyAbilitySkillCard
-              key={item.ability.id}
-              item={item}
-              unlocking={unlockingId === item.ability.id}
-              onUnlock={() => void handleUnlock(item.ability.id)}
-            />
-          ))}
+        <div className="space-y-6">
+          <div>
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--app-gold)]/75">
+              Первые сигналы тела
+            </p>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              {featuredItems.map((item) => (
+                <BodyAbilitySkillCard
+                  key={item.ability.id}
+                  item={item}
+                  featured
+                  unlocking={unlockingId === item.ability.id}
+                  onUnlock={() => void handleUnlock(item.ability.id)}
+                />
+              ))}
+            </div>
+          </div>
+
+          {otherItems.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+              {otherItems.map((item) => (
+                <BodyAbilitySkillCard
+                  key={item.ability.id}
+                  item={item}
+                  unlocking={unlockingId === item.ability.id}
+                  onUnlock={() => void handleUnlock(item.ability.id)}
+                />
+              ))}
+            </div>
+          ) : null}
         </div>
       </section>
 
-      <footer className="rounded-2xl border border-violet-500/20 bg-gradient-to-br from-[#101522]/80 via-[#0e0c16]/90 to-[#08070f] px-5 py-6 sm:px-6">
+      <footer className="rounded-2xl border border-violet-500/20 bg-gradient-to-br from-[#101522]/80 via-[#0e0c16]/90 to-[#08070f] px-5 py-5 sm:px-6">
         <h2 className="text-lg font-semibold text-[var(--app-text)]">Тело — твой фундамент</h2>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--app-text-muted)]">
           Способности тела показывают прогресс, который не всегда виден на весах: легче
@@ -149,8 +215,8 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
           </dl>
         ) : (
           <p className="mt-4 text-sm text-[var(--app-text-muted)]">
-            Первые способности откроются по мере маршрута. Даже минимальный день может удержать
-            движение.
+            Первые способности проявятся по мере маршрута. Даже минимальный день может удержать
+            движение — тело отвечает, персонаж продолжает путь.
           </p>
         )}
       </footer>

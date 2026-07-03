@@ -20,22 +20,24 @@ type BodyAbilityArtMedallionProps = {
   visualState: BodyAbilityVisualState;
 };
 
+const MEDALLION_SIZE =
+  'h-[128px] w-[128px] min-h-[112px] min-w-[112px] md:h-[148px] md:w-[148px] lg:h-[164px] lg:w-[164px]';
+
 const RING_CLASS: Record<BodyAbilityVisualState, string> = {
-  locked:
-    'ring-2 ring-violet-500/20 shadow-[0_0_24px_rgba(88,28,135,0.15)]',
+  locked: 'ring-2 ring-violet-400/25 shadow-[0_0_28px_rgba(139,92,246,0.12)]',
   discovered:
-    'ring-2 ring-[var(--app-gold)]/45 shadow-[0_0_32px_rgba(212,165,55,0.22)]',
+    'ring-2 ring-[var(--app-gold)]/40 shadow-[0_0_32px_rgba(212,165,55,0.18)]',
   unlocked:
-    'ring-2 ring-emerald-400/40 shadow-[0_0_36px_rgba(52,211,153,0.25)]',
+    'ring-2 ring-emerald-400/45 shadow-[0_0_36px_rgba(52,211,153,0.2)]',
   recentlyUnlocked:
-    'ring-[3px] ring-[var(--app-gold)]/55 shadow-[0_0_44px_rgba(212,165,55,0.35)]',
+    'ring-[3px] ring-[var(--app-gold)]/50 shadow-[0_0_40px_rgba(212,165,55,0.28)] motion-safe:animate-[body-ability-glow_3s_ease-in-out_infinite]',
 };
 
 const PANEL_CLASS: Record<BodyAbilityVisualState, string> = {
-  locked: 'from-[#14101f]/95 via-[#0e0c18] to-[#08070f]',
-  discovered: 'from-violet-950/90 via-[#12101c] to-[#0a0812]',
-  unlocked: 'from-[#101822]/95 via-[#0f1419] to-[#080a0f]',
-  recentlyUnlocked: 'from-[#18120a]/95 via-[#12101c] to-[#0a0810]',
+  locked: 'from-[#18142a]/90 via-[#12101c] to-[#0a0812]',
+  discovered: 'from-violet-950/80 via-[#14101f] to-[#0a0812]',
+  unlocked: 'from-[#101822]/90 via-[#0f1419] to-[#080a0f]',
+  recentlyUnlocked: 'from-[#18120a]/90 via-[#14101c] to-[#0a0810]',
 };
 
 export function BodyAbilityArtMedallion({
@@ -48,11 +50,11 @@ export function BodyAbilityArtMedallion({
   const assetId = getBodyAbilityManifestAssetId(abilityId);
   const manifestUrl = getManifestAssetUrl(assetId);
   const ring = RING_CLASS[visualState];
-  const dimmed = visualState === 'locked';
+  const fallbackDimmed = visualState === 'locked';
 
   return (
     <div
-      className={`relative mx-auto flex shrink-0 items-center justify-center rounded-full ${ring}`}
+      className={`relative mx-auto flex shrink-0 items-center justify-center rounded-full ${MEDALLION_SIZE} ${ring}`}
       data-testid={`body-ability-medallion-${abilityId}`}
     >
       {visualState === 'recentlyUnlocked' ? (
@@ -65,10 +67,6 @@ export function BodyAbilityArtMedallion({
             className="pointer-events-none absolute -left-0.5 bottom-1 h-1.5 w-1.5 rounded-full bg-emerald-400/90"
             aria-hidden
           />
-          <span
-            className="pointer-events-none absolute right-2 top-0 h-1.5 w-1.5 rounded-full bg-[var(--app-gold)]/70"
-            aria-hidden
-          />
         </>
       ) : null}
 
@@ -77,20 +75,22 @@ export function BodyAbilityArtMedallion({
           assetId={assetId}
           alt={title}
           layout="body-ability-medallion"
-          dimmed={dimmed}
-          className="border-violet-500/25 shadow-none"
+          dimmed={false}
+          className="h-full w-full border-violet-400/20 shadow-[0_0_24px_rgba(139,92,246,0.08)]"
           testId={`body-ability-art-${abilityId}`}
         />
       ) : (
         <div
-          className={`relative flex h-32 w-32 items-center justify-center overflow-hidden rounded-full border border-violet-500/25 bg-gradient-to-br sm:h-40 sm:w-40 ${PANEL_CLASS[visualState]}`}
+          className={`relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border border-violet-500/20 bg-gradient-to-br ${PANEL_CLASS[visualState]}`}
           aria-hidden
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(212,165,55,0.12),transparent_62%)]" />
-          <span className={`text-5xl sm:text-6xl ${dimmed ? 'opacity-45 grayscale' : 'opacity-90'}`}>
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(212,165,55,0.1),transparent_62%)]" />
+          <span
+            className={`text-5xl md:text-6xl ${fallbackDimmed ? 'opacity-55 saturate-75' : 'opacity-90'}`}
+          >
             {emoji}
           </span>
-          <span className="pointer-events-none absolute bottom-3 text-[10px] font-semibold uppercase tracking-widest text-violet-300/50">
+          <span className="pointer-events-none absolute bottom-3 text-[10px] font-semibold uppercase tracking-widest text-violet-300/40">
             {getBodyAbilityCategoryGlyph(category)}
           </span>
         </div>

@@ -119,3 +119,13 @@ body {
 .journey-page__details {
   width: 100%;
 }
+
+@keyframes body-ability-glow {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.08);
+  }
+}

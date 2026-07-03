@@ -134,6 +134,7 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 - Manifest ids wired via `getBodyAbilityManifestAssetId()`; **emoji fallback** when `.webp` absent or not in-app.
 - **Group 1 (4/12) in-app:** `tie_shoes_easier`, `stand_from_floor`, `stairs_breath`, `long_route`.
 - Remaining 8: prompt-ready / emoji fallback.
+- **Polish (2026-06):** larger medallions (128–164px), lighter overlay on in-app art, counters «Открыто / На маршруте / Осталось проявиться», supportive state copy, featured row label.
 
 ---
 

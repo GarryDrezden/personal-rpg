@@ -5,6 +5,7 @@
 ### Added
 
 - **Body Ability Icons — Group 1 in-app:** integrated first 4 body ability icons (`tie_shoes_easier`, `stand_from_floor`, `stairs_breath`, `long_route`) on disk and wired into `/growth/abilities` skill board via manifest `in-app`; `GAME_ASSET_VERSION` 22. Remaining 8 icons stay prompt-ready with emoji fallback. Not the full 12-icon set completion.
+- **Body Abilities Skill Board polish:** larger medallions, softer in-app art rendering, supportive state labels, three-line counters (opened / on route / remaining), featured group label «Первые сигналы тела», denser card layout.
 - **Asset Registry 2.0 / Art Backlog:** expanded manifest v2 schema (categories, priorities, lifecycle statuses); Art Backlog with P0–P3; naming convention and placeholder strategy; Nano Banana prompt templates; `assetManifest.ts` helpers and validation tests. Asset generation and gameplay changes kept out of scope.
 - **Dark MVP Visual Priority Pack v1:** 8 prompt-ready Dark Campaign assets with Nano Banana briefs; manifest `prompt-ready` status; Future Cozy Campaign explicitly excluded from pack. No asset generation or UI wire.
 - **Dark MVP Batch 1 — UI Wire:** connected 4 processed assets via `ManifestArtScene` and `getManifestAssetUrl()`; manifest `in-app`; `GAME_ASSET_VERSION` 20.

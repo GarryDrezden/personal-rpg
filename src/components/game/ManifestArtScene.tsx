@@ -63,7 +63,7 @@ function frameClass(layout: ManifestArtLayout): string {
     case 'boss-codex-compact':
       return 'aspect-video w-full max-h-[11rem]';
     case 'body-ability-medallion':
-      return 'h-32 w-32 shrink-0 sm:h-40 sm:w-40 rounded-full';
+      return 'h-full w-full min-h-[112px] min-w-[112px] shrink-0 rounded-full';
     default:
       return 'aspect-[16/9] w-full max-h-[22rem] sm:max-h-[25rem]';
   }
@@ -93,7 +93,7 @@ export function ManifestArtScene({
     resolvedLayout === 'reward-icon' ||
     resolvedLayout === 'artifact-icon' ||
     resolvedLayout === 'body-ability-medallion'
-      ? 'object-cover object-center scale-110'
+      ? 'object-cover object-center scale-[1.18]'
       : 'object-cover';
 
   if (!src) {
@@ -126,13 +126,19 @@ export function ManifestArtScene({
     );
   }
 
+  const isMedallion = resolvedLayout === 'body-ability-medallion';
+
   return (
     <div
       data-testid={testId}
-      className={`relative overflow-hidden border border-[var(--app-border)] shadow-[0_4px_20px_rgba(0,0,0,0.28)] ${frameRadiusClass(resolvedLayout)} ${frameClass(resolvedLayout)} ${dimmed ? 'opacity-70' : ''} ${className}`}
+      className={`relative overflow-hidden border border-[var(--app-border)] shadow-[0_4px_20px_rgba(0,0,0,0.28)] ${frameRadiusClass(resolvedLayout)} ${frameClass(resolvedLayout)} ${dimmed && !isMedallion ? 'opacity-70' : ''} ${className}`}
     >
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#12101c] via-[#0e0c16] to-[#08070f]"
+        className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${
+          isMedallion
+            ? 'from-[#1a1428]/40 via-transparent to-[#08070f]/50'
+            : 'from-[#12101c] via-[#0e0c16] to-[#08070f]'
+        }`}
         aria-hidden
       />
       <GameAssetImage
@@ -140,15 +146,19 @@ export function ManifestArtScene({
         alt={alt}
         variant="artifact"
         loading={imageLoading}
-        className={`absolute inset-0 ${dimmed ? 'grayscale-[0.35]' : ''}`}
+        className={`absolute inset-0 ${dimmed && !isMedallion ? 'grayscale-[0.35]' : ''}`}
         imageClassName={`h-full w-full ${imageFitClass}`}
         imageStyle={{ objectPosition: crop }}
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-black/12"
+        className={`pointer-events-none absolute inset-0 bg-gradient-to-t ${
+          isMedallion
+            ? 'from-black/18 via-transparent to-black/6'
+            : 'from-black/50 via-black/10 to-black/12'
+        }`}
         aria-hidden
       />
-      {dimmed ? (
+      {dimmed && !isMedallion ? (
         <div className="pointer-events-none absolute inset-0 bg-black/25" aria-hidden />
       ) : null}
     </div>
