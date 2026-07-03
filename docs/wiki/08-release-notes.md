@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Growth Trials tab — weekly threat board:** polished `/growth/trials` into codex-style weekly boss archive; featured active threat panel; softer stat labels; compact fog callouts for future bosses. Weekly boss logic unchanged.
 - **Growth Rewards tab — hero reward treasury:** polished `/growth/rewards` into treasury/shop feel; hero header with coin balance and piggy bank; softer empty states; RPG sub-tabs; clearer XP vs coins framing. Coin/XP mechanics unchanged.
 - **Growth Skills tab — RPG mastery roads:** polished `/growth/skills` into dark fantasy mastery roads UI; lucide icons instead of emoji; summary labels «Общий ранг / Сильная дорога / Точка роста»; codex footer «Откуда приходит опыт». XP mechanics unchanged.
 - **Body Abilities roadmap — 36 entries:** expanded catalog to 36 body abilities across 3 progression rings (`early_signals`, `stable_form`, `new_mobility`); only first 12 remain active with unlock/hints and in-app icons v1; additional 24 are future text/glyph placeholders on skill board — distant route orientation, not daily obligations. Future art can ship as Body Ability Icons v2/v3.
