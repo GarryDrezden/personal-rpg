@@ -147,7 +147,7 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
             <p className="body-ability-group-label mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--app-gold)]/88">
               Первые сигналы тела
             </p>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 auto-rows-fr">
               {featuredItems.map((item) => (
                 <BodyAbilitySkillCard
                   key={item.ability.id}
@@ -161,7 +161,7 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
           </div>
 
           {otherItems.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 auto-rows-fr">
               {otherItems.map((item) => (
                 <BodyAbilitySkillCard
                   key={item.ability.id}
