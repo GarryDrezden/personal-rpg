@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
 import { useAppStore } from '../store/appStore';
 import { calcAllSkillProgress, getSkillsSummary } from '../utils/skillEngine';
-import { SKILLS, SKILL_LEVEL_HOW_TO } from '../constants/skills';
+import { SKILLS } from '../constants/skills';
 import { SkillCard } from '../components/skills/SkillCard';
-import { Card } from '../components/ui/Card';
+import { SKILL_XP_CODEX_ROWS } from '../components/skills/skillUi';
+import { SkillRoadInlineIcon } from '../components/skills/SkillRoadInlineIcon';
 
 export function SkillsPage({ embedded = false }: { embedded?: boolean }) {
   const { dailyEntries, measurements, settings } = useAppStore();
@@ -14,62 +15,123 @@ export function SkillsPage({ embedded = false }: { embedded?: boolean }) {
   );
 
   const ordered = SKILLS.map((def) => skills.find((s) => s.id === def.id)!);
-  const { totalLevels, strongest, weakest, hasAnyXp } = getSkillsSummary(skills);
+  const { totalLevels, strongest, growthFocus, hasAnyXp } = getSkillsSummary(skills);
 
   return (
-    <div className="space-y-6">
-      {!embedded ? (
-        <header>
-          <h1 className="text-2xl font-bold text-[var(--app-text)]">Навыки персонажа</h1>
-          <p className="mt-1 text-sm text-[var(--app-text-muted)]">
-            Каждое действие прокачивает одну из сторон режима.
-          </p>
-        </header>
-      ) : null}
-
-      <Card className="bg-[color-mix(in_srgb,var(--app-primary)_8%,var(--app-card))]">
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div>
-            <p className="text-sm text-[var(--app-text-muted)]">Сумма уровней</p>
-            <p className="text-2xl font-bold text-[var(--app-primary)]">{totalLevels}</p>
-          </div>
-          <div>
-            <p className="text-sm text-[var(--app-text-muted)]">Самый прокачанный</p>
-            <p className="text-lg font-semibold text-[var(--app-text)]">
-              {hasAnyXp ? `${strongest.icon} ${strongest.title}` : '—'}
+    <div className="space-y-6" data-testid="growth-skills-page">
+      <header
+        className={
+          embedded
+            ? 'relative overflow-hidden rounded-2xl border border-violet-500/20 bg-gradient-to-br from-[#14101f]/90 via-[#0e0c18]/95 to-[#08070f] px-4 py-5 sm:px-6'
+            : undefined
+        }
+      >
+        {embedded ? (
+          <>
+            <div
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,rgba(212,165,55,0.07),transparent_55%)]"
+              aria-hidden
+            />
+            <div className="relative">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-gold)]/80">
+                Дороги мастерства
+              </p>
+              <h1 className="mt-1.5 text-xl font-bold text-[var(--app-text)] sm:text-2xl">
+                Навыки героя
+              </h1>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--app-text-muted)]">
+                Навыки растут от обычных дней. Это не обязанности, а дороги, которые поддерживают
+                маршрут.
+              </p>
+            </div>
+          </>
+        ) : (
+          <>
+            <h1 className="text-2xl font-bold text-[var(--app-text)]">Навыки героя</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--app-text-muted)]">
+              Навыки растут от обычных дней. Это не обязанности, а дороги, которые поддерживают
+              маршрут.
             </p>
-          </div>
-          <div>
-            <p className="text-sm text-[var(--app-text-muted)]">Самый слабый</p>
-            <p className="text-lg font-semibold text-[var(--app-text)]">
-              {hasAnyXp ? `${weakest.icon} ${weakest.title}` : '—'}
-            </p>
-          </div>
-        </div>
-        {!hasAnyXp && (
-          <p className="mt-4 text-sm text-[var(--app-text-muted)]">
-            Навыки начнут расти после первых записей.
-          </p>
+          </>
         )}
-      </Card>
+      </header>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <section className="relative overflow-hidden rounded-2xl border border-violet-500/20 bg-gradient-to-br from-[#101522]/80 via-[#0e0c16]/90 to-[#08070f] px-4 py-4 sm:px-5 sm:py-5">
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_80%_0%,rgba(88,28,135,0.1),transparent_50%)]"
+          aria-hidden
+        />
+        <dl className="relative grid gap-4 sm:grid-cols-3">
+          <div>
+            <dt className="text-xs font-medium uppercase tracking-wide text-[var(--app-text-muted)]/70">
+              Общий ранг
+            </dt>
+            <dd className="mt-1 text-2xl font-bold text-[var(--app-gold)]">{totalLevels}</dd>
+          </div>
+          <div>
+            <dt className="text-xs font-medium uppercase tracking-wide text-[var(--app-text-muted)]/70">
+              Сильная дорога
+            </dt>
+            <dd className="mt-1 flex items-center gap-2 text-sm font-semibold text-[var(--app-text)] sm:text-base">
+              {hasAnyXp && strongest ? (
+                <>
+                  <SkillRoadInlineIcon skillId={strongest.id} />
+                  <span>{strongest.title}</span>
+                </>
+              ) : (
+                '—'
+              )}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs font-medium uppercase tracking-wide text-[var(--app-text-muted)]/70">
+              Точка роста
+            </dt>
+            <dd className="mt-1 flex items-center gap-2 text-sm font-semibold text-[var(--app-text)] sm:text-base">
+              {hasAnyXp && growthFocus ? (
+                <>
+                  <SkillRoadInlineIcon skillId={growthFocus.id} />
+                  <span>{growthFocus.title}</span>
+                </>
+              ) : (
+                '—'
+              )}
+            </dd>
+          </div>
+        </dl>
+        {!hasAnyXp ? (
+          <p className="relative mt-4 text-sm text-[var(--app-text-muted)]/80">
+            Дороги начнут расти после первых записей — персонаж продолжит путь шаг за шагом.
+          </p>
+        ) : null}
+      </section>
+
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {ordered.map((skill) => (
           <SkillCard key={skill.id} skill={skill} />
         ))}
       </div>
 
-      <Card>
-        <h2 className="mb-4 text-lg font-semibold text-[var(--app-text)]">Как качаются навыки</h2>
-        <ul className="space-y-2">
-          {SKILL_LEVEL_HOW_TO.map(({ skill, actions }) => (
-            <li key={skill} className="flex gap-2 text-sm">
-              <span className="min-w-[5.5rem] font-semibold text-[var(--app-text)]">{skill}:</span>
-              <span className="text-[var(--app-text-muted)]">{actions}</span>
+      <footer className="rounded-2xl border border-violet-500/15 bg-gradient-to-br from-[#101522]/70 via-[#0e0c16]/85 to-[#08070f] px-4 py-5 sm:px-6">
+        <h2 className="text-base font-semibold text-[var(--app-text)]">Откуда приходит опыт</h2>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--app-text-muted)]/80">
+          Навыки растут из обычных действий. Не нужно закрывать всё сразу — достаточно удерживать
+          маршрут.
+        </p>
+        <ul className="mt-4 space-y-2">
+          {SKILL_XP_CODEX_ROWS.map(({ skill, actions }) => (
+            <li
+              key={skill}
+              className="flex flex-col gap-0.5 border-b border-violet-500/8 pb-2 text-sm last:border-0 last:pb-0 sm:flex-row sm:gap-3"
+            >
+              <span className="min-w-[5.5rem] shrink-0 font-medium text-[var(--app-text)]/90">
+                {skill}
+              </span>
+              <span className="text-[var(--app-text-muted)]/65">{actions}</span>
             </li>
           ))}
         </ul>
-      </Card>
+      </footer>
     </div>
   );
 }

@@ -42,7 +42,18 @@ Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 | Dashboard | `DashboardScene`, `DailyQuestsCompact`, `NextBestActionCompact` |
 | Journey | `JourneyMapV3Section`, `JourneyChapterRoadItem`, `JourneyMapV3SummaryBar`, `JourneyChapterDetailPanel` |
 | Codex | `HeroTransformationShowcase`, collections |
+| Growth | `SkillsPage`, `BodyAbilitySkillBoard`, `GrowthHubTabs` |
 | Game assets | `GameAssetImage`, `GameAssetPlaceholder` |
+
+## Growth Skills tab (mastery roads)
+
+`/growth/skills` — **дороги мастерства героя**, не habit-dashboard.
+
+- Lucide/glyph icons in medallions; **no emoji** as primary skill icons
+- Unified dark card shell; per-skill color = accent glow/border/rune line only
+- Summary: «Общий ранг / Сильная дорога / Точка роста» — avoid «слабый», shame language
+- Footer codex: «Откуда приходит опыт» — orientation, not obligation checklist
+- XP/level math unchanged; UI copy lives in `src/components/skills/skillUi.ts`
 
 ## Journey Map rules
 

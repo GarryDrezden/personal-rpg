@@ -351,10 +351,7 @@ export function getSkillsSummary(skills: SkillProgress[]) {
 
   const hasAnyXp = skills.some((s) => s.totalXp > 0);
 
-
-
-  return { totalLevels, strongest, weakest, hasAnyXp };
-
+  return { totalLevels, strongest, growthFocus: weakest, hasAnyXp };
 }
 
 
