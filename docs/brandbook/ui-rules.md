@@ -55,6 +55,16 @@ Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 - Footer codex: «Откуда приходит опыт» — orientation, not obligation checklist
 - XP/level math unchanged; UI copy lives in `src/components/skills/skillUi.ts`
 
+## Growth Achievements tab (hero trophy collection)
+
+`/growth/achievements` — **коллекция трофеев героя**, не checklist dashboard.
+
+- Hero: «Коллекция героя» + прогресс коллекции; секции «Недавно получено», «Близко к открытию», «Разделы коллекции»
+- Locked = «В пути»; earned = warm gold glow; close = subtle violet highlight
+- Category `boss` in UI → «Испытания» (not campaign codex bosses)
+- Compact cards when locked with zero progress; avoid shame language
+- Achievement unlock logic unchanged; UI copy in `src/components/achievements/achievementsUi.ts`
+
 ## Journey Map rules
 
 Карта возвращения тела (`/journey`) — **вертикальная хроника пути (v3)**, не горизонтальная карта-мир.
