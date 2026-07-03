@@ -5,7 +5,10 @@ import {
   getBodyAbilityV1Items,
   getBodyAbilityV1Summary,
 } from '../../game/bodyAbilities/bodyAbilityV1Engine';
-import { BODY_ABILITY_FEATURED_IDS } from '../../game/bodyAbilityAssetUi';
+import {
+  isBodyAbilityFeaturedOnSkillBoard,
+  sortBodyAbilitySkillBoardItems,
+} from '../../game/bodyAbilityAssetUi';
 import { useBodyAbilityV1Actions } from '../../hooks/useBodyAbilityV1Actions';
 import { BodyAbilitySkillCard } from './BodyAbilitySkillCard';
 
@@ -36,16 +39,8 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
     [items],
   );
 
-  const featuredItems = useMemo(
-    () =>
-      BODY_ABILITY_FEATURED_IDS.map((id) => items.find((i) => i.ability.id === id)).filter(
-        (item): item is (typeof items)[number] => item != null,
-      ),
-    [items],
-  );
-
-  const otherItems = useMemo(
-    () => items.filter((i) => !(BODY_ABILITY_FEATURED_IDS as readonly string[]).includes(i.ability.id)),
+  const displayItems = useMemo(
+    () => sortBodyAbilitySkillBoardItems(items),
     [items],
   );
 
@@ -142,36 +137,16 @@ export function BodyAbilitySkillBoard({ showPageHero = true }: BodyAbilitySkillB
           </dl>
         </div>
 
-        <div className="space-y-6">
-          <div>
-            <p className="body-ability-group-label mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--app-gold)]/88">
-              Первые сигналы тела
-            </p>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 auto-rows-fr">
-              {featuredItems.map((item) => (
-                <BodyAbilitySkillCard
-                  key={item.ability.id}
-                  item={item}
-                  featured
-                  unlocking={unlockingId === item.ability.id}
-                  onUnlock={() => void handleUnlock(item.ability.id)}
-                />
-              ))}
-            </div>
-          </div>
-
-          {otherItems.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 auto-rows-fr">
-              {otherItems.map((item) => (
-                <BodyAbilitySkillCard
-                  key={item.ability.id}
-                  item={item}
-                  unlocking={unlockingId === item.ability.id}
-                  onUnlock={() => void handleUnlock(item.ability.id)}
-                />
-              ))}
-            </div>
-          ) : null}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 auto-rows-fr">
+          {displayItems.map((item) => (
+            <BodyAbilitySkillCard
+              key={item.ability.id}
+              item={item}
+              featured={isBodyAbilityFeaturedOnSkillBoard(item.ability.id)}
+              unlocking={unlockingId === item.ability.id}
+              onUnlock={() => void handleUnlock(item.ability.id)}
+            />
+          ))}
         </div>
       </section>
 
