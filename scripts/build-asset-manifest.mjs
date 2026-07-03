@@ -818,10 +818,32 @@ const BODY_ABILITY_ICON_GROUP2_IDS = BODY_ABILITY_ICON_GROUP2_ENTITY_IDS.map(
 /** Set true when group-2 icons are on disk and wired in /growth/abilities skill board. */
 const BODY_ABILITY_ICON_GROUP2_IN_APP = true;
 
+/** Final visual group — confidence / recovery / journal / stairs-up on skill board. */
+const BODY_ABILITY_ICON_GROUP3_ENTITY_IDS = [
+  'movement_confidence',
+  'recovery_awareness',
+  'journal_clarity',
+  'stairs_easier',
+];
+const BODY_ABILITY_ICON_GROUP3_IDS = BODY_ABILITY_ICON_GROUP3_ENTITY_IDS.map(
+  (entityId) => `ability-${entityId}`,
+);
+
+/** Set true when group-3 icons complete Body Ability Icons v1 (12/12) on skill board. */
+const BODY_ABILITY_ICON_GROUP3_IN_APP = true;
+
 const BODY_ABILITY_ICON_IN_APP_IDS = new Set([
   ...(BODY_ABILITY_ICON_GROUP1_IN_APP ? BODY_ABILITY_ICON_GROUP1_IDS : []),
   ...(BODY_ABILITY_ICON_GROUP2_IN_APP ? BODY_ABILITY_ICON_GROUP2_IDS : []),
+  ...(BODY_ABILITY_ICON_GROUP3_IN_APP ? BODY_ABILITY_ICON_GROUP3_IDS : []),
 ]);
+
+function bodyAbilityIconGroupNumber(id) {
+  if (BODY_ABILITY_ICON_GROUP3_IDS.includes(id)) return 3;
+  if (BODY_ABILITY_ICON_GROUP2_IDS.includes(id)) return 2;
+  if (BODY_ABILITY_ICON_GROUP1_IDS.includes(id)) return 1;
+  return null;
+}
 
 function syncBodyAbilityIconsFromDisk(assetList) {
   let onDisk = 0;
@@ -839,7 +861,7 @@ function syncBodyAbilityIconsFromDisk(assetList) {
     if (BODY_ABILITY_ICON_IN_APP_IDS.has(id)) {
       asset.status = 'in-app';
       inApp += 1;
-      const group = BODY_ABILITY_ICON_GROUP2_IDS.includes(id) ? 2 : 1;
+      const group = bodyAbilityIconGroupNumber(id);
       asset.notes = `${asset.notes || ''} Body ability icon group ${group} connected in skill board (${ext}).`.trim();
     } else {
       asset.status = ext === '.webp' ? 'processed' : 'generated';
@@ -862,6 +884,13 @@ const bodyAbilityIconsGroup2InApp =
   BODY_ABILITY_ICON_GROUP2_IDS.every((id) =>
     assets.find((a) => a.id === id && a.status === 'in-app'),
   );
+const bodyAbilityIconsGroup3InApp =
+  BODY_ABILITY_ICON_GROUP3_IN_APP &&
+  BODY_ABILITY_ICON_GROUP3_IDS.every((id) =>
+    assets.find((a) => a.id === id && a.status === 'in-app'),
+  );
+const bodyAbilityIconsV1CompleteInApp =
+  bodyAbilityIconsInApp === BODY_ABILITY_ICON_IDS.length;
 const bodyAbilityIconsPartialInApp =
   bodyAbilityIconsInApp > 0 && bodyAbilityIconsInApp < BODY_ABILITY_ICON_IDS.length;
 const batch2InApp =
@@ -871,8 +900,9 @@ const manifest = {
   version: 2,
   schema: 'asset-registry-2.0',
   updated: '2026-06-06',
-  gameAssetVersion:
-    bodyAbilityIconsGroup2InApp && bodyAbilityIconsInApp >= 8
+  gameAssetVersion: bodyAbilityIconsV1CompleteInApp
+    ? '24'
+    : bodyAbilityIconsGroup2InApp && bodyAbilityIconsInApp >= 8
       ? '23'
       : bodyAbilityIconsGroup1InApp
         ? '22'
@@ -938,8 +968,9 @@ const manifest = {
             : bodyAbilityIconsOnDisk > 0
               ? 'partial-on-disk'
               : 'prepared',
-    description:
-      bodyAbilityIconsInApp === BODY_ABILITY_ICON_IDS.length
+    description: bodyAbilityIconsV1CompleteInApp
+      ? 'Body Ability Icons v1 complete: 12/12 in-app on skill board. Visual icon set v1 done; Body Abilities system may expand later (24–36). Cozy variant excluded.'
+      : bodyAbilityIconsInApp === BODY_ABILITY_ICON_IDS.length
         ? 'Body Ability Icons mini-batch: 12/12 in-app on skill board. Cozy variant excluded.'
         : bodyAbilityIconsGroup2InApp
           ? 'Body Ability Icons mini-batch: groups 1–2 (8/12) in-app on skill board; remaining 4 prompt-ready with glyph fallback. Cozy variant excluded.'
@@ -954,12 +985,15 @@ const manifest = {
     inApp: bodyAbilityIconsInApp === BODY_ABILITY_ICON_IDS.length,
     promptQueue: 'docs/prompts/assets/BODY-ABILITY-ICONS-mini-batch-queue.md',
     workflow:
-      'Generate per prompt → public/game-assets/abilities/ → node scripts/build-asset-manifest.mjs → in-app per group when GROUP1/GROUP2 flags set',
+      'Generate per prompt → public/game-assets/abilities/ → node scripts/build-asset-manifest.mjs → in-app per group when GROUP1/2/3 flags set',
     source: 'src/game/bodyAbilities/bodyAbilityConfig.ts',
     group1InApp: bodyAbilityIconsGroup1InApp,
     group1AssetIds: BODY_ABILITY_ICON_GROUP1_IDS,
     group2InApp: bodyAbilityIconsGroup2InApp,
     group2AssetIds: BODY_ABILITY_ICON_GROUP2_IDS,
+    group3InApp: bodyAbilityIconsGroup3InApp,
+    group3AssetIds: BODY_ABILITY_ICON_GROUP3_IDS,
+    v1Complete: bodyAbilityIconsV1CompleteInApp,
   },
   conventions: {
     naming:

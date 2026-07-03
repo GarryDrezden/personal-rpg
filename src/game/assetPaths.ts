@@ -14,7 +14,7 @@ import { getLegacyCodexBossManifestAssetId } from './manifestAssetUi';
 export const GAME_ASSET_BASE_PATH = '/game-assets';
 
 /** Bump when replacing PNGs so browsers reload public assets */
-export const GAME_ASSET_VERSION = '23';
+export const GAME_ASSET_VERSION = '24';
 
 /** Folder names under heroes/{gender}/variants/ */
 export type HeroAssetVariantFolder = 'dark-fantasy' | 'light';

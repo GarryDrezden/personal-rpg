@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Body Ability Icons v1 complete:** all 12 ability medallions on disk and wired into the RPG Skill Board; `GAME_ASSET_VERSION` 24. Closes visual icon set v1; Body Abilities system may expand later (24–36). Glyph fallback remains as safety for missing assets.
 - **Body Ability Icons — Group 2 in-app:** integrated second 4 body ability icons (`stand_easier`, `car_easier`, `clothing_freer`, `household_easier`) on disk and wired into skill board via manifest `in-app`; `GAME_ASSET_VERSION` 23. **8/12** in-app total; remaining 4 stay prompt-ready with glyph fallback. Set not done.
 - **Body Ability Icons — Group 1 in-app:** integrated first 4 body ability icons (`tie_shoes_easier`, `stand_from_floor`, `stairs_breath`, `long_route`) on disk and wired into `/growth/abilities` skill board via manifest `in-app`; `GAME_ASSET_VERSION` 22. Remaining 8 icons stay prompt-ready with emoji fallback. Not the full 12-icon set completion.
 - **Body Abilities Skill Board polish:** larger medallions, softer in-app art rendering, supportive state labels, three-line counters (opened / on route / remaining), featured group label «Первые сигналы тела», denser card layout.

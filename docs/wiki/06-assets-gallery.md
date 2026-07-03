@@ -127,7 +127,7 @@ prompt-ready → Nano Banana → public/ → build-asset-manifest.mjs → in-app
 | `camp-base-stage-02-shelter` | `/growth/camp`, `BaseStageRail` (stage shelter) |
 | `season-01-reward-core-spark` | `SeasonDashboardSummary` (сезон 1) |
 
-`GAME_ASSET_VERSION` = **23**. Fallback: emoji/gradient если `getManifestAssetUrl()` → null.
+`GAME_ASSET_VERSION` = **24**. Fallback: lucide glyph / gradient если `getManifestAssetUrl()` → null.
 
 **Visual QA (2026-06):** Batch 1 connected and polished — onboarding art только шаг 0; camp thumbnails с dim locked; season reward full-width banner.
 
@@ -157,38 +157,39 @@ generate → optimize → public/ → build-asset-manifest.mjs → in-app (BATCH
 
 **Исключено:** `body-ability-icon-set-v1` — отдельный mini-batch. Cozy Campaign — не в scope.
 
-## Body Ability Icons Mini-Batch (partial in-app)
+## Body Ability Icons v1 — complete (12/12 in-app)
 
-12 иконок Body Abilities v1 — **8/12 in-app** (groups 1–2), **4/12 prompt-ready** with glyph fallback.
+12 иконок Body Abilities v1 — **12/12 in-app** on skill board. Visual icon set v1 complete.
 
 | Документ | Назначение |
 |----------|------------|
 | [`BODY-ABILITY-ICONS-mini-batch-queue.md`](../prompts/assets/BODY-ABILITY-ICONS-mini-batch-queue.md) | Queue: 12 ability icons |
 | `ability-{entityId}.md` | Per-ability Nano Banana prompts |
-| `manifest.bodyAbilityIconsMiniBatch` | Batch metadata (`partial-in-app`, 8/12 on disk) |
+| `manifest.bodyAbilityIconsMiniBatch` | Batch metadata (`in-app`, 12/12, `v1Complete`) |
 
-**Group 1 in-app:**
+**All 12 in-app (display order):**
 
-| Ability id | File |
-|------------|------|
-| `tie_shoes_easier` | `ability-mobility-shoes.webp` |
-| `stand_from_floor` | `ability-mobility-floor.webp` |
-| `stairs_breath` | `ability-endurance-stairs.webp` |
-| `long_route` | `ability-endurance-route.webp` |
+| # | Ability id | File |
+|---|------------|------|
+| 1 | `stand_easier` | `ability-mobility-stand.webp` |
+| 2 | `tie_shoes_easier` | `ability-mobility-shoes.webp` |
+| 3 | `stand_from_floor` | `ability-mobility-floor.webp` |
+| 4 | `stairs_breath` | `ability-endurance-stairs.webp` |
+| 5 | `long_route` | `ability-endurance-route.webp` |
+| 6 | `car_easier` | `ability-daily-car.webp` |
+| 7 | `clothing_freer` | `ability-clothing-freer.webp` |
+| 8 | `household_easier` | `ability-daily-household.webp` |
+| 9 | `movement_confidence` | `ability-confidence-movement.webp` |
+| 10 | `recovery_awareness` | `ability-recovery-awareness.webp` |
+| 11 | `journal_clarity` | `ability-confidence-journal.webp` |
+| 12 | `stairs_easier` | `ability-endurance-stairs-up.webp` |
 
-**Group 2 in-app:**
-
-| Ability id | File |
-|------------|------|
-| `stand_easier` | `ability-mobility-stand.webp` |
-| `car_easier` | `ability-daily-car.webp` |
-| `clothing_freer` | `ability-clothing-freer.webp` |
-| `household_easier` | `ability-daily-household.webp` |
+**Note:** Icon set v1 closes MVP visual coverage. Future Body Abilities expansions (24–36) are a separate roadmap item.
 
 **Visual rule:** RPG artifacts / badges / tokens — **not** medical, hospital, or fitness pictograms.  
 **Format:** 1:1, readable at **48–64px**, dark fantasy + cozy, ember/gold accent.
 
-**UI:** `BodyAbilitySkillBoard`, `/growth/abilities` — manifest art for 8 in-app; lucide glyph fallback for remaining 4.
+**UI:** `BodyAbilitySkillBoard`, `/growth/abilities` — all 12 use manifest art; lucide glyph fallback for missing/future assets only.
 
 ## Body Abilities — RPG skill board (2026-06)
 
@@ -196,9 +197,8 @@ generate → optimize → public/ → build-asset-manifest.mjs → in-app (BATCH
 - hero header («Прогресс — это не только вес»)
 - 12 large medallion cards (128–160px art zone)
 - states: locked / discovered / unlocked / recentlyUnlocked (derived; ≤21 days since unlock)
-- manifest via `getBodyAbilityManifestAssetId()` + safe emoji fallback
-- **group 1–2 in-app (8/12):** mobility/endurance quartet + stand/car/clothing/household
-- **remaining 4:** glyph fallback until generated
+- manifest via `getBodyAbilityManifestAssetId()` + lucide glyph safety fallback
+- **all 12 in-app:** full skill board manifest art v1
 
 ## Workflow
 
