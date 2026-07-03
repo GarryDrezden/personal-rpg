@@ -186,6 +186,8 @@ generate → optimize → public/ → build-asset-manifest.mjs → in-app (BATCH
 
 **Note:** Icon set v1 closes MVP visual coverage. Future Body Abilities expansions (24–36) are a separate roadmap item.
 
+**Visual variety pass (2026-06):** `movement_confidence` and `stairs_breath` icons were redesigned to reduce duplicate route/stair motifs on the skill board. `long_route` keeps the long-path motif; `stairs_easier` keeps the stair-climb motif.
+
 **Visual rule:** RPG artifacts / badges / tokens — **not** medical, hospital, or fitness pictograms.  
 **Format:** 1:1, readable at **48–64px**, dark fantasy + cozy, ember/gold accent.
 
