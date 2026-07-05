@@ -13,6 +13,7 @@ import { getNutritionQuestCompleted, isNutritionTrackingEnabled } from '../../ut
 import { getBodyAbilityState } from '../bodyAbilities/bodyAbilityV1Engine';
 import { getSeasonSnapshot } from '../seasons/seasonEngine';
 import { todayISO } from '../../utils/dates';
+import { hasJournalEntry } from '../../utils/journalEntry';
 
 export const PLATEAU_SOFT_DAYS = 10;
 export const PLATEAU_STRONG_DAYS = 21;
@@ -153,7 +154,7 @@ export function getPlateauRouteHoldingSnapshot(params: {
     return mode === 'minimal' || mode === 'recovery';
   }).length;
   const alcoholFreeDays = windowEntries.filter((e) => e.alcohol === 'none').length;
-  const journalDays = windowEntries.filter((e) => e.journal).length;
+  const journalDays = windowEntries.filter(hasJournalEntry).length;
 
   const plateauStart = params.plateauStartedAt?.slice(0, 10) ?? windowStart;
   const abilityUnlocks = getBodyAbilityState(params.settings).abilityUnlocks ?? [];

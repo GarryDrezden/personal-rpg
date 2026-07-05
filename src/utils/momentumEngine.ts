@@ -33,6 +33,7 @@ import {
 } from './stepsEngine';
 import { MINIMAL_DAY_STEPS } from './recoveryEngine';
 import { weekDays, weekStart } from './dates';
+import { hasJournalEntry } from './journalEntry';
 
 export function clampMomentum(value: number): number {
   return Math.max(MOMENTUM_LIMITS.min, Math.min(MOMENTUM_LIMITS.max, value));
@@ -110,7 +111,7 @@ function isRecoveryMinimalBaseHeld(entry: DailyEntry, settings: AppSettings): bo
   const hasNutrition = isNutritionLogged({ entry, settings });
   const hasSteps = (entry.steps ?? 0) >= MINIMAL_DAY_STEPS;
   const sober = entry.alcohol === 'none';
-  const hasJournal = entry.journal || entry.comment.trim().length > 0;
+  const hasJournal = hasJournalEntry(entry);
 
   return hasNutrition && hasSteps && sober && hasJournal;
 }
@@ -178,7 +179,7 @@ function buildDailyFactors(
   if (entry!.gym) {
     factors.push(factor('gym', 'Зал', 5));
   }
-  if (entry!.journal || entry!.comment.trim().length > 0) {
+  if (hasJournalEntry(entry!)) {
     factors.push(factor('journal', 'Дневник', 3));
   }
 

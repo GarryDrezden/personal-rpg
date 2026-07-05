@@ -2,6 +2,7 @@ import type { DailyEntry } from '../types';
 import type { MeasurementEntry } from '../types';
 import type { ArtifactId, AssetUnlockStatus, HeroStageNumber } from '../types/gameAssets';
 import { hasAnyDailyData } from '../utils/achievementHelpers';
+import { hasJournalEntry } from '../utils/journalEntry';
 
 function countDaysMatching(
   entries: DailyEntry[],
@@ -45,7 +46,7 @@ export function getArtifactUnlockStatus(params: {
           (e) => e.dayMode === 'recovery' || e.dayMode === 'minimal',
         ) >= 3;
       case 'return_shield':
-        return countDaysMatching(dailyEntries, (e) => e.journal) >= 5;
+        return countDaysMatching(dailyEntries, hasJournalEntry) >= 5;
       case 'step_boots':
         return countDaysMatching(dailyEntries, (e) => (e.steps ?? 0) >= 7000) >= 7;
       case 'iron_boots':
@@ -53,7 +54,7 @@ export function getArtifactUnlockStatus(params: {
       case 'control_compass':
         return countDaysMatching(dailyEntries, (e) => e.calories !== null) >= 7;
       case 'journal_quill':
-        return countDaysMatching(dailyEntries, (e) => e.journal) >= 7;
+        return countDaysMatching(dailyEntries, hasJournalEntry) >= 7;
       case 'momentum_core':
         return momentumValue >= 40;
       case 'body_key':

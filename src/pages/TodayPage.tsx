@@ -683,7 +683,13 @@ export function TodayPage() {
 
       <Card>
         <label className="block">
-          <span className="mb-2 block text-sm font-medium text-[var(--app-text)]">Комментарий дня</span>
+          <span className="mb-2 block text-sm font-medium text-[var(--app-text)]">
+            Заметки / дневник дня
+          </span>
+          <p className="mb-2 text-xs leading-relaxed text-[var(--app-text-muted)]/75">
+            Одна строка уже считается записью. Не нужно писать идеально — достаточно оставить след
+            дня.
+          </p>
           <textarea
             value={entry.comment}
             onChange={(e) => patch({ comment: e.target.value })}

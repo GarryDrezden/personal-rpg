@@ -10,6 +10,7 @@ import {
 } from './achievementEngine';
 import { sortMeasurementsByDate } from './measurements';
 import { weekDays, weekStart } from './dates';
+import { hasJournalEntry } from './journalEntry';
 
 const MIN_DAYS_FOR_INSIGHTS = 7;
 
@@ -203,7 +204,7 @@ function journalGoodDayInsight(entries: DailyEntry[], settings: AppSettings): In
   const withoutJournal: DailyEntry[] = [];
 
   for (const e of entriesWithData(entries)) {
-    if (e.journal) withJournal.push(e);
+    if (hasJournalEntry(e)) withJournal.push(e);
     else withoutJournal.push(e);
   }
 

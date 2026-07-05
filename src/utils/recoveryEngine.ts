@@ -7,6 +7,7 @@ import {
   isNutritionLogged,
   isNutritionTrackingEnabled,
 } from './nutritionEngine';
+import { hasJournalEntry } from './journalEntry';
 
 function hasDayData(entry: DailyEntry | undefined): boolean {
   if (!entry) return false;
@@ -17,12 +18,11 @@ function hasDayData(entry: DailyEntry | undefined): boolean {
     entry.alcohol !== null ||
     entry.morningExercise ||
     entry.gym ||
-    entry.journal ||
+    hasJournalEntry(entry) ||
     entry.cooking ||
     entry.repair ||
     entry.plants ||
-    entry.hobby ||
-    entry.comment.trim().length > 0
+    entry.hobby
   );
 }
 
@@ -57,8 +57,7 @@ export function isMinimalDayCompleted(params: {
   const hasNutrition = isNutritionLogged({ entry: todayEntry, settings: params.settings });
   const hasSteps = (todayEntry.steps ?? 0) >= MINIMAL_DAY_STEPS;
   const sober = todayEntry.alcohol === 'none';
-  const hasJournal =
-    todayEntry.journal || todayEntry.comment.trim().length > 0;
+  const hasJournal = hasJournalEntry(todayEntry);
 
   return hasNutrition && hasSteps && sober && hasJournal;
 }
@@ -149,7 +148,7 @@ function hasAnyMetric(entry: DailyEntry | null): boolean {
     entry.alcohol !== null ||
     entry.morningExercise ||
     entry.gym ||
-    entry.journal ||
+    hasJournalEntry(entry) ||
     entry.cooking ||
     entry.repair ||
     entry.plants ||
@@ -229,7 +228,7 @@ export function getRecoveryQuests(params: {
         title: 'Написать одну строку в дневник',
         description: 'Комментарий или отметка дневника',
         icon: '✍️',
-        completed: !!(entry?.journal || entry?.comment.trim()),
+        completed: hasJournalEntry(entry ?? undefined),
       },
     ];
   }

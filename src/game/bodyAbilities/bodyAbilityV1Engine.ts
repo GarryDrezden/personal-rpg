@@ -15,6 +15,7 @@ import {
 } from './bodyAbilityConfig';
 import { getWeightLossKg, getWaistLossCm } from '../../utils/bodyAbilityEngine';
 import { getDayMode, isStepsNormalDone } from '../../utils/stepsEngine';
+import { hasJournalEntry } from '../../utils/journalEntry';
 
 const HINT_MESSAGE =
   'Возможно, тело уже отвечает. Если заметил улучшение в жизни — открой способность.';
@@ -116,7 +117,7 @@ function evaluateHintSignal(
         return mode === 'recovery' || mode === 'minimal';
       }).length >= 2;
     case 'journal_entries':
-      return recent.filter((e) => e.journal).length >= 3;
+      return recent.filter(hasJournalEntry).length >= 3;
     case 'movement_habits':
       return recent.filter(
         (e) => e.gym || e.morningExercise || (e.steps ?? 0) >= 3000,

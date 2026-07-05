@@ -15,6 +15,7 @@ import {
   getTrackingMode,
   isNutritionTrackingEnabled,
 } from './nutritionEngine';
+import { hasJournalEntry } from './journalEntry';
 
 function getEntryForDate(
   date: string,
@@ -155,11 +156,14 @@ export function getDailyQuests(params: {
     if (habitConfig.hiddenBuiltinIds.includes(habit.id)) continue;
 
     const override = habitConfig.builtinOverrides[habit.id];
-    const completed = !!entry?.[habit.id];
+    const completed =
+      habit.id === 'journal' ? hasJournalEntry(entry) : !!entry?.[habit.id as keyof DailyEntry];
     const description =
       habit.id === 'gym'
         ? `Недельный прогресс: ${gymCount}/${weekly.gymTarget}`
-        : (override?.description ?? habit.description);
+        : habit.id === 'journal'
+          ? 'Отметка или строка в «Заметки / дневник дня»'
+          : (override?.description ?? habit.description);
 
     quests.push({
       id: habit.id,
@@ -222,12 +226,11 @@ export function isDayEmpty(entry: DailyEntry | undefined, settings?: AppSettings
     entry.alcohol === null &&
     !entry.morningExercise &&
     !entry.gym &&
-    !entry.journal &&
+    !hasJournalEntry(entry) &&
     !entry.cooking &&
     !entry.repair &&
     !entry.plants &&
     !entry.hobby &&
-    !hasCustom &&
-    !entry.comment.trim()
+    !hasCustom
   );
 }

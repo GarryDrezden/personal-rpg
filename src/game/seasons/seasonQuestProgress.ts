@@ -1,6 +1,7 @@
 import type { AppSettings, DailyEntry } from '../../types';
 import { getDayMode } from '../../utils/stepsEngine';
 import { getNutritionQuestCompleted, isNutritionTrackingEnabled } from '../../utils/nutritionEngine';
+import { hasJournalEntry } from '../../utils/journalEntry';
 import type { SeasonQuestDef, SeasonQuestProgress, SeasonQuestType } from './seasonTypes';
 
 function isResourceMarked(entry: DailyEntry): boolean {
@@ -51,7 +52,7 @@ function questDayMatches(
     case 'recoveryDays':
       return getDayMode(entry.dayMode) === 'recovery';
     case 'daysWithJournal':
-      return entry.journal;
+      return hasJournalEntry(entry);
     case 'daysWithMovement':
       return hasMovement(entry);
     case 'daysSaved':

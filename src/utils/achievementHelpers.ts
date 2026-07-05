@@ -2,6 +2,7 @@ import { addDays, format, parseISO } from 'date-fns';
 import type { DailyEntry } from '../types';
 import { getDayMode } from './stepsEngine';
 import { weekDays, weekStart } from './dates';
+import { hasJournalEntry } from './journalEntry';
 
 export function hasAnyDailyData(entry: DailyEntry | undefined | null): boolean {
   if (!entry) return false;
@@ -11,12 +12,11 @@ export function hasAnyDailyData(entry: DailyEntry | undefined | null): boolean {
   if (entry.alcohol !== null && entry.alcohol !== undefined) return true;
   if (entry.morningExercise) return true;
   if (entry.gym) return true;
-  if (entry.journal) return true;
+  if (hasJournalEntry(entry)) return true;
   if (entry.cooking) return true;
   if (entry.repair) return true;
   if (entry.plants) return true;
   if (entry.hobby) return true;
-  if (entry.comment.trim().length > 0) return true;
   if (entry.energyLevel !== null && entry.energyLevel !== undefined) return true;
   if (entry.sleepQuality !== null && entry.sleepQuality !== undefined) return true;
   if (entry.cognitiveBreaks !== null && entry.cognitiveBreaks !== undefined) return true;

@@ -16,7 +16,7 @@ export const BUILTIN_HABITS: BuiltinHabitTemplate[] = [
   {
     id: 'journal',
     title: 'Дневник',
-    description: 'Запись в дневник',
+    description: 'Запись в дневник или строка в заметках',
     category: 'medium',
     icon: '✍️',
     cardColor: 'secondary',

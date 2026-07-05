@@ -2,6 +2,7 @@ import { subDays, format } from 'date-fns';
 import type { AppSettings, DailyEntry } from '../types';
 import { getWeeklySettingsForDate } from './points';
 import { isStepsMinimumDone, isStepsNormalDone } from './stepsEngine';
+import { hasJournalEntry } from './journalEntry';
 
 function countStreak(
   entries: DailyEntry[],
@@ -52,6 +53,6 @@ export function calcStreaks(
       if (!e || e.steps === null) return false;
       return isStepsMinimumDone(e.steps, s, d);
     }),
-    journal: countStreak(entries, settings, (e) => e?.journal === true),
+    journal: countStreak(entries, settings, (e) => hasJournalEntry(e)),
   };
 }

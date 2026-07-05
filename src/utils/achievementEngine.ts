@@ -46,6 +46,7 @@ import {
 import { getBonusXpTotal } from './xpTransactionStorage';
 import { getPlateauSnapshot } from '../game/plateau/plateauEngine';
 import { getBossCampaignSnapshot, isBossFirstCrackEligible } from '../game/bosses/bossCampaignEngine';
+import { hasJournalEntry } from './journalEntry';
 
 export type AchievementEngineParams = {
   dailyEntries: DailyEntry[];
@@ -98,12 +99,11 @@ export function hasDayData(entry: DailyEntry | undefined): boolean {
     entry.alcohol !== null ||
     entry.morningExercise ||
     entry.gym ||
-    entry.journal ||
+    hasJournalEntry(entry) ||
     entry.cooking ||
     entry.repair ||
     entry.plants ||
-    entry.hobby ||
-    entry.comment.trim().length > 0
+    entry.hobby
   );
 }
 
@@ -362,7 +362,7 @@ function buildMetrics(params: AchievementEngineParams): AchievementMetrics {
     maxStepsDay: Math.max(0, ...entries.map((e) => e.steps ?? 0)),
     totalMorningExercise: countEntries(entries, (e) => e.morningExercise),
     totalGym: countEntries(entries, (e) => e.gym),
-    totalJournal: countEntries(entries, (e) => e.journal),
+    totalJournal: countEntries(entries, hasJournalEntry),
     totalCooking: countEntries(entries, (e) => e.cooking),
     totalRepair: countEntries(entries, (e) => e.repair),
     totalPlants: countEntries(entries, (e) => e.plants),
@@ -421,7 +421,7 @@ function buildMetrics(params: AchievementEngineParams): AchievementMetrics {
       (e) =>
         isCaloriesInLimit(e, settings) &&
         isStepsGoalDone(e, settings) &&
-        e.journal &&
+        hasJournalEntry(e) &&
         e.hobby,
     ),
     strongWeeks,

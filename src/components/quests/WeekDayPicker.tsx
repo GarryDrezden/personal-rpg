@@ -2,6 +2,7 @@ import { format, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import type { DailyEntry } from '../../types';
 import { weekDays } from '../../utils/dates';
+import { hasJournalEntry } from '../../utils/journalEntry';
 
 type WeekDayPickerProps = {
   weekStartDate: string;
@@ -19,13 +20,12 @@ function hasDayData(entry: DailyEntry | undefined): boolean {
     entry.alcohol !== null ||
     entry.morningExercise ||
     entry.gym ||
-    entry.journal ||
+    hasJournalEntry(entry) ||
     entry.cooking ||
     entry.repair ||
     entry.plants ||
     entry.hobby ||
-    Object.values(entry.customCompletions ?? {}).some(Boolean) ||
-    entry.comment.trim().length > 0
+    Object.values(entry.customCompletions ?? {}).some(Boolean)
   );
 }
 

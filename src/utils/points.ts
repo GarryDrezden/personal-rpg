@@ -8,6 +8,7 @@ import {
   isNutritionGoodForWeekBonus,
   isNutritionTrackingEnabled,
 } from './nutritionEngine';
+import { hasJournalEntry } from './journalEntry';
 
 export function getWeeklySettingsForDate(
   date: string,
@@ -51,7 +52,7 @@ export function calcDailyPoints(entry: DailyEntry, settings: AppSettings): numbe
 
   if (entry.morningExercise) total += p.morningExercise;
   if (entry.gym) total += p.gym;
-  if (entry.journal) total += p.journal;
+  if (hasJournalEntry(entry)) total += p.journal;
   if (entry.cooking) total += p.cooking;
   if (entry.repair) total += p.repair;
   if (entry.plants) total += p.plants;

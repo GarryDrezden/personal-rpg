@@ -13,6 +13,7 @@ import {
 } from './nutritionEngine';
 
 import { isMinimalDayCompleted } from './recoveryEngine';
+import { hasJournalEntry } from './journalEntry';
 
 import { getDayMode, getStepsStatus } from './stepsEngine';
 
@@ -171,7 +172,7 @@ export function calcSkillXpFromDailyEntry(
 
   if (isNoAlcohol(entry)) xp.clarity += a.noAlcohol;
 
-  if (entry.journal) xp.clarity += a.journal;
+  if (hasJournalEntry(entry)) xp.clarity += a.journal;
 
 
 
