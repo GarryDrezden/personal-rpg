@@ -149,6 +149,21 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
     return saved;
   },
 
+  async updateMeasurement(
+    id: string,
+    entry: Omit<MeasurementEntry, 'id'>,
+  ): Promise<MeasurementEntry> {
+    const state = await ensureCache();
+    const idx = state.measurements.findIndex((m) => m.id === id);
+    if (idx < 0) throw new Error('Measurement not found');
+    const saved: MeasurementEntry = { ...entry, id };
+    state.measurements = state.measurements
+      .map((m) => (m.id === id ? saved : m))
+      .sort((a, b) => a.date.localeCompare(b.date));
+    await persistType('measurements', state.measurements);
+    return saved;
+  },
+
   async deleteMeasurement(id: string): Promise<void> {
     const state = await ensureCache();
     state.measurements = state.measurements.filter((m) => m.id !== id);

@@ -53,6 +53,7 @@ interface AppState extends AppData {
   updateDaily: (entry: DailyEntry) => Promise<void>;
   deleteDaily: (date: string) => Promise<void>;
   addMeasurement: (entry: Omit<MeasurementEntry, 'id'>) => Promise<void>;
+  updateMeasurement: (id: string, entry: Omit<MeasurementEntry, 'id'>) => Promise<void>;
   addReward: (reward: Omit<Reward, 'id' | 'purchasedAt'>) => Promise<void>;
   updateReward: (id: string, patch: Partial<Pick<Reward, 'title' | 'description' | 'cost' | 'category' | 'moneyGoal'>>) => Promise<void>;
   deleteReward: (id: string) => Promise<void>;
@@ -166,6 +167,16 @@ export const useAppStore = create<AppState>((set, get) => ({
   addMeasurement: async (entry) => {
     const saved = await getRepository().addMeasurement(entry);
     const measurements = [...get().measurements, saved].sort((a, b) => a.date.localeCompare(b.date));
+    set({ measurements });
+    syncAchievementsFromData(get().dailyEntries, measurements, get().settings);
+  },
+
+  updateMeasurement: async (id, entry) => {
+    const saved = await getRepository().updateMeasurement(id, entry);
+    const measurements = get()
+      .measurements.filter((m) => m.id !== id)
+      .concat(saved)
+      .sort((a, b) => a.date.localeCompare(b.date));
     set({ measurements });
     syncAchievementsFromData(get().dailyEntries, measurements, get().settings);
   },

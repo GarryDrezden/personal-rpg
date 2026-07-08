@@ -69,7 +69,7 @@
 - **Today** (`/today`) — ввод дня, квесты, nutrition modes
 - **Week** (`/week`) — недельный босс, календарь, бонусы
 - **Growth hub** (`/growth/:tab`) — skills, abilities, camp, rewards, achievements, trials; **Growth Hub integration QA (2026-06)** — unified hero panels, tab chrome, trials/achievements copy aligned across tabs
-- **Measurements** (`/measurements`) — замеры и графики
+- **Measurements** (`/measurements`) — замеры, графики; можно редактировать дату и значения в истории
 - **Journey map** (`/journey`) — вертикальная хроника пути (v3): 9 глав + hero stages (20 стадий трансформации)
 - **Codex** (`/codex`) — коллекции: герой, спутники, мобы, боссы, артефакты
 - **Freedom** (`/freedom`), **Momentum** (`/momentum`) — метрики устойчивости

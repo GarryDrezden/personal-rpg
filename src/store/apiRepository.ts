@@ -45,6 +45,12 @@ export const apiRepository: DataRepository = {
       body: JSON.stringify(entry),
     }),
 
+  updateMeasurement: (id, entry) =>
+    request<MeasurementEntry>(`${API}/measurements/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(entry),
+    }),
+
   deleteMeasurement: (id) =>
     request(`${API}/measurements/${id}`, { method: 'DELETE' }).then(() => undefined),
 

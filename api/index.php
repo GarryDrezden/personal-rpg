@@ -81,6 +81,33 @@ if ($uri === '/measurements' && $method === 'POST') {
     jsonResponse(rowToMeasurement($stmt->fetch()), 201);
 }
 
+// PUT /measurements/{id}
+if (preg_match('#^/measurements/([^/]+)$#', $uri, $m) && $method === 'PUT') {
+    $id = $m[1];
+    $body = getJsonBody();
+    $pdo->prepare(
+        'UPDATE measurements SET date = :date, weight = :weight, chest = :chest, waist = :waist, belly = :belly, hips = :hips, thigh = :thigh, biceps = :biceps, comment = :comment WHERE id = :id'
+    )->execute([
+        'id' => $id,
+        'date' => $body['date'],
+        'weight' => $body['weight'] ?? null,
+        'chest' => $body['chest'] ?? null,
+        'waist' => $body['waist'] ?? null,
+        'belly' => $body['belly'] ?? null,
+        'hips' => $body['hips'] ?? null,
+        'thigh' => $body['thigh'] ?? null,
+        'biceps' => $body['biceps'] ?? null,
+        'comment' => $body['comment'] ?? '',
+    ]);
+    $stmt = $pdo->prepare('SELECT * FROM measurements WHERE id = :id');
+    $stmt->execute(['id' => $id]);
+    $row = $stmt->fetch();
+    if (!$row) {
+        jsonResponse(['error' => 'Measurement not found'], 404);
+    }
+    jsonResponse(rowToMeasurement($row));
+}
+
 // DELETE /measurements/{id}
 if (preg_match('#^/measurements/([^/]+)$#', $uri, $m) && $method === 'DELETE') {
     $pdo->prepare('DELETE FROM measurements WHERE id = :id')->execute(['id' => $m[1]]);

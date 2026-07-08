@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useAppStore } from '../store/appStore';
 import { todayISO, formatDateRu, isMonday } from '../utils/dates';
 import { getDelta, sortMeasurementsByDate } from '../utils/measurements';
@@ -32,8 +32,22 @@ import type { MeasurementEntry } from '../types';
 
 const MeasurementsLineChart = lazy(() => import('../components/measurements/MeasurementsLineChart'));
 
+function emptyMeasurementForm(date: string): Omit<MeasurementEntry, 'id'> {
+  return {
+    date,
+    weight: null,
+    chest: null,
+    waist: null,
+    belly: null,
+    hips: null,
+    thigh: null,
+    biceps: null,
+    comment: '',
+  };
+}
+
 export function MeasurementsPage() {
-  const { measurements, addMeasurement, settings } = useAppStore();
+  const { measurements, addMeasurement, updateMeasurement, settings } = useAppStore();
   const sorted = sortMeasurementsByDate(measurements);
   const weightDelta = getDelta(measurements, 'weight');
   const waistDelta = getDelta(measurements, 'waist');
@@ -49,19 +63,11 @@ export function MeasurementsPage() {
   const [dualAxisMetrics, setDualAxisMetrics] = useState<MeasurementMetricKey[]>(
     () => getStoredDualAxisMetrics() ?? resolveInitialDualAxisMetrics(),
   );
-  const [form, setForm] = useState<Omit<MeasurementEntry, 'id'>>({
-    date: today,
-    weight: null,
-    chest: null,
-    waist: null,
-    belly: null,
-    hips: null,
-    thigh: null,
-    biceps: null,
-    comment: '',
-  });
+  const [form, setForm] = useState<Omit<MeasurementEntry, 'id'>>(() => emptyMeasurementForm(today));
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setStoredMeasurementMetric(selectedMetric);
@@ -132,23 +138,41 @@ export function MeasurementsPage() {
     setSaving(true);
     setSaveError(null);
     try {
-      await addMeasurement(form);
-      setForm({
-        ...form,
-        weight: null,
-        chest: null,
-        waist: null,
-        belly: null,
-        hips: null,
-        thigh: null,
-        biceps: null,
-        comment: '',
-      });
+      if (editingId) {
+        await updateMeasurement(editingId, form);
+      } else {
+        await addMeasurement(form);
+      }
+      setEditingId(null);
+      setForm(emptyMeasurementForm(today));
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Не удалось сохранить замер');
     } finally {
       setSaving(false);
     }
+  };
+
+  const startEdit = (entry: MeasurementEntry) => {
+    setEditingId(entry.id);
+    setSaveError(null);
+    setForm({
+      date: entry.date,
+      weight: entry.weight,
+      chest: entry.chest,
+      waist: entry.waist,
+      belly: entry.belly,
+      hips: entry.hips,
+      thigh: entry.thigh,
+      biceps: entry.biceps,
+      comment: entry.comment,
+    });
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setSaveError(null);
+    setForm(emptyMeasurementForm(today));
   };
 
   return (
@@ -184,8 +208,14 @@ export function MeasurementsPage() {
         />
       </div>
 
+      <div ref={formRef}>
       <Card>
-        <h2 className="mb-4 font-semibold">Новый замер</h2>
+        <h2 className="mb-1 font-semibold">{editingId ? 'Редактировать замер' : 'Новый замер'}</h2>
+        {editingId && (
+          <p className="mb-4 text-sm text-[var(--app-text-muted)]">
+            Можно исправить дату и значения — график и история обновятся сразу.
+          </p>
+        )}
         <form onSubmit={handleSubmit} className="space-y-3">
           <label className="block text-sm">
             Дата
@@ -215,15 +245,28 @@ export function MeasurementsPage() {
           {saveError && (
             <p className="text-sm text-[var(--app-danger)]">{saveError}</p>
           )}
-          <button
-            type="submit"
-            disabled={saving}
-            className="min-h-12 w-full rounded-xl bg-gold font-semibold text-slate-950 hover:bg-amber-600 disabled:opacity-50"
-          >
-            {saving ? 'Сохранение…' : 'Сохранить замер'}
-          </button>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            {editingId && (
+              <button
+                type="button"
+                onClick={cancelEdit}
+                disabled={saving}
+                className="min-h-12 flex-1 rounded-xl border border-rpg-border px-4 font-medium text-[var(--app-text-muted)] hover:text-[var(--app-text)] disabled:opacity-50"
+              >
+                Отмена
+              </button>
+            )}
+            <button
+              type="submit"
+              disabled={saving}
+              className="min-h-12 flex-1 rounded-xl bg-gold font-semibold text-slate-950 hover:bg-amber-600 disabled:opacity-50"
+            >
+              {saving ? 'Сохранение…' : editingId ? 'Сохранить изменения' : 'Сохранить замер'}
+            </button>
+          </div>
         </form>
       </Card>
+      </div>
 
       <Card>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
@@ -345,19 +388,33 @@ export function MeasurementsPage() {
                 <th className="py-2 pr-2">Дата</th>
                 <th className="py-2 pr-2">Вес</th>
                 <th className="py-2 pr-2">Талия</th>
-                <th className="py-2">Δ вес</th>
+                <th className="py-2 pr-2">Δ вес</th>
+                <th className="py-2" />
               </tr>
             </thead>
             <tbody>
               {[...sorted].reverse().map((m, i, arr) => {
                 const prev = arr[i + 1];
                 const diff = prev?.weight && m.weight ? (m.weight - prev.weight).toFixed(1) : '—';
+                const isEditing = editingId === m.id;
                 return (
-                  <tr key={m.id} className="border-rpg-border/50 border-b">
+                  <tr
+                    key={m.id}
+                    className={`border-rpg-border/50 border-b ${isEditing ? 'bg-[var(--app-bg-soft)]' : ''}`}
+                  >
                     <td className="py-2 pr-2">{formatDateRu(m.date)}</td>
                     <td className="py-2 pr-2">{m.weight ?? '—'}</td>
                     <td className="py-2 pr-2">{m.waist ?? '—'}</td>
-                    <td className="py-2">{diff}</td>
+                    <td className="py-2 pr-2">{diff}</td>
+                    <td className="py-2 text-right">
+                      <button
+                        type="button"
+                        onClick={() => startEdit(m)}
+                        className="text-sm font-medium text-[var(--app-gold)] hover:underline"
+                      >
+                        {isEditing ? 'Редактируется' : 'Изменить'}
+                      </button>
+                    </td>
                   </tr>
                 );
               })}

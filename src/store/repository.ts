@@ -14,6 +14,7 @@ export interface DataRepository {
   getDaily(from: string, to: string): Promise<DailyEntry[]>;
   getMeasurements(): Promise<MeasurementEntry[]>;
   addMeasurement(entry: Omit<MeasurementEntry, 'id'>): Promise<MeasurementEntry>;
+  updateMeasurement(id: string, entry: Omit<MeasurementEntry, 'id'>): Promise<MeasurementEntry>;
   deleteMeasurement(id: string): Promise<void>;
   getRewards(): Promise<Reward[]>;
   addReward(reward: Omit<Reward, 'id' | 'purchasedAt'>): Promise<Reward>;
