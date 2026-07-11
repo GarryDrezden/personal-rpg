@@ -31,6 +31,7 @@ import { useAutosaveStatus } from '../hooks/useAutosaveStatus';
 import { AutosaveStatus } from '../components/ui/AutosaveStatus';
 import { DEFAULT_HABIT_CONFIG } from '../utils/habitConfig';
 import { CompanionSelector } from '../components/game/CompanionSelector';
+import { PwaInstallCard } from '../components/pwa/PwaInstallCard';
 import { setActiveCompanionId } from '../game/gameAssetStorage';
 import type { CompanionId, HeroGender, TransformationMode } from '../types/gameAssets';
 
@@ -209,6 +210,10 @@ export function SettingsPage() {
           data-testid="theme-autosave-status"
         />
       </Card>
+
+      <div id="settings-pwa" className="scroll-mt-28">
+        <PwaInstallCard />
+      </div>
 
       <Card id="settings-experimental" className="scroll-mt-28">
         <h2 className="mb-2 font-semibold text-[var(--app-text)]">Экспериментальные функции</h2>

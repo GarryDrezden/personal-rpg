@@ -75,7 +75,7 @@
 - **Freedom** (`/freedom`), **Momentum** (`/momentum`) — метрики устойчивости
 - **Progress map** (`/map`) — пути веса, шагов, трезвости и др.
 - **Reports** (`/reports`), **Insights** (`/insights`)
-- **Settings** (`/settings`), **FAQ** (`/faq`)
+- **Settings** (`/settings`), **FAQ** (`/faq`) — в Settings есть установка PWA на домашний экран
 
 ### Journey Map (актуальный UI — v3)
 

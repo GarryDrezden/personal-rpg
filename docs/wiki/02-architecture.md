@@ -51,6 +51,8 @@ Node/Express/Prisma в `backend/` — прототип Sprint 1 для VPS. Prod
 
 **Routing:** `src/App.tsx` — React Router v7, protected routes via `ProtectedRoute`.
 
+**PWA:** `vite-plugin-pwa` — web manifest, service worker (`autoUpdate`), precached SPA shell, network-first `/api/*`, cache-first `game-assets`. Install hint: Settings → «Установить на телефон». Legacy PHP SQLite API is not cached for offline writes.
+
 Legacy redirects: `/skills` → `/growth/skills`, `/bosses` → `/growth/trials`.
 
 ## Storage (authenticated users)
