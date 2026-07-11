@@ -4,7 +4,7 @@
 
 ### Added
 
-- **PWA:** installable web app with manifest, service worker, offline shell caching, and install card in Settings. API requests stay network-first; `/api` routes are excluded from SPA fallback.
+- **PWA:** installable web app with manifest, service worker, offline shell caching, and install card in Settings. FAQ covers install steps (Chrome/Edge/iPhone) and offline behavior. API requests stay network-first; `/api` routes are excluded from SPA fallback.
 - Measurement history entries can be edited (date and values) from `/measurements` — fixes accidental wrong dates without re-entering data.
 - Daily notes now count as a journal entry. This reduces duplicate input and lets one written line support Clarity progress.
 - Completed Growth Hub integration QA pass after Skills, Body Abilities, Camp, Rewards, Achievements, and Trials polish.
