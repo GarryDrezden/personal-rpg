@@ -66,8 +66,8 @@
 ### Экраны и навигация
 
 - **Dashboard** (`/`) — компактная панель: герой, CTA, ресурс дня, квесты, recovery
-- **Today** (`/today`) — ввод дня, квесты, nutrition modes
-- **Week** (`/week`) — недельный босс, календарь, бонусы
+- **Today** (`/today`) — ввод дня, квесты, nutrition modes; переключение прошлой недели для дополнения записей
+- **Week** (`/week`) — недельный босс, календарь, бонусы; навигация по прошлым неделям
 - **Growth hub** (`/growth/:tab`) — skills, abilities, camp, rewards, achievements, trials; **Growth Hub integration QA (2026-06)** — unified hero panels, tab chrome, trials/achievements copy aligned across tabs
 - **Measurements** (`/measurements`) — замеры, графики; можно редактировать дату и значения в истории
 - **Journey map** (`/journey`) — вертикальная хроника пути (v3): 9 глав + hero stages (20 стадий трансформации)

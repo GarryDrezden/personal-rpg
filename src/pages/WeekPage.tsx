@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { useGameStats } from '../hooks/useGameStats';
 import { todayISO, weekStart, weekDays, formatDateRu } from '../utils/dates';
+import { buildWeekPageSearchParams, resolveTodayPageSelection } from '../utils/todayWeekSelection';
 import { calcDailyPoints, calcWeeklyBonuses, getWeekStatus } from '../utils/points';
 import { isStepsMinimumDone, isStepsNormalDone, isStepsExcellentDone, getWeeklyStepsDistribution } from '../utils/stepsEngine';
 import { getWeeklyBoss } from '../utils/bossEngine';
@@ -19,6 +20,7 @@ import {
 } from '../utils/momentumEngine';
 import { MomentumWeekBlock } from '../components/momentum/MomentumWeekBlock';
 import { Card } from '../components/ui/Card';
+import { WeekNavigator } from '../components/quests/WeekNavigator';
 import { Badge } from '../components/ui/Badge';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { StatTile } from '../components/ui/StatTile';
@@ -26,10 +28,18 @@ import { Check, X } from 'lucide-react';
 
 export function WeekPage() {
   const { dailyEntries, measurements, settings } = useAppStore();
+  const [searchParams, setSearchParams] = useSearchParams();
   const today = todayISO();
-  const ws = weekStart(today);
+  const currentWeekStart = useMemo(() => weekStart(today), [today]);
+  const weekParam = searchParams.get('week');
+  const { visibleWeekStart } = useMemo(
+    () => resolveTodayPageSelection({ today, dateParam: null, weekParam }),
+    [today, weekParam],
+  );
+  const ws = visibleWeekStart;
   const days = weekDays(ws);
-  const stats = useGameStats(today);
+  const referenceDate = days.includes(today) ? today : days[days.length - 1]!;
+  const stats = useGameStats(referenceDate);
   const bonuses = calcWeeklyBonuses(ws, dailyEntries, measurements, settings);
 
   const weeklyBoss = useMemo(
@@ -76,14 +86,14 @@ export function WeekPage() {
         dailyEntries,
         measurements,
         settings,
-        today,
+        today: referenceDate,
       }),
-    [ws, dailyEntries, measurements, settings, today],
+    [ws, dailyEntries, measurements, settings, referenceDate],
   );
 
   const momentumSummary = useMemo(
-    () => getMomentumSummary({ today, dailyEntries, settings }),
-    [today, dailyEntries, settings],
+    () => getMomentumSummary({ today: referenceDate, dailyEntries, settings }),
+    [referenceDate, dailyEntries, settings],
   );
 
   const momentumHistory = useMemo(
@@ -101,14 +111,29 @@ export function WeekPage() {
     [dailyEntries, measurements, settings],
   );
 
+  const selectWeek = (nextWeekStart: string) => {
+    setSearchParams(buildWeekPageSearchParams(nextWeekStart, currentWeekStart));
+  };
+
+  const todayHref = (date: string) => {
+    const params = new URLSearchParams();
+    if (ws !== currentWeekStart) params.set('week', ws);
+    if (date !== today) params.set('date', date);
+    const query = params.toString();
+    return query ? `/today?${query}` : '/today';
+  };
+
   return (
     <div className="space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0 flex-1">
           <h1 className="text-2xl font-bold">Неделя</h1>
-          <p className="text-rpg-muted">
-            {formatDateRu(days[0]!)} — {formatDateRu(days[6]!)}
-          </p>
+          <WeekNavigator
+            weekStartDate={ws}
+            weekEndDate={days[6]!}
+            currentWeekStart={currentWeekStart}
+            onChange={selectWeek}
+          />
         </div>
         <Link
           to="/growth/trials"
@@ -160,7 +185,7 @@ export function WeekPage() {
                     {pts} оч.
                   </span>
                   <Link
-                    to={isToday ? '/today' : `/today?date=${date}`}
+                    to={todayHref(date)}
                     className="shrink-0 text-sm font-medium text-[var(--app-primary)] hover:underline"
                   >
                     {entry ? 'Изменить' : 'Внести'}

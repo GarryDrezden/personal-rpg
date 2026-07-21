@@ -20,6 +20,11 @@ export function weekDays(weekStartDate: string): string[] {
   return eachDayOfInterval({ start, end }).map((d) => format(d, 'yyyy-MM-dd'));
 }
 
+/** Сдвиг понедельника недели на N недель (отрицательное — в прошлое). */
+export function shiftWeekStart(weekStartDate: string, weeks: number): string {
+  return format(addDays(parseISO(weekStartDate), weeks * 7), 'yyyy-MM-dd');
+}
+
 export function todayISO(): string {
   return format(new Date(), 'yyyy-MM-dd');
 }

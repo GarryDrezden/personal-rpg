@@ -3,6 +3,10 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import type { DailyEntry } from '../types';
 import { useAppStore, emptyDaily } from '../store/appStore';
 import { todayISO, formatDateFull, weekStart, weekDays } from '../utils/dates';
+import {
+  buildTodaySearchParams,
+  resolveTodayPageSelection,
+} from '../utils/todayWeekSelection';
 import { getSeasonSnapshotWithRecap } from '../game/seasons/seasonEngine';
 import { SeasonTodayCard } from '../components/season/SeasonTodayCard';
 import { getTopBodyAbilityV1Hint } from '../game/bodyAbilities/bodyAbilityV1Engine';
@@ -38,6 +42,7 @@ import {
 } from '../utils/recoverySuggestionStorage';
 import { QuestCard } from '../components/quests/QuestCard';
 import { WeekDayPicker } from '../components/quests/WeekDayPicker';
+import { WeekNavigator } from '../components/quests/WeekNavigator';
 import { CARD_ACCENT } from '../constants/cardTheme';
 import { Card } from '../components/ui/Card';
 import { ProgressBar } from '../components/ui/ProgressBar';
@@ -63,10 +68,15 @@ export function TodayPage() {
     () => (location.state as { routeOpened?: boolean } | null)?.routeOpened === true,
   );
   const today = todayISO();
-  const currentWeekDays = useMemo(() => weekDays(weekStart(today)), [today]);
+  const currentWeekStart = useMemo(() => weekStart(today), [today]);
   const dateParam = searchParams.get('date');
-  const selectedDate =
-    dateParam && currentWeekDays.includes(dateParam) ? dateParam : today;
+  const weekParam = searchParams.get('week');
+  const { visibleWeekStart, selectedDate } = useMemo(
+    () => resolveTodayPageSelection({ today, dateParam, weekParam }),
+    [today, dateParam, weekParam],
+  );
+  const visibleWeekDays = useMemo(() => weekDays(visibleWeekStart), [visibleWeekStart]);
+  const isCurrentWeek = visibleWeekStart === currentWeekStart;
   const isEditingToday = selectedDate === today;
 
   const existing = dailyEntries.find((e) => e.date === selectedDate);
@@ -98,13 +108,40 @@ export function TodayPage() {
       if (dirty && !confirm('Есть несохранённые изменения. Перейти к другому дню без сохранения?')) {
         return;
       }
-      if (date === today) {
-        setSearchParams({});
-      } else {
-        setSearchParams({ date });
-      }
+      setSearchParams(
+        buildTodaySearchParams({
+          currentWeekStart,
+          visibleWeekStart,
+          date,
+          today,
+        }),
+      );
     },
-    [dirty, selectedDate, today, setSearchParams],
+    [dirty, selectedDate, today, currentWeekStart, visibleWeekStart, setSearchParams],
+  );
+
+  const selectWeek = useCallback(
+    (nextWeekStart: string) => {
+      if (nextWeekStart === visibleWeekStart) return;
+      if (dirty && !confirm('Есть несохранённые изменения. Перейти к другой неделе без сохранения?')) {
+        return;
+      }
+      const nextWeekDays = weekDays(nextWeekStart);
+      const nextDate = nextWeekDays.includes(selectedDate)
+        ? selectedDate
+        : nextWeekDays.includes(today)
+          ? today
+          : nextWeekDays[nextWeekDays.length - 1]!;
+      setSearchParams(
+        buildTodaySearchParams({
+          currentWeekStart,
+          visibleWeekStart: nextWeekStart,
+          date: nextDate,
+          today,
+        }),
+      );
+    },
+    [dirty, selectedDate, today, currentWeekStart, visibleWeekStart, setSearchParams],
   );
 
   const entriesForQuests = useMemo(() => {
@@ -430,7 +467,9 @@ export function TodayPage() {
           <p className="text-sm text-[var(--app-text-muted)]">{formatDateFull(selectedDate)}</p>
           {!isEditingToday && (
             <p className="mt-1 text-xs font-medium text-[var(--app-warning)]">
-              Редактирование прошлого дня недели
+              {isCurrentWeek
+                ? 'Редактирование прошлого дня недели'
+                : 'Заполнение прошлой недели — данные сохранятся и пересчитают прогресс'}
             </p>
           )}
           <p className="mt-1 text-sm font-medium text-[var(--app-primary)]">{dayStatus}</p>
@@ -507,16 +546,23 @@ export function TodayPage() {
       <div className="hidden h-px bg-[var(--app-border)]/60 lg:block" aria-hidden />
 
       <Card>
+        <WeekNavigator
+          weekStartDate={visibleWeekStart}
+          weekEndDate={visibleWeekDays[6]!}
+          currentWeekStart={currentWeekStart}
+          onChange={selectWeek}
+        />
         <p className="mb-3 text-sm font-medium text-[var(--app-text)]">День недели</p>
         <WeekDayPicker
-          weekStartDate={weekStart(today)}
+          weekStartDate={visibleWeekStart}
           selectedDate={selectedDate}
           today={today}
           dailyEntries={dailyEntries}
           onChange={selectDay}
         />
         <p className="mt-3 text-xs text-[var(--app-text-muted)]">
-          Можно внести или исправить данные за любой день текущей недели.
+          Можно внести или исправить данные за любой день текущей или прошлой недели — переключи
+          неделю стрелками выше.
         </p>
       </Card>
 
