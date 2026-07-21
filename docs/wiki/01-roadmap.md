@@ -1,6 +1,6 @@
 # Roadmap
 
-> **Единый источник правды.** Обновлено: 2026-06-06 (year campaign structure).
+> **Единый источник правды.** Обновлено: 2026-07-21 (Stabilize closeout).
 
 ## Главный приоритет
 
@@ -14,19 +14,19 @@
 
 ---
 
-## Сейчас — Stabilize (в процессе)
+## Сейчас — Stabilize ✅ (closeout)
 
 - [x] PHP + MySQL production auth/storage (shared hosting)
 - [x] Journey Map v3 vertical chapter road, per-chapter vignettes, sticky/accordion detail panel
 - [x] Resource & Rest v1
-- [ ] PHP auth/session stabilization (cookie, `/api/auth/me` flow)
-- [ ] Sidecar sync: achievements, coins, momentum → remote `user_data`
+- [x] PHP auth/session stabilization (cookie, `/api/auth/me` flow — HTTP dual auth)
+- [x] Sidecar sync: achievements, coins, momentum → remote `user_data`
 - [x] Production smoke tests на `http://fit-rpg.ru` (API: 2026-07-02 — OK)
-- [ ] HTTPS / SSL certificate + redirect (future hardening)
-- [ ] Journey Map v3 — polish (mobile QA, chapter art tuning)
-- [ ] Mobile layout polish
+- [x] Journey Map v3 — mobile polish (full-width road, accordion toggle/scroll, vignette band, safe-area)
+- [x] Mobile layout polish (AppShell bottom safe-area under BottomNav)
+- [ ] HTTPS / SSL certificate + redirect (future hardening — hosting cert, not a code blocker)
 
-**Критерий готовности:** production стабилен; Today + Dashboard + Journey работают на хостинге без критичных багов.
+**Критерий готовности:** production стабилен на HTTP; Today + Dashboard + Journey работают на телефоне без критичных багов. HTTPS — отдельный infra-шаг.
 
 ---
 

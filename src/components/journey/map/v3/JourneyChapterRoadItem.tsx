@@ -43,7 +43,8 @@ export function JourneyChapterRoadItem({
   const nextGoal = getIncompleteConditions(progress, 1)[0];
 
   return (
-    <li
+    <article
+      data-chapter-id={progress.stage.id}
       className={`journey-v3-chapter journey-v3-chapter--${status} ${
         isSelected ? 'journey-v3-chapter--selected' : ''
       }${isCompact ? ' journey-v3-chapter--compact' : ''}`}
@@ -119,6 +120,6 @@ export function JourneyChapterRoadItem({
       {showMobileDetail && mobileDetail ? (
         <div className="journey-v3-chapter__mobile-detail">{mobileDetail}</div>
       ) : null}
-    </li>
+    </article>
   );
 }

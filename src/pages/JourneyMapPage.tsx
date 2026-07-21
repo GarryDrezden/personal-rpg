@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAppStore } from '../store/appStore';
 import { useAppTheme } from '../hooks/useAppTheme';
 import {
@@ -7,6 +7,7 @@ import {
   hasAnyJourneyData,
   hasMinimalJourneyData,
 } from '../utils/journeyMapEngine';
+import { nextJourneyChapterSelection } from '../utils/journeyChapterSelection';
 import { JourneyDevelopmentMap } from '../components/journey/JourneyDevelopmentMap';
 import { JourneyMapV3SummaryBar } from '../components/journey/map/v3/JourneyMapV3SummaryBar';
 
@@ -28,8 +29,36 @@ export function JourneyMapPage() {
   const defaultSelected =
     summary.currentStage?.stage.id ?? stages[0]?.stage.id ?? undefined;
   const [selectedStageId, setSelectedStageId] = useState<string | undefined>(undefined);
+  const [mobileCollapsed, setMobileCollapsed] = useState(false);
 
-  const activeStageId = selectedStageId ?? defaultSelected;
+  const activeStageId = mobileCollapsed
+    ? undefined
+    : (selectedStageId ?? defaultSelected);
+
+  const handleSelectStage = useCallback(
+    (stageId: string) => {
+      const next = nextJourneyChapterSelection(activeStageId, stageId);
+      if (next === undefined) {
+        setMobileCollapsed(true);
+        setSelectedStageId(undefined);
+        return;
+      }
+      setMobileCollapsed(false);
+      setSelectedStageId(next);
+    },
+    [activeStageId],
+  );
+
+  useEffect(() => {
+    if (!activeStageId || mobileCollapsed) return;
+    const frame = window.requestAnimationFrame(() => {
+      const detail = document.querySelector(
+        `[data-chapter-id="${activeStageId}"] .journey-v3-chapter__mobile-detail`,
+      );
+      detail?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeStageId, mobileCollapsed]);
 
   const currentProgress = useMemo(() => {
     if (summary.currentStage) return summary.currentStage;
@@ -70,7 +99,7 @@ export function JourneyMapPage() {
           stages={stages}
           themeId={themeId}
           selectedStageId={activeStageId}
-          onSelectStage={setSelectedStageId}
+          onSelectStage={handleSelectStage}
         />
       </section>
     </div>

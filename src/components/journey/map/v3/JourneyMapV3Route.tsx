@@ -78,7 +78,7 @@ export function JourneyMapV3Route({
           );
 
           return (
-            <div key={progress.stage.id} className="journey-v3-route__row">
+            <li key={progress.stage.id} className="journey-v3-route__row">
               <div className="journey-v3-route__node-col">
                 <RouteNode
                   order={progress.stage.order}
@@ -94,7 +94,7 @@ export function JourneyMapV3Route({
                 showMobileDetail={isMobile && isSelected}
                 mobileDetail={isMobile && isSelected ? detailPanel : undefined}
               />
-            </div>
+            </li>
           );
         })}
       </ol>

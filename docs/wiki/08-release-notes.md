@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Stabilize closeout:** Journey Map mobile polish (full-width road, accordion toggle/scroll, vignette band) and AppShell safe-area clearance under BottomNav; roadmap marks auth/sidecar done, HTTPS remains hosting-only.
 - **Past week entry:** Today and Week pages support week navigation — switch to a previous week and fill or edit any day; progress recalculates on save.
 - **PWA:** installable web app with manifest, service worker, offline shell caching, and install card in Settings. FAQ covers install steps (Chrome/Edge/iPhone) and offline behavior. API requests stay network-first; `/api` routes are excluded from SPA fallback.
 - Measurement history entries can be edited (date and values) from `/measurements` — fixes accidental wrong dates without re-entering data.
