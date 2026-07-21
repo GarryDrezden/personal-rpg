@@ -145,7 +145,7 @@
 
 ---
 
-## 8. Boss Campaign v1 ✅
+## 8. Boss Campaign v1 ✅ → v2 ✅
 
 - [x] Boss catalog (13 season mini-bosses, 9 chapter, 3 act)
 - [x] Derived boss progress from existing data
@@ -153,11 +153,12 @@
 - [x] Boss summary in Dashboard campaign section
 - [x] Chapter boss label in Journey Map detail
 - [x] Achievement «Первая трещина»
-- [ ] Boss art / Asset Registry 2.0 (v2)
-- [ ] Boss history page (v2)
-- [ ] Act boss progression (v2)
+- [x] Boss history / campaign archive on Growth → Испытания (seasons, chapters, acts)
+- [x] Act boss progression (derived from season seals + chapter completion)
+- [x] Boss art wire for existing season assets (emoji fallback otherwise)
+- [ ] Full boss art set / Asset Registry generation (later)
 
-**Критерий готовности v1:** narrative derived layer без combat и новых обязанностей.
+**Критерий готовности v2:** архив кампании виден; акты показывают derived progress; без combat и DB migration.
 
 ---
 

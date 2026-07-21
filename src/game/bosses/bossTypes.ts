@@ -44,3 +44,37 @@ export type BossCampaignSnapshot = {
   isWeakened: boolean;
   isDefeatedNarratively: boolean;
 };
+
+/** One row in Boss Campaign v2 archive (season or chapter). */
+export type BossArchiveEntry = {
+  boss: BossDef;
+  progressPercent: number;
+  status: BossStatus;
+  statusLabel: string;
+  isCurrent: boolean;
+  isLocked: boolean;
+  artUrl: string | null;
+};
+
+/** Act-level derived progress (Boss Campaign v2). */
+export type ActBossProgressEntry = {
+  boss: BossDef;
+  progressPercent: number;
+  status: BossStatus;
+  statusLabel: string;
+  seasonRange: [number, number];
+  chapterRange: [number, number];
+  sealedSeasonCount: number;
+  seasonTotal: number;
+  completedChapterCount: number;
+  chapterTotal: number;
+  isCurrentAct: boolean;
+  isLocked: boolean;
+};
+
+export type BossCampaignArchive = {
+  current: BossCampaignSnapshot;
+  seasonBosses: BossArchiveEntry[];
+  chapterBosses: BossArchiveEntry[];
+  actBosses: ActBossProgressEntry[];
+};

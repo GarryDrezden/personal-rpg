@@ -762,25 +762,26 @@ Design rules:
 
 ## Boss Layers
 
-**Status:** Boss Campaign v1 implemented (narrative derived layer, no combat).
+**Status:** Boss Campaign v2 — archive + act progression (narrative derived layer, no combat).
 
 Четыре уровня противников:
 
-| Уровень | Роль | Статус v1 |
-|---------|------|-----------|
+| Уровень | Роль | Статус |
+|---------|------|--------|
 | 1. Мобы дня | по состоянию дня | ✅ daily mobs (отдельно) |
-| 2. Недельные элиты | проблема недели | позже |
-| 3. Сезонные мини-боссы | конфликт 28-дневного сезона | ✅ derived progress |
-| 4. Боссы глав / актов | символы этапа | ✅ chapter labels; act config only |
+| 2. Недельные элиты | проблема недели | ✅ Growth → Испытания (weekly) |
+| 3. Сезонные мини-боссы | конфликт 28-дневного сезона | ✅ derived + archive |
+| 4. Боссы глав / актов | символы этапа | ✅ chapter + act progression |
 
-### Boss Campaign v1 engine
+### Boss Campaign v1–v2 engine
 
-- `src/game/bosses/bossCampaignEngine.ts` — progress из season quests, route-held days, minimal/recovery, Body Abilities, plateau, camp/base
-- Статусы: untouched → noticed → weakened → broken → sealed
+- `bossCampaignEngine.ts` — текущий сезонный босс
+- `bossCampaignArchive.ts` — история сезонов, глав, актов; `ACT_SEASON_RANGES` / `ACT_CHAPTER_RANGES`
+- `bossArt.ts` — URL для существующих season art (остальные — emoji)
+- UI: `BossCampaignArchiveSection` на `/growth/trials`
 - Тон: босс **слабеет**, не «убит»; без combat economy
-- UI: встроено в Season card (Today/Dashboard), Journey chapter detail
 
-**Not in v1:** combat/HP UI, boss art, dedicated boss screen, DB migrations, new daily metrics.
+**Not in v2:** full art generation, combat/HP UI, DB migrations, new daily metrics.
 
 ### Daily mobs (уровень 1)
 

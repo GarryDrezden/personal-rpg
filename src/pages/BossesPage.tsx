@@ -4,10 +4,12 @@ import { useAppStore } from '../store/appStore';
 import { todayISO } from '../utils/dates';
 import { getBossCatalog } from '../utils/bossCatalog';
 import { countDefeatedBosses, getBossHistory } from '../utils/bossEngine';
+import { getBossCampaignArchive } from '../game/bosses/bossCampaignArchive';
 import {
   ArchiveBossCodexCard,
   FeaturedWeeklyBossCard,
 } from '../components/boss/BossCatalogCard';
+import { BossCampaignArchiveSection } from '../components/boss/BossCampaignArchiveSection';
 import { TRIALS_ARCHIVE_HELPER, TRIALS_PANEL } from '../components/boss/trialsUi';
 import {
   WEEKLY_TRIAL_LABEL,
@@ -26,6 +28,11 @@ export function BossesPage({ embedded = false }: { embedded?: boolean }) {
   const history = useMemo(
     () => getBossHistory(dailyEntries, settings, measurements),
     [dailyEntries, settings, measurements],
+  );
+
+  const campaignArchive = useMemo(
+    () => getBossCampaignArchive({ dailyEntries, measurements, settings, today }),
+    [dailyEntries, measurements, settings, today],
   );
 
   const defeatedTypes = catalog.filter(
@@ -55,10 +62,11 @@ export function BossesPage({ embedded = false }: { embedded?: boolean }) {
                 {WEEKLY_TRIAL_LABEL}
               </p>
               <h1 className="mt-1.5 text-xl font-bold text-[var(--app-text)] sm:text-2xl">
-                Испытания недели
+                Испытания и кампания
               </h1>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--app-text-muted)]">
-                Еженедельные угрозы, которые проверяют маршрут на прочность.
+                Еженедельные угрозы и архив сезонных боссов кампании — без боя, только удержание
+                маршрута.
               </p>
             </div>
           </>
@@ -68,9 +76,9 @@ export function BossesPage({ embedded = false }: { embedded?: boolean }) {
               <Skull size={24} strokeWidth={1.5} />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-[var(--app-text)]">Испытания недели</h1>
+              <h1 className="text-2xl font-bold text-[var(--app-text)]">Испытания и кампания</h1>
               <p className="text-sm text-[var(--app-text-muted)]">
-                Еженедельные угрозы, которые проверяют маршрут на прочность.
+                Еженедельные угрозы и архив сезонных боссов кампании.
               </p>
             </div>
           </div>
@@ -140,6 +148,8 @@ export function BossesPage({ embedded = false }: { embedded?: boolean }) {
           </div>
         </section>
       ) : null}
+
+      <BossCampaignArchiveSection archive={campaignArchive} />
     </div>
   );
 }
