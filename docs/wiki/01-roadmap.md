@@ -76,19 +76,19 @@
 
 ---
 
-## 4. Seasons v1 ✅
+## 4. Seasons v1 ✅ → v2 ✅
 
 **Цель:** 28-дневные арки как главный слой годового удержания.
 
 - [x] Season config (13 сезонов, act, focus, mini-boss label, reward)
-- [ ] Weekly quests (отложено — отдельный слой)
+- [ ] Weekly quests (отложено — Week уже покрывает weekly trials)
 - [x] Season quests (3–5 на сезон, из existing daily data)
 - [x] Season progress + partial success (derived engine)
-- [ ] Season reward / artifact unlock (narrative label only в v1)
-- [x] Season recap stub (chronicle tone, без экрана)
-- [ ] Season history (Seasons v2)
+- [x] Soft season reward unlock (narrative: earned at cleared/empowered; no artifact engine / coins)
+- [x] Season recap stub (chronicle tone)
+- [x] Season history / летопись (`/seasons`)
 
-**Критерий готовности v1:** текущий сезон виден на Today/Dashboard; квесты считаются из daily entries; partial success без наказаний.
+**Критерий готовности v2:** летопись сезонов 1…current (+ fog); soft reward status на Dashboard/летописи; без combat, DB migration и новых daily metrics.
 
 ---
 

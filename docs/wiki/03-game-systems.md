@@ -641,7 +641,7 @@ Purpose:
 - keep the game interesting for 1–2 years (~13 seasons/year);
 - give story and rewards without depending only on weight.
 
-**Status:** implemented (Seasons v1). Boss Campaign / season history — later.
+**Status:** implemented (Seasons v1 + v2 chronicle / soft rewards). Weekly season quests — deferred.
 
 Design rules:
 
@@ -650,6 +650,13 @@ Design rules:
 - partial completion still produces story;
 - season recap = chronicle, not judgment;
 - no tone of «провал», shame or punishment.
+
+### Seasons v2 — летопись и soft rewards
+
+- `seasonHistory.ts` — derived archive сезонов 1…13 (past + current open, future fog)
+- Soft reward: `fog` | `preview` | `awaiting` | `earned` (earned при `cleared`/`empowered`, ≥4 квестов)
+- UI: `/seasons` летопись; Dashboard reward label; link «Летопись сезонов»
+- **Не в scope:** artifactUnlockEngine, coins/XP за сезон, новый арт, combat, DB migrations
 
 ---
 

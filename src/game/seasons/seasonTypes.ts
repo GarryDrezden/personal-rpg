@@ -53,3 +53,28 @@ export type SeasonSnapshot = {
   partialStatusLabel: string;
   questsNearCompletion: number;
 };
+
+/** Soft reward state for Seasons v2 chronicle (narrative only). */
+export type SeasonRewardStatus = 'fog' | 'preview' | 'awaiting' | 'earned';
+
+export type SeasonHistoryEntry = {
+  seasonIndex: number;
+  config: SeasonConfig;
+  seasonStartDate: string;
+  seasonEndDate: string;
+  completedQuestCount: number;
+  questTotal: number;
+  partialStatus: SeasonPartialStatus;
+  partialStatusLabel: string;
+  recapText: string;
+  rewardStatus: SeasonRewardStatus;
+  rewardLabel: string;
+  isCurrent: boolean;
+  isLocked: boolean;
+};
+
+export type SeasonHistoryArchive = {
+  currentSeasonIndex: number;
+  entries: SeasonHistoryEntry[];
+  earnedRewardCount: number;
+};

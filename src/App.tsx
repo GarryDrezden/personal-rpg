@@ -110,6 +110,12 @@ const GameCodexPage = lazy(() =>
 
 );
 
+const SeasonsPage = lazy(() =>
+
+  import('./pages/SeasonsPage').then((m) => ({ default: m.SeasonsPage })),
+
+);
+
 
 
 function LoadingScreen() {
@@ -235,6 +241,8 @@ function AuthenticatedApp() {
           <Route path="/measurements" element={<MeasurementsPage />} />
 
           <Route path="/journey" element={<JourneyMapPage />} />
+
+          <Route path="/seasons" element={<SeasonsPage />} />
 
           <Route path="/freedom" element={<FreedomPage />} />
 

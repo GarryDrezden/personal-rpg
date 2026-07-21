@@ -36,6 +36,9 @@ export function CampaignProgressDashboardSection({
           Кампания
         </h2>
         <div className="flex flex-wrap gap-3 text-xs">
+          <Link to="/seasons" className="font-medium text-[var(--app-primary)] hover:underline">
+            Летопись сезонов
+          </Link>
           <Link to="/growth/abilities" className="font-medium text-[var(--app-primary)] hover:underline">
             Способности
           </Link>
