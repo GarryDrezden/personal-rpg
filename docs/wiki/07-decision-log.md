@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-07-22 — Season mini-boss art set S01–S13 (dedicated webp, in-app)
+
+### Context
+
+Boss Campaign v2 archive used emoji + partial legacy/codex art. Season mini-bosses needed a full dedicated visual set without combat or new gameplay obligations.
+
+### Decision
+
+- Generate **13 dedicated** `season-boss-NN-*.webp` (16:9, 1280×720) with distinct silhouettes per season.
+- Wire via Asset Registry 2.0: `build-asset-manifest.mjs` `SEASON_BOSS_DEDICATED` + `seasonBossArtSet`; UI through `getSeasonBossManifestAssetId` / `getSeasonCampaignBossArtUrl`.
+- Review loop: place file in `public/` first (user cannot see tool previews), then approve/iterate.
+- Chapter/act boss art remains **P2** (out of this set).
+
+### Consequences
+
+Season cards, Dashboard, Archive and Codex show dedicated art for all seasons. `GAME_ASSET_VERSION` 39. Roadmap «Full boss art set» for season mini-bosses marked done.
+
+---
+
 ## 2026-06-06 — Boss Campaign v1 (narrative derived layer, not combat)
 
 ### Context

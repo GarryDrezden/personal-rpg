@@ -151,9 +151,10 @@ generate → optimize → public/ → build-asset-manifest.mjs → in-app (BATCH
 |----|-----|---|
 | `empty-state-no-entries` | `DashboardPathEmptyState`, `MeasurementsPage` | P0 |
 | `plateau-artifact-pass-stone` | `PlateauDashboardSummary`, `PlateauTodayCard` | P1 |
-| `season-boss-01-empty-day-lord` | `SeasonTodayCard`, `SeasonDashboardSummary`, `ChapterBossCard`, `GameCodexPage`, `JourneyBossMini`, `getBossPublicPath` | P1 |
+| `season-boss-01-empty-day-lord` … `season-boss-13-old-year-shadow` | season cards / archive / Codex via `getSeasonCampaignBossArtUrl` | P1 ✅ |
 
-**Optimization (2026-06):** ~2 MB sources → ~85 KB / ~45 KB / ~100 KB webp.
+**Optimization (2026-06):** ~2 MB sources → ~85 KB / ~45 KB / ~100 KB webp.  
+**Season bosses (2026-07-22):** full dedicated set S01–S13 in `public/game-assets/bosses/seasons/`.
 
 **Исключено:** `body-ability-icon-set-v1` — отдельный mini-batch. Cozy Campaign — не в scope.
 

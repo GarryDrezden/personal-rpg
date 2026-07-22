@@ -4,14 +4,14 @@
 
 | ID | File |
 |----|------|
-| misty_baron | bosses/misty-baron.png |
-| resource_devourer | bosses/resource-devourer.png |
-| divan_king | bosses/divan-king.png |
+| misty_baron | bosses/seasons/season-boss-04-misty-baron.webp (manifest: `season-boss-04-misty-baron`) |
+| resource_devourer | bosses/seasons/season-boss-05-resource-devourer.webp (manifest: `season-boss-05-resource-devourer`) |
+| divan_king | bosses/seasons/season-boss-02-divan-king.webp (manifest: `season-boss-02-divan-king`) |
 | lord_of_empty_day | bosses/seasons/season-boss-01-empty-day-lord.webp (manifest: `season-boss-01-empty-day-lord`) |
-| chain_of_rollback | bosses/chain-of-rollback.png |
-| night_feast_baron | bosses/night-feast-baron.png |
-| promise_collector | bosses/promise-collector.png |
-| old_form_guardian | bosses/old-form-guardian.png |
+| chain_of_rollback | bosses/seasons/season-boss-07-rollback-chain.webp (manifest: `season-boss-07-rollback-chain`) |
+| night_feast_baron | bosses/seasons/season-boss-08-night-feast-baron.webp (manifest: `season-boss-08-night-feast-baron`) |
+| promise_collector | bosses/seasons/season-boss-09-promise-collector.webp (manifest: `season-boss-09-promise-collector`) |
+| old_form_guardian | bosses/seasons/season-boss-10-old-form-guardian.webp (manifest: `season-boss-10-old-form-guardian`) |
 
 ## Style
 

@@ -1,7 +1,9 @@
 import type { BossId } from '../../types/gameAssets';
+import { getManifestAssetUrl } from '../assetManifest';
 import { getBossPublicPath } from '../assetPaths';
+import { getSeasonBossManifestAssetId } from '../manifestAssetUi';
 
-/** Season mini-boss → existing codex/legacy boss art when available. */
+/** Season mini-boss → existing codex/legacy boss art when dedicated season art missing. */
 const SEASON_TO_CODEX_BOSS: Partial<Record<number, BossId>> = {
   1: 'lord_of_empty_day',
   2: 'divan_king',
@@ -15,11 +17,16 @@ const SEASON_TO_CODEX_BOSS: Partial<Record<number, BossId>> = {
 
 /** Public URL for season campaign boss art, or null when only emoji fallback exists. */
 export function getSeasonCampaignBossArtUrl(seasonId: number): string | null {
+  const manifestId = getSeasonBossManifestAssetId(seasonId);
+  if (manifestId) {
+    const manifestUrl = getManifestAssetUrl(manifestId);
+    if (manifestUrl) return manifestUrl;
+  }
   const codexId = SEASON_TO_CODEX_BOSS[seasonId];
   if (!codexId) return null;
   return getBossPublicPath(codexId);
 }
 
 export function hasSeasonCampaignBossArt(seasonId: number): boolean {
-  return SEASON_TO_CODEX_BOSS[seasonId] != null;
+  return getSeasonCampaignBossArtUrl(seasonId) != null;
 }

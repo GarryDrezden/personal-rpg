@@ -51,6 +51,31 @@
       "body-ability-icon-set-v1"
     ]
   },
+  "seasonBossArtSet": {
+    "updated": "2026-07-22",
+    "status": "in-app",
+    "description": "Dedicated season mini-boss webp set complete: S01–S13 in-app.",
+    "assetIds": [
+      "season-boss-01-empty-day-lord",
+      "season-boss-02-divan-king",
+      "season-boss-03-snack-chaos",
+      "season-boss-04-misty-baron",
+      "season-boss-05-resource-devourer",
+      "season-boss-06-plateau-guardian",
+      "season-boss-07-rollback-chain",
+      "season-boss-08-night-feast-baron",
+      "season-boss-09-promise-collector",
+      "season-boss-10-old-form-guardian",
+      "season-boss-11-fatigue-archivist",
+      "season-boss-12-mobility-gatekeeper",
+      "season-boss-13-old-year-shadow"
+    ],
+    "filesOnDisk": 13,
+    "filesExpected": 13,
+    "filesInApp": 13,
+    "inApp": true,
+    "workflow": "Generate one → public/game-assets/bosses/seasons/ → wire manifestAssetUi + bossArt → build-asset-manifest.mjs"
+  },
   "bodyAbilityIconsMiniBatch": {
     "updated": "2026-06-06",
     "status": "in-app",
@@ -1892,7 +1917,7 @@
       "promptStatus": "ready",
       "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Batch 2 in-app. Replaces legacy boss-lord-of-empty-day for codex and journey. Batch 2 connected in UI (.webp).",
+      "notes": "Batch 2 in-app. Replaces legacy boss-lord-of-empty-day for codex and journey. Batch 2 connected in UI (.webp). Season boss art set connected in UI (.webp).",
       "status": "in-app",
       "id": "season-boss-01-empty-day-lord",
       "type": "season-mini-boss",
@@ -1903,6 +1928,7 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
+        "BossCampaignArchive",
         "bossConfig",
         "ChapterBossCard",
         "GameCodexPage",
@@ -1915,11 +1941,11 @@
     },
     {
       "promptStatus": "ready",
-      "fileStatus": "missing",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Campaign v1 UI uses emoji icon. Target path follows naming convention.",
-      "status": "needed",
-      "id": "season-boss-02",
+      "notes": "Season boss art set — dedicated webp; prefers over legacy divan-king.png in UI. Season boss art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-boss-02-divan-king",
       "type": "season-mini-boss",
       "category": "seasonBosses",
       "title": "Сезон 2 — Диванный Король",
@@ -1928,17 +1954,24 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
-        "bossConfig"
+        "BossCampaignArchive",
+        "bossConfig",
+        "ChapterBossCard",
+        "GameCodexPage",
+        "assetRegistry",
+        "JourneyBossMini",
+        "getBossPublicPath"
       ],
-      "relatedEntityId": "season_mini_02"
+      "relatedEntityId": "season_mini_02",
+      "path": "/game-assets/bosses/seasons/season-boss-02-divan-king.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Campaign v1 UI uses emoji icon. Target path follows naming convention.",
-      "status": "needed",
-      "id": "season-boss-03",
+      "notes": "Season boss art set — dedicated webp for snack chaos / disordered snacking resistance. Season boss art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-boss-03-snack-chaos",
       "type": "season-mini-boss",
       "category": "seasonBosses",
       "title": "Сезон 3 — Хаос Перекусов",
@@ -1947,17 +1980,24 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
-        "bossConfig"
+        "BossCampaignArchive",
+        "bossConfig",
+        "ChapterBossCard",
+        "GameCodexPage",
+        "assetRegistry",
+        "JourneyBossMini",
+        "getBossPublicPath"
       ],
-      "relatedEntityId": "season_mini_03"
+      "relatedEntityId": "season_mini_03",
+      "path": "/game-assets/bosses/seasons/season-boss-03-snack-chaos.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Campaign v1 UI uses emoji icon. Target path follows naming convention.",
-      "status": "needed",
-      "id": "season-boss-04",
+      "notes": "Season boss art set — dedicated webp; prefers over legacy misty-baron.png in UI. Season boss art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-boss-04-misty-baron",
       "type": "season-mini-boss",
       "category": "seasonBosses",
       "title": "Сезон 4 — Туманный Барон",
@@ -1966,17 +2006,24 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
-        "bossConfig"
+        "BossCampaignArchive",
+        "bossConfig",
+        "ChapterBossCard",
+        "GameCodexPage",
+        "assetRegistry",
+        "JourneyBossMini",
+        "getBossPublicPath"
       ],
-      "relatedEntityId": "season_mini_04"
+      "relatedEntityId": "season_mini_04",
+      "path": "/game-assets/bosses/seasons/season-boss-04-misty-baron.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Campaign v1 UI uses emoji icon. Target path follows naming convention.",
-      "status": "needed",
-      "id": "season-boss-05",
+      "notes": "Season boss art set — dedicated webp; prefers over legacy resource-devourer.png in UI. Season boss art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-boss-05-resource-devourer",
       "type": "season-mini-boss",
       "category": "seasonBosses",
       "title": "Сезон 5 — Пожиратель Ресурса",
@@ -1985,17 +2032,24 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
-        "bossConfig"
+        "BossCampaignArchive",
+        "bossConfig",
+        "ChapterBossCard",
+        "GameCodexPage",
+        "assetRegistry",
+        "JourneyBossMini",
+        "getBossPublicPath"
       ],
-      "relatedEntityId": "season_mini_05"
+      "relatedEntityId": "season_mini_05",
+      "path": "/game-assets/bosses/seasons/season-boss-05-resource-devourer.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Campaign v1 UI uses emoji icon. Target path follows naming convention.",
-      "status": "needed",
-      "id": "season-boss-06",
+      "notes": "Season boss art set — seated stone pass guardian with shield dam; distinct from reaper/fog/vacuum bosses. Season boss art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-boss-06-plateau-guardian",
       "type": "season-mini-boss",
       "category": "seasonBosses",
       "title": "Сезон 6 — Страж Перевала",
@@ -2004,17 +2058,24 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
-        "bossConfig"
+        "BossCampaignArchive",
+        "bossConfig",
+        "ChapterBossCard",
+        "GameCodexPage",
+        "assetRegistry",
+        "JourneyBossMini",
+        "getBossPublicPath"
       ],
-      "relatedEntityId": "season_mini_06"
+      "relatedEntityId": "season_mini_06",
+      "path": "/game-assets/bosses/seasons/season-boss-06-plateau-guardian.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Campaign v1 UI uses emoji icon. Target path follows naming convention.",
-      "status": "needed",
-      "id": "season-boss-07",
+      "notes": "Season boss art set — living iron chain golem of rollback; prefers over legacy chain-of-rollback.png. Season boss art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-boss-07-rollback-chain",
       "type": "season-mini-boss",
       "category": "seasonBosses",
       "title": "Сезон 7 — Цепь Отката",
@@ -2023,17 +2084,24 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
-        "bossConfig"
+        "BossCampaignArchive",
+        "bossConfig",
+        "ChapterBossCard",
+        "GameCodexPage",
+        "assetRegistry",
+        "JourneyBossMini",
+        "getBossPublicPath"
       ],
-      "relatedEntityId": "season_mini_07"
+      "relatedEntityId": "season_mini_07",
+      "path": "/game-assets/bosses/seasons/season-boss-07-rollback-chain.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Campaign v1 UI uses emoji icon. Target path follows naming convention.",
-      "status": "needed",
-      "id": "season-boss-08",
+      "notes": "Season boss art set — midnight feast aristocrat; prefers over legacy night-feast-baron.png. Season boss art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-boss-08-night-feast-baron",
       "type": "season-mini-boss",
       "category": "seasonBosses",
       "title": "Сезон 8 — Барон Ночного Пира",
@@ -2042,17 +2110,24 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
-        "bossConfig"
+        "BossCampaignArchive",
+        "bossConfig",
+        "ChapterBossCard",
+        "GameCodexPage",
+        "assetRegistry",
+        "JourneyBossMini",
+        "getBossPublicPath"
       ],
-      "relatedEntityId": "season_mini_08"
+      "relatedEntityId": "season_mini_08",
+      "path": "/game-assets/bosses/seasons/season-boss-08-night-feast-baron.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Campaign v1 UI uses emoji icon. Target path follows naming convention.",
-      "status": "needed",
-      "id": "season-boss-09",
+      "notes": "Season boss art set — scroll/ledger promise hoarder; prefers over legacy promise-collector.png. Season boss art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-boss-09-promise-collector",
       "type": "season-mini-boss",
       "category": "seasonBosses",
       "title": "Сезон 9 — Собиратель Обещаний",
@@ -2061,17 +2136,24 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
-        "bossConfig"
+        "BossCampaignArchive",
+        "bossConfig",
+        "ChapterBossCard",
+        "GameCodexPage",
+        "assetRegistry",
+        "JourneyBossMini",
+        "getBossPublicPath"
       ],
-      "relatedEntityId": "season_mini_09"
+      "relatedEntityId": "season_mini_09",
+      "path": "/game-assets/bosses/seasons/season-boss-09-promise-collector.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Campaign v1 UI uses emoji icon. Target path follows naming convention.",
-      "status": "needed",
-      "id": "season-boss-10",
+      "notes": "Season boss art set — mirror warden of past form; prefers over legacy old-form-guardian.png. Season boss art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-boss-10-old-form-guardian",
       "type": "season-mini-boss",
       "category": "seasonBosses",
       "title": "Сезон 10 — Хранитель Старой Формы",
@@ -2080,17 +2162,24 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
-        "bossConfig"
+        "BossCampaignArchive",
+        "bossConfig",
+        "ChapterBossCard",
+        "GameCodexPage",
+        "assetRegistry",
+        "JourneyBossMini",
+        "getBossPublicPath"
       ],
-      "relatedEntityId": "season_mini_10"
+      "relatedEntityId": "season_mini_10",
+      "path": "/game-assets/bosses/seasons/season-boss-10-old-form-guardian.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Campaign v1 UI uses emoji icon. Target path follows naming convention.",
-      "status": "needed",
-      "id": "season-boss-11",
+      "notes": "Season boss art set — gray fatigue archivist at dusty desk; no legacy PNG. Season boss art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-boss-11-fatigue-archivist",
       "type": "season-mini-boss",
       "category": "seasonBosses",
       "title": "Сезон 11 — Серый Архивариус Усталости",
@@ -2099,17 +2188,24 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
-        "bossConfig"
+        "BossCampaignArchive",
+        "bossConfig",
+        "ChapterBossCard",
+        "GameCodexPage",
+        "assetRegistry",
+        "JourneyBossMini",
+        "getBossPublicPath"
       ],
-      "relatedEntityId": "season_mini_11"
+      "relatedEntityId": "season_mini_11",
+      "path": "/game-assets/bosses/seasons/season-boss-11-fatigue-archivist.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Campaign v1 UI uses emoji icon. Target path follows naming convention.",
-      "status": "needed",
-      "id": "season-boss-12",
+      "notes": "Season boss art set — iron threshold gatekeeper of new mobility; no legacy PNG. Season boss art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-boss-12-mobility-gatekeeper",
       "type": "season-mini-boss",
       "category": "seasonBosses",
       "title": "Сезон 12 — Привратник Новой Мобильности",
@@ -2118,17 +2214,24 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
-        "bossConfig"
+        "BossCampaignArchive",
+        "bossConfig",
+        "ChapterBossCard",
+        "GameCodexPage",
+        "assetRegistry",
+        "JourneyBossMini",
+        "getBossPublicPath"
       ],
-      "relatedEntityId": "season_mini_12"
+      "relatedEntityId": "season_mini_12",
+      "path": "/game-assets/bosses/seasons/season-boss-12-mobility-gatekeeper.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Campaign v1 UI uses emoji icon. Target path follows naming convention.",
-      "status": "needed",
-      "id": "season-boss-13",
+      "notes": "Season boss art set — year-end shadow of the old cycle; completes dedicated 13-boss set. Season boss art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-boss-13-old-year-shadow",
       "type": "season-mini-boss",
       "category": "seasonBosses",
       "title": "Сезон 13 — Тень Старого Года",
@@ -2137,9 +2240,16 @@
       "usedIn": [
         "SeasonTodayCard",
         "SeasonDashboardSummary",
-        "bossConfig"
+        "BossCampaignArchive",
+        "bossConfig",
+        "ChapterBossCard",
+        "GameCodexPage",
+        "assetRegistry",
+        "JourneyBossMini",
+        "getBossPublicPath"
       ],
-      "relatedEntityId": "season_mini_13"
+      "relatedEntityId": "season_mini_13",
+      "path": "/game-assets/bosses/seasons/season-boss-13-old-year-shadow.webp"
     },
     {
       "promptStatus": "planned",

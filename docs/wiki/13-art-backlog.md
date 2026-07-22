@@ -164,7 +164,7 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 | Companions ×4 | companion | Onboarding, Codex | assetRegistry | in-app | P0 | ready | ready | registered | PNG approved |
 | Body ability icons ×12 | body-ability-icon | Growth abilities | bodyAbilityConfig | in-app | P0 | ready | 12/12 ready | registered | Icon set v1 complete on skill board |
 | Camp base stage 1 (ember) | camp-base-scene | Dashboard, /growth/camp | baseProgressionConfig | needed | P0 | ready | missing | registered | Prompt template ready |
-| Season boss (current) | season-mini-boss | SeasonTodayCard | bossCampaign v1 | needed | P0 | ready* | missing | registered | Emoji until art; *S01–02 prompts first |
+| Season boss (current) | season-mini-boss | SeasonTodayCard | bossCampaign | **in-app** | P0 | ready | ready | registered | Full S01–S13 dedicated webp set (2026-07-22) |
 | Onboarding core awakening | onboarding-hero | /start | Onboarding v1 | needed | P0 | ready | missing | registered | Text ritual OK without image |
 | Empty states ×2 | empty-state | Dashboard, Growth | UI | needed | P0 | planned | missing | registered | Gradient + symbol |
 
@@ -174,13 +174,16 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 
 ## P1 — Campaign Visual Polish
 
-### Season mini-bosses (13)
+### Season mini-bosses (13) ✅ in-app
 
 | Название | Тип | Где используется | Связанная система | Статус | Приоритет | Промпт | Файл | Manifest |
 |----------|-----|------------------|-------------------|--------|-----------|--------|------|----------|
-| Владыка Пустого Дня … Тень Старого Года | season-mini-boss | Season cards | bossConfig SEASON_MINI_BOSSES | needed | P1 | planned | missing | registered |
+| S01 … S13 (Владыка Пустого Дня → Тень Старого Года) | season-mini-boss | Today, Dashboard, Archive, Codex | bossConfig / manifestAssetUi | **in-app** | P1 | ready | ready | registered |
 
-**Prompt file:** [`_template-boss.md`](../prompts/assets/_template-boss.md) → `docs/prompts/assets/season-boss-NN.md`
+**Paths:** `public/game-assets/bosses/seasons/season-boss-NN-*.webp`  
+**Prompts:** `docs/prompts/assets/season-boss-*.md`  
+**Wire:** `getSeasonBossManifestAssetId(1..13)`, `getSeasonCampaignBossArtUrl`  
+**Done:** 2026-07-22 — dedicated set complete (`GAME_ASSET_VERSION` 39).
 
 ### Camp / base scenes (8)
 

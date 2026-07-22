@@ -66,7 +66,7 @@ describe('bossCampaignArchive', () => {
 
   it('wires art for known season bosses', () => {
     expect(hasSeasonCampaignBossArt(1)).toBe(true);
-    expect(hasSeasonCampaignBossArt(2)).toBe(true);
-    expect(hasSeasonCampaignBossArt(3)).toBe(false);
+    expect(hasSeasonCampaignBossArt(6)).toBe(true);
+    expect(hasSeasonCampaignBossArt(13)).toBe(true);
   });
 });

@@ -784,11 +784,12 @@ Design rules:
 
 - `bossCampaignEngine.ts` — текущий сезонный босс
 - `bossCampaignArchive.ts` — история сезонов, глав, актов; `ACT_SEASON_RANGES` / `ACT_CHAPTER_RANGES`
-- `bossArt.ts` — URL для существующих season art (остальные — emoji)
-- UI: `BossCampaignArchiveSection` на `/growth/trials`
+- `bossArt.ts` + `manifestAssetUi.getSeasonBossManifestAssetId` — dedicated season art S01–S13 in-app
+- UI: `BossCampaignArchiveSection` на `/growth/trials`; Today/Dashboard season boss rows
 - Тон: босс **слабеет**, не «убит»; без combat economy
 
-**Not in v2:** full art generation, combat/HP UI, DB migrations, new daily metrics.
+**Season mini-boss art:** ✅ dedicated webp set S01–S13 (2026-07-22).  
+**Not in v2 / later:** chapter/act full art (P2), combat/HP UI, DB migrations, new daily metrics.
 
 ### Daily mobs (уровень 1)
 

@@ -156,9 +156,11 @@
 - [x] Boss history / campaign archive on Growth → Испытания (seasons, chapters, acts)
 - [x] Act boss progression (derived from season seals + chapter completion)
 - [x] Boss art wire for existing season assets (emoji fallback otherwise)
-- [ ] Full boss art set / Asset Registry generation (later)
+- [x] Full boss art set / Asset Registry generation (season mini-bosses S01–S13 dedicated webp)
+- [ ] Chapter / act boss dedicated art (P2, later)
 
-**Критерий готовности v2:** архив кампании виден; акты показывают derived progress; без combat и DB migration.
+**Критерий готовности v2:** архив кампании виден; акты показывают derived progress; без combat и DB migration.  
+**Season art (2026-07-22):** dedicated `season-boss-01`…`13` webp in-app via manifest (`GAME_ASSET_VERSION` 39).
 
 ---
 

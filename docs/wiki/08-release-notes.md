@@ -4,6 +4,18 @@
 
 ### Added
 
+- **Season boss art — S13 Тень Старого Года:** year-end cycle shadow; `season-boss-13-old-year-shadow.webp`; `GAME_ASSET_VERSION` 39. **Dedicated season mini-boss set S01–S13 complete.**
+- **Season boss art — S12 Привратник Новой Мобильности:** iron threshold gatekeeper; `season-boss-12-mobility-gatekeeper.webp`; `GAME_ASSET_VERSION` 38. Season set now S01–S12.
+- **Season boss art — S11 Серый Архивариус Усталости:** gray fatigue archivist at dusty desk; `season-boss-11-fatigue-archivist.webp`; `GAME_ASSET_VERSION` 37. Season set now S01–S11.
+- **Season boss art — S10 Хранитель Старой Формы:** mirror warden of past form; `season-boss-10-old-form-guardian.webp`; `GAME_ASSET_VERSION` 36. Season set now S01–S10.
+- **Season boss art — S09 Собиратель Обещаний:** scroll/ledger promise hoarder; `season-boss-09-promise-collector.webp`; `GAME_ASSET_VERSION` 35. Season set now S01–S09.
+- **Season boss art — S08 Барон Ночного Пира:** midnight feast aristocrat; `season-boss-08-night-feast-baron.webp`; `GAME_ASSET_VERSION` 34. Season set now S01–S08.
+- **Season boss art — S07 Цепь Отката:** living iron chain golem; `season-boss-07-rollback-chain.webp`; `GAME_ASSET_VERSION` 33. Season set now S01–S07.
+- **Season boss art — S06 Страж Перевала:** seated stone pass guardian with shield-dam; `season-boss-06-plateau-guardian.webp`; `GAME_ASSET_VERSION` 32. Season set now S01–S06.
+- **Season boss art — S05 Пожиратель Ресурса:** armored devourer with chest vacuum maw pulling energy/flasks; `season-boss-05-resource-devourer.webp`; `GAME_ASSET_VERSION` 31.
+- **Season boss art — S04 Туманный Барон:** dedicated fog-pass composition `season-boss-04-misty-baron.webp` (distinct from S01–S03 reaper pose); wired via manifest; `GAME_ASSET_VERSION` 29.
+- **Season boss art — S03 Хаос Перекусов:** dedicated `season-boss-03-snack-chaos.webp`; wired via manifest; `GAME_ASSET_VERSION` 26. Season set now S01–S03.
+- **Season boss art — S02 Диванный Король:** dedicated `season-boss-02-divan-king.webp` (1280×720); wired in Today/Dashboard/Archive/Codex via manifest; `GAME_ASSET_VERSION` 25. Legacy `divan-king.png` kept on disk as fallback source map only.
 - **Seasons v2:** season chronicle at `/seasons` (history 1…current + fog); soft reward unlock (`preview` / `awaiting` / `earned` at cleared/empowered); Dashboard reward copy; no combat, artifacts engine, or new daily metrics.
 - **Boss Campaign v2:** campaign archive on Growth → Испытания (season / chapter / act layers), derived act progression, art wire for existing season boss assets; no combat.
 - **Stabilize closeout:** Journey Map mobile polish (full-width road, accordion toggle/scroll, vignette band) and AppShell safe-area clearance under BottomNav; roadmap marks auth/sidecar done, HTTPS remains hosting-only.

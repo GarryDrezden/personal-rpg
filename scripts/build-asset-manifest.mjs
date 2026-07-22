@@ -414,22 +414,78 @@ for (const [id, entityId, title, file] of LEGACY_BOSSES) {
   );
 }
 
-// Season mini-bosses (campaign v1 — emoji placeholders)
+// Season mini-bosses (campaign — dedicated webp when in pack, else needed)
+const SEASON_BOSS_DEDICATED = {
+  1: {
+    id: 'season-boss-01-empty-day-lord',
+    notes: 'Batch 2 in-app. Replaces legacy boss-lord-of-empty-day for codex and journey.',
+  },
+  2: {
+    id: 'season-boss-02-divan-king',
+    notes: 'Season boss art set — dedicated webp; prefers over legacy divan-king.png in UI.',
+  },
+  3: {
+    id: 'season-boss-03-snack-chaos',
+    notes: 'Season boss art set — dedicated webp for snack chaos / disordered snacking resistance.',
+  },
+  4: {
+    id: 'season-boss-04-misty-baron',
+    notes: 'Season boss art set — dedicated webp; prefers over legacy misty-baron.png in UI.',
+  },
+  5: {
+    id: 'season-boss-05-resource-devourer',
+    notes: 'Season boss art set — dedicated webp; prefers over legacy resource-devourer.png in UI.',
+  },
+  6: {
+    id: 'season-boss-06-plateau-guardian',
+    notes: 'Season boss art set — seated stone pass guardian with shield dam; distinct from reaper/fog/vacuum bosses.',
+  },
+  7: {
+    id: 'season-boss-07-rollback-chain',
+    notes: 'Season boss art set — living iron chain golem of rollback; prefers over legacy chain-of-rollback.png.',
+  },
+  8: {
+    id: 'season-boss-08-night-feast-baron',
+    notes: 'Season boss art set — midnight feast aristocrat; prefers over legacy night-feast-baron.png.',
+  },
+  9: {
+    id: 'season-boss-09-promise-collector',
+    notes: 'Season boss art set — scroll/ledger promise hoarder; prefers over legacy promise-collector.png.',
+  },
+  10: {
+    id: 'season-boss-10-old-form-guardian',
+    notes: 'Season boss art set — mirror warden of past form; prefers over legacy old-form-guardian.png.',
+  },
+  11: {
+    id: 'season-boss-11-fatigue-archivist',
+    notes: 'Season boss art set — gray fatigue archivist at dusty desk; no legacy PNG.',
+  },
+  12: {
+    id: 'season-boss-12-mobility-gatekeeper',
+    notes: 'Season boss art set — iron threshold gatekeeper of new mobility; no legacy PNG.',
+  },
+  13: {
+    id: 'season-boss-13-old-year-shadow',
+    notes: 'Season boss art set — year-end shadow of the old cycle; completes dedicated 13-boss set.',
+  },
+};
+
 for (const [seasonId, slug, title] of SEASON_MINI_BOSSES) {
   const n = String(seasonId).padStart(2, '0');
-  const isPackBoss = seasonId === 1;
+  const dedicated = SEASON_BOSS_DEDICATED[seasonId];
   assets.push(
-    isPackBoss
+    dedicated
       ? promptReady({
-          id: 'season-boss-01-empty-day-lord',
+          id: dedicated.id,
           type: 'season-mini-boss',
           category: 'seasonBosses',
-          title: `Сезон 1 — ${title}`,
+          title: `Сезон ${seasonId} — ${title}`,
           priority: 'P1',
-          targetPath: `/game-assets/bosses/seasons/season-boss-01-empty-day-lord.webp`,
+          targetPath: `/game-assets/bosses/seasons/${dedicated.id}.webp`,
           usedIn: [
             'SeasonTodayCard',
             'SeasonDashboardSummary',
+            'BossCampaignArchive',
             'bossConfig',
             'ChapterBossCard',
             'GameCodexPage',
@@ -437,12 +493,11 @@ for (const [seasonId, slug, title] of SEASON_MINI_BOSSES) {
             'JourneyBossMini',
             'getBossPublicPath',
           ],
-          relatedEntityId: 'season_mini_01',
-          notes:
-            'Batch 2 in-app. Replaces legacy boss-lord-of-empty-day for codex and journey.',
+          relatedEntityId: `season_mini_${n}`,
+          notes: dedicated.notes,
         })
       : needed({
-          id: `season-boss-${n}`,
+          id: `season-boss-${n}-${slug}`,
           type: 'season-mini-boss',
           category: 'seasonBosses',
           title: `Сезон ${seasonId} — ${title}`,
@@ -450,8 +505,8 @@ for (const [seasonId, slug, title] of SEASON_MINI_BOSSES) {
           targetPath: `/game-assets/bosses/seasons/season-boss-${n}-${slug}.webp`,
           usedIn: ['SeasonTodayCard', 'SeasonDashboardSummary', 'bossConfig'],
           relatedEntityId: `season_mini_${n}`,
-          promptStatus: seasonId <= 2 ? 'ready' : 'planned',
-          notes: 'Campaign v1 UI uses emoji icon. Target path follows naming convention.',
+          promptStatus: 'planned',
+          notes: 'Campaign UI uses emoji until dedicated season art ships.',
         }),
   );
 }
@@ -762,6 +817,49 @@ const DARK_MVP_BATCH_2_IDS = [
   'season-boss-01-empty-day-lord',
 ];
 
+/** Dedicated season mini-boss webp set (one-by-one generation). */
+const SEASON_BOSS_ART_SET_IDS = [
+  'season-boss-01-empty-day-lord',
+  'season-boss-02-divan-king',
+  'season-boss-03-snack-chaos',
+  'season-boss-04-misty-baron',
+  'season-boss-05-resource-devourer',
+  'season-boss-06-plateau-guardian',
+  'season-boss-07-rollback-chain',
+  'season-boss-08-night-feast-baron',
+  'season-boss-09-promise-collector',
+  'season-boss-10-old-form-guardian',
+  'season-boss-11-fatigue-archivist',
+  'season-boss-12-mobility-gatekeeper',
+  'season-boss-13-old-year-shadow',
+];
+
+/** Set true when season boss assets are wired via getSeasonBossManifestAssetId. */
+const SEASON_BOSS_ART_SET_IN_APP = true;
+
+function syncSeasonBossArtSetFromDisk(assetList) {
+  let onDisk = 0;
+  for (const id of SEASON_BOSS_ART_SET_IDS) {
+    const asset = assetList.find((a) => a.id === id);
+    if (!asset?.targetPath) continue;
+    const diskPath = join(root, 'public', asset.targetPath.replace(/^\//, ''));
+    if (!existsSync(diskPath)) continue;
+    onDisk += 1;
+    const ext = extname(diskPath).toLowerCase();
+    asset.path = asset.targetPath;
+    asset.fileStatus = 'ready';
+    asset.promptStatus = 'ready';
+    if (SEASON_BOSS_ART_SET_IN_APP) {
+      asset.status = 'in-app';
+      asset.notes = `${asset.notes || ''} Season boss art set connected in UI (${ext}).`.trim();
+    } else {
+      asset.status = ext === '.webp' ? 'processed' : 'generated';
+      asset.notes = `${asset.notes || ''} On disk (${ext}); not in-app until UI wire.`.trim();
+    }
+  }
+  return onDisk;
+}
+
 /** Set true after Batch 2 assets are wired in empty state, plateau, and season boss UI. */
 const BATCH_2_IN_APP = true;
 
@@ -872,6 +970,7 @@ function syncBodyAbilityIconsFromDisk(assetList) {
 }
 
 const batch2OnDisk = syncBatch2FromDisk(assets);
+const seasonBossArtOnDisk = syncSeasonBossArtSetFromDisk(assets);
 const { onDisk: bodyAbilityIconsOnDisk, inApp: bodyAbilityIconsInApp } =
   syncBodyAbilityIconsFromDisk(assets);
 const bodyAbilityIconsGroup1InApp =
@@ -956,6 +1055,26 @@ const manifest = {
       'Generate → place in public/game-assets/ → node scripts/build-asset-manifest.mjs → processed; UI wire in separate sprint',
     excludedFromBatch: ['body-ability-icon-set-v1'],
   },
+  seasonBossArtSet: {
+    updated: '2026-07-22',
+    status:
+      seasonBossArtOnDisk === SEASON_BOSS_ART_SET_IDS.length
+        ? SEASON_BOSS_ART_SET_IN_APP
+          ? 'in-app'
+          : 'files-on-disk'
+        : seasonBossArtOnDisk > 0
+          ? 'partial-on-disk'
+          : 'awaiting-generation',
+    description:
+      'Dedicated season mini-boss webp set complete: S01–S13 in-app.',
+    assetIds: SEASON_BOSS_ART_SET_IDS,
+    filesOnDisk: seasonBossArtOnDisk,
+    filesExpected: 13,
+    filesInApp: seasonBossArtOnDisk,
+    inApp: SEASON_BOSS_ART_SET_IN_APP && seasonBossArtOnDisk === SEASON_BOSS_ART_SET_IDS.length,
+    workflow:
+      'Generate one → public/game-assets/bosses/seasons/ → wire manifestAssetUi + bossArt → build-asset-manifest.mjs',
+  },
   bodyAbilityIconsMiniBatch: {
     updated: '2026-06-06',
     status:
@@ -1021,6 +1140,9 @@ writeFileSync(outPath, JSON.stringify(manifest, null, 2) + '\n', 'utf-8');
 console.log(`Wrote ${assets.length} assets to ${outPath}`);
 console.log(`Dark MVP Batch 1: ${batch1OnDisk}/${DARK_MVP_BATCH_1_IDS.length} files on disk`);
 console.log(`Dark MVP Batch 2: ${batch2OnDisk}/${DARK_MVP_BATCH_2_IDS.length} files on disk`);
+console.log(
+  `Season boss art set: ${seasonBossArtOnDisk}/${SEASON_BOSS_ART_SET_IDS.length} dedicated files on disk`,
+);
 console.log(
   `Body Ability Icons mini-batch: ${bodyAbilityIconsOnDisk}/${BODY_ABILITY_ICON_IDS.length} on disk, ${bodyAbilityIconsInApp} in-app`,
 );
