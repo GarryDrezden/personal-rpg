@@ -120,19 +120,19 @@ function FlankFigure({ gender, stage, side, playerStage, variant }: FlankFigureP
           src={heroAssets.src}
           alt={meta.title}
           fallbackCandidates={heroAssets.fallbackCandidates}
-          status={locked ? 'locked' : 'unlocked'}
+          status="unlocked"
           fit="hero"
           className="h-full w-full bg-transparent"
           imageClassName={`object-contain object-bottom ${
             isFuture
-              ? 'brightness-[0.72] contrast-[0.92] saturate-[0.88]'
-              : 'brightness-[0.62] contrast-[0.88] saturate-[0.78]'
-          } ${locked && isFuture ? 'blur-[0.3px]' : ''}`}
+              ? 'brightness-[0.88] contrast-[0.96] saturate-[0.95]'
+              : 'brightness-[0.82] contrast-[0.94] saturate-[0.9]'
+          }`}
         />
       </div>
 
       {locked ? (
-        <span className="absolute bottom-[16%] left-1/2 z-[2] flex -translate-x-1/2 items-center gap-1 rounded-full border border-stone-500/45 bg-black/60 px-2 py-0.5 text-[10px] font-medium text-stone-300 backdrop-blur-sm">
+        <span className="absolute bottom-[16%] left-1/2 z-[2] flex -translate-x-1/2 items-center gap-1 rounded-full border border-amber-400/30 bg-black/50 px-2 py-0.5 text-[10px] font-medium text-amber-100/90 backdrop-blur-sm">
           <Lock size={10} aria-hidden />
           <span className="hidden sm:inline">Будущая форма</span>
         </span>
@@ -525,7 +525,7 @@ export function HeroTransformationShowcase({
             status={displayUnlocked ? 'current' : 'locked'}
             fit="hero"
             className="h-full w-full bg-transparent drop-shadow-[0_10px_32px_rgba(0,0,0,0.5)]"
-            imageClassName={`object-contain object-bottom ${displayUnlocked ? '' : 'brightness-[0.72] saturate-[0.85]'}`}
+            imageClassName="object-contain object-bottom"
           />
           {currentWeightKg !== null ? (
             <span className={HERO_WEIGHT_BADGE_CLASS} data-testid="hero-transformation-weight-badge">

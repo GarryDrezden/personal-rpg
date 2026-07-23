@@ -83,14 +83,17 @@ export function GameAssetImage({
   if (candidates.length === 0 || exhausted) {
     return (
       <div
-        className={`relative bg-transparent ${className} ${locked ? 'opacity-55' : ''} ${
+        className={`relative bg-transparent ${className} ${
           showHighlight ? 'ring-2 ring-[var(--app-primary)] ring-inset' : ''
         }`}
       >
         <GameAssetPlaceholder variant={variant} status={status} label={alt} className="h-full w-full" />
         {locked && (
-          <span className="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/20">
-            <Lock size={18} className="text-[var(--app-text-muted)]" />
+          <span
+            className="pointer-events-none absolute left-1/2 top-[42%] z-[2] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+            aria-hidden
+          >
+            <Lock size={22} className="text-amber-200/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]" />
           </span>
         )}
       </div>
@@ -100,8 +103,8 @@ export function GameAssetImage({
   return (
     <div
       className={`relative flex h-full w-full ${alignClass} justify-center ${overflowClass} bg-transparent ${className} ${
-        locked ? 'opacity-55 grayscale' : ''
-      } ${showHighlight ? 'ring-2 ring-[var(--app-primary)] ring-inset' : ''}`}
+        showHighlight ? 'ring-2 ring-[var(--app-primary)] ring-inset' : ''
+      }`}
     >
       <img
         src={activeSrc}
@@ -116,14 +119,18 @@ export function GameAssetImage({
           }
           setExhausted(true);
         }}
-        className={`select-none pointer-events-none bg-transparent ${fitClass} ${variantScale} ${imageClassName} ${
-          locked ? 'blur-[1px]' : ''
-        }`}
+        className={`select-none pointer-events-none bg-transparent ${fitClass} ${variantScale} ${imageClassName}`}
         style={imageStyle}
       />
       {locked && (
-        <span className="absolute inset-0 flex items-center justify-center bg-black/20">
-          <Lock size={18} className="text-[var(--app-text-muted)]" />
+        <span
+          className="pointer-events-none absolute left-1/2 top-[42%] z-[2] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+          aria-hidden
+        >
+          <Lock
+            size={resolvedFit === 'hero' ? 28 : 20}
+            className="text-amber-200/90 drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]"
+          />
         </span>
       )}
     </div>
