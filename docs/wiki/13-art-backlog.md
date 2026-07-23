@@ -158,8 +158,7 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 
 | Название | Тип | Где используется | Связанная система | Статус | Приоритет | Промпт | Файл | Manifest | Комментарий |
 |----------|-----|------------------|-------------------|--------|-----------|--------|------|----------|-------------|
-| Male stage 01–03, 19–20 | hero-stage | Dashboard, Codex, Journey | heroStages | in-app | P0 | ready | ready | registered | Anchor PNG в `public/` |
-| Male stages 04–18 (variant) | hero-stage | assetPaths fallback | heroStages | in-app | P0 | ready | ready | registered | `variants/dark-fantasy/` |
+| Male stage 01–20 | hero-stage | Dashboard, Codex, Journey | heroStages | **in-app** | P0 | ready | ready | registered | v2 set 2026-07-23: unique tee prints HP rave / Rick&Morty; long-hair arc |
 | Journey chapter 1–9 | journey-chapter-bg | Journey Map v3 | journeyChapterVisuals | in-app | P0 | ready | ready | registered | `.webp` в `maps/chapters/` |
 | Companions ×4 | companion | Onboarding, Codex | assetRegistry | in-app | P0 | ready | ready | registered | PNG approved |
 | Body ability icons ×12 | body-ability-icon | Growth abilities | bodyAbilityConfig | in-app | P0 | ready | 12/12 ready | registered | Icon set v1 complete on skill board |

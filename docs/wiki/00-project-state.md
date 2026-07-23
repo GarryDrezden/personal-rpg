@@ -50,7 +50,7 @@
 
 - **README:** v1.4 (пользовательская документация)
 - **package.json:** 1.0.0
-- **GAME_ASSET_VERSION:** 40
+- **GAME_ASSET_VERSION:** 41
 
 ## Sprint 1 — Accounts & Storage ✅ (production: PHP + MySQL)
 
@@ -117,7 +117,7 @@
 
 - `public/game-assets/` — heroes, companions, mobs, bosses, artifacts, maps
 - Female hero: полный набор 20 стадий + death
-- Male hero: стадии 1–3, 19–20 + variants 4–18 + death
+- Male hero: **v2 full set 1–20** (2026-07-23) — unique tee prints (HP rave / Rick & Morty), ponytail arc, tattoo identity; `GAME_ASSET_VERSION` 41
 - 8 legacy codex bosses (PNG), 8 daily mobs, 4 companions
 - Journey chapter vignettes: 9 × `.webp` (P0 in-app)
 - **Asset Registry 2.0** ✅ — `docs/assets/manifest.json` v2, Art Backlog, validation tests
@@ -283,7 +283,7 @@ Full boss art set for season mini-bosses (S01–S13) and season reward tokens (S
 - рассинхрон ассетов (manifest vs `public/game-assets/` vs `GAME_ASSET_VERSION`);
 - приватные данные в публичной вики;
 - sidecar sync achievements/coins/momentum — **remote persist подключён** (см. Stabilize в долгах);
-- consistency hero stages (male incomplete);
+- consistency hero stages (male v2 1–20 in-app 2026-07-23; death.png legacy);
 - FTP deploy не заливает `data/` — MySQL на хостинге отдельно;
 - `api/config/config.php` только на сервере, не в Git.
 

@@ -109,7 +109,7 @@ describe('Body Ability Icons mini-batch', () => {
       const url = getManifestAssetUrl(assetId);
       expect(url).not.toBeNull();
       expect(url).toContain('/game-assets/abilities/');
-      expect(url).toContain('?v=40');
+      expect(url).toContain('?v=41');
     });
   }
 
