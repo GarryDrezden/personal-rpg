@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Lock, Scale, Skull } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Lock, Scale, Skull } from 'lucide-react';
 import type { HeroGender, HeroStageMeta, HeroStageNumber } from '../../types/gameAssets';
 import { HERO_STAGE_COUNT } from '../../types/gameAssets';
 import { HERO_MILESTONE_STAGES } from '../../constants/heroMilestones';
@@ -55,8 +55,9 @@ function DeathFigureImage({ src, alt, className = '' }: DeathFigureImageProps) {
 const MILESTONE_SET = new Set<number>(HERO_MILESTONE_STAGES);
 
 /** Компактная сцена; аватары +35% от базовых размеров */
-const SHOWCASE_H = 'h-[580px] sm:h-[620px] lg:h-[640px]';
-const HERO_ZONE_BOTTOM = 'bottom-[100px]';
+const SHOWCASE_H = 'h-[600px] sm:h-[640px] lg:h-[660px]';
+/** Место под шкалу + подпись (чтобы текст не наезжал на трек) */
+const HERO_ZONE_BOTTOM = 'bottom-[148px]';
 const HERO_H = 'clamp(351px, 54vw, 479px)';
 const HERO_W = 'min(92vw, 43rem)';
 const HERO_BOTTOM = 'bottom-0';
@@ -235,17 +236,30 @@ function StageTimeline({
     [onStageNavigate, scrollToStage],
   );
 
+  const canGoPrev = displayStage > 1;
+  const canGoNext = displayStage < HERO_STAGE_COUNT;
+
   return (
     <div
       data-testid="hero-stage-timeline"
-      className="absolute bottom-[52px] left-1/2 z-[5] w-[92%] max-w-4xl -translate-x-1/2 sm:bottom-[56px]"
+      className="absolute bottom-[76px] left-1/2 z-[5] flex w-[94%] max-w-4xl -translate-x-1/2 items-center gap-1.5 sm:bottom-[80px] sm:gap-2"
     >
+      <button
+        type="button"
+        data-testid="hero-stage-prev"
+        aria-label="Предыдущая стадия"
+        disabled={!canGoPrev}
+        onClick={() => navigateStage(-1)}
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-amber-400/35 bg-black/55 text-amber-200 shadow-[0_0_12px_rgba(0,0,0,0.35)] backdrop-blur-sm transition hover:border-amber-300/60 hover:bg-black/70 hover:text-amber-100 disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:border-amber-400/35 disabled:hover:bg-black/55"
+      >
+        <ChevronLeft size={22} strokeWidth={2.25} aria-hidden />
+      </button>
+
       <div
         ref={scrollRef}
         data-testid="hero-stage-timeline-scroll"
         role="group"
-        aria-label="Листание стадий — клик слева или справа"
-        title="Кликните слева или справа, чтобы листать стадии"
+        aria-label="Шкала стадий героя"
         onClick={handleTrackClick}
         onKeyDown={(event) => {
           if (event.key === 'ArrowLeft') {
@@ -258,10 +272,10 @@ function StageTimeline({
           }
         }}
         tabIndex={0}
-        className="cursor-pointer overflow-x-auto rounded-lg pb-1 outline-none [-ms-overflow-style:none] [scrollbar-width:none] focus-visible:ring-2 focus-visible:ring-amber-400/70 [&::-webkit-scrollbar]:hidden"
+        className="min-w-0 flex-1 cursor-pointer overflow-x-auto rounded-lg outline-none [-ms-overflow-style:none] [scrollbar-width:none] focus-visible:ring-2 focus-visible:ring-amber-400/70 [&::-webkit-scrollbar]:hidden"
       >
         <div className="relative min-w-[36rem] px-1">
-          <div className="relative h-11">
+          <div className="relative h-10">
             <div className="pointer-events-none absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-stone-800/90 shadow-inner" />
 
             <div
@@ -279,7 +293,7 @@ function StageTimeline({
                 return (
                   <div
                     key={stage}
-                    className="pointer-events-none flex h-11 w-0 flex-1 items-center justify-center"
+                    className="pointer-events-none flex h-10 w-0 flex-1 items-center justify-center"
                   >
                     <button
                       ref={(el) => {
@@ -296,32 +310,32 @@ function StageTimeline({
                         event.stopPropagation();
                         handleDotClick(stage);
                       }}
-                      className={`group pointer-events-auto relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/80 ${
-                        unlocked ? 'cursor-pointer' : 'cursor-not-allowed'
+                      className={`group pointer-events-auto relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/80 ${
+                        unlocked ? 'cursor-pointer' : 'cursor-pointer'
                       }`}
                     >
-                    {isCurrentMarker ? (
-                      <div
-                        data-testid="hero-stage-current-marker"
-                        className="relative flex h-9 w-9 items-center justify-center"
-                      >
-                        <div className="absolute inset-0 scale-125 rounded-sm bg-amber-400/30 blur-lg" />
-                        <div className="absolute h-8 w-8 rotate-45 rounded-sm border-2 border-amber-50/95 bg-gradient-to-br from-amber-100 via-amber-400 to-amber-600 shadow-[0_0_24px_rgba(251,191,36,0.9),0_0_48px_rgba(251,191,36,0.4)]" />
-                        <span className="sr-only">Текущая стадия {stage}</span>
-                      </div>
-                    ) : (
-                      <div
-                        className={`rounded-full transition group-hover:scale-125 ${
-                          isMilestone ? 'h-3.5 w-3.5' : 'h-2.5 w-2.5'
-                        } ${
-                          isPast
-                            ? 'bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.6)]'
-                            : unlocked
-                              ? 'bg-amber-500/85 shadow-[0_0_6px_rgba(251,191,36,0.4)]'
-                              : 'border border-stone-500/75 bg-stone-950/95'
-                        }`}
-                      />
-                    )}
+                      {isCurrentMarker ? (
+                        <div
+                          data-testid="hero-stage-current-marker"
+                          className="relative flex h-8 w-8 items-center justify-center"
+                        >
+                          <div className="absolute inset-0 scale-125 rounded-sm bg-amber-400/30 blur-lg" />
+                          <div className="absolute h-7 w-7 rotate-45 rounded-sm border-2 border-amber-50/95 bg-gradient-to-br from-amber-100 via-amber-400 to-amber-600 shadow-[0_0_24px_rgba(251,191,36,0.9),0_0_48px_rgba(251,191,36,0.4)]" />
+                          <span className="sr-only">Текущая стадия {stage}</span>
+                        </div>
+                      ) : (
+                        <div
+                          className={`rounded-full transition group-hover:scale-125 ${
+                            isMilestone ? 'h-3.5 w-3.5' : 'h-2.5 w-2.5'
+                          } ${
+                            isPast
+                              ? 'bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.6)]'
+                              : unlocked
+                                ? 'bg-amber-500/85 shadow-[0_0_6px_rgba(251,191,36,0.4)]'
+                                : 'border border-stone-500/75 bg-stone-950/95'
+                          }`}
+                        />
+                      )}
                     </button>
                   </div>
                 );
@@ -330,6 +344,17 @@ function StageTimeline({
           </div>
         </div>
       </div>
+
+      <button
+        type="button"
+        data-testid="hero-stage-next"
+        aria-label="Следующая стадия"
+        disabled={!canGoNext}
+        onClick={() => navigateStage(1)}
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-amber-400/35 bg-black/55 text-amber-200 shadow-[0_0_12px_rgba(0,0,0,0.35)] backdrop-blur-sm transition hover:border-amber-300/60 hover:bg-black/70 hover:text-amber-100 disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:border-amber-400/35 disabled:hover:bg-black/55"
+      >
+        <ChevronRight size={22} strokeWidth={2.25} aria-hidden />
+      </button>
     </div>
   );
 }
@@ -550,18 +575,24 @@ export function HeroTransformationShowcase({
         onStageNavigate={handleTimelineNavigate}
       />
 
-      <div className="absolute bottom-1.5 left-1/2 z-[6] w-[94%] max-w-xl -translate-x-1/2 text-center sm:bottom-2">
-        {lockedHint ? (
-          <p className="mb-0.5 text-[10px] text-stone-400">{lockedHint}</p>
-        ) : null}
+      {lockedHint ? (
+        <p
+          data-testid="hero-stage-locked-hint"
+          className="absolute bottom-[122px] left-1/2 z-[6] max-w-[90%] -translate-x-1/2 rounded-full border border-stone-500/35 bg-black/65 px-3 py-1 text-center text-[10px] text-stone-200 backdrop-blur-sm sm:bottom-[126px]"
+        >
+          {lockedHint}
+        </p>
+      ) : null}
+
+      <div className="absolute inset-x-0 bottom-0 z-[6] flex min-h-[68px] flex-col items-center justify-end px-3 pb-2 pt-1 text-center">
         <p className="text-sm font-bold leading-tight text-[var(--app-text)]">
           Стадия {displayStage}/{HERO_STAGE_COUNT} — {displayMeta.title}
         </p>
-        <p className="mt-0.5 text-[11px] text-[var(--app-text-muted)]">
+        <p className="mt-0.5 text-[11px] leading-snug text-[var(--app-text-muted)]">
           Глава {chapter.chapter}: {chapter.title} · {Math.round(progressPercent)}% пути
-          {isPreview ? ' · просмотр' : ''}
+          {isPreview || browseStage !== null ? ' · просмотр' : ''}
         </p>
-        {isPreview ? (
+        {isPreview || browseStage !== null ? (
           <button
             type="button"
             onClick={() => {
@@ -569,7 +600,7 @@ export function HeroTransformationShowcase({
               setBrowseStage(null);
               setLockedHint(null);
             }}
-            className="mt-1 text-[11px] font-semibold text-amber-400/90 underline-offset-2 hover:text-amber-300 hover:underline"
+            className="mt-0.5 text-[11px] font-semibold text-amber-400/90 underline-offset-2 hover:text-amber-300 hover:underline"
           >
             Вернуться к текущей
           </button>
