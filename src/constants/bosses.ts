@@ -1,3 +1,5 @@
+import { gameAsset } from '../game/assetPaths';
+
 export type BossTemplateId =
   | 'monday_laziness'
   | 'weekend_slip'
@@ -11,7 +13,7 @@ export type WeeklyBossTemplate = {
   subtitle: string;
   avatarEmoji: string;
   description: string;
-  /** PNG/WebP в public/bosses/ — при отсутствии показывается SVG или emoji */
+  /** Dark-fantasy portrait under public/game-assets/bosses/weekly/ */
   imagePath: string;
   /** CSS-цвет акцента карточки */
   accent: string;
@@ -25,7 +27,7 @@ export const WEEKLY_BOSS_TEMPLATES: WeeklyBossTemplate[] = [
     subtitle: 'Тянет отложить всё на потом',
     avatarEmoji: '😴',
     description: 'Победи прокрастинацию — закрой недельную цель и держи режим.',
-    imagePath: '/bosses/monday-laziness.svg',
+    imagePath: gameAsset('bosses/weekly/weekly-threat-monday-laziness.webp'),
     accent: '#6366f1',
     defeatHint: 'Закрой недельную цель XP и не пропускай учёт дней.',
   },
@@ -35,7 +37,7 @@ export const WEEKLY_BOSS_TEMPLATES: WeeklyBossTemplate[] = [
     subtitle: 'Любит нападать в пятницу вечером',
     avatarEmoji: '🍕',
     description: 'Не дай сорваться на выходных — калории и трезвость под контролем.',
-    imagePath: '/bosses/weekend-slip.svg',
+    imagePath: gameAsset('bosses/weekly/weekly-threat-weekend-slip.webp'),
     accent: '#f97316',
     defeatHint: 'Держи калории в лимите и избегай тяжёлых срывов в конце недели.',
   },
@@ -45,7 +47,7 @@ export const WEEKLY_BOSS_TEMPLATES: WeeklyBossTemplate[] = [
     subtitle: 'Питается алкоголем и хаосом',
     avatarEmoji: '🌫️',
     description: 'Прогоняй туман трезвостью и чётким планом дня.',
-    imagePath: '/bosses/brain-fog.svg',
+    imagePath: gameAsset('bosses/weekly/weekly-threat-brain-fog.webp'),
     accent: '#94a3b8',
     defeatHint: 'Собери серию трезвых дней и веди дневник.',
   },
@@ -55,7 +57,7 @@ export const WEEKLY_BOSS_TEMPLATES: WeeklyBossTemplate[] = [
     subtitle: 'Держит на месте сильнее гравитации',
     avatarEmoji: '🛋️',
     description: 'Сорви с дивана — шаги, зал и активность спасут неделю.',
-    imagePath: '/bosses/couch-magnet.svg',
+    imagePath: gameAsset('bosses/weekly/weekly-threat-couch-magnet.webp'),
     accent: '#22c55e',
     defeatHint: 'Выполни цели по шагам и норму зала за неделю.',
   },
@@ -65,7 +67,7 @@ export const WEEKLY_BOSS_TEMPLATES: WeeklyBossTemplate[] = [
     subtitle: 'Побеждается дневником и учётом',
     avatarEmoji: '🌀',
     description: 'Упорядочь хаос — вноси данные и бей недельные цели.',
-    imagePath: '/bosses/chaos-unplanned.svg',
+    imagePath: gameAsset('bosses/weekly/weekly-threat-chaos-unplanned.webp'),
     accent: '#a855f7',
     defeatHint: 'Заполняй дни подряд и закрывай все условия победы.',
   },

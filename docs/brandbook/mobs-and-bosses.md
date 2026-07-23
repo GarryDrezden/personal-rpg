@@ -59,14 +59,16 @@ Victory → XP + coins. Perfect week → bonus.
 
 UI: Week page, Growth hub → Trials tab.
 
+**Art (in-app):** `public/game-assets/bosses/weekly/weekly-threat-*.webp` (5 portraits), wired via `src/constants/bosses.ts` + `GAME_ASSET_VERSION`.
+
 ---
 
 ## Legacy
 
-Old weekly boss IDs and `public/bosses/` SVG — **legacy**.
-See [`../BOSS_ASSETS.md`](../BOSS_ASSETS.md) (archived reference).
+Old `public/bosses/*.svg` cartoons — **legacy**, no longer wired.
+See [`../BOSS_ASSETS.md`](../BOSS_ASSETS.md).
 
-Current game assets use chapter bosses in codex/journey and separate weekly trial system.
+Current game assets use chapter/season bosses in codex/journey and dedicated weekly threat portraits for Trials/Week.
 
 ## Prompts
 

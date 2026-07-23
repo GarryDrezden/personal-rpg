@@ -5,25 +5,21 @@
 > - [`assets/manifest.json`](assets/manifest.json)
 > - Chapter bosses: `public/game-assets/bosses/`
 
-## Боссы
+## Недельные угрозы (Weekly Threats)
 
-Каждый недельный босс имеет стабильный `id` и путь к картинке в `public/bosses/`.
+Портреты dark-fantasy в `public/game-assets/bosses/weekly/`, пути через `gameAsset()` в `src/constants/bosses.ts`.
 
-| ID | Файл (сейчас SVG) | Можно заменить на |
-|----|-------------------|-------------------|
-| `monday_laziness` | `monday-laziness.svg` | `monday-laziness.png` (512×512+) |
-| `weekend_slip` | `weekend-slip.svg` | `weekend-slip.png` |
-| `brain_fog` | `brain-fog.svg` | `brain-fog.png` |
-| `couch_magnet` | `couch-magnet.svg` | `couch-magnet.png` |
-| `chaos_unplanned` | `chaos-unplanned.svg` | `chaos-unplanned.png` |
+| ID | Файл |
+|----|------|
+| `monday_laziness` | `weekly-threat-monday-laziness.webp` |
+| `weekend_slip` | `weekly-threat-weekend-slip.webp` |
+| `brain_fog` | `weekly-threat-brain-fog.webp` |
+| `couch_magnet` | `weekly-threat-couch-magnet.webp` |
+| `chaos_unplanned` | `weekly-threat-chaos-unplanned.webp` |
 
-Чтобы подключить PNG/WebP — положите файл с тем же именем и расширением `.png`, затем обновите `imagePath` в `src/constants/bosses.ts`.
+Legacy SVG в `public/bosses/*.svg` больше не подключены к UI (можно удалить позже).
 
-Рекомендации для финального арта:
-- **2D иллюстрация** (PNG/WebP) — оптимально: лёгкий вес, стиль RPG, читается в карточке
-- **3D рендер** — можно экспортировать в PNG из Blender; Three.js в рантайме не обязателен
-- Размер: **512×512** или **1024×1024**, фон прозрачный или с мягким градиентом
-- Стиль: единый для всех 5 боссов (как набор в одной игре)
+Рекомендации: **1024×1024** WebP, единый dark-fantasy стиль с сезонными мини-боссами.
 
 ## Аватар персонажа
 
