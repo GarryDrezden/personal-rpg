@@ -76,6 +76,31 @@
     "inApp": true,
     "workflow": "Generate one → public/game-assets/bosses/seasons/ → wire manifestAssetUi + bossArt → build-asset-manifest.mjs"
   },
+  "seasonRewardArtSet": {
+    "updated": "2026-07-23",
+    "status": "in-app",
+    "description": "Dedicated season reward webp set complete: S01–S13 in-app (1:1 trophy tokens).",
+    "assetIds": [
+      "season-01-reward-core-spark",
+      "season-02-reward-trail-mark",
+      "season-03-reward-base-stone",
+      "season-04-reward-tower-key",
+      "season-05-reward-pass-mark",
+      "season-06-reward-lake-light",
+      "season-07-reward-fortress-seal",
+      "season-08-reward-river-drop",
+      "season-09-reward-form-shield",
+      "season-10-reward-strength-medal",
+      "season-11-reward-clarity-lantern",
+      "season-12-reward-gate-key",
+      "season-13-reward-year-artifact"
+    ],
+    "filesOnDisk": 13,
+    "filesExpected": 13,
+    "filesInApp": 13,
+    "inApp": true,
+    "workflow": "Generate → public/game-assets/rewards/ → wire getSeasonRewardManifestAssetId → build-asset-manifest.mjs"
+  },
   "bodyAbilityIconsMiniBatch": {
     "updated": "2026-06-06",
     "status": "in-app",
@@ -2923,7 +2948,7 @@
       "promptStatus": "ready",
       "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Dark MVP Priority Pack v1. Small reward for igniting the system. Batch 1 connected in UI (.webp).",
+      "notes": "Dark MVP Priority Pack v1. Small reward for igniting the system. Batch 1 connected in UI (.webp). Season reward art set connected in UI (.webp).",
       "status": "in-app",
       "id": "season-01-reward-core-spark",
       "type": "season-reward",
@@ -2934,18 +2959,19 @@
       "usedIn": [
         "seasonConfig",
         "SeasonDashboardSummary",
+        "SeasonHistoryCard",
         "ManifestArtScene"
       ],
       "relatedEntityId": "season_01_reward",
       "path": "/game-assets/rewards/season-01-core-spark.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Text-only reward name in Seasons v1.",
-      "status": "needed",
-      "id": "season-reward-02",
+      "notes": "Season reward art set — dedicated 1:1 webp trophy token. Season reward art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-02-reward-trail-mark",
       "type": "season-reward",
       "category": "seasonRewards",
       "title": "Награда сезона 2 — Метка тропы",
@@ -2953,17 +2979,20 @@
       "targetPath": "/game-assets/rewards/season-02-trail-mark.webp",
       "usedIn": [
         "seasonConfig",
-        "SeasonDashboardSummary"
+        "SeasonDashboardSummary",
+        "SeasonHistoryCard",
+        "ManifestArtScene"
       ],
-      "relatedEntityId": "season_02_reward"
+      "relatedEntityId": "season_02_reward",
+      "path": "/game-assets/rewards/season-02-trail-mark.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Text-only reward name in Seasons v1.",
-      "status": "needed",
-      "id": "season-reward-03",
+      "notes": "Season reward art set — dedicated 1:1 webp trophy token. Season reward art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-03-reward-base-stone",
       "type": "season-reward",
       "category": "seasonRewards",
       "title": "Награда сезона 3 — Камень базы",
@@ -2971,17 +3000,20 @@
       "targetPath": "/game-assets/rewards/season-03-base-stone.webp",
       "usedIn": [
         "seasonConfig",
-        "SeasonDashboardSummary"
+        "SeasonDashboardSummary",
+        "SeasonHistoryCard",
+        "ManifestArtScene"
       ],
-      "relatedEntityId": "season_03_reward"
+      "relatedEntityId": "season_03_reward",
+      "path": "/game-assets/rewards/season-03-base-stone.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Text-only reward name in Seasons v1.",
-      "status": "needed",
-      "id": "season-reward-04",
+      "notes": "Season reward art set — dedicated 1:1 webp trophy token. Season reward art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-04-reward-tower-key",
       "type": "season-reward",
       "category": "seasonRewards",
       "title": "Награда сезона 4 — Ключ башни",
@@ -2989,17 +3021,20 @@
       "targetPath": "/game-assets/rewards/season-04-tower-key.webp",
       "usedIn": [
         "seasonConfig",
-        "SeasonDashboardSummary"
+        "SeasonDashboardSummary",
+        "SeasonHistoryCard",
+        "ManifestArtScene"
       ],
-      "relatedEntityId": "season_04_reward"
+      "relatedEntityId": "season_04_reward",
+      "path": "/game-assets/rewards/season-04-tower-key.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Text-only reward name in Seasons v1.",
-      "status": "needed",
-      "id": "season-reward-05",
+      "notes": "Season reward art set — dedicated 1:1 webp trophy token. Season reward art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-05-reward-pass-mark",
       "type": "season-reward",
       "category": "seasonRewards",
       "title": "Награда сезона 5 — Перевальная метка",
@@ -3007,17 +3042,20 @@
       "targetPath": "/game-assets/rewards/season-05-pass-mark.webp",
       "usedIn": [
         "seasonConfig",
-        "SeasonDashboardSummary"
+        "SeasonDashboardSummary",
+        "SeasonHistoryCard",
+        "ManifestArtScene"
       ],
-      "relatedEntityId": "season_05_reward"
+      "relatedEntityId": "season_05_reward",
+      "path": "/game-assets/rewards/season-05-pass-mark.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Text-only reward name in Seasons v1.",
-      "status": "needed",
-      "id": "season-reward-06",
+      "notes": "Season reward art set — dedicated 1:1 webp trophy token. Season reward art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-06-reward-lake-light",
       "type": "season-reward",
       "category": "seasonRewards",
       "title": "Награда сезона 6 — Озёрный свет",
@@ -3025,17 +3063,20 @@
       "targetPath": "/game-assets/rewards/season-06-lake-light.webp",
       "usedIn": [
         "seasonConfig",
-        "SeasonDashboardSummary"
+        "SeasonDashboardSummary",
+        "SeasonHistoryCard",
+        "ManifestArtScene"
       ],
-      "relatedEntityId": "season_06_reward"
+      "relatedEntityId": "season_06_reward",
+      "path": "/game-assets/rewards/season-06-lake-light.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Text-only reward name in Seasons v1.",
-      "status": "needed",
-      "id": "season-reward-07",
+      "notes": "Season reward art set — dedicated 1:1 webp trophy token. Season reward art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-07-reward-fortress-seal",
       "type": "season-reward",
       "category": "seasonRewards",
       "title": "Награда сезона 7 — Печать крепости",
@@ -3043,17 +3084,20 @@
       "targetPath": "/game-assets/rewards/season-07-fortress-seal.webp",
       "usedIn": [
         "seasonConfig",
-        "SeasonDashboardSummary"
+        "SeasonDashboardSummary",
+        "SeasonHistoryCard",
+        "ManifestArtScene"
       ],
-      "relatedEntityId": "season_07_reward"
+      "relatedEntityId": "season_07_reward",
+      "path": "/game-assets/rewards/season-07-fortress-seal.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Text-only reward name in Seasons v1.",
-      "status": "needed",
-      "id": "season-reward-08",
+      "notes": "Season reward art set — dedicated 1:1 webp trophy token. Season reward art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-08-reward-river-drop",
       "type": "season-reward",
       "category": "seasonRewards",
       "title": "Награда сезона 8 — Капля реки",
@@ -3061,17 +3105,20 @@
       "targetPath": "/game-assets/rewards/season-08-river-drop.webp",
       "usedIn": [
         "seasonConfig",
-        "SeasonDashboardSummary"
+        "SeasonDashboardSummary",
+        "SeasonHistoryCard",
+        "ManifestArtScene"
       ],
-      "relatedEntityId": "season_08_reward"
+      "relatedEntityId": "season_08_reward",
+      "path": "/game-assets/rewards/season-08-river-drop.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Text-only reward name in Seasons v1.",
-      "status": "needed",
-      "id": "season-reward-09",
+      "notes": "Season reward art set — dedicated 1:1 webp trophy token. Season reward art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-09-reward-form-shield",
       "type": "season-reward",
       "category": "seasonRewards",
       "title": "Награда сезона 9 — Щит формы",
@@ -3079,17 +3126,20 @@
       "targetPath": "/game-assets/rewards/season-09-form-shield.webp",
       "usedIn": [
         "seasonConfig",
-        "SeasonDashboardSummary"
+        "SeasonDashboardSummary",
+        "SeasonHistoryCard",
+        "ManifestArtScene"
       ],
-      "relatedEntityId": "season_09_reward"
+      "relatedEntityId": "season_09_reward",
+      "path": "/game-assets/rewards/season-09-form-shield.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Text-only reward name in Seasons v1.",
-      "status": "needed",
-      "id": "season-reward-10",
+      "notes": "Season reward art set — dedicated 1:1 webp trophy token. Season reward art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-10-reward-strength-medal",
       "type": "season-reward",
       "category": "seasonRewards",
       "title": "Награда сезона 10 — Медаль силы",
@@ -3097,17 +3147,20 @@
       "targetPath": "/game-assets/rewards/season-10-strength-medal.webp",
       "usedIn": [
         "seasonConfig",
-        "SeasonDashboardSummary"
+        "SeasonDashboardSummary",
+        "SeasonHistoryCard",
+        "ManifestArtScene"
       ],
-      "relatedEntityId": "season_10_reward"
+      "relatedEntityId": "season_10_reward",
+      "path": "/game-assets/rewards/season-10-strength-medal.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Text-only reward name in Seasons v1.",
-      "status": "needed",
-      "id": "season-reward-11",
+      "notes": "Season reward art set — dedicated 1:1 webp trophy token. Season reward art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-11-reward-clarity-lantern",
       "type": "season-reward",
       "category": "seasonRewards",
       "title": "Награда сезона 11 — Фонарь ясности",
@@ -3115,17 +3168,20 @@
       "targetPath": "/game-assets/rewards/season-11-clarity-lantern.webp",
       "usedIn": [
         "seasonConfig",
-        "SeasonDashboardSummary"
+        "SeasonDashboardSummary",
+        "SeasonHistoryCard",
+        "ManifestArtScene"
       ],
-      "relatedEntityId": "season_11_reward"
+      "relatedEntityId": "season_11_reward",
+      "path": "/game-assets/rewards/season-11-clarity-lantern.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Text-only reward name in Seasons v1.",
-      "status": "needed",
-      "id": "season-reward-12",
+      "notes": "Season reward art set — dedicated 1:1 webp trophy token. Season reward art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-12-reward-gate-key",
       "type": "season-reward",
       "category": "seasonRewards",
       "title": "Награда сезона 12 — Ключ врат",
@@ -3133,17 +3189,20 @@
       "targetPath": "/game-assets/rewards/season-12-gate-key.webp",
       "usedIn": [
         "seasonConfig",
-        "SeasonDashboardSummary"
+        "SeasonDashboardSummary",
+        "SeasonHistoryCard",
+        "ManifestArtScene"
       ],
-      "relatedEntityId": "season_12_reward"
+      "relatedEntityId": "season_12_reward",
+      "path": "/game-assets/rewards/season-12-gate-key.webp"
     },
     {
-      "promptStatus": "planned",
-      "fileStatus": "missing",
+      "promptStatus": "ready",
+      "fileStatus": "ready",
       "manifestStatus": "registered",
-      "notes": "Text-only reward name in Seasons v1.",
-      "status": "needed",
-      "id": "season-reward-13",
+      "notes": "Season reward art set — dedicated 1:1 webp trophy token. Season reward art set connected in UI (.webp).",
+      "status": "in-app",
+      "id": "season-13-reward-year-artifact",
       "type": "season-reward",
       "category": "seasonRewards",
       "title": "Награда сезона 13 — Артефакт года",
@@ -3151,9 +3210,12 @@
       "targetPath": "/game-assets/rewards/season-13-year-artifact.webp",
       "usedIn": [
         "seasonConfig",
-        "SeasonDashboardSummary"
+        "SeasonDashboardSummary",
+        "SeasonHistoryCard",
+        "ManifestArtScene"
       ],
-      "relatedEntityId": "season_13_reward"
+      "relatedEntityId": "season_13_reward",
+      "path": "/game-assets/rewards/season-13-year-artifact.webp"
     },
     {
       "promptStatus": "ready",

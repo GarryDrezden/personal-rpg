@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Season reward art set S01–S13:** dedicated 1:1 trophy webp for all season rewards (`season-NN-*.webp`); wired via `getSeasonRewardManifestAssetId`; Dashboard + летопись banners; `GAME_ASSET_VERSION` 40.
 - **Season boss art — S13 Тень Старого Года:** year-end cycle shadow; `season-boss-13-old-year-shadow.webp`; `GAME_ASSET_VERSION` 39. **Dedicated season mini-boss set S01–S13 complete.**
 - **Season boss art — S12 Привратник Новой Мобильности:** iron threshold gatekeeper; `season-boss-12-mobility-gatekeeper.webp`; `GAME_ASSET_VERSION` 38. Season set now S01–S12.
 - **Season boss art — S11 Серый Архивариус Усталости:** gray fatigue archivist at dusty desk; `season-boss-11-fatigue-archivist.webp`; `GAME_ASSET_VERSION` 37. Season set now S01–S11.

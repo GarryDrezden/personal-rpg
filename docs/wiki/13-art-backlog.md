@@ -197,11 +197,15 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 |----------|-----|-----|---------|--------|---|--------|------|----------|
 | 8 daily mobs | mob | Today, Codex | dailyMobEngine | **in-app** | P1 | ready | ready | registered | Polish / .webp migration later |
 
-### Season rewards (13)
+### Season rewards (13) ✅ in-app
 
 | Название | Тип | Где | Система | Статус | P | Промпт | Файл | Manifest |
 |----------|-----|-----|---------|--------|---|--------|------|----------|
-| Искра ядра … Артефакт года | season-reward | Season summary | seasonConfig | needed | P1 | planned | missing | registered |
+| Искра ядра … Артефакт года (S01–S13) | season-reward | Dashboard / летопись | seasonConfig | **in-app** | P1 | ready | ready | registered |
+
+**Paths:** `public/game-assets/rewards/season-NN-*.webp`  
+**Wire:** `getSeasonRewardManifestAssetId(1..13)`  
+**Done:** 2026-07-23 (`GAME_ASSET_VERSION` 40).
 
 ### Plateau artifact
 

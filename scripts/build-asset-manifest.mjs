@@ -638,37 +638,29 @@ for (const [entityId, slug, title] of BODY_ABILITIES) {
   );
 }
 
-// Season rewards
+// Season rewards (dedicated webp set S01–S13)
 for (const [seasonId, slug, rewardName] of SEASON_REWARDS) {
   const n = String(seasonId).padStart(2, '0');
-  if (seasonId === 1) {
-    assets.push(
-      promptReady({
-        id: 'season-01-reward-core-spark',
-        type: 'season-reward',
-        category: 'seasonRewards',
-        title: `Награда сезона 1 — ${rewardName}`,
-        priority: 'P1',
-        targetPath: `/game-assets/rewards/season-01-core-spark.webp`,
-        usedIn: ['seasonConfig', 'SeasonDashboardSummary', 'ManifestArtScene'],
-        relatedEntityId: 'season_01_reward',
-        notes: 'Dark MVP Priority Pack v1. Small reward for igniting the system.',
-      }),
-    );
-    continue;
-  }
+  const id = `season-${n}-reward-${slug}`;
   assets.push(
-    needed({
-      id: `season-reward-${n}`,
+    promptReady({
+      id,
       type: 'season-reward',
       category: 'seasonRewards',
       title: `Награда сезона ${seasonId} — ${rewardName}`,
       priority: 'P1',
       targetPath: `/game-assets/rewards/season-${n}-${slug}.webp`,
-      usedIn: ['seasonConfig', 'SeasonDashboardSummary'],
+      usedIn: [
+        'seasonConfig',
+        'SeasonDashboardSummary',
+        'SeasonHistoryCard',
+        'ManifestArtScene',
+      ],
       relatedEntityId: `season_${n}_reward`,
-      promptStatus: 'planned',
-      notes: 'Text-only reward name in Seasons v1.',
+      notes:
+        seasonId === 1
+          ? 'Dark MVP Priority Pack v1. Small reward for igniting the system.'
+          : 'Season reward art set — dedicated 1:1 webp trophy token.',
     }),
   );
 }
@@ -971,6 +963,39 @@ function syncBodyAbilityIconsFromDisk(assetList) {
 
 const batch2OnDisk = syncBatch2FromDisk(assets);
 const seasonBossArtOnDisk = syncSeasonBossArtSetFromDisk(assets);
+
+/** Dedicated season reward webp set (S01–S13). */
+const SEASON_REWARD_ART_SET_IDS = SEASON_REWARDS.map(([seasonId, slug]) => {
+  const n = String(seasonId).padStart(2, '0');
+  return `season-${n}-reward-${slug}`;
+});
+
+const SEASON_REWARD_ART_SET_IN_APP = true;
+
+function syncSeasonRewardArtSetFromDisk(assetList) {
+  let onDisk = 0;
+  for (const id of SEASON_REWARD_ART_SET_IDS) {
+    const asset = assetList.find((a) => a.id === id);
+    if (!asset?.targetPath) continue;
+    const diskPath = join(root, 'public', asset.targetPath.replace(/^\//, ''));
+    if (!existsSync(diskPath)) continue;
+    onDisk += 1;
+    const ext = extname(diskPath).toLowerCase();
+    asset.path = asset.targetPath;
+    asset.fileStatus = 'ready';
+    asset.promptStatus = 'ready';
+    if (SEASON_REWARD_ART_SET_IN_APP) {
+      asset.status = 'in-app';
+      asset.notes = `${asset.notes || ''} Season reward art set connected in UI (${ext}).`.trim();
+    } else {
+      asset.status = ext === '.webp' ? 'processed' : 'generated';
+      asset.notes = `${asset.notes || ''} On disk (${ext}); not in-app until UI wire.`.trim();
+    }
+  }
+  return onDisk;
+}
+
+const seasonRewardArtOnDisk = syncSeasonRewardArtSetFromDisk(assets);
 const { onDisk: bodyAbilityIconsOnDisk, inApp: bodyAbilityIconsInApp } =
   syncBodyAbilityIconsFromDisk(assets);
 const bodyAbilityIconsGroup1InApp =
@@ -1075,6 +1100,28 @@ const manifest = {
     workflow:
       'Generate one → public/game-assets/bosses/seasons/ → wire manifestAssetUi + bossArt → build-asset-manifest.mjs',
   },
+  seasonRewardArtSet: {
+    updated: '2026-07-23',
+    status:
+      seasonRewardArtOnDisk === SEASON_REWARD_ART_SET_IDS.length
+        ? SEASON_REWARD_ART_SET_IN_APP
+          ? 'in-app'
+          : 'files-on-disk'
+        : seasonRewardArtOnDisk > 0
+          ? 'partial-on-disk'
+          : 'awaiting-generation',
+    description:
+      'Dedicated season reward webp set complete: S01–S13 in-app (1:1 trophy tokens).',
+    assetIds: SEASON_REWARD_ART_SET_IDS,
+    filesOnDisk: seasonRewardArtOnDisk,
+    filesExpected: 13,
+    filesInApp: seasonRewardArtOnDisk,
+    inApp:
+      SEASON_REWARD_ART_SET_IN_APP &&
+      seasonRewardArtOnDisk === SEASON_REWARD_ART_SET_IDS.length,
+    workflow:
+      'Generate → public/game-assets/rewards/ → wire getSeasonRewardManifestAssetId → build-asset-manifest.mjs',
+  },
   bodyAbilityIconsMiniBatch: {
     updated: '2026-06-06',
     status:
@@ -1142,6 +1189,9 @@ console.log(`Dark MVP Batch 1: ${batch1OnDisk}/${DARK_MVP_BATCH_1_IDS.length} fi
 console.log(`Dark MVP Batch 2: ${batch2OnDisk}/${DARK_MVP_BATCH_2_IDS.length} files on disk`);
 console.log(
   `Season boss art set: ${seasonBossArtOnDisk}/${SEASON_BOSS_ART_SET_IDS.length} dedicated files on disk`,
+);
+console.log(
+  `Season reward art set: ${seasonRewardArtOnDisk}/${SEASON_REWARD_ART_SET_IDS.length} dedicated files on disk`,
 );
 console.log(
   `Body Ability Icons mini-batch: ${bodyAbilityIconsOnDisk}/${BODY_ABILITY_ICON_IDS.length} on disk, ${bodyAbilityIconsInApp} in-app`,

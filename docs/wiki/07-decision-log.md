@@ -4,6 +4,24 @@
 
 ---
 
+## 2026-07-23 — Season reward art set S01–S13 (dedicated webp, in-app)
+
+### Context
+
+Soft season rewards had labels + S01 art only; later seasons showed text without a trophy visual.
+
+### Decision
+
+- Generate dedicated 1:1 reward tokens S02–S13 in the same cinematic style as `season-01-core-spark`.
+- Wire all 13 via `getSeasonRewardManifestAssetId`; manifest pack `seasonRewardArtSet`.
+- No artifact engine / coins — visual only for preview/awaiting/earned.
+
+### Consequences
+
+Dashboard and `/seasons` history show reward banners for every season. `GAME_ASSET_VERSION` 40.
+
+---
+
 ## 2026-07-22 — Season mini-boss art set S01–S13 (dedicated webp, in-app)
 
 ### Context

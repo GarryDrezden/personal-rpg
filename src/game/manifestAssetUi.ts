@@ -24,6 +24,18 @@ const BASE_STAGE_ASSET_IDS: Record<string, string> = {
 
 const SEASON_REWARD_ASSET_IDS: Record<number, string> = {
   1: 'season-01-reward-core-spark',
+  2: 'season-02-reward-trail-mark',
+  3: 'season-03-reward-base-stone',
+  4: 'season-04-reward-tower-key',
+  5: 'season-05-reward-pass-mark',
+  6: 'season-06-reward-lake-light',
+  7: 'season-07-reward-fortress-seal',
+  8: 'season-08-reward-river-drop',
+  9: 'season-09-reward-form-shield',
+  10: 'season-10-reward-strength-medal',
+  11: 'season-11-reward-clarity-lantern',
+  12: 'season-12-reward-gate-key',
+  13: 'season-13-reward-year-artifact',
 };
 
 const SEASON_BOSS_ASSET_IDS: Record<number, string> = {
@@ -60,6 +72,18 @@ const OBJECT_POSITION: Record<string, string> = {
   'camp-base-stage-01-ember-camp': 'center 58%',
   'camp-base-stage-02-trail-shelter': 'center 48%',
   'season-01-reward-core-spark': 'center',
+  'season-02-reward-trail-mark': 'center',
+  'season-03-reward-base-stone': 'center',
+  'season-04-reward-tower-key': 'center',
+  'season-05-reward-pass-mark': 'center',
+  'season-06-reward-lake-light': 'center',
+  'season-07-reward-fortress-seal': 'center',
+  'season-08-reward-river-drop': 'center',
+  'season-09-reward-form-shield': 'center',
+  'season-10-reward-strength-medal': 'center',
+  'season-11-reward-clarity-lantern': 'center',
+  'season-12-reward-gate-key': 'center',
+  'season-13-reward-year-artifact': 'center',
   'empty-state-no-entries': 'center 45%',
   'plateau-artifact-pass-stone': 'center',
   'season-boss-01-empty-day-lord': 'center 42%',

@@ -19,7 +19,10 @@ describe('manifestAssetUi', () => {
 
   it('maps season reward and bosses', () => {
     expect(getSeasonRewardManifestAssetId(1)).toBe('season-01-reward-core-spark');
-    expect(getSeasonRewardManifestAssetId(2)).toBeUndefined();
+    expect(getSeasonRewardManifestAssetId(2)).toBe('season-02-reward-trail-mark');
+    expect(getSeasonRewardManifestAssetId(3)).toBe('season-03-reward-base-stone');
+    expect(getSeasonRewardManifestAssetId(13)).toBe('season-13-reward-year-artifact');
+    expect(getSeasonRewardManifestAssetId(14)).toBeUndefined();
     expect(getSeasonBossManifestAssetId(1)).toBe('season-boss-01-empty-day-lord');
     expect(getSeasonBossManifestAssetId(2)).toBe('season-boss-02-divan-king');
     expect(getSeasonBossManifestAssetId(3)).toBe('season-boss-03-snack-chaos');
