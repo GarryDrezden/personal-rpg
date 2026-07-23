@@ -84,7 +84,7 @@ export function BaseCampPage({ embedded = false }: { embedded?: boolean }) {
             : ' · максимальная стадия'}
         </p>
         <p className="mt-2 text-xs text-[var(--app-text-muted)]">
-          Недавний рост: {snapshot.recentContributors.join(', ')}.
+          Недавний рост (14 дней): {snapshot.recentContributors.join(', ')}.
         </p>
       </section>
 

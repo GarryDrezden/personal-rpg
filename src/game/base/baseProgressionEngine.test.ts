@@ -5,8 +5,11 @@ import { emptyDaily } from '../../store/appStore';
 import { unlockBodyAbilityV1 } from '../bodyAbilities/bodyAbilityV1Engine';
 import { BASE_STAGES } from './baseProgressionConfig';
 import {
+  BASE_MAX_POINTS_PER_DAY,
   BASE_SCORE_WEIGHTS,
+  calculateBaseRouteScore,
   calculateBaseScoreBreakdown,
+  dayRouteSignalPoints,
   getBaseProgressionSnapshot,
   getBaseSaveSparkLine,
   scoreFromBreakdown,
@@ -101,11 +104,13 @@ describe('getBaseProgressionSnapshot stages', () => {
   });
 
   it('progressed user changes stage', () => {
-    const entries = Array.from({ length: 20 }, (_, i) =>
-      entry(`2026-06-${String(i + 1).padStart(2, '0')}`, { steps: 6000, alcohol: 'none' }),
-    );
+    const fixed = Array.from({ length: 40 }, (_, i) => {
+      const d = new Date(Date.UTC(2026, 4, 1 + i));
+      const iso = d.toISOString().slice(0, 10);
+      return entry(iso, { steps: 6000, alcohol: 'none' });
+    });
     const snap = getBaseProgressionSnapshot({
-      dailyEntries: entries,
+      dailyEntries: fixed,
       measurements: [],
       settings: DEFAULT_APP_SETTINGS,
       today: '2026-06-20',
@@ -113,6 +118,23 @@ describe('getBaseProgressionSnapshot stages', () => {
     expect(snap.baseScore).toBeGreaterThan(BASE_STAGES[1]!.unlockScore);
     expect(snap.currentStage.level).toBeGreaterThan(1);
     expect(snap.recentContributors.length).toBeGreaterThan(0);
+  });
+
+  it('caps points per day so a full day is not worth 5+', () => {
+    const rich = entry('2026-06-20', {
+      steps: 8000,
+      alcohol: 'none',
+      energyLevel: 4,
+      morningExercise: true,
+    });
+    expect(dayRouteSignalPoints(rich, DEFAULT_APP_SETTINGS)).toBeGreaterThan(BASE_MAX_POINTS_PER_DAY);
+    const { baseScore } = calculateBaseRouteScore({
+      dailyEntries: [rich],
+      measurements: [],
+      settings: DEFAULT_APP_SETTINGS,
+      today: '2026-06-20',
+    });
+    expect(baseScore).toBe(BASE_MAX_POINTS_PER_DAY);
   });
 
   it('progress to next stage is calculated', () => {
@@ -129,10 +151,10 @@ describe('getBaseProgressionSnapshot stages', () => {
   });
 
   it('max stage behavior', () => {
-    const entries = Array.from({ length: 200 }, (_, i) => {
-      const day = (i % 28) + 1;
-      const month = Math.floor(i / 28) + 1;
-      return entry(`2026-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, {
+    const entries = Array.from({ length: 280 }, (_, i) => {
+      const d = new Date(Date.UTC(2026, 0, 1 + i));
+      const iso = d.toISOString().slice(0, 10);
+      return entry(iso, {
         steps: 8000,
         alcohol: 'none',
         energyLevel: 4,
@@ -143,7 +165,7 @@ describe('getBaseProgressionSnapshot stages', () => {
       dailyEntries: entries,
       measurements: [],
       settings: { ...DEFAULT_APP_SETTINGS, startDate: '2026-01-01' },
-      today: '2026-07-15',
+      today: '2026-10-15',
       unlockedAchievementIds: ['plateau_route_guardian'],
     });
     expect(snap.isMaxStage).toBe(true);

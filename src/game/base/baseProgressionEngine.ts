@@ -26,10 +26,13 @@ export const BASE_SCORE_WEIGHTS = {
   movementDay: 1,
   alcoholFreeDay: 1,
   nutritionDay: 1,
-  bodyAbility: 3,
-  qualifyingSeason: 5,
-  plateauGuardian: 5,
+  bodyAbility: 2,
+  qualifyingSeason: 4,
+  plateauGuardian: 4,
 } as const;
+
+/** Один день даёт максимум столько очков маршрута (без бонусов способностей/сезонов). */
+export const BASE_MAX_POINTS_PER_DAY = 2;
 
 export const BASE_RECENT_WINDOW_DAYS = 14;
 
@@ -50,6 +53,26 @@ function isResourceMarked(entry: DailyEntry): boolean {
 
 function isMovementDay(entry: DailyEntry): boolean {
   return (entry.steps ?? 0) > 0 || Boolean(entry.morningExercise) || Boolean(entry.gym);
+}
+
+/** Очки за один день до капа — без отдельного double-count minimal/recovery поверх saved. */
+export function dayRouteSignalPoints(entry: DailyEntry, settings: AppSettings): number {
+  if (!isSavedDay(entry)) return 0;
+  let points = BASE_SCORE_WEIGHTS.savedDay;
+  if (isResourceMarked(entry)) points += BASE_SCORE_WEIGHTS.resourceDay;
+  if (isMovementDay(entry)) points += BASE_SCORE_WEIGHTS.movementDay;
+  if (entry.alcohol === 'none') points += BASE_SCORE_WEIGHTS.alcoholFreeDay;
+  if (
+    isNutritionTrackingEnabled(settings) &&
+    getNutritionQuestCompleted({ entry, settings })
+  ) {
+    points += BASE_SCORE_WEIGHTS.nutritionDay;
+  }
+  return points;
+}
+
+export function cappedDayRoutePoints(entry: DailyEntry, settings: AppSettings): number {
+  return Math.min(BASE_MAX_POINTS_PER_DAY, dayRouteSignalPoints(entry, settings));
 }
 
 function countQualifyingSeasons(
@@ -134,6 +157,31 @@ export function scoreFromBreakdown(breakdown: BaseScoreBreakdown): number {
     breakdown.qualifyingSeasons * w.qualifyingSeason +
     breakdown.plateauGuardian * w.plateauGuardian
   );
+}
+
+/** Итоговый score лагеря: дни с капом + редкие бонусы. */
+export function calculateBaseRouteScore(params: {
+  dailyEntries: DailyEntry[];
+  measurements: MeasurementEntry[];
+  settings: AppSettings;
+  today?: string;
+  unlockedAchievementIds?: string[];
+}): { breakdown: BaseScoreBreakdown; baseScore: number } {
+  const breakdown = calculateBaseScoreBreakdown(params);
+  const today = params.today ?? todayISO();
+  const entries = params.dailyEntries.filter((e) => e.date <= today);
+
+  let dayScore = 0;
+  for (const entry of entries) {
+    dayScore += cappedDayRoutePoints(entry, params.settings);
+  }
+
+  const bonusScore =
+    breakdown.bodyAbilities * BASE_SCORE_WEIGHTS.bodyAbility +
+    breakdown.qualifyingSeasons * BASE_SCORE_WEIGHTS.qualifyingSeason +
+    breakdown.plateauGuardian * BASE_SCORE_WEIGHTS.plateauGuardian;
+
+  return { breakdown, baseScore: dayScore + bonusScore };
 }
 
 function resolveStageForScore(score: number): {
@@ -232,7 +280,6 @@ function countRecentBreakdown(
 }
 
 function buildRecentContributors(
-  breakdown: BaseScoreBreakdown,
   recent: Pick<
     BaseScoreBreakdown,
     | 'savedDays'
@@ -252,8 +299,6 @@ function buildRecentContributors(
     { count: recent.resourceDays, label: `${recent.resourceDays} дней с ресурсом` },
     { count: recent.alcoholFreeDays, label: `${recent.alcoholFreeDays} дней без алкоголя` },
     { count: recent.nutritionDays, label: `${recent.nutritionDays} дней с питанием` },
-    { count: breakdown.bodyAbilities, label: `${breakdown.bodyAbilities} способностей тела` },
-    { count: breakdown.qualifyingSeasons, label: `${breakdown.qualifyingSeasons} сезонов удержано` },
   ];
 
   const lines = candidates
@@ -263,7 +308,7 @@ function buildRecentContributors(
     .map((c) => c.label);
 
   if (lines.length > 0) return lines;
-  return ['Маршрут только начинается — даже минимальный день добавляет искру.'];
+  return ['За последние 14 дней новых искр маршрута не было — лагерь ждёт возвращения.'];
 }
 
 export function getBaseProgressionSnapshot(params: {
@@ -274,11 +319,10 @@ export function getBaseProgressionSnapshot(params: {
   unlockedAchievementIds?: string[];
 }): BaseProgressionSnapshot {
   const today = params.today ?? todayISO();
-  const breakdown = calculateBaseScoreBreakdown(params);
-  const baseScore = scoreFromBreakdown(breakdown);
+  const { breakdown, baseScore } = calculateBaseRouteScore(params);
   const stageInfo = resolveStageForScore(baseScore);
   const recent = countRecentBreakdown(params.dailyEntries, params.settings, today);
-  const recentContributors = buildRecentContributors(breakdown, recent);
+  const recentContributors = buildRecentContributors(recent);
 
   const plateau = getPlateauSnapshot({
     dailyEntries: params.dailyEntries,
