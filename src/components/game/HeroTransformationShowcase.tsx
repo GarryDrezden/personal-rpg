@@ -34,24 +34,6 @@ function formatWeightKg(value: number): string {
   return Number.isInteger(rounded) ? `${rounded} кг` : `${rounded.toFixed(1)} кг`;
 }
 
-type DeathFigureImageProps = {
-  src: string;
-  alt: string;
-  className?: string;
-};
-
-/** Чёрный фон PNG убираем через screen-blend — без квадратной рамки и оверлея locked */
-function DeathFigureImage({ src, alt, className = '' }: DeathFigureImageProps) {
-  return (
-    <img
-      src={src}
-      alt={alt}
-      draggable={false}
-      className={`pointer-events-none h-full w-full max-h-full max-w-full select-none object-contain object-bottom mix-blend-screen ${className}`}
-    />
-  );
-}
-
 const MILESTONE_SET = new Set<number>(HERO_MILESTONE_STAGES);
 
 /** Компактная сцена; аватары +35% от базовых размеров */
@@ -154,12 +136,21 @@ function DeathEntity({ gender }: DeathEntityProps) {
       className={`pointer-events-none absolute ${HERO_BOTTOM} left-[2%] z-[2] hidden w-[48%] ${FLANK_MAX_W} sm:block lg:left-[4%]`}
       style={{ height: FLANK_H }}
     >
-      <div className="pointer-events-none absolute -inset-x-8 -inset-y-6 z-0 rounded-full bg-violet-950/20 blur-3xl" />
+      <div className="pointer-events-none absolute -inset-x-8 -inset-y-6 z-0 rounded-full bg-amber-950/15 blur-3xl" />
       <div className="pointer-events-none absolute bottom-0 left-1/2 z-0 h-8 w-[88%] -translate-x-1/2 rounded-[50%] bg-black/45 blur-xl" />
       <div className="pointer-events-none absolute bottom-1 left-1/2 z-0 h-4 w-[76%] -translate-x-1/2 rounded-[50%] border border-stone-700/40 bg-black/50" />
 
-      <div className="relative z-[1] isolate h-full w-full opacity-[0.52]">
-        <DeathFigureImage src={deathAssets.src} alt="Смерть — предел 200 кг" />
+      <div className="relative z-[1] h-full w-full opacity-[0.72]">
+        <GameAssetImage
+          variant="boss"
+          src={deathAssets.src}
+          alt="Смерть — предел 200 кг"
+          fallbackCandidates={deathAssets.fallbackCandidates}
+          status="unlocked"
+          fit="hero"
+          className="h-full w-full bg-transparent"
+          imageClassName="object-contain object-bottom brightness-[0.92] saturate-[0.95]"
+        />
       </div>
 
       <span className={DEATH_BADGE_CLASS}>
@@ -537,14 +528,19 @@ export function HeroTransformationShowcase({
 
         {flanks.deathState ? (
           <div
-            className="pointer-events-none absolute bottom-0 left-[2%] z-[1] isolate w-[42%] opacity-[0.22] sm:hidden"
+            className="pointer-events-none absolute bottom-0 left-[2%] z-[1] w-[42%] opacity-[0.45] sm:hidden"
             style={{ height: MOBILE_FLANK_H }}
             aria-hidden
           >
-            <DeathFigureImage
+            <GameAssetImage
+              variant="boss"
               src={deathAssets.src}
               alt=""
-              className="brightness-[0.75]"
+              fallbackCandidates={deathAssets.fallbackCandidates}
+              status="unlocked"
+              fit="hero"
+              className="h-full w-full bg-transparent"
+              imageClassName="object-contain object-bottom brightness-[0.9]"
             />
           </div>
         ) : flanks.left ? (

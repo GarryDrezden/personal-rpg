@@ -59,8 +59,8 @@ function HeroSilhouette({ gender, stage, playerStage, variant }: HeroSilhouetteP
   const wrapperClass =
     variant === 'current'
       ? 'relative z-20 h-[96%] w-[56%] max-w-[22rem] sm:max-w-[26rem] lg:max-w-[30rem]'
-      : variant === 'death'
-        ? 'absolute bottom-[6%] left-[1%] z-10 isolate hidden h-[86%] w-[40%] max-w-[15rem] opacity-[0.36] sm:block sm:left-[3%] sm:h-[90%] sm:max-w-[17rem] lg:max-w-[19rem]'
+        : variant === 'death'
+        ? 'absolute bottom-[6%] left-[1%] z-10 hidden h-[86%] w-[40%] max-w-[15rem] opacity-[0.62] sm:block sm:left-[3%] sm:h-[90%] sm:max-w-[17rem] lg:max-w-[19rem]'
         : variant === 'left'
           ? 'absolute bottom-[7%] left-[2%] z-10 hidden h-[80%] w-[36%] max-w-[13rem] opacity-[0.4] sm:block sm:left-[4%] sm:h-[84%] sm:max-w-[15rem] lg:max-w-[17rem]'
           : 'absolute bottom-[7%] right-[2%] z-10 hidden h-[80%] w-[36%] max-w-[13rem] opacity-[0.4] sm:block sm:right-[4%] sm:h-[84%] sm:max-w-[15rem] lg:max-w-[17rem]';
@@ -95,7 +95,7 @@ function HeroSilhouette({ gender, stage, playerStage, variant }: HeroSilhouetteP
           className="h-full w-full bg-transparent"
           imageClassName={
             variant === 'death'
-              ? 'mix-blend-screen object-contain object-bottom brightness-[0.68] contrast-[0.9] saturate-[0.85]'
+              ? 'object-contain object-bottom brightness-[0.9] saturate-[0.95]'
               : `${variant !== 'current' ? 'brightness-[0.68] contrast-[0.9] saturate-[0.85]' : ''} ${imageScaleClass}`.trim()
           }
         />

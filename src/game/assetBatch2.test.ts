@@ -73,7 +73,7 @@ describe('Dark MVP Asset Generation Batch 2', () => {
       const promptPath = join(process.cwd(), 'docs/prompts/assets', PROMPT_FILES[id]);
       expect(existsSync(promptPath)).toBe(true);
       const url = getManifestAssetUrl(id);
-      expect(url).toContain('?v=41');
+      expect(url).toContain('?v=42');
       expect(url).toContain(asset?.path?.replace(/^\//, '') ?? '');
     });
   }

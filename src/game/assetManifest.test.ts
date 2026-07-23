@@ -52,18 +52,18 @@ describe('asset manifest helpers', () => {
 
   it('getManifestAssetUrl returns versioned path for in-app batch 1 assets', () => {
     const url = getManifestAssetUrl('onboarding-core-awakening');
-    expect(url).toMatch(/\/game-assets\/onboarding\/core-awakening\.webp\?v=41$/);
+    expect(url).toMatch(/\/game-assets\/onboarding\/core-awakening\.webp\?v=42$/);
   });
 
   it('getManifestAssetUrl returns versioned path for in-app batch 2 assets', () => {
     expect(getManifestAssetUrl('empty-state-no-entries')).toMatch(
-      /\/game-assets\/empty-states\/no-entries\.webp\?v=41$/,
+      /\/game-assets\/empty-states\/no-entries\.webp\?v=42$/,
     );
     expect(getManifestAssetUrl('plateau-artifact-pass-stone')).toMatch(
-      /\/game-assets\/artifacts\/plateau-pass-stone\.webp\?v=41$/,
+      /\/game-assets\/artifacts\/plateau-pass-stone\.webp\?v=42$/,
     );
     expect(getManifestAssetUrl('season-boss-01-empty-day-lord')).toMatch(
-      /\/game-assets\/bosses\/seasons\/season-boss-01-empty-day-lord\.webp\?v=41$/,
+      /\/game-assets\/bosses\/seasons\/season-boss-01-empty-day-lord\.webp\?v=42$/,
     );
   });
 
