@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Companions epic dark-fantasy set:** all 4 (cat, alabai, raven, fox) restyled with glowing amber eyes, orange lightning/energy, runic gear — matching boss-familiar reference; `GAME_ASSET_VERSION` 48.
 - **Hero fully opaque:** solid underpaint for clothing alpha holes + cache bust `GAME_ASSET_VERSION` 47; dashboard torso backlight removed.
 - **Hero opacity fix + companion redo:** fill transparent holes in black clothing; cat/dog restyled as dark-fantasy cutouts; companion sits beside feet (not over legs); `GAME_ASSET_VERSION` 46.
 - **Companion dark-fantasy restyle:** recognizable photo traits with amber rim / boss-mood lighting; dashboard hero floor glow so avatar no longer sinks into BG; `GAME_ASSET_VERSION` 45.
