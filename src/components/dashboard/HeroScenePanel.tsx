@@ -9,6 +9,7 @@ import { getDayMoodPhrase, getLevelFromXp, getLevelRankTitle } from '../../utils
 import { getPathSetupState } from '../../utils/dashboardPathSetup';
 import { getDayStatus } from '../../utils/points';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import { getHeroSceneBackdropPath } from '../../game/assetPaths';
 import { GameAssetImage } from '../game/GameAssetImage';
 import { HeroCompanionOverlay } from '../game/HeroCompanionOverlay';
 import { DailyMobMiniCard } from '../game/DailyMobMiniCard';
@@ -62,8 +63,10 @@ export function HeroScenePanel({
     : 'overflow-hidden rounded-2xl border border-amber-200/60 bg-gradient-to-br from-amber-50 via-white to-orange-50 shadow-md';
 
   const sceneBg = isDarkFantasy
-    ? 'bg-gradient-to-b from-[#12101c] via-[#161228] to-[#0c0a12]'
+    ? 'bg-[#0c0a12]'
     : 'bg-gradient-to-b from-[color-mix(in_srgb,var(--app-primary)_6%,#1a1520)] via-[#1e1a28] to-[#14121c]';
+
+  const backdropSrc = getHeroSceneBackdropPath();
 
   return (
     <section
@@ -130,29 +133,24 @@ export function HeroScenePanel({
       <div className="grid min-h-0 grid-cols-1 lg:grid-cols-2">
         {/* Hero + compact companion overlay */}
         <div className={`relative min-h-[24rem] overflow-hidden lg:min-h-[25rem] ${sceneBg}`}>
-          {/* Stylized cavern backdrop — CSS only, no heavy image */}
+          {/* Hopeful cliff sunrise backdrop */}
           <div
             className="pointer-events-none absolute inset-0"
             aria-hidden
             data-testid="hero-scene-backdrop"
           >
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(90,110,160,0.18),transparent_55%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,rgba(0,0,0,0.72),transparent_55%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_15%_45%,rgba(45,55,85,0.22),transparent_42%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_88%_40%,rgba(40,50,75,0.18),transparent_40%)]" />
-            {/* Distant pillar silhouettes */}
-            <div className="absolute bottom-[12%] left-[2%] h-[78%] w-[11%] -skew-x-2 rounded-t-[40%] bg-gradient-to-t from-[#0a0910] via-[#151320]/90 to-transparent opacity-70" />
-            <div className="absolute bottom-[10%] left-[9%] h-[62%] w-[7%] skew-x-1 rounded-t-[45%] bg-gradient-to-t from-[#0b0a12] via-[#12101a]/75 to-transparent opacity-55" />
-            <div className="absolute bottom-[10%] right-[3%] h-[74%] w-[10%] skew-x-2 rounded-t-[40%] bg-gradient-to-t from-[#0a0910] via-[#151320]/88 to-transparent opacity-65" />
-            <div className="absolute bottom-[12%] right-[11%] h-[55%] w-[6%] -skew-x-1 rounded-t-[45%] bg-gradient-to-t from-[#0b0a12] via-[#12101a]/70 to-transparent opacity-50" />
-            {/* Soft mist */}
-            <div className="absolute bottom-[16%] left-[12%] h-20 w-28 rounded-full bg-slate-400/[0.06] blur-3xl" />
-            <div className="absolute bottom-[20%] right-[14%] h-24 w-32 rounded-full bg-stone-300/[0.05] blur-3xl" />
-            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/55 to-transparent" />
-            {/* Stone pedestal under hero */}
-            <div className="absolute bottom-[4%] left-1/2 z-[5] h-7 w-[52%] max-w-[13rem] -translate-x-1/2 rounded-[100%] border border-stone-500/40 bg-gradient-to-b from-stone-500/35 via-stone-700/45 to-stone-950/80 shadow-[0_6px_20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.07)]" />
-            <div className="absolute bottom-[4%] left-1/2 z-[4] h-2.5 w-[62%] max-w-[15rem] -translate-x-1/2 rounded-[100%] bg-black/45 blur-md" />
-            <div className="absolute bottom-[5.5%] left-1/2 z-[6] h-px w-[28%] max-w-[7rem] -translate-x-1/2 bg-amber-300/25" />
+            <img
+              src={backdropSrc}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover object-[center_42%]"
+              loading="eager"
+              decoding="async"
+            />
+            {/* Readability overlays — keep UI + hero crisp */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/10 to-black/55" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_70%,transparent_20%,rgba(0,0,0,0.45)_100%)]" />
+            {/* Soft contact shadow on cliff ledge */}
+            <div className="absolute bottom-[7%] left-1/2 h-3 w-[42%] max-w-[11rem] -translate-x-1/2 rounded-[100%] bg-black/45 blur-md" />
           </div>
 
           <div className="absolute left-2 top-2 z-20 rounded-full border border-[var(--app-border)] bg-black/45 px-2.5 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm">
@@ -174,7 +172,7 @@ export function HeroScenePanel({
                   status="unlocked"
                   fit="hero"
                   className="relative z-10 h-full w-full items-end bg-transparent"
-                  imageClassName=""
+                  imageClassName="drop-shadow-[0_8px_18px_rgba(0,0,0,0.55)]"
                 />
                 <HeroCompanionOverlay
                   companionId={game.profile.activeCompanionId}

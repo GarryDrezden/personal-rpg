@@ -14,13 +14,18 @@ import { getLegacyCodexBossManifestAssetId } from './manifestAssetUi';
 export const GAME_ASSET_BASE_PATH = '/game-assets';
 
 /** Bump when replacing PNGs so browsers reload public assets */
-export const GAME_ASSET_VERSION = '52';
+export const GAME_ASSET_VERSION = '53';
 
 /** Folder names under heroes/{gender}/variants/ */
 export type HeroAssetVariantFolder = 'dark-fantasy' | 'light';
 
 export function gameAsset(path: string): string {
   return `${GAME_ASSET_BASE_PATH}/${path}?v=${GAME_ASSET_VERSION}`;
+}
+
+/** Dashboard hero scene backdrop (cliff sunrise) */
+export function getHeroSceneBackdropPath(): string {
+  return gameAsset('scenes/hero-cliff-sunrise.webp');
 }
 
 const warnedMissingAssets = new Set<string>();
