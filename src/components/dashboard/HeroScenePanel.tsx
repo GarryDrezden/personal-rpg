@@ -62,7 +62,7 @@ export function HeroScenePanel({
     : 'overflow-hidden rounded-2xl border border-amber-200/60 bg-gradient-to-br from-amber-50 via-white to-orange-50 shadow-md';
 
   const sceneBg = isDarkFantasy
-    ? 'bg-gradient-to-b from-[#12101c] via-[#161422] to-[color-mix(in_srgb,var(--app-primary)_12%,#0c0b12)]'
+    ? 'bg-gradient-to-b from-[#1a1730] via-[#16122a] to-[#1c1810]'
     : 'bg-gradient-to-b from-[color-mix(in_srgb,var(--app-primary)_6%,#1a1520)] via-[#1e1a28] to-[#14121c]';
 
   return (
@@ -130,15 +130,19 @@ export function HeroScenePanel({
       <div className="grid min-h-0 grid-cols-1 lg:grid-cols-2">
         {/* Hero + compact companion overlay */}
         <div className={`relative min-h-[24rem] lg:min-h-[25rem] ${sceneBg}`}>
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_92%,color-mix(in_srgb,var(--app-primary)_22%,transparent),transparent_55%)]" />
+          {/* Floor / separation glow so dark shorts & shoes don't sink into BG */}
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,rgba(245,180,70,0.28),transparent_42%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_88%,color-mix(in_srgb,var(--app-primary)_32%,transparent),transparent_58%)]" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-t from-[color-mix(in_srgb,#2a2418_55%,transparent)] via-transparent to-transparent" />
 
           <div className="absolute left-2 top-2 z-20 rounded-full border border-[var(--app-border)] bg-black/45 px-2.5 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm">
             Ур. {level}
           </div>
 
           <div className="relative flex h-full min-h-[24rem] items-end justify-center px-2 pb-2 pt-4 lg:min-h-[25rem] lg:px-4 lg:pb-3 lg:pt-5">
-            <div className="pointer-events-none absolute inset-x-[18%] bottom-3 h-3 rounded-[100%] bg-black/35 blur-md" />
-            <div className="pointer-events-none absolute inset-x-[22%] bottom-2.5 h-1 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_28%,transparent)] opacity-55" />
+            <div className="pointer-events-none absolute inset-x-[12%] bottom-2 h-8 rounded-[100%] bg-[color-mix(in_srgb,var(--app-primary)_45%,#000)] opacity-50 blur-2xl" />
+            <div className="pointer-events-none absolute inset-x-[18%] bottom-3 h-3 rounded-[100%] bg-black/40 blur-md" />
+            <div className="pointer-events-none absolute inset-x-[20%] bottom-2 h-1.5 rounded-full bg-amber-300/35 blur-[1px]" />
 
             <div
               data-testid="hero-scene-character"
@@ -153,6 +157,7 @@ export function HeroScenePanel({
                 status="unlocked"
                 fit="hero"
                 className="relative z-10 h-full w-full items-end bg-transparent"
+                imageClassName="drop-shadow-[0_0_18px_rgba(245,180,70,0.22)] drop-shadow-[0_10px_24px_rgba(0,0,0,0.65)]"
               />
               <HeroCompanionOverlay
                 companionId={game.profile.activeCompanionId}
