@@ -129,40 +129,39 @@ export function HeroScenePanel({
       */}
       <div className="grid min-h-0 grid-cols-1 lg:grid-cols-2">
         {/* Hero + compact companion overlay */}
-        <div className={`relative min-h-[24rem] lg:min-h-[25rem] ${sceneBg}`}>
-          {/* Floor / separation glow so dark shorts & shoes don't sink into BG */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,rgba(245,180,70,0.28),transparent_42%)]" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_88%,color-mix(in_srgb,var(--app-primary)_32%,transparent),transparent_58%)]" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-t from-[color-mix(in_srgb,#2a2418_55%,transparent)] via-transparent to-transparent" />
+        <div className={`relative min-h-[24rem] overflow-visible lg:min-h-[25rem] ${sceneBg}`}>
+          {/* Ground plate ONLY under feet — never behind the torso */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-t from-[color-mix(in_srgb,#2a2418_40%,transparent)] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-[16%] bottom-1 h-6 rounded-[100%] bg-amber-400/20 blur-xl" />
 
           <div className="absolute left-2 top-2 z-20 rounded-full border border-[var(--app-border)] bg-black/45 px-2.5 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm">
             Ур. {level}
           </div>
 
-          <div className="relative flex h-full min-h-[24rem] items-end justify-center px-2 pb-2 pt-4 lg:min-h-[25rem] lg:px-4 lg:pb-3 lg:pt-5">
-            <div className="pointer-events-none absolute inset-x-[12%] bottom-2 h-8 rounded-[100%] bg-[color-mix(in_srgb,var(--app-primary)_45%,#000)] opacity-50 blur-2xl" />
-            <div className="pointer-events-none absolute inset-x-[18%] bottom-3 h-3 rounded-[100%] bg-black/40 blur-md" />
-            <div className="pointer-events-none absolute inset-x-[20%] bottom-2 h-1.5 rounded-full bg-amber-300/35 blur-[1px]" />
+          <div className="relative flex h-full min-h-[24rem] items-end justify-center overflow-visible px-2 pb-2 pt-4 lg:min-h-[25rem] lg:px-4 lg:pb-3 lg:pt-5">
+            <div className="pointer-events-none absolute inset-x-[20%] bottom-2.5 h-2 rounded-[100%] bg-black/45 blur-md" />
 
             <div
               data-testid="hero-scene-character"
-              className="relative z-10 flex w-full max-w-[13.5rem] items-end justify-center overflow-visible bg-transparent sm:max-w-[14.5rem] lg:max-w-[15.5rem]"
+              className="relative z-10 flex w-full max-w-[20rem] items-end justify-center overflow-visible bg-transparent sm:max-w-[22rem] lg:max-w-[24rem]"
               style={{ height: DASHBOARD_HERO_HEIGHT, maxHeight: 'calc(100% - 1.5rem)' }}
             >
-              <GameAssetImage
-                variant="hero"
-                src={heroAssets.src}
-                alt={stageMeta.title}
-                fallbackCandidates={heroAssets.fallbackCandidates}
-                status="unlocked"
-                fit="hero"
-                className="relative z-10 h-full w-full items-end bg-transparent"
-                imageClassName="drop-shadow-[0_0_18px_rgba(245,180,70,0.22)] drop-shadow-[0_10px_24px_rgba(0,0,0,0.65)]"
-              />
-              <HeroCompanionOverlay
-                companionId={game.profile.activeCompanionId}
-                side="left"
-              />
+              <div className="relative h-full w-full max-w-[12.5rem] sm:max-w-[13.5rem] lg:max-w-[14.5rem]">
+                <GameAssetImage
+                  variant="hero"
+                  src={heroAssets.src}
+                  alt={stageMeta.title}
+                  fallbackCandidates={heroAssets.fallbackCandidates}
+                  status="unlocked"
+                  fit="hero"
+                  className="relative z-10 h-full w-full items-end bg-transparent"
+                  imageClassName="drop-shadow-[0_12px_20px_rgba(0,0,0,0.55)]"
+                />
+                <HeroCompanionOverlay
+                  companionId={game.profile.activeCompanionId}
+                  side="left"
+                />
+              </div>
             </div>
 
             <div

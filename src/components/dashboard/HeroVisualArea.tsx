@@ -63,22 +63,23 @@ export function HeroVisualArea({
           {stage}/{HERO_STAGE_COUNT}
         </div>
 
-        <div className="relative flex min-h-[15rem] items-end justify-center px-2 pb-2.5 pt-10 sm:min-h-[16rem] sm:px-3 lg:min-h-[17rem]">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,rgba(245,180,70,0.24),transparent_44%)]" />
-          <div className="pointer-events-none absolute inset-x-[8%] bottom-0 h-7 rounded-[100%] bg-[color-mix(in_srgb,var(--app-primary)_40%,#000)] opacity-40 blur-2xl" />
-          <div className="pointer-events-none absolute inset-x-[8%] bottom-0 h-3 rounded-[100%] bg-black/30 blur-md" />
-          <div className="relative h-[11.5rem] w-full max-w-[12rem] overflow-visible sm:h-[12.5rem] lg:h-[13.5rem]">
-            <GameAssetImage
-              variant="hero"
-              src={heroAssets.src}
-              alt={stageMeta.title}
-              fallbackCandidates={heroAssets.fallbackCandidates}
-              status="unlocked"
-              fit="hero"
-              className="relative z-10 h-full w-full"
-              imageClassName="scale-[1.1] sm:scale-[1.14] lg:scale-[1.16] drop-shadow-[0_0_16px_rgba(245,180,70,0.2)] drop-shadow-[0_8px_18px_rgba(0,0,0,0.55)]"
-            />
-            <HeroCompanionOverlay companionId={companionId} side="left" />
+        <div className="relative flex min-h-[15rem] items-end justify-center overflow-visible px-2 pb-2.5 pt-10 sm:min-h-[16rem] sm:px-3 lg:min-h-[17rem]">
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[20%] bg-gradient-to-t from-[color-mix(in_srgb,#2a2418_35%,transparent)] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-[14%] bottom-0 h-2 rounded-[100%] bg-black/35 blur-md" />
+          <div className="relative h-[11.5rem] w-full max-w-[16rem] overflow-visible sm:h-[12.5rem] lg:h-[13.5rem]">
+            <div className="relative mx-auto h-full w-full max-w-[11rem] sm:max-w-[12rem]">
+              <GameAssetImage
+                variant="hero"
+                src={heroAssets.src}
+                alt={stageMeta.title}
+                fallbackCandidates={heroAssets.fallbackCandidates}
+                status="unlocked"
+                fit="hero"
+                className="relative z-10 h-full w-full"
+                imageClassName="scale-[1.1] sm:scale-[1.14] lg:scale-[1.16] drop-shadow-[0_10px_16px_rgba(0,0,0,0.5)]"
+              />
+              <HeroCompanionOverlay companionId={companionId} side="left" />
+            </div>
           </div>
           {companionChip}
         </div>

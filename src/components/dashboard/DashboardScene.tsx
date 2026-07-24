@@ -55,9 +55,8 @@ export function DashboardScene({
         <div
           className={`relative flex min-w-0 flex-[1.35] flex-col overflow-hidden rounded-xl border border-[var(--app-border)] ${avatarBg}`}
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,rgba(245,180,70,0.26),transparent_44%)]" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_92%,color-mix(in_srgb,var(--app-primary)_30%,transparent),transparent_52%)]" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[36%] bg-gradient-to-t from-[color-mix(in_srgb,#2a2418_50%,transparent)] via-transparent to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-t from-[color-mix(in_srgb,#2a2418_40%,transparent)] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-[10%] bottom-1 h-5 rounded-[100%] bg-amber-400/18 blur-xl" />
           <div className="absolute left-2 top-2 z-10 rounded-full border border-[var(--app-border)] bg-black/45 px-2 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm">
             Ур. {level}
           </div>
@@ -65,8 +64,7 @@ export function DashboardScene({
             {stage}/{HERO_STAGE_COUNT}
           </div>
           <div className="relative flex min-h-[16.5rem] flex-1 items-end justify-center overflow-visible px-0.5 pb-1 pt-8 sm:min-h-[17.5rem] lg:min-h-[18.5rem]">
-            <div className="pointer-events-none absolute inset-x-[8%] bottom-1 h-7 rounded-[100%] bg-[color-mix(in_srgb,var(--app-primary)_40%,#000)] opacity-45 blur-2xl" />
-            <div className="pointer-events-none absolute inset-x-[6%] bottom-0.5 h-3.5 rounded-[100%] bg-black/30 blur-md" />
+            <div className="pointer-events-none absolute inset-x-[12%] bottom-1 h-2 rounded-[100%] bg-black/40 blur-md" />
             <div className="relative h-full w-full min-h-[15rem] max-h-[19rem] overflow-visible sm:min-h-[16rem] lg:min-h-[17.5rem] lg:max-h-[20rem]">
               <GameAssetImage
                 variant="hero"
@@ -76,7 +74,7 @@ export function DashboardScene({
                 status="unlocked"
                 fit="hero"
                 className="relative z-10 h-full w-full"
-                imageClassName="scale-[1.18] sm:scale-[1.22] lg:scale-[1.28] drop-shadow-[0_0_16px_rgba(245,180,70,0.2)] drop-shadow-[0_10px_22px_rgba(0,0,0,0.6)]"
+                imageClassName="scale-[1.18] sm:scale-[1.22] lg:scale-[1.28] drop-shadow-[0_12px_18px_rgba(0,0,0,0.5)]"
               />
               <HeroCompanionOverlay companionId={companionId} side="left" />
             </div>

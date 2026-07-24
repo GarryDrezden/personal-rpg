@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Hero opacity fix + companion redo:** fill transparent holes in black clothing; cat/dog restyled as dark-fantasy cutouts; companion sits beside feet (not over legs); `GAME_ASSET_VERSION` 46.
 - **Companion dark-fantasy restyle:** recognizable photo traits with amber rim / boss-mood lighting; dashboard hero floor glow so avatar no longer sinks into BG; `GAME_ASSET_VERSION` 45.
 - **Companion cutouts v2:** photo-matched cat/alabai + restyled raven/fox as transparent PNGs; overlay at hero feet via `HeroCompanionOverlay`; `GAME_ASSET_VERSION` 44.
 - **Weekly threat portraits:** 5 dark-fantasy 1:1 webp (`bosses/weekly/weekly-threat-*.webp`) replace legacy SVG cartoons; wired in `constants/bosses.ts`; `GAME_ASSET_VERSION` 43.

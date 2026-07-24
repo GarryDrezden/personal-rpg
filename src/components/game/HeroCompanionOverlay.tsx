@@ -3,25 +3,28 @@ import { getCompanionImageCandidates } from '../../game/assetPaths';
 import { getCompanionMeta } from '../../game/assetRegistry';
 import { GameAssetImage } from './GameAssetImage';
 
-/** Relative size at hero feet — dog larger, raven smaller. */
+/**
+ * Compact size — sits beside the hero's feet, not over the legs.
+ * Dog slightly larger; raven smallest.
+ */
 const FEET_SIZE: Record<CompanionId, string> = {
-  golden_chinchilla_cat: 'w-[40%] max-w-[5.75rem] sm:max-w-[6.25rem]',
-  alabai: 'w-[52%] max-w-[7.25rem] sm:max-w-[8rem]',
-  raven: 'w-[34%] max-w-[4.75rem] sm:max-w-[5.25rem]',
-  fox_cub: 'w-[38%] max-w-[5.5rem] sm:max-w-[6rem]',
+  golden_chinchilla_cat: 'w-[4.75rem] sm:w-[5.25rem]',
+  alabai: 'w-[5.75rem] sm:w-[6.5rem]',
+  raven: 'w-[3.75rem] sm:w-[4.25rem]',
+  fox_cub: 'w-[4.5rem] sm:w-[5rem]',
 };
 
 type HeroCompanionOverlayProps = {
   companionId: CompanionId;
-  /** left = у левой ноги, right = у правой */
+  /** left / right of the hero silhouette */
   side?: 'left' | 'right';
   className?: string;
   showLabel?: boolean;
 };
 
 /**
- * Transparent companion cutout layered at the hero's feet.
- * Parent must be `relative` and size to the hero portrait.
+ * Transparent companion cutout at the hero's feet, offset outside the body.
+ * Parent must be `relative` and sized to the hero portrait.
  */
 export function HeroCompanionOverlay({
   companionId,
@@ -30,12 +33,16 @@ export function HeroCompanionOverlay({
   showLabel = false,
 }: HeroCompanionOverlayProps) {
   const meta = getCompanionMeta(companionId);
-  const sideClass = side === 'left' ? 'left-[-4%] sm:left-[-6%]' : 'right-[-4%] sm:right-[-6%]';
+  // Push fully outside the legs; slight bottom inset so paws sit on the same ground plane
+  const sideClass =
+    side === 'left'
+      ? 'left-0 -translate-x-[105%] sm:-translate-x-[110%]'
+      : 'right-0 translate-x-[105%] sm:translate-x-[110%]';
 
   return (
     <div
       data-testid="hero-companion-overlay"
-      className={`pointer-events-none absolute bottom-0 z-20 flex flex-col items-center ${sideClass} ${FEET_SIZE[companionId]} ${className}`}
+      className={`pointer-events-none absolute bottom-[1%] z-20 flex flex-col items-center ${sideClass} ${FEET_SIZE[companionId]} ${className}`}
     >
       <GameAssetImage
         variant="companion"
@@ -45,7 +52,7 @@ export function HeroCompanionOverlay({
         status="unlocked"
         fit="companion"
         className="h-auto w-full bg-transparent"
-        imageClassName="object-contain object-bottom drop-shadow-[0_6px_10px_rgba(0,0,0,0.55)]"
+        imageClassName="object-contain object-bottom drop-shadow-[0_8px_12px_rgba(0,0,0,0.65)]"
       />
       {showLabel ? (
         <p className="mt-0.5 max-w-[7rem] truncate text-center text-[10px] font-semibold leading-tight text-amber-200/90">

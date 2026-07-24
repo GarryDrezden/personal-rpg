@@ -30,17 +30,19 @@ export function GameJourneyScene({
       <div className="absolute bottom-[12%] left-1/2 h-6 w-[58%] -translate-x-1/2 rounded-[100%] bg-black/15 blur-md" />
       <div className="absolute bottom-[12%] left-[14%] h-4 w-[22%] rounded-[100%] bg-black/10 blur-sm" />
 
-      <div className="absolute bottom-0 left-1/2 z-10 h-[82%] w-[56%] max-w-[14rem] -translate-x-1/2 overflow-visible">
-        <GameAssetImage
-          variant="hero"
-          src={heroAssets.src}
-          alt={heroMeta.title}
-          fallbackCandidates={heroAssets.fallbackCandidates}
-          status="current"
-          className="relative z-10 h-full w-full"
-          imageClassName="object-contain object-bottom"
-        />
-        <HeroCompanionOverlay companionId={companionId} side="left" />
+      <div className="absolute bottom-0 left-1/2 z-10 flex h-[82%] w-[72%] max-w-[20rem] -translate-x-1/2 items-end justify-center overflow-visible">
+        <div className="relative h-full w-full max-w-[13rem]">
+          <GameAssetImage
+            variant="hero"
+            src={heroAssets.src}
+            alt={heroMeta.title}
+            fallbackCandidates={heroAssets.fallbackCandidates}
+            status="current"
+            className="relative z-10 h-full w-full"
+            imageClassName="object-contain object-bottom"
+          />
+          <HeroCompanionOverlay companionId={companionId} side="left" />
+        </div>
       </div>
     </div>
   );
