@@ -62,7 +62,7 @@ export function HeroScenePanel({
     : 'overflow-hidden rounded-2xl border border-amber-200/60 bg-gradient-to-br from-amber-50 via-white to-orange-50 shadow-md';
 
   const sceneBg = isDarkFantasy
-    ? 'bg-gradient-to-b from-[#1a1730] via-[#16122a] to-[#1c1810]'
+    ? 'bg-gradient-to-b from-[#12101c] via-[#161228] to-[#0c0a12]'
     : 'bg-gradient-to-b from-[color-mix(in_srgb,var(--app-primary)_6%,#1a1520)] via-[#1e1a28] to-[#14121c]';
 
   return (
@@ -129,16 +129,37 @@ export function HeroScenePanel({
       */}
       <div className="grid min-h-0 grid-cols-1 lg:grid-cols-2">
         {/* Hero + compact companion overlay */}
-        <div className={`relative min-h-[24rem] overflow-visible lg:min-h-[25rem] ${sceneBg}`}>
-          {/* Ground only — no torso backlight (that made alpha holes look like ghosts) */}
-          <div className="pointer-events-none absolute inset-x-[18%] bottom-2 h-3 rounded-[100%] bg-black/50 blur-md" />
-          <div className="pointer-events-none absolute inset-x-[22%] bottom-1.5 h-1 rounded-full bg-amber-400/15" />
+        <div className={`relative min-h-[24rem] overflow-hidden lg:min-h-[25rem] ${sceneBg}`}>
+          {/* Stylized cavern backdrop — CSS only, no heavy image */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            aria-hidden
+            data-testid="hero-scene-backdrop"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(90,110,160,0.18),transparent_55%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,rgba(0,0,0,0.72),transparent_55%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_15%_45%,rgba(45,55,85,0.22),transparent_42%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_88%_40%,rgba(40,50,75,0.18),transparent_40%)]" />
+            {/* Distant pillar silhouettes */}
+            <div className="absolute bottom-[12%] left-[2%] h-[78%] w-[11%] -skew-x-2 rounded-t-[40%] bg-gradient-to-t from-[#0a0910] via-[#151320]/90 to-transparent opacity-70" />
+            <div className="absolute bottom-[10%] left-[9%] h-[62%] w-[7%] skew-x-1 rounded-t-[45%] bg-gradient-to-t from-[#0b0a12] via-[#12101a]/75 to-transparent opacity-55" />
+            <div className="absolute bottom-[10%] right-[3%] h-[74%] w-[10%] skew-x-2 rounded-t-[40%] bg-gradient-to-t from-[#0a0910] via-[#151320]/88 to-transparent opacity-65" />
+            <div className="absolute bottom-[12%] right-[11%] h-[55%] w-[6%] -skew-x-1 rounded-t-[45%] bg-gradient-to-t from-[#0b0a12] via-[#12101a]/70 to-transparent opacity-50" />
+            {/* Soft mist */}
+            <div className="absolute bottom-[16%] left-[12%] h-20 w-28 rounded-full bg-slate-400/[0.06] blur-3xl" />
+            <div className="absolute bottom-[20%] right-[14%] h-24 w-32 rounded-full bg-stone-300/[0.05] blur-3xl" />
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/55 to-transparent" />
+            {/* Stone pedestal under hero */}
+            <div className="absolute bottom-[4%] left-1/2 z-[5] h-7 w-[52%] max-w-[13rem] -translate-x-1/2 rounded-[100%] border border-stone-500/40 bg-gradient-to-b from-stone-500/35 via-stone-700/45 to-stone-950/80 shadow-[0_6px_20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.07)]" />
+            <div className="absolute bottom-[4%] left-1/2 z-[4] h-2.5 w-[62%] max-w-[15rem] -translate-x-1/2 rounded-[100%] bg-black/45 blur-md" />
+            <div className="absolute bottom-[5.5%] left-1/2 z-[6] h-px w-[28%] max-w-[7rem] -translate-x-1/2 bg-amber-300/25" />
+          </div>
 
           <div className="absolute left-2 top-2 z-20 rounded-full border border-[var(--app-border)] bg-black/45 px-2.5 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm">
             Ур. {level}
           </div>
 
-          <div className="relative flex h-full min-h-[24rem] items-end justify-center overflow-visible px-2 pb-2 pt-4 lg:min-h-[25rem] lg:px-4 lg:pb-3 lg:pt-5">
+          <div className="relative z-10 flex h-full min-h-[24rem] items-end justify-center overflow-visible px-2 pb-2 pt-4 lg:min-h-[25rem] lg:px-4 lg:pb-3 lg:pt-5">
             <div
               data-testid="hero-scene-character"
               className="relative z-10 flex w-full max-w-[20rem] items-end justify-center overflow-visible bg-transparent sm:max-w-[22rem] lg:max-w-[24rem]"
