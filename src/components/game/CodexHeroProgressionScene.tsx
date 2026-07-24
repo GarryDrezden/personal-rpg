@@ -95,8 +95,8 @@ function HeroSilhouette({ gender, stage, playerStage, variant }: HeroSilhouetteP
           className="h-full w-full bg-transparent"
           imageClassName={
             variant === 'death'
-              ? 'object-contain object-bottom brightness-[0.9] saturate-[0.95]'
-              : `${variant !== 'current' ? 'brightness-[0.68] contrast-[0.9] saturate-[0.85]' : ''} ${imageScaleClass}`.trim()
+              ? 'object-contain object-bottom'
+              : `${variant !== 'current' ? 'brightness-[0.72] saturate-[0.9]' : ''} ${imageScaleClass}`.trim()
           }
         />
     </div>

@@ -50,7 +50,7 @@
 
 - **README:** v1.4 (пользовательская документация)
 - **package.json:** 1.0.0
-- **GAME_ASSET_VERSION:** 48
+- **GAME_ASSET_VERSION:** 49
 
 ## Sprint 1 — Accounts & Storage ✅ (production: PHP + MySQL)
 

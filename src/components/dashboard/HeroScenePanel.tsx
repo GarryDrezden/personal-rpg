@@ -153,7 +153,7 @@ export function HeroScenePanel({
                   status="unlocked"
                   fit="hero"
                   className="relative z-10 h-full w-full items-end bg-transparent"
-                  imageClassName="drop-shadow-[0_14px_22px_rgba(0,0,0,0.7)]"
+                  imageClassName=""
                 />
                 <HeroCompanionOverlay
                   companionId={game.profile.activeCompanionId}
