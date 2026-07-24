@@ -14,7 +14,7 @@ import { getLegacyCodexBossManifestAssetId } from './manifestAssetUi';
 export const GAME_ASSET_BASE_PATH = '/game-assets';
 
 /** Bump when replacing PNGs so browsers reload public assets */
-export const GAME_ASSET_VERSION = '51';
+export const GAME_ASSET_VERSION = '52';
 
 /** Folder names under heroes/{gender}/variants/ */
 export type HeroAssetVariantFolder = 'dark-fantasy' | 'light';
@@ -40,15 +40,20 @@ export function getGameHeroStageVariantPath(
   gender: HeroGender,
   stage: HeroStageNumber,
   variant: HeroAssetVariantFolder,
+  ext: 'webp' | 'png' = 'webp',
 ): string {
   const n = String(stage).padStart(2, '0');
-  return gameAsset(`heroes/${gender}/variants/${variant}/stage-${n}.png`);
+  return gameAsset(`heroes/${gender}/variants/${variant}/stage-${n}.${ext}`);
 }
 
-/** Legacy root path — existing approved PNGs (unchanged on disk) */
-export function getGameHeroStageLegacyPath(gender: HeroGender, stage: HeroStageNumber): string {
+/** Legacy root path — existing approved assets */
+export function getGameHeroStageLegacyPath(
+  gender: HeroGender,
+  stage: HeroStageNumber,
+  ext: 'webp' | 'png' = 'webp',
+): string {
   const n = String(stage).padStart(2, '0');
-  return gameAsset(`heroes/${gender}/stage-${n}.png`);
+  return gameAsset(`heroes/${gender}/stage-${n}.${ext}`);
 }
 
 /** @deprecated Use getGameHeroStageLegacyPath or themed variant paths */
@@ -166,9 +171,12 @@ function buildHeroStagePathsForStage(
   const otherVariant: HeroAssetVariantFolder = variant === 'light' ? 'dark-fantasy' : 'light';
 
   const paths: string[] = [
-    getGameHeroStageVariantPath(gender, stage, variant),
-    getGameHeroStageLegacyPath(gender, stage),
-    getGameHeroStageVariantPath(gender, stage, otherVariant),
+    getGameHeroStageVariantPath(gender, stage, variant, 'webp'),
+    getGameHeroStageLegacyPath(gender, stage, 'webp'),
+    getGameHeroStageVariantPath(gender, stage, variant, 'png'),
+    getGameHeroStageLegacyPath(gender, stage, 'png'),
+    getGameHeroStageVariantPath(gender, stage, otherVariant, 'webp'),
+    getGameHeroStageVariantPath(gender, stage, otherVariant, 'png'),
   ];
 
   return uniquePaths(paths);
@@ -201,8 +209,11 @@ function buildHeroDeathPaths(gender: HeroGender, themeId: AppThemeId): string[] 
   const otherVariant: HeroAssetVariantFolder = variant === 'light' ? 'dark-fantasy' : 'light';
 
   return uniquePaths([
+    gameAsset(`heroes/${gender}/variants/${variant}/death.webp`),
+    gameAsset(`heroes/${gender}/death.webp`),
     gameAsset(`heroes/${gender}/variants/${variant}/death.png`),
     gameAsset(`heroes/${gender}/death.png`),
+    gameAsset(`heroes/${gender}/variants/${otherVariant}/death.webp`),
     gameAsset(`heroes/${gender}/variants/${otherVariant}/death.png`),
   ]);
 }
@@ -211,9 +222,9 @@ function buildHeroDeathPaths(gender: HeroGender, themeId: AppThemeId): string[] 
 export function getHeroDeathPublicPath(gender: HeroGender, themeId?: AppThemeId): string {
   if (themeId) {
     const variant = resolveHeroAssetVariant(themeId);
-    return gameAsset(`heroes/${gender}/variants/${variant}/death.png`);
+    return gameAsset(`heroes/${gender}/variants/${variant}/death.webp`);
   }
-  return gameAsset(`heroes/${gender}/death.png`);
+  return gameAsset(`heroes/${gender}/death.webp`);
 }
 
 export function getHeroDeathImageCandidates(
