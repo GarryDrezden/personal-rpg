@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Hero fully opaque:** solid underpaint for clothing alpha holes + cache bust `GAME_ASSET_VERSION` 47; dashboard torso backlight removed.
 - **Hero opacity fix + companion redo:** fill transparent holes in black clothing; cat/dog restyled as dark-fantasy cutouts; companion sits beside feet (not over legs); `GAME_ASSET_VERSION` 46.
 - **Companion dark-fantasy restyle:** recognizable photo traits with amber rim / boss-mood lighting; dashboard hero floor glow so avatar no longer sinks into BG; `GAME_ASSET_VERSION` 45.
 - **Companion cutouts v2:** photo-matched cat/alabai + restyled raven/fox as transparent PNGs; overlay at hero feet via `HeroCompanionOverlay`; `GAME_ASSET_VERSION` 44.

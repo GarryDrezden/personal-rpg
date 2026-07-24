@@ -130,17 +130,15 @@ export function HeroScenePanel({
       <div className="grid min-h-0 grid-cols-1 lg:grid-cols-2">
         {/* Hero + compact companion overlay */}
         <div className={`relative min-h-[24rem] overflow-visible lg:min-h-[25rem] ${sceneBg}`}>
-          {/* Ground plate ONLY under feet — never behind the torso */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-t from-[color-mix(in_srgb,#2a2418_40%,transparent)] to-transparent" />
-          <div className="pointer-events-none absolute inset-x-[16%] bottom-1 h-6 rounded-[100%] bg-amber-400/20 blur-xl" />
+          {/* Ground only — no torso backlight (that made alpha holes look like ghosts) */}
+          <div className="pointer-events-none absolute inset-x-[18%] bottom-2 h-3 rounded-[100%] bg-black/50 blur-md" />
+          <div className="pointer-events-none absolute inset-x-[22%] bottom-1.5 h-1 rounded-full bg-amber-400/15" />
 
           <div className="absolute left-2 top-2 z-20 rounded-full border border-[var(--app-border)] bg-black/45 px-2.5 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm">
             Ур. {level}
           </div>
 
           <div className="relative flex h-full min-h-[24rem] items-end justify-center overflow-visible px-2 pb-2 pt-4 lg:min-h-[25rem] lg:px-4 lg:pb-3 lg:pt-5">
-            <div className="pointer-events-none absolute inset-x-[20%] bottom-2.5 h-2 rounded-[100%] bg-black/45 blur-md" />
-
             <div
               data-testid="hero-scene-character"
               className="relative z-10 flex w-full max-w-[20rem] items-end justify-center overflow-visible bg-transparent sm:max-w-[22rem] lg:max-w-[24rem]"
@@ -155,7 +153,7 @@ export function HeroScenePanel({
                   status="unlocked"
                   fit="hero"
                   className="relative z-10 h-full w-full items-end bg-transparent"
-                  imageClassName="drop-shadow-[0_12px_20px_rgba(0,0,0,0.55)]"
+                  imageClassName="drop-shadow-[0_14px_22px_rgba(0,0,0,0.7)]"
                 />
                 <HeroCompanionOverlay
                   companionId={game.profile.activeCompanionId}
