@@ -1,8 +1,8 @@
 import type { BossId, CompanionId, HeroGender, HeroStageNumber, MobId, ChapterNumber } from '../../types/gameAssets';
 import { HERO_STAGE_COUNT } from '../../types/gameAssets';
 import { getCompanionMeta, getHeroStageMeta } from '../../game/assetRegistry';
-import { getCompanionImageCandidates } from '../../game/assetPaths';
 import { GameAssetImage } from '../game/GameAssetImage';
+import { HeroCompanionOverlay } from '../game/HeroCompanionOverlay';
 import { DailyMobBadge } from '../game/DailyMobBadge';
 import { ChapterBossBadge } from '../game/ChapterBossBadge';
 import { useAppTheme } from '../../hooks/useAppTheme';
@@ -62,49 +62,36 @@ export function DashboardScene({
           <div className="absolute right-2 top-2 z-10 rounded-full border border-[var(--app-border)] bg-black/45 px-2 py-0.5 text-xs font-semibold text-[var(--app-text)] backdrop-blur-sm">
             {stage}/{HERO_STAGE_COUNT}
           </div>
-          <div className="relative flex min-h-[16.5rem] flex-1 items-end justify-center px-0.5 pb-1 pt-8 sm:min-h-[17.5rem] lg:min-h-[18.5rem]">
+          <div className="relative flex min-h-[16.5rem] flex-1 items-end justify-center overflow-visible px-0.5 pb-1 pt-8 sm:min-h-[17.5rem] lg:min-h-[18.5rem]">
             <div className="pointer-events-none absolute inset-x-[6%] bottom-0.5 h-3.5 rounded-[100%] bg-black/30 blur-md" />
-            <GameAssetImage
-              variant="hero"
-              src={heroAssets.src}
-              alt={stageMeta.title}
-              fallbackCandidates={heroAssets.fallbackCandidates}
-              status="unlocked"
-              fit="hero"
-              className="h-full w-full min-h-[15rem] max-h-[19rem] sm:min-h-[16rem] lg:min-h-[17.5rem] lg:max-h-[20rem]"
-              imageClassName="scale-[1.18] sm:scale-[1.22] lg:scale-[1.28]"
-            />
+            <div className="relative h-full w-full min-h-[15rem] max-h-[19rem] overflow-visible sm:min-h-[16rem] lg:min-h-[17.5rem] lg:max-h-[20rem]">
+              <GameAssetImage
+                variant="hero"
+                src={heroAssets.src}
+                alt={stageMeta.title}
+                fallbackCandidates={heroAssets.fallbackCandidates}
+                status="unlocked"
+                fit="hero"
+                className="relative z-10 h-full w-full"
+                imageClassName="scale-[1.18] sm:scale-[1.22] lg:scale-[1.28]"
+              />
+              <HeroCompanionOverlay companionId={companionId} side="left" />
+            </div>
+            <div
+              data-testid="active-companion-label"
+              className="absolute bottom-2 right-2 z-30 rounded-md border border-amber-400/35 bg-black/55 px-1.5 py-1 text-center backdrop-blur-sm"
+            >
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-amber-200/90">
+                Спутник
+              </p>
+              <p className="max-w-[5.5rem] truncate text-[11px] font-semibold leading-snug text-[var(--app-text)]">
+                {companionMeta.title}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Block 2 — companion: wider square card, image dominates */}
-        <div
-          data-testid="active-companion-label"
-          className="flex w-[9rem] shrink-0 flex-col overflow-hidden rounded-xl border border-amber-400/40 bg-[color-mix(in_srgb,#000_35%,var(--app-card))] sm:w-[9.75rem]"
-        >
-          <div className="flex min-h-[7.5rem] flex-1 items-center justify-center bg-black/15 p-2 sm:min-h-[8rem]">
-            <GameAssetImage
-              variant="companion"
-              src={companionMeta.image}
-              alt={companionMeta.title}
-              fallbackCandidates={getCompanionImageCandidates(companionId).slice(1)}
-              status="unlocked"
-              fit="companion"
-              className="h-full w-full"
-              imageClassName="scale-[1.12] sm:scale-[1.16]"
-            />
-          </div>
-          <div className="shrink-0 border-t border-amber-400/25 bg-black/45 px-2 py-2 text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-200/90">
-              Спутник
-            </p>
-            <p className="mt-0.5 text-xs font-semibold leading-snug text-[var(--app-text)]">
-              {companionMeta.title}
-            </p>
-          </div>
-        </div>
-
-        {/* Block 3 — mob + boss, art-first cards */}
+        {/* Block 2 — mob + boss */}
         <div className="hidden w-[10.5rem] shrink-0 flex-col justify-stretch gap-2 sm:flex lg:w-[11.25rem]">
           {threats}
         </div>

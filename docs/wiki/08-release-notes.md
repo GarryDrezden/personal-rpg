@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Companion cutouts v2:** photo-matched cat/alabai + restyled raven/fox as transparent PNGs; overlay at hero feet via `HeroCompanionOverlay`; `GAME_ASSET_VERSION` 44.
 - **Weekly threat portraits:** 5 dark-fantasy 1:1 webp (`bosses/weekly/weekly-threat-*.webp`) replace legacy SVG cartoons; wired in `constants/bosses.ts`; `GAME_ASSET_VERSION` 43.
 - **Male hero stages v2 (1–20):** full set with unique tee prints (Harry Potter rave / Rick & Morty themes), identity + tattoo continuity; installed to `heroes/male/` + `variants/dark-fantasy/`; `GAME_ASSET_VERSION` 41.
 - **Season reward art set S01–S13:** dedicated 1:1 trophy webp for all season rewards (`season-NN-*.webp`); wired via `getSeasonRewardManifestAssetId`; Dashboard + летопись banners; `GAME_ASSET_VERSION` 40.

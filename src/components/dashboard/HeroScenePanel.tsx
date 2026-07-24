@@ -2,9 +2,6 @@ import { Link } from 'react-router-dom';
 import { Coins, Flame } from 'lucide-react';
 import { getChapterMeta } from '../../constants/gameChapters';
 import { getCompanionMeta, getHeroStageMeta } from '../../game/assetRegistry';
-import {
-  getCompanionImageCandidates,
-} from '../../game/assetPaths';
 import { useGameHeroState } from '../../hooks/useGameHeroState';
 import { useHeroStageAssets } from '../../hooks/useHeroStageAssets';
 import { useAppStore } from '../../store/appStore';
@@ -13,6 +10,7 @@ import { getPathSetupState } from '../../utils/dashboardPathSetup';
 import { getDayStatus } from '../../utils/points';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import { GameAssetImage } from '../game/GameAssetImage';
+import { HeroCompanionOverlay } from '../game/HeroCompanionOverlay';
 import { DailyMobMiniCard } from '../game/DailyMobMiniCard';
 import { ChapterBossMiniCard } from '../game/ChapterBossMiniCard';
 import { ProgressBar } from '../ui/ProgressBar';
@@ -144,7 +142,7 @@ export function HeroScenePanel({
 
             <div
               data-testid="hero-scene-character"
-              className="relative z-10 flex w-full max-w-[12rem] items-end justify-center bg-transparent sm:max-w-[13rem] lg:max-w-[14rem]"
+              className="relative z-10 flex w-full max-w-[13.5rem] items-end justify-center overflow-visible bg-transparent sm:max-w-[14.5rem] lg:max-w-[15.5rem]"
               style={{ height: DASHBOARD_HERO_HEIGHT, maxHeight: 'calc(100% - 1.5rem)' }}
             >
               <GameAssetImage
@@ -154,44 +152,29 @@ export function HeroScenePanel({
                 fallbackCandidates={heroAssets.fallbackCandidates}
                 status="unlocked"
                 fit="hero"
-                className="h-full w-full items-end bg-transparent"
+                className="relative z-10 h-full w-full items-end bg-transparent"
+              />
+              <HeroCompanionOverlay
+                companionId={game.profile.activeCompanionId}
+                side="left"
               />
             </div>
 
-            {/* Компактный спутник — у пояса героя, как на макете */}
             <div
               data-testid="hero-scene-companion"
-              className="absolute bottom-6 right-2 z-20 flex w-[6.25rem] flex-col items-center sm:bottom-8 sm:right-3 sm:w-[7rem]"
+              className="absolute bottom-3 right-2 z-30 max-w-[7.5rem] rounded-lg border border-amber-400/35 bg-black/50 px-2 py-1.5 backdrop-blur-sm sm:bottom-4 sm:right-3"
             >
-              <div className="w-full overflow-hidden rounded-xl border border-amber-400/45 bg-[color-mix(in_srgb,#000_45%,transparent)] backdrop-blur-sm">
-                <div className="flex h-[5.25rem] items-center justify-center p-1.5 sm:h-[5.75rem]">
-                  <GameAssetImage
-                    variant="companion"
-                    src={companionMeta.image}
-                    alt={companionMeta.title}
-                    fallbackCandidates={getCompanionImageCandidates(
-                      game.profile.activeCompanionId,
-                    ).slice(1)}
-                    status="unlocked"
-                    fit="companion"
-                    className="h-full w-full bg-transparent"
-                    imageClassName="scale-[1.1] sm:scale-[1.14]"
-                  />
-                </div>
-                <div className="border-t border-amber-400/25 bg-black/55 px-1 py-0.5 text-center">
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-amber-200/90">
-                    Спутник
-                  </p>
-                </div>
-              </div>
-              <p className="mt-1 max-w-full truncate px-0.5 text-center text-[11px] font-semibold leading-tight text-amber-200/95">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-amber-200/90">
+                Спутник
+              </p>
+              <p className="truncate text-[11px] font-semibold leading-tight text-amber-100">
                 {companionMeta.title}
               </p>
               <Link
                 to="/today"
-                className="mt-0.5 max-w-full truncate px-0.5 text-center text-[10px] font-medium text-amber-300/85 hover:text-amber-200 hover:underline"
+                className="mt-0.5 block truncate text-[10px] font-medium text-amber-300/85 hover:text-amber-200 hover:underline"
               >
-                Помогает в квестах дня →
+                Квесты дня →
               </Link>
             </div>
           </div>

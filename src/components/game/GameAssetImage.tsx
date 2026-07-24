@@ -23,7 +23,7 @@ type GameAssetImageProps = {
 const FIT_CLASS: Record<NonNullable<GameAssetImageProps['fit']>, string> = {
   default: 'h-full w-full max-h-full max-w-full object-contain',
   hero: 'h-full w-full max-h-full max-w-full object-contain object-bottom',
-  companion: 'h-full w-full max-h-full max-w-full object-contain object-center',
+  companion: 'h-full w-full max-h-full max-w-full object-contain object-bottom',
   mob: 'h-full w-full max-h-full max-w-full object-contain object-center',
   boss: 'h-full w-full max-h-full max-w-full object-contain object-center',
 };

@@ -31,7 +31,7 @@ export function CompanionCard({
       } ${compact ? 'flex items-center gap-4' : ''}`}
     >
       <div
-        className={`relative shrink-0 overflow-hidden rounded-xl border border-[var(--app-border)] bg-[var(--app-bg-soft)] ${
+        className={`relative shrink-0 overflow-hidden rounded-xl border border-[var(--app-border)] bg-gradient-to-b from-[#1a1626] to-[#0e0c14] ${
           compact ? 'h-24 w-24' : 'mx-auto h-44 w-44'
         }`}
       >
