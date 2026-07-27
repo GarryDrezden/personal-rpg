@@ -192,8 +192,7 @@ export function DashboardCommandBridge({
               loading="eager"
               decoding="async"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/10 to-black/55" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_70%,transparent_20%,rgba(0,0,0,0.45)_100%)]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/50" />
             <div className="absolute bottom-[7%] left-1/2 h-3 w-[42%] max-w-[11rem] -translate-x-1/2 rounded-[100%] bg-black/45 blur-md" />
           </div>
 
@@ -211,16 +210,6 @@ export function DashboardCommandBridge({
               className="relative flex w-full max-w-[16rem] items-end justify-center sm:max-w-[18rem]"
               style={{ height: HERO_HEIGHT, maxHeight: 'calc(100% - 2rem)' }}
             >
-              {/* Egg-shaped aura behind hero — frames silhouette without covering art */}
-              <div
-                data-testid="hero-egg-backdrop"
-                aria-hidden
-                className="pointer-events-none absolute bottom-[2%] left-1/2 z-0 h-[96%] w-[78%] max-w-[15rem] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_50%_42%,rgba(40,36,58,0.55)_0%,rgba(18,16,28,0.72)_48%,rgba(8,7,12,0.15)_78%,transparent_88%)] shadow-[inset_0_0_0_1px_rgba(251,191,36,0.12),0_0_40px_rgba(0,0,0,0.35)]"
-              />
-              <div
-                aria-hidden
-                className="pointer-events-none absolute bottom-[6%] left-1/2 z-0 h-[88%] w-[62%] max-w-[12rem] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_50%_35%,rgba(251,191,36,0.08)_0%,transparent_65%)]"
-              />
               <GameAssetImage
                 variant="hero"
                 src={heroAssets.src}
