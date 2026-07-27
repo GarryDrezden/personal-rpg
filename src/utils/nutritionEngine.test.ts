@@ -8,6 +8,8 @@ import {
   getNutritionPoints,
   getNutritionStatus,
   getTrackingMode,
+  normalizeNutritionTrackingMode,
+  toServerNutritionTrackingMode,
 } from './nutritionEngine';
 
 function entry(partial: Partial<DailyEntry> & { date?: string }): DailyEntry {
@@ -116,5 +118,16 @@ describe('nutritionEngine', () => {
     const s = settings();
     delete (s as Partial<AppSettings>).nutritionTrackingMode;
     expect(getTrackingMode(s)).toBe('simple');
+  });
+
+  it('maps API detailed mode to precise', () => {
+    expect(normalizeNutritionTrackingMode('detailed')).toBe('precise');
+    expect(normalizeNutritionTrackingMode('precise')).toBe('precise');
+    expect(toServerNutritionTrackingMode('precise')).toBe('detailed');
+    expect(toServerNutritionTrackingMode('simple')).toBe('simple');
+    expect(toServerNutritionTrackingMode('disabled')).toBe('simple');
+    expect(getTrackingMode(settings({ nutritionTrackingMode: 'detailed' as never }))).toBe(
+      'precise',
+    );
   });
 });

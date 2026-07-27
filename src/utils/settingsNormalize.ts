@@ -2,6 +2,7 @@ import { DEFAULT_APP_SETTINGS, DEFAULT_WEIGHT_GOAL_KG } from '../constants/defau
 import type { AppSettings } from '../types';
 import { normalizeBodyAbilityState } from '../game/bodyAbilities/bodyAbilityV1Engine';
 import { normalizePlateauState } from '../game/plateau/plateauEngine';
+import { normalizeNutritionTrackingMode } from './nutritionEngine';
 
 /** Синхронизирует weightGoal / targetWeight после загрузки или сохранения через API. */
 export function normalizeAppSettings(
@@ -36,6 +37,13 @@ export function normalizeAppSettings(
     routeMode: settings.routeMode ?? fallback.routeMode,
     firstFocus: settings.firstFocus ?? fallback.firstFocus,
     startDate: settings.startDate ?? fallback.startDate,
+    nutritionTrackingMode: normalizeNutritionTrackingMode(
+      settings.nutritionTrackingMode ?? fallback.nutritionTrackingMode,
+    ),
+    dailyCalorieLimit:
+      settings.dailyCalorieLimit !== undefined
+        ? settings.dailyCalorieLimit
+        : (fallback.dailyCalorieLimit ?? null),
     bodyAbilityState: normalizeBodyAbilityState(
       settings.bodyAbilityState ?? fallback.bodyAbilityState,
     ),

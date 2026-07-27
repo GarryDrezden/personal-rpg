@@ -41,7 +41,22 @@ const FREEDOM_BY_STATUS: Record<NutritionStatus, number> = {
 };
 
 export function getTrackingMode(settings: AppSettings): NutritionTrackingMode {
-  return settings.nutritionTrackingMode ?? 'simple';
+  return normalizeNutritionTrackingMode(settings.nutritionTrackingMode);
+}
+
+/** Maps API/legacy values (`detailed`) to client modes (`precise` / `simple` / `disabled`). */
+export function normalizeNutritionTrackingMode(mode: unknown): NutritionTrackingMode {
+  if (mode === 'precise' || mode === 'detailed') return 'precise';
+  if (mode === 'disabled' || mode === 'off') return 'disabled';
+  if (mode === 'simple') return 'simple';
+  return 'simple';
+}
+
+/** Client → API enum (`simple` | `detailed`). Disabled stays local in settings backup. */
+export function toServerNutritionTrackingMode(
+  mode: NutritionTrackingMode | undefined,
+): 'simple' | 'detailed' {
+  return normalizeNutritionTrackingMode(mode) === 'precise' ? 'detailed' : 'simple';
 }
 
 export function resolveNutritionSettings(settings: AppSettings): NutritionSettings {
@@ -263,6 +278,8 @@ export function migrateNutritionSettings(
       (e) => e.calories !== null && e.calories !== undefined,
     );
     next.nutritionTrackingMode = hasCalorieEntries ? 'precise' : 'simple';
+  } else {
+    next.nutritionTrackingMode = normalizeNutritionTrackingMode(next.nutritionTrackingMode);
   }
 
   if (next.dailyCalorieLimit === undefined) {

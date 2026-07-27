@@ -473,7 +473,16 @@ export function SettingsPage() {
               <button
                 key={opt.mode}
                 type="button"
-                onClick={() => setLocal({ ...local, nutritionTrackingMode: opt.mode })}
+                onClick={() =>
+                  setLocal({
+                    ...local,
+                    nutritionTrackingMode: opt.mode,
+                    dailyCalorieLimit:
+                      opt.mode === 'precise'
+                        ? (local.dailyCalorieLimit ?? local.defaultCaloriesLimit ?? 2500)
+                        : local.dailyCalorieLimit,
+                  })
+                }
                 className={`rounded-xl border px-3 py-3 text-left transition ${
                   active
                     ? 'border-[var(--app-primary)] bg-[var(--app-primary-soft)]'

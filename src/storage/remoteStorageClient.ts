@@ -9,7 +9,11 @@ import type {
 import { dataApi } from '../api/dataApi';
 import type { DataRepository } from '../store/repository';
 import { normalizeAppSettings } from '../utils/settingsNormalize';
-import { migrateNutritionSettings } from '../utils/nutritionEngine';
+import {
+  migrateNutritionSettings,
+  normalizeNutritionTrackingMode,
+  toServerNutritionTrackingMode,
+} from '../utils/nutritionEngine';
 import { resolveThemeId } from '../constants/themes';
 import { debouncedRemoteSave, immediateRemoteSave } from './saveStatusStore';
 import { getActiveCompanionId } from '../game/gameAssetStorage';
@@ -51,14 +55,25 @@ function mergeRemoteSettings(
   backup: AppSettings | null,
 ): AppSettings {
   const base = backup ?? defaultSettings();
+  const serverMode = normalizeNutritionTrackingMode(serverSettings.nutritionTrackingMode);
+  // Backup keeps client-only modes (disabled) and precise; prefer it when present.
+  const nutritionTrackingMode = backup?.nutritionTrackingMode
+    ? normalizeNutritionTrackingMode(backup.nutritionTrackingMode)
+    : serverMode;
+  const calorieLimit =
+    backup?.dailyCalorieLimit ??
+    serverSettings.dailyCalorieLimit ??
+    base.dailyCalorieLimit ??
+    base.defaultCaloriesLimit ??
+    null;
+
   return normalizeAppSettings({
     ...base,
     themeId: resolveThemeId(serverSettings.themeId ?? base.themeId),
     defaultCaloriesLimit:
       serverSettings.dailyCalorieLimit ?? base.defaultCaloriesLimit,
-    nutritionTrackingMode:
-      (serverSettings.nutritionTrackingMode as AppSettings['nutritionTrackingMode']) ??
-      base.nutritionTrackingMode,
+    dailyCalorieLimit: calorieLimit,
+    nutritionTrackingMode,
     activeCompanionId:
       (serverSettings.activeCompanionId as AppSettings['activeCompanionId']) ??
       base.activeCompanionId,
@@ -241,15 +256,22 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
   async saveSettings(settings: AppSettings): Promise<AppSettings> {
     const state = await ensureCache();
     const saved = normalizeAppSettings(settings);
-    state.settings = saved;
-    await persistType('customSettingsBackup', saved, false);
+    const normalizedMode = normalizeNutritionTrackingMode(saved.nutritionTrackingMode);
+    const calorieLimit = saved.dailyCalorieLimit ?? saved.defaultCaloriesLimit ?? null;
+    const withNutrition: AppSettings = {
+      ...saved,
+      nutritionTrackingMode: normalizedMode,
+      dailyCalorieLimit: calorieLimit,
+      defaultCaloriesLimit: saved.defaultCaloriesLimit ?? calorieLimit ?? 2500,
+    };
+    state.settings = withNutrition;
+    await persistType('customSettingsBackup', withNutrition, false);
     await dataApi.patchSettings({
-      themeId: saved.themeId,
-      dailyCalorieLimit: saved.defaultCaloriesLimit,
-      nutritionTrackingMode:
-        saved.nutritionTrackingMode === 'precise' ? 'detailed' : 'simple',
+      themeId: withNutrition.themeId,
+      dailyCalorieLimit: calorieLimit,
+      nutritionTrackingMode: toServerNutritionTrackingMode(normalizedMode),
       activeCompanionId: getActiveCompanionId(),
     });
-    return saved;
+    return withNutrition;
   },
 };

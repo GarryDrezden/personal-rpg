@@ -30,4 +30,14 @@ describe('normalizeAppSettings', () => {
     expect(normalized.activeCompanionId).toBe('raven');
     expect(normalized.heroGender).toBe('female');
   });
+
+  it('maps detailed nutrition mode from API payloads', () => {
+    const normalized = normalizeAppSettings({
+      ...DEFAULT_APP_SETTINGS,
+      nutritionTrackingMode: 'detailed' as never,
+      dailyCalorieLimit: 2800,
+    });
+    expect(normalized.nutritionTrackingMode).toBe('precise');
+    expect(normalized.dailyCalorieLimit).toBe(2800);
+  });
 });
