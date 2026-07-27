@@ -14,7 +14,7 @@ import { getLegacyCodexBossManifestAssetId } from './manifestAssetUi';
 export const GAME_ASSET_BASE_PATH = '/game-assets';
 
 /** Bump when replacing PNGs so browsers reload public assets */
-export const GAME_ASSET_VERSION = '53';
+export const GAME_ASSET_VERSION = '54';
 
 /** Folder names under heroes/{gender}/variants/ */
 export type HeroAssetVariantFolder = 'dark-fantasy' | 'light';
@@ -101,14 +101,14 @@ export function getCompanionImageCandidates(id: CompanionId): string[] {
 
 export function getMobPublicPath(id: MobId): string {
   const fileMap: Record<MobId, string> = {
-    sofa_magnet: 'sofa-magnet.png',
-    snack_chaos: 'snack-chaos.png',
-    fog_of_fatigue: 'fog-of-fatigue.png',
-    empty_day: 'empty-day.png',
-    impulse_of_rollback: 'impulse-of-rollback.png',
-    night_call: 'night-call.png',
-    gray_heaviness: 'gray-heaviness.png',
-    sweet_whisper: 'sweet-whisper.png',
+    sofa_magnet: 'sofa-magnet.webp',
+    snack_chaos: 'snack-chaos.webp',
+    fog_of_fatigue: 'fog-of-fatigue.webp',
+    empty_day: 'empty-day.webp',
+    impulse_of_rollback: 'impulse-of-rollback.webp',
+    night_call: 'night-call.webp',
+    gray_heaviness: 'gray-heaviness.webp',
+    sweet_whisper: 'sweet-whisper.webp',
   };
   return gameAsset(`mobs/${fileMap[id]}`);
 }
