@@ -53,9 +53,9 @@ function CompanionStatusChip({ companionId }: { companionId: CompanionId }) {
     <Link
       to="/settings"
       data-testid="companion-status-chip"
-      className="inline-flex max-w-full items-center gap-2 rounded-full border border-amber-400/35 bg-black/45 py-1 pl-1 pr-3 backdrop-blur-sm transition hover:border-amber-300/55 hover:bg-black/55"
+      className="inline-flex max-w-[11rem] items-center gap-2.5 rounded-2xl border border-amber-400/40 bg-black/55 py-1.5 pl-1.5 pr-3 shadow-[0_4px_16px_rgba(0,0,0,0.35)] backdrop-blur-sm transition hover:border-amber-300/60 hover:bg-black/65 sm:max-w-[13rem]"
     >
-      <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full bg-black/40">
+      <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-gradient-to-b from-amber-900/30 to-black/50 ring-1 ring-amber-400/25 sm:h-16 sm:w-16">
         <GameAssetImage
           variant="companion"
           src={meta.image}
@@ -64,14 +64,16 @@ function CompanionStatusChip({ companionId }: { companionId: CompanionId }) {
           status="unlocked"
           fit="companion"
           className="h-full w-full bg-transparent"
-          imageClassName="object-contain object-center"
+          imageClassName="object-contain object-bottom scale-110"
         />
       </span>
       <span className="min-w-0">
-        <span className="block text-[9px] font-semibold uppercase tracking-wide text-amber-200/80">
+        <span className="block text-[10px] font-semibold uppercase tracking-wide text-amber-200/85">
           Спутник
         </span>
-        <span className="block truncate text-xs font-semibold text-amber-50">{meta.title}</span>
+        <span className="block truncate text-sm font-bold leading-tight text-amber-50">
+          {meta.title}
+        </span>
       </span>
     </Link>
   );
@@ -209,6 +211,16 @@ export function DashboardCommandBridge({
               className="relative flex w-full max-w-[16rem] items-end justify-center sm:max-w-[18rem]"
               style={{ height: HERO_HEIGHT, maxHeight: 'calc(100% - 2rem)' }}
             >
+              {/* Egg-shaped aura behind hero — frames silhouette without covering art */}
+              <div
+                data-testid="hero-egg-backdrop"
+                aria-hidden
+                className="pointer-events-none absolute bottom-[2%] left-1/2 z-0 h-[96%] w-[78%] max-w-[15rem] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_50%_42%,rgba(40,36,58,0.55)_0%,rgba(18,16,28,0.72)_48%,rgba(8,7,12,0.15)_78%,transparent_88%)] shadow-[inset_0_0_0_1px_rgba(251,191,36,0.12),0_0_40px_rgba(0,0,0,0.35)]"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute bottom-[6%] left-1/2 z-0 h-[88%] w-[62%] max-w-[12rem] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_50%_35%,rgba(251,191,36,0.08)_0%,transparent_65%)]"
+              />
               <GameAssetImage
                 variant="hero"
                 src={heroAssets.src}
