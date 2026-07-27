@@ -9,13 +9,11 @@ import { formatDateFull, todayISO } from '../utils/dates';
 import { shouldShowRecoveryCard } from '../utils/recoveryEngine';
 
 import { HeroScenePanel } from '../components/dashboard/HeroScenePanel';
-
+import { DashboardCommandBridge } from '../components/dashboard/DashboardCommandBridge';
+import { DASHBOARD_LAYOUT } from '../components/dashboard/dashboardLayout';
 import { RecoveryCompactPanel } from '../components/dashboard/RecoveryCompactPanel';
-
 import { DashboardPrimaryCta } from '../components/dashboard/DashboardPrimaryCta';
-
 import { DailyQuestsCompact } from '../components/dashboard/DailyQuestsCompact';
-
 import { DashboardResourceCompact } from '../components/rest/DashboardResourceCompact';
 import { DashboardSummaryStrip } from '../components/dashboard/DashboardSummaryStrip';
 
@@ -312,9 +310,7 @@ export function DashboardPage() {
 
 
   return (
-
     <div data-testid="dashboard-page" className="space-y-3 pb-2">
-
       {showStartRouteBanner ? (
         <div className="rounded-xl border border-[var(--app-gold)]/25 bg-[var(--app-card)]/70 px-4 py-3 text-sm text-[var(--app-text-muted)]">
           Кампания ждёт первого ритма —{' '}
@@ -327,75 +323,59 @@ export function DashboardPage() {
 
       <p className="text-sm text-rpg-muted lg:hidden">{formatDateFull(today)}</p>
 
-
-
-      <HeroScenePanel
-
-        level={stats.level.level}
-
-        totalXp={stats.totalXP}
-
-        todayPoints={stats.todayPoints}
-
-        todayCoins={stats.coins.todayEarned}
-
-        availableCoins={stats.coins.available}
-
-      />
-
-
-
-      <DashboardPrimaryCta action={primaryAction} />
-
-      <DashboardResourceCompact entry={stats.todayEntry} />
-
-      {showMomentumHelp ? (
-
-        <RecoveryCompactPanel
-
-          variant="momentum"
-
-          summary={momentumSummary}
-
-          onSetRecoveryMode={() => void acceptMomentumRecovery()}
-
-          onSetMinimalMode={() => void acceptMomentumMinimal()}
-
-          onDismiss={handleDismissMomentumHelp}
-
-        />
-
-      ) : showRecovery ? (
-
-        <RecoveryCompactPanel
-
-          variant="recovery"
-
-          today={today}
-
-          dailyEntries={dailyEntries}
-
-          settings={settings}
-
+      {DASHBOARD_LAYOUT === 'command-bridge' ? (
+        <DashboardCommandBridge
+          level={stats.level.level}
+          totalXp={stats.totalXP}
+          todayPoints={stats.todayPoints}
+          todayCoins={stats.coins.todayEarned}
+          availableCoins={stats.coins.available}
+          primaryAction={primaryAction}
           todayEntry={stats.todayEntry}
-
+          today={today}
+          showMomentumHelp={showMomentumHelp}
+          showRecovery={showRecovery}
+          momentumSummary={momentumSummary}
+          onAcceptMomentumRecovery={() => void acceptMomentumRecovery()}
+          onAcceptMomentumMinimal={() => void acceptMomentumMinimal()}
+          onDismissMomentumHelp={handleDismissMomentumHelp}
         />
-
-      ) : null}
-
-
-
-      <DailyQuestsCompact
-
-        entry={stats.todayEntry}
-
-        dailyEntries={dailyEntries}
-
-        settings={settings}
-
-        date={today}
-
-      />
+      ) : (
+        <>
+          <HeroScenePanel
+            level={stats.level.level}
+            totalXp={stats.totalXP}
+            todayPoints={stats.todayPoints}
+            todayCoins={stats.coins.todayEarned}
+            availableCoins={stats.coins.available}
+          />
+          <DashboardPrimaryCta action={primaryAction} />
+          <DashboardResourceCompact entry={stats.todayEntry} />
+          {showMomentumHelp ? (
+            <RecoveryCompactPanel
+              variant="momentum"
+              summary={momentumSummary}
+              onSetRecoveryMode={() => void acceptMomentumRecovery()}
+              onSetMinimalMode={() => void acceptMomentumMinimal()}
+              onDismiss={handleDismissMomentumHelp}
+            />
+          ) : showRecovery ? (
+            <RecoveryCompactPanel
+              variant="recovery"
+              today={today}
+              dailyEntries={dailyEntries}
+              settings={settings}
+              todayEntry={stats.todayEntry}
+            />
+          ) : null}
+          <DailyQuestsCompact
+            entry={stats.todayEntry}
+            dailyEntries={dailyEntries}
+            settings={settings}
+            date={today}
+          />
+        </>
+      )}
 
       <CampaignProgressDashboardSection
         season={seasonSnapshot}
@@ -407,11 +387,8 @@ export function DashboardPage() {
       />
 
       <DashboardSummaryStrip />
-
     </div>
-
   );
-
 }
 
 

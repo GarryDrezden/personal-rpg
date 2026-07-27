@@ -6,6 +6,7 @@ type ChapterBossMiniCardProps = {
   bossId: BossId;
   chapter: ChapterNumber;
   status?: 'locked' | 'active' | 'defeated';
+  layout?: 'banner' | 'portrait';
 };
 
 const statusBadgeLabel = {
@@ -24,6 +25,7 @@ export function ChapterBossMiniCard({
   bossId,
   chapter,
   status = 'active',
+  layout = 'banner',
 }: ChapterBossMiniCardProps) {
   const meta = getBossMeta(bossId);
   const reward = meta.rewardArtifactId ? getArtifactMeta(meta.rewardArtifactId).title : null;
@@ -32,6 +34,7 @@ export function ChapterBossMiniCard({
     <GameSceneBannerCard
       testId="chapter-boss-mini-card"
       variant="boss"
+      layout={layout}
       imageSrc={meta.image}
       imageAlt={meta.title}
       href="/today"

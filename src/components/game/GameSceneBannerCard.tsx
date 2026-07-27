@@ -17,6 +17,8 @@ type GameSceneBannerCardProps = {
   backdropClassName?: string;
   imagePositionClassName?: string;
   imageScaleClassName?: string;
+  /** banner = wide strip; portrait = tall threat card for command-bridge */
+  layout?: 'banner' | 'portrait';
 };
 
 function CardInner({
@@ -28,40 +30,64 @@ function CardInner({
   subtitle,
   accent,
   backdropClassName = 'from-[#12101c] via-[#0e0c16] to-[#08070f]',
-  imagePositionClassName = 'right-0 w-[58%] sm:w-[52%]',
-  imageScaleClassName = 'scale-[1.18] sm:scale-[1.22]',
+  imagePositionClassName,
+  imageScaleClassName,
+  layout = 'banner',
 }: GameSceneBannerCardProps) {
+  const isPortrait = layout === 'portrait';
+  const resolvedImagePosition =
+    imagePositionClassName ??
+    (isPortrait ? 'inset-x-0 top-0 h-[72%]' : 'right-0 w-[58%] sm:w-[52%]');
+  const resolvedImageScale =
+    imageScaleClassName ?? (isPortrait ? 'scale-[1.05]' : 'scale-[1.18] sm:scale-[1.22]');
+
   return (
     <>
       <div className={`absolute inset-0 bg-gradient-to-br ${backdropClassName}`} />
 
-      <div className={`absolute inset-y-0 ${imagePositionClassName}`}>
+      <div className={`absolute ${resolvedImagePosition}`}>
         <GameAssetImage
           variant={variant}
           src={imageSrc}
           alt={imageAlt}
           fit={variant === 'boss' ? 'boss' : variant === 'mob' ? 'mob' : 'default'}
           className="h-full w-full bg-transparent"
-          imageClassName={`object-contain object-right ${imageScaleClassName}`}
+          imageClassName={`object-contain ${isPortrait ? 'object-bottom' : 'object-right'} ${resolvedImageScale}`}
         />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/88 via-black/55 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/20" />
-
-      <div className="absolute left-3 top-3 z-10">{badge}</div>
-
-      <div className="absolute bottom-0 left-0 z-10 max-w-[78%] p-3 sm:max-w-[72%]">
-        <h3 className="text-base font-bold leading-tight text-white drop-shadow-md sm:text-lg">
-          {title}
-        </h3>
-        {subtitle ? (
-          <p className="mt-0.5 text-xs text-white/75 sm:text-sm">{subtitle}</p>
-        ) : null}
-        {accent ? (
-          <p className="mt-1 line-clamp-2 text-xs font-medium text-amber-300/95">{accent}</p>
-        ) : null}
-      </div>
+      {isPortrait ? (
+        <>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/30" />
+          <div className="absolute left-3 top-3 z-10">{badge}</div>
+          <div className="absolute bottom-0 left-0 z-10 w-full p-3">
+            <h3 className="text-base font-bold leading-tight text-white drop-shadow-md sm:text-lg">
+              {title}
+            </h3>
+            {subtitle ? <p className="mt-0.5 text-xs text-white/75">{subtitle}</p> : null}
+            {accent ? (
+              <p className="mt-1 line-clamp-2 text-[11px] font-medium text-amber-300/95">{accent}</p>
+            ) : null}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/88 via-black/55 to-transparent" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/20" />
+          <div className="absolute left-3 top-3 z-10">{badge}</div>
+          <div className="absolute bottom-0 left-0 z-10 max-w-[78%] p-3 sm:max-w-[72%]">
+            <h3 className="text-base font-bold leading-tight text-white drop-shadow-md sm:text-lg">
+              {title}
+            </h3>
+            {subtitle ? (
+              <p className="mt-0.5 text-xs text-white/75 sm:text-sm">{subtitle}</p>
+            ) : null}
+            {accent ? (
+              <p className="mt-1 line-clamp-2 text-xs font-medium text-amber-300/95">{accent}</p>
+            ) : null}
+          </div>
+        </>
+      )}
     </>
   );
 }
@@ -71,14 +97,18 @@ export function GameSceneBannerCard(props: GameSceneBannerCardProps) {
     href,
     borderClassName = 'border-[var(--app-border)]',
     backdropClassName = 'from-[#12101c] via-[#0e0c16] to-[#08070f]',
-    imagePositionClassName = 'right-0 w-[58%] sm:w-[52%]',
-    imageScaleClassName = 'scale-[1.18] sm:scale-[1.22]',
+    imagePositionClassName,
+    imageScaleClassName,
+    layout = 'banner',
     testId,
   } = props;
 
-  const className = `relative aspect-[2.35/1] min-h-[7.25rem] w-full overflow-hidden rounded-2xl border shadow-[0_4px_24px_rgba(0,0,0,0.35)] ${borderClassName} ${
-    href ? 'transition hover:brightness-105' : ''
-  }`;
+  const shell =
+    layout === 'portrait'
+      ? 'relative min-h-[14rem] w-full flex-1 overflow-hidden rounded-2xl border shadow-[0_4px_24px_rgba(0,0,0,0.35)] aspect-[3/4] max-h-[22rem]'
+      : 'relative aspect-[2.35/1] min-h-[7.25rem] w-full overflow-hidden rounded-2xl border shadow-[0_4px_24px_rgba(0,0,0,0.35)]';
+
+  const className = `${shell} ${borderClassName} ${href ? 'transition hover:brightness-105' : ''}`;
 
   if (href) {
     return (
@@ -89,6 +119,7 @@ export function GameSceneBannerCard(props: GameSceneBannerCardProps) {
           imagePositionClassName={imagePositionClassName}
           imageScaleClassName={imageScaleClassName}
           borderClassName={borderClassName}
+          layout={layout}
         />
       </Link>
     );
@@ -102,6 +133,7 @@ export function GameSceneBannerCard(props: GameSceneBannerCardProps) {
         imagePositionClassName={imagePositionClassName}
         imageScaleClassName={imageScaleClassName}
         borderClassName={borderClassName}
+        layout={layout}
       />
     </div>
   );

@@ -8,9 +8,14 @@ function isJourneyRoute(pathname: string): boolean {
   return pathname === '/journey' || pathname.endsWith('/journey');
 }
 
+function isDashboardRoute(pathname: string): boolean {
+  return pathname === '/' || pathname === '';
+}
+
 export function AppShell() {
   const { pathname } = useLocation();
   const journeyPage = isJourneyRoute(pathname);
+  const dashboardPage = isDashboardRoute(pathname);
 
   return (
     <ThemeShell>
@@ -20,7 +25,11 @@ export function AppShell() {
       >
         <div
           className={
-            journeyPage ? 'w-full px-4 py-6 md:px-6' : 'mx-auto max-w-6xl px-4 py-6'
+            journeyPage
+              ? 'w-full px-4 py-6 md:px-6'
+              : dashboardPage
+                ? 'mx-auto max-w-7xl px-4 py-6'
+                : 'mx-auto max-w-6xl px-4 py-6'
           }
         >
           <LegacyImportBanner />
