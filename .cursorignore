@@ -1,0 +1,15 @@
+﻿# Heavy binary / generated game art — keep README searchable
+public/game-assets/**
+!public/game-assets/**/README.md
+
+node_modules/
+dist/
+backend/node_modules/
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.webp
+**/*.gif
+**/*.mp4
+**/*.psd
+**/*.zip
