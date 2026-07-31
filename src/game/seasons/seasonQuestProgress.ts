@@ -13,7 +13,10 @@ function isResourceMarked(entry: DailyEntry): boolean {
 }
 
 function hasMovement(entry: DailyEntry): boolean {
-  return (entry.steps ?? 0) > 0 || entry.morningExercise || entry.gym;
+  const pa = entry.physicalActivityLevel;
+  const hasPhysical =
+    pa === 'light' || pa === 'medium' || pa === 'heavy';
+  return (entry.steps ?? 0) > 0 || entry.morningExercise || entry.gym || hasPhysical;
 }
 
 function isAlcoholFree(entry: DailyEntry): boolean {

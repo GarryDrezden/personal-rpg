@@ -116,6 +116,33 @@ XP за квесты, недельные бонусы, победу над бо�
 
 ---
 
+## Physical Activity / Физическая активность
+
+**Engine:** `movementCreditEngine.ts`  
+**UI:** `PhysicalActivityDayCard` на `/today`, `MovementCreditDashboardCard` на Dashboard  
+**Fields:** `physicalActivityLevel`, `physicalActivityDuration`, `physicalActivityNote`
+
+Физическая активность учитывает физическую нагрузку, которая может не отражаться в шагах.
+
+Design rule:
+Steps measure movement.
+Physical activity measures body load.
+Resource measures the cost of that load.
+
+| Уровень | Смысл | Movement credit | Momentum | Body XP |
+|---------|--------|-----------------|----------|---------|
+| `none` | Не было | — | — | — |
+| `light` | Лёгкая уборка / короткая нагрузка | `partial` | +1 | +10 |
+| `medium` | Косил, собирал, 1–4 ч | может закрыть `minimum_held` | +2 | +25 |
+| `heavy` | Сварка, таскал материалы, 5–6+ ч | `minimum_held` / `strong` | +3 | +45 (+12 за 6+) |
+
+- Не считать точные калории.
+- Шаговый квест остаётся отдельным; общий зачёт движения может быть удержан через PA.
+- Тяжёлая нагрузка снижает resource score и предлагает восстановление.
+- Диванный Магнит не выбирается, если medium/heavy PA удержала движение.
+
+---
+
 ## Momentum
 
 **Engine:** `momentumEngine.ts`  

@@ -20,6 +20,13 @@ export function hasAnyDailyData(entry: DailyEntry | undefined | null): boolean {
   if (entry.energyLevel !== null && entry.energyLevel !== undefined) return true;
   if (entry.sleepQuality !== null && entry.sleepQuality !== undefined) return true;
   if (entry.cognitiveBreaks !== null && entry.cognitiveBreaks !== undefined) return true;
+  if (
+    entry.physicalActivityLevel === 'light' ||
+    entry.physicalActivityLevel === 'medium' ||
+    entry.physicalActivityLevel === 'heavy'
+  ) {
+    return true;
+  }
   const mode = entry.dayMode;
   if (mode !== undefined && mode !== 'normal') return true;
   if (entry.customCompletions && Object.values(entry.customCompletions).some(Boolean)) {

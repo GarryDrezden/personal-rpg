@@ -4,7 +4,7 @@ export const SKILLS: SkillDefinition[] = [
   {
     id: 'body',
     title: 'Тело',
-    description: 'Шаги, зал и зарядка',
+    description: 'Шаги, зал, зарядка и физическая активность',
     icon: '💪',
     colorClass: 'text-red-600',
     gradientClass: 'from-red-500/20 to-orange-100',
@@ -69,6 +69,11 @@ export const SKILL_XP_AWARDS = {
   recoveryControl: 10,
   gym: 40,
   morningExercise: 20,
+  /** Опыт за физическую активность (не калорийный калькулятор) */
+  physicalActivityLight: 10,
+  physicalActivityMedium: 25,
+  physicalActivityHeavy: 45,
+  physicalActivityDuration6hPlus: 12,
   caloriesLogged: 10,
   caloriesOk: 40,
   weightLogged: 15,
@@ -87,7 +92,7 @@ export const SKILL_XP_AWARDS = {
 } as const;
 
 export const SKILL_LEVEL_HOW_TO: { skill: string; actions: string }[] = [
-  { skill: 'Тело', actions: 'шаги, зал, зарядка' },
+  { skill: 'Тело', actions: 'шаги, зал, зарядка, физическая активность' },
   { skill: 'Контроль', actions: 'калории и замеры' },
   { skill: 'Ясность', actions: 'без алкоголя и дневник' },
   { skill: 'Быт', actions: 'готовка и ремонт' },

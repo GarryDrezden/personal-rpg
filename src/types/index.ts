@@ -9,8 +9,16 @@ export type SleepQuality = 'poor' | 'ok' | 'good';
 export type CognitiveBreakLevel = 'none' | 'small' | 'good' | 'deep';
 
 export type { NutritionLevel, NutritionStatus, NutritionTrackingMode } from './nutrition';
+export type {
+  PhysicalActivityLevel,
+  PhysicalActivityDuration,
+} from './physicalActivity';
 
 import type { NutritionLevel, NutritionTrackingMode } from './nutrition';
+import type {
+  PhysicalActivityDuration,
+  PhysicalActivityLevel,
+} from './physicalActivity';
 
 export interface DailyEntry {
   id: string;
@@ -40,6 +48,13 @@ export interface DailyEntry {
   cognitiveBreaks?: CognitiveBreakLevel | null;
   /** Опционально — часы сна (расширенный учёт) */
   sleepHours?: number | null;
+  /**
+   * Физическая активность — нагрузка тела вне шагов
+   * (ремонт, участок, сварка, перенос материалов и т.п.)
+   */
+  physicalActivityLevel?: PhysicalActivityLevel | null;
+  physicalActivityDuration?: PhysicalActivityDuration | null;
+  physicalActivityNote?: string | null;
 }
 
 export interface MeasurementEntry {

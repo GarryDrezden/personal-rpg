@@ -4,6 +4,7 @@
 
 ### Added
 
+- Added Physical Activity concept for non-step body load such as repair, yard work, welding, carrying materials and other physically demanding tasks. Qualitative levels (`none`/`light`/`medium`/`heavy`) + duration; movement credit engine; soft Body XP and Momentum; resource cost for heavy load; sofa magnet suppressed when movement held via activity; FAQ + docs.
 - **Revert hero/death art corruption:** restored clean hero stage + death PNGs from before alpha-underpaint; removed heavy drop-shadow/filters that looked like black outline blur; `GAME_ASSET_VERSION` 49.
 - **Companions epic dark-fantasy set:** all 4 (cat, alabai, raven, fox) restyled with glowing amber eyes, orange lightning/energy, runic gear — matching boss-familiar reference; `GAME_ASSET_VERSION` 48.
 - **Hero fully opaque:** solid underpaint for clothing alpha holes + cache bust `GAME_ASSET_VERSION` 47; dashboard torso backlight removed.

@@ -157,6 +157,17 @@ export function calcSkillXpFromDailyEntry(
 
   if (entry.morningExercise) xp.body += a.morningExercise;
 
+  const paLevel = entry.physicalActivityLevel;
+  if (paLevel === 'light') xp.body += a.physicalActivityLight;
+  else if (paLevel === 'medium') xp.body += a.physicalActivityMedium;
+  else if (paLevel === 'heavy') xp.body += a.physicalActivityHeavy;
+  if (
+    (paLevel === 'light' || paLevel === 'medium' || paLevel === 'heavy') &&
+    entry.physicalActivityDuration === '6h_plus'
+  ) {
+    xp.body += a.physicalActivityDuration6hPlus;
+  }
+
 
 
   if (isNutritionTrackingEnabled(settings)) {

@@ -56,6 +56,7 @@ import { shouldShowBodyAbilityHintOnToday } from '../utils/campaignIntegration';
 import { TodayMinimalQuickCard } from '../components/today/TodayMinimalQuickCard';
 import { TodaySaveReactionCard } from '../components/today/TodaySaveReactionCard';
 import { NutritionDayCard } from '../components/nutrition/NutritionDayCard';
+import { PhysicalActivityDayCard } from '../components/today/PhysicalActivityDayCard';
 import { NutritionRecoverySuggestionCard } from '../components/nutrition/NutritionRecoverySuggestionCard';
 import { shouldSuggestNutritionRecovery, isNutritionTrackingEnabled } from '../utils/nutritionEngine';
 
@@ -631,6 +632,8 @@ export function TodayPage() {
         date={selectedDate}
         onPatch={patch}
       />
+
+      <PhysicalActivityDayCard entry={entry} settings={settings} onPatch={patch} />
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">

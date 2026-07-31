@@ -26,6 +26,12 @@ import {
 } from './nutritionEngine';
 import { normalizeSleepQuality } from './resourceEngine';
 import {
+  getPhysicalActivityLevel,
+  getMovementCredit,
+  hasMarkedPhysicalActivity,
+} from './movementCreditEngine';
+import { PHYSICAL_ACTIVITY_MOMENTUM } from '../constants/physicalActivity';
+import {
   getDayMode,
   isStepsExcellentDone,
   isStepsMinimumDone,
@@ -98,8 +104,10 @@ function countConsecutiveDays(
   return count;
 }
 
-function isLowMovement(entry: DailyEntry | null): boolean {
+function isLowMovement(entry: DailyEntry | null, settings?: AppSettings): boolean {
   if (!entry || !hasAnyDailyData(entry)) return false;
+  if (settings && getMovementCredit(entry, settings).holdsMinimumMovement) return false;
+  if (hasMarkedPhysicalActivity(entry)) return false;
   if (entry.steps === null || entry.steps === undefined) return true;
   return entry.steps < 3000;
 }
@@ -150,17 +158,45 @@ function buildDailyFactors(
   }
 
   const steps = entry!.steps;
+  const movement = getMovementCredit(entry!, settings);
   if (isStepsExcellentDone(steps, settings, date)) {
     factors.push(factor('steps_excellent', 'Отличные шаги', 8));
   } else if (isStepsNormalDone(steps, settings, date)) {
     factors.push(factor('steps_normal', 'Норма шагов', 6));
   } else if (isStepsMinimumDone(steps, settings, date)) {
     factors.push(factor('steps_minimum', 'Минимум шагов', 4));
-  } else if (steps !== null && steps !== undefined && steps < 3000) {
+  } else if (
+    steps !== null &&
+    steps !== undefined &&
+    steps < 3000 &&
+    !movement.holdsMinimumMovement
+  ) {
     factors.push(factor('steps_low', 'Очень мало движения', -5));
   }
 
-  const lowMoveStreak = countConsecutiveDays(date, allEntries, isLowMovement);
+  const paLevel = getPhysicalActivityLevel(entry!);
+  if (paLevel === 'light' || paLevel === 'medium' || paLevel === 'heavy') {
+    const delta = PHYSICAL_ACTIVITY_MOMENTUM[paLevel];
+    const title =
+      paLevel === 'heavy'
+        ? 'Физическая активность: тяжёлая'
+        : paLevel === 'medium'
+          ? 'Физическая активность: средняя'
+          : 'Физическая активность: лёгкая';
+    factors.push(
+      factor(`physical_activity_${paLevel}`, title, delta, {
+        source: 'physical_activity',
+        description:
+          movement.holdsMinimumMovement && !isStepsMinimumDone(steps, settings, date)
+            ? 'Маршрут удержан через физическую активность.'
+            : 'Мягкий бонус за нагрузку тела вне шагов.',
+      }),
+    );
+  }
+
+  const lowMoveStreak = countConsecutiveDays(date, allEntries, (e) =>
+    isLowMovement(e, settings),
+  );
   if (lowMoveStreak >= 3) {
     factors.push(factor('low_movement_streak', 'Несколько дней без движения', -10));
   }

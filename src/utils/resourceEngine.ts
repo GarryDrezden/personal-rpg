@@ -5,6 +5,10 @@ import type {
   SleepQuality,
 } from '../types';
 import { getDayMode } from './stepsEngine';
+import {
+  getPhysicalActivityLevel,
+  isHeavyPhysicalActivity,
+} from './movementCreditEngine';
 
 export type ResourceLevel = 'low' | 'medium' | 'high';
 
@@ -107,12 +111,39 @@ function levelFromScore(score: number): ResourceLevel {
   return 'low';
 }
 
+function scorePhysicalLoad(entry: DailyEntry): { points: number; reason?: string } {
+  const level = getPhysicalActivityLevel(entry);
+  const longDay = entry.physicalActivityDuration === '6h_plus';
+  if (level === 'heavy') {
+    return {
+      points: longDay ? -18 : -12,
+      reason: longDay
+        ? 'Тело сегодня работало тяжело. Движение удержано, но ресурс просел'
+        : 'Тяжёлая физическая активность — расход ресурса',
+    };
+  }
+  if (level === 'medium') {
+    return {
+      points: longDay ? -6 : -3,
+      reason: 'Средняя физическая активность — лёгкий расход ресурса',
+    };
+  }
+  return { points: 0 };
+}
+
 function buildSuggestion(level: ResourceLevel, entry: DailyEntry): string | undefined {
   const mode = getDayMode(entry.dayMode);
   if (mode === 'recovery' || mode === 'minimal') {
     if (hasRestMarker(entry)) {
       return 'Маршрут удержан. Восстановление сегодня — уже ход вперёд.';
     }
+  }
+
+  if (isHeavyPhysicalActivity(entry)) {
+    if (entry.physicalActivityDuration === '6h_plus') {
+      return 'После тяжёлой физической активности лучший ход — сон, еда по плану и восстановление.';
+    }
+    return 'Тяжёлая нагрузка засчитана. Теперь важно восстановить ресурс.';
   }
 
   if (level === 'low') {
@@ -134,13 +165,20 @@ export function getDailyResource(entry: DailyEntry): DailyResourceResult {
   const sleepScore = scoreSleep(sleep);
   const cognitiveScore = scoreCognitiveBreaks(cognitive);
   const energyScore = scoreEnergy(entry.energyLevel);
+  const loadScore = scorePhysicalLoad(entry);
 
-  const score = sleepScore.points + cognitiveScore.points + energyScore.points;
+  const score = Math.max(
+    0,
+    sleepScore.points + cognitiveScore.points + energyScore.points + loadScore.points,
+  );
   const level = levelFromScore(score);
 
-  const reasons = [sleepScore.reason, cognitiveScore.reason, energyScore.reason].filter(
-    Boolean,
-  ) as string[];
+  const reasons = [
+    sleepScore.reason,
+    cognitiveScore.reason,
+    energyScore.reason,
+    loadScore.reason,
+  ].filter(Boolean) as string[];
 
   return {
     score,

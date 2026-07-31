@@ -23,11 +23,18 @@ export function getOrCreateDailyMobForEntry(
   entry: DailyEntry,
   settings: AppSettings,
 ): MobId {
+  const resolved = resolveDailyMobForEntry(entry, settings);
   const existing = getDailyMobId(date);
+
+  // Soft correction: never keep sofa_magnet when movement was held via body load
+  if (existing === 'sofa_magnet' && resolved !== 'sofa_magnet') {
+    setDailyMobId(date, resolved);
+    return resolved;
+  }
   if (existing) return existing;
-  const mobId = resolveDailyMobForEntry(entry, settings);
-  setDailyMobId(date, mobId);
-  return mobId;
+
+  setDailyMobId(date, resolved);
+  return resolved;
 }
 
 export function getMobWeaknessText(

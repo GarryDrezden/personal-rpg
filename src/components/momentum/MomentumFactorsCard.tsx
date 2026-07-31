@@ -119,12 +119,18 @@ export function MomentumFactorsCard({ result }: MomentumFactorsCardProps) {
         </div>
       )}
 
-      <div className="mt-4 border-t border-[var(--app-border)] pt-3">
+      <div className="mt-4 border-t border-[var(--app-border)] pt-3 space-y-1">
         <p className="text-sm text-[var(--app-text-muted)]">
-          Итог дня:{' '}
+          Инерция сейчас:{' '}
           <span className="font-semibold text-[var(--app-text)]">
-            {formatDelta(result.endValue)}
+            {formatDelta(Math.round(result.endValue))}
           </span>
+        </p>
+        <p className="text-xs text-[var(--app-text-muted)]">
+          Было {formatDelta(Math.round(result.startValue))} → после затухания{' '}
+          {formatDelta(Math.round(result.decayValue))} → вклад{' '}
+          {formatDelta(result.dailyDelta)} → сейчас{' '}
+          {formatDelta(Math.round(result.endValue))}
         </p>
       </div>
     </Card>

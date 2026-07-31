@@ -158,3 +158,12 @@ All `/growth/:tab` siblings share dark violet/gold panel language via `src/compo
 ## FAQ
 
 Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Codex main view.
+
+## Physical Activity UX Rules
+
+- Do not treat low steps as an empty day if physical activity was marked.
+- Do not convert physical activity into exact calories.
+- Use qualitative levels: none, light, medium, heavy.
+- Heavy activity can hold movement but may lower resource.
+- Explain the result in supportive language.
+- Distinguish step quest vs overall movement credit.

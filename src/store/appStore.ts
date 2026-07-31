@@ -43,6 +43,9 @@ function emptyDaily(date: string): DailyEntry {
     energyLevel: null,
     cognitiveBreaks: null,
     nutritionLevel: null,
+    physicalActivityLevel: null,
+    physicalActivityDuration: null,
+    physicalActivityNote: null,
   };
 }
 

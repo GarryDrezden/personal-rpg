@@ -5,6 +5,10 @@ import { SKILL_XP_AWARDS } from '../constants/skills';
 import { resolveHabitConfig } from './habitConfig';
 import { getWeeklySettingsForDate } from './points';
 import { getDayMode, getStepsStatus } from './stepsEngine';
+import {
+  formatPhysicalActivitySummary,
+  getMovementCredit,
+} from './movementCreditEngine';
 import { weekDays, weekStart } from './dates';
 import {
   getEffectiveCalorieLimit,
@@ -105,12 +109,29 @@ export function getDailyQuests(params: {
     }
   }
 
-  const stepsDescription =
+  const movement = entry ? getMovementCredit(entry, settings) : null;
+  const paSummary = entry ? formatPhysicalActivitySummary(entry) : null;
+
+  let stepsDescription =
     dayMode !== 'normal'
       ? `${stepsInfo.description || stepsInfo.title} · облегчённый порог`
       : stepsInfo.stepsToNextTarget && stepsInfo.stepsToNextTarget > 0
         ? `${stepsInfo.title}. До ${stepsInfo.nextTargetLabel} осталось ${stepsInfo.stepsToNextTarget.toLocaleString('ru')}.`
         : stepsInfo.description || stepsInfo.title;
+
+  if (
+    movement?.holdsMinimumMovement &&
+    movement.sources.includes('physical_activity') &&
+    stepsStatus !== 'done'
+  ) {
+    const stepsPart =
+      entry?.steps != null
+        ? `Шаги: ${entry.steps.toLocaleString('ru')} · шаговый квест отдельно`
+        : 'Шаговый квест отдельно';
+    stepsDescription = `Движение дня удержано через физическую активность. ${stepsPart}${
+      paSummary ? `. ${paSummary}` : ''
+    }`;
+  }
 
   const stepsSkillXp =
     stepsInfo.status === 'excellent'
@@ -231,6 +252,9 @@ export function isDayEmpty(entry: DailyEntry | undefined, settings?: AppSettings
     !entry.repair &&
     !entry.plants &&
     !entry.hobby &&
+    entry.physicalActivityLevel !== 'light' &&
+    entry.physicalActivityLevel !== 'medium' &&
+    entry.physicalActivityLevel !== 'heavy' &&
     !hasCustom
   );
 }

@@ -28,6 +28,7 @@ export type MomentumFactorSource =
   | 'journal'
   | 'energy'
   | 'rest'
+  | 'physical_activity'
   | 'other';
 
 export type MomentumDailyFactor = {

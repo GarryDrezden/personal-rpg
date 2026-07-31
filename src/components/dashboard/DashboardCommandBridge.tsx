@@ -24,6 +24,7 @@ import { DashboardPathEmptyState } from './DashboardPathEmptyState';
 import { DashboardPrimaryCta } from './DashboardPrimaryCta';
 import { DailyQuestsCompact } from './DailyQuestsCompact';
 import { DashboardResourceCompact } from '../rest/DashboardResourceCompact';
+import { MovementCreditDashboardCard } from './MovementCreditDashboardCard';
 import { RecoveryCompactPanel } from './RecoveryCompactPanel';
 
 const HERO_HEIGHT = '22rem';
@@ -231,6 +232,12 @@ export function DashboardCommandBridge({
         >
           <DashboardPrimaryCta action={primaryAction} />
           <DashboardResourceCompact entry={todayEntry} />
+          <MovementCreditDashboardCard
+            entry={todayEntry}
+            settings={settings}
+            dailyEntries={dailyEntries}
+            today={today}
+          />
           {showMomentumHelp ? (
             <RecoveryCompactPanel
               variant="momentum"

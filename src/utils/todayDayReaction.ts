@@ -3,6 +3,11 @@ import { getDayMode } from './stepsEngine';
 import { getDailyResource } from './resourceEngine';
 import { isNutritionLogged } from './nutritionEngine';
 import { isDayEmpty } from './questEngine';
+import {
+  getMovementCredit,
+  hasMarkedPhysicalActivity,
+  isHeavyPhysicalActivity,
+} from './movementCreditEngine';
 
 export type TodaySaveReaction = {
   headline: string;
@@ -20,11 +25,13 @@ export function getTodaySaveReaction(params: {
   const { entry, settings, questDone, questTotal, points } = params;
   const mode = getDayMode(entry.dayMode);
   const resource = getDailyResource(entry);
+  const movement = getMovementCredit(entry, settings);
 
   if (mode === 'minimal') {
     return {
       headline: 'Маршрут удержан.',
-      detail: 'Минимальный день — валидный ход. День не обязан быть идеальным, он должен быть сохранён.',
+      detail:
+        'Минимальный день — валидный ход. День не обязан быть идеальным, он должен быть сохранён.',
     };
   }
 
@@ -32,6 +39,21 @@ export function getTodaySaveReaction(params: {
     return {
       headline: 'Ядро стабилизируется.',
       detail: 'День восстановления сохранён. Персонаж продолжает путь — можно идти мягко.',
+    };
+  }
+
+  if (isHeavyPhysicalActivity(entry) && movement.holdsMinimumMovement) {
+    return {
+      headline: 'Тело сегодня работало.',
+      detail:
+        'Маршрут движения удержан через физическую активность. Движение засчитано — теперь защити ресурс.',
+    };
+  }
+
+  if (hasMarkedPhysicalActivity(entry) && movement.holdsMinimumMovement) {
+    return {
+      headline: 'Движение удержано.',
+      detail: 'Шагов было мало, но тело сегодня работало. День не пустой.',
     };
   }
 
@@ -73,7 +95,8 @@ export function getTodaySaveReaction(params: {
   if (isDayEmpty(entry, settings)) {
     return {
       headline: 'День сохранён.',
-      detail: 'Маршрут ждёт отметок — но уже зафиксирован. Можно вернуться и дополнить позже.',
+      detail:
+        'Маршрут ждёт отметок — но уже зафиксирован. Можно вернуться и дополнить позже.',
     };
   }
 

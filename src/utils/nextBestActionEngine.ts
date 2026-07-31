@@ -17,6 +17,10 @@ import { getStepsThresholds, getDayMode } from './stepsEngine';
 import { DEFAULT_STEPS_THRESHOLDS } from '../constants/steps';
 import { MINIMAL_DAY_STEPS } from './recoveryEngine';
 import { shouldSuggestRecoveryFromResource } from './resourceEngine';
+import {
+  getMovementCredit,
+  isHeavyPhysicalActivity,
+} from './movementCreditEngine';
 
 function themedAction(
   actionId: string,
@@ -105,6 +109,24 @@ export function getNextBestAction(params: {
   const entry = todayEntry ?? dailyEntries.find((e) => e.date === today) ?? null;
   const dayMode = entry ? getDayMode(entry.dayMode) : 'normal';
   const momentum = momentumSummary.currentValue;
+
+  if (entry && isHeavyPhysicalActivity(entry) && dayMode === 'normal') {
+    const credit = getMovementCredit(entry, settings);
+    return {
+      id: 'recover_after_physical_load',
+      priority: 'recovery',
+      title: credit.holdsMinimumMovement
+        ? 'Маршрут удержан. Теперь защити ресурс'
+        : 'Сегодня лучший ход — восстановиться',
+      description:
+        entry.physicalActivityDuration === '6h_plus'
+          ? 'После тяжёлой физической активности лучший ход — сон, еда по плану и восстановление.'
+          : 'Тяжёлая нагрузка засчитана. Теперь важно восстановить ресурс.',
+      actionLabel: 'Открыть день',
+      targetRoute: '/today',
+      icon: '🔋',
+    };
+  }
 
   if (
     entry &&
@@ -200,17 +222,31 @@ export function getNextBestAction(params: {
   const minimum =
     thresholds.minimum ?? settings.defaultStepsMinimum ?? DEFAULT_STEPS_THRESHOLDS.minimum;
   const steps = entry?.steps ?? 0;
+  const movement = entry ? getMovementCredit(entry, settings) : null;
 
-  if (steps < minimum) {
+  if (steps < minimum && !(movement?.holdsMinimumMovement)) {
     const remaining = minimum - steps;
     return {
       id: 'reach_steps_minimum',
       priority: 'steps',
       title: 'Добрать минимум шагов',
-      description: `Минимум движения удерживает базу дня. Осталось до ${minimum.toLocaleString('ru')} шагов: ${remaining.toLocaleString('ru')}.`,
+      description: `Минимум движения удерживает базу дня. Осталось до ${minimum.toLocaleString('ru')} шагов: ${remaining.toLocaleString('ru')}. Если тело уже работало — отметь физическую активность.`,
       actionLabel: 'Открыть день',
       targetRoute: '/today',
       icon: '👟',
+    };
+  }
+
+  if (steps < minimum && movement?.holdsMinimumMovement) {
+    return {
+      id: 'movement_held_protect_resource',
+      priority: 'steps',
+      title: 'Движение удержано',
+      description:
+        'Маршрут движения удержан через физическую активность. Шаговый квест может остаться открытым — сейчас важнее защитить ресурс.',
+      actionLabel: 'Открыть день',
+      targetRoute: '/today',
+      icon: '💪',
     };
   }
 

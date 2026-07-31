@@ -29,4 +29,35 @@ describe('resolveDailyMobForEntry', () => {
       ),
     ).toBe('sofa_magnet');
   });
+
+  it('does not pick sofa_magnet when medium physical activity holds movement', () => {
+    const mob = resolveDailyMobForEntry(
+      entry({
+        steps: 0,
+        dayMode: 'normal',
+        energyLevel: 4,
+        journal: true,
+        physicalActivityLevel: 'medium',
+        physicalActivityDuration: '3_6h',
+      }),
+      DEFAULT_APP_SETTINGS,
+    );
+    expect(mob).not.toBe('sofa_magnet');
+  });
+
+  it('picks fog after heavy physical activity with low energy', () => {
+    expect(
+      resolveDailyMobForEntry(
+        entry({
+          steps: 2000,
+          dayMode: 'normal',
+          energyLevel: 2,
+          physicalActivityLevel: 'heavy',
+          physicalActivityDuration: '6h_plus',
+          journal: true,
+        }),
+        DEFAULT_APP_SETTINGS,
+      ),
+    ).toBe('fog_of_fatigue');
+  });
 });
