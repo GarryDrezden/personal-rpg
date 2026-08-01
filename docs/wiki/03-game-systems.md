@@ -144,6 +144,22 @@ Cozy never falls back to Dark Fantasy art by default — missing cozy art uses s
 
 **Presentation note:** Cozy Home is not a resource table; it is a visual meta-progression for restoring the home (hero scene, warm resource chips, zone cards as rooms/yard/garden).
 
+## Cozy Reward Feedback
+
+After saving a day, the app shows a compact reward feedback card when Cozy Home resources were granted (`CozyRewardFeedbackCard` inside `TodaySaveReactionCard`).
+
+Purpose:
+- connect daily body-care actions with home restoration;
+- make the reward moment visible;
+- avoid turning Cozy Home into a separate chore.
+
+Rules:
+- rewards are shown after save when `cozyRewardsGranted` was just written;
+- resources are not granted more than once per `DailyEntry` (`cozyRewardsGranted` / previousEntry guard);
+- MVP does not recalculate reward diffs on later edits of the same day;
+- feedback is supportive and short;
+- CTA leads to `/home`; upgrades are not automatic.
+
 **Ресурсы:** Уют (`comfort`), Материалы (`materials`), Сад (`garden`), Ясность (`clarity`).
 
 **Зоны (0–3):** крыльцо, прихожая, кухня, спальня, двор, сад, мастерская, уголок спутника (всего 24 улучшения).

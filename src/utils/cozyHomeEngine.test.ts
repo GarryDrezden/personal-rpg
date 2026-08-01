@@ -5,10 +5,16 @@ import {
   applyCozyRewardsOnSave,
   canUpgradeCozyZone,
   DEFAULT_COZY_HOME_STATE,
+  getCozyUpgradeHintLine,
+  getNextCozyHomeUpgrade,
   normalizeCozyHomeState,
   upgradeCozyZone,
 } from './cozyHomeEngine';
-import { getCozyRewardsForEntry } from './cozyHomeRewardsEngine';
+import {
+  getCozyRewardsForEntry,
+  pickCozyRewardReasons,
+  sumCozyGrantedResources,
+} from './cozyHomeRewardsEngine';
 import { normalizeAppSettings } from './settingsNormalize';
 
 function baseEntry(partial: Partial<DailyEntry> = {}): DailyEntry {
@@ -158,5 +164,44 @@ describe('upgradeCozyZone', () => {
     const next = upgradeCozyZone(home, 'porch');
     expect(next.zones.porch.level).toBe(0);
     expect(canUpgradeCozyZone(home, 'porch').missingResources?.materials).toBe(2);
+  });
+});
+
+describe('getNextCozyHomeUpgrade', () => {
+  it('returns affordable upgrade when resources are enough', () => {
+    const home = normalizeCozyHomeState({
+      ...DEFAULT_COZY_HOME_STATE,
+      resources: { comfort: 0, materials: 2, garden: 0, clarity: 0 },
+    });
+    const next = getNextCozyHomeUpgrade(home);
+    expect(next?.canUpgrade).toBe(true);
+    expect(next?.zoneId).toBe('porch');
+    expect(getCozyUpgradeHintLine(home)).toMatch(/Можно улучшить: Крыльцо/i);
+  });
+
+  it('returns closest unfinished zone when nothing is affordable', () => {
+    const home = DEFAULT_COZY_HOME_STATE;
+    const next = getNextCozyHomeUpgrade(home);
+    expect(next?.canUpgrade).toBe(false);
+    expect(next?.zoneTitle).toBeTruthy();
+    expect(getCozyUpgradeHintLine(home)).toMatch(/стало ближе/i);
+  });
+});
+
+describe('cozy reward helpers', () => {
+  it('sums granted resources and picks unique reasons', () => {
+    expect(sumCozyGrantedResources({ comfort: 2, materials: 1 })).toBe(3);
+    expect(
+      pickCozyRewardReasons(
+        [
+          'Питание отмечено — в доме стало чуть больше порядка.',
+          'Питание отмечено — в доме стало чуть больше порядка.',
+          'Сон восстановил уют.',
+          'Дневник добавил ясности.',
+          'Ещё одна причина',
+        ],
+        3,
+      ),
+    ).toHaveLength(3);
   });
 });

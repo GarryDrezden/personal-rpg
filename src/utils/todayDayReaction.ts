@@ -1,4 +1,5 @@
 import type { AppSettings, DailyEntry } from '../types';
+import type { CozyRewardsGranted } from '../types/cozyHome';
 import { getDayMode } from './stepsEngine';
 import { getDailyResource } from './resourceEngine';
 import { isNutritionLogged } from './nutritionEngine';
@@ -8,14 +9,17 @@ import {
   hasMarkedPhysicalActivity,
   isHeavyPhysicalActivity,
 } from './movementCreditEngine';
-import { getCozyRewardSummaryLine } from './cozyHomeRewardsEngine';
+import { sumCozyGrantedResources } from './cozyHomeRewardsEngine';
 
 export type TodaySaveReaction = {
   headline: string;
   detail: string;
   baseLine?: string;
-  /** Cozy Home: короткая тёплая реакция на начисленные ресурсы */
-  cozyLine?: string;
+  /**
+   * Structured Cozy Home feedback for the save moment.
+   * Set only when resources were just granted (not on reload re-display).
+   */
+  cozyFeedback?: CozyRewardsGranted | null;
 };
 
 export function getTodaySaveReaction(params: {
@@ -30,14 +34,11 @@ export function getTodaySaveReaction(params: {
   const resource = getDailyResource(entry);
   const movement = getMovementCredit(entry, settings);
 
-  const cozyLine = getCozyRewardSummaryLine(entry.cozyRewardsGranted ?? null) ?? undefined;
-
   if (mode === 'minimal') {
     return {
       headline: 'Маршрут удержан.',
       detail:
         'Минимальный день — валидный ход. День не обязан быть идеальным, он должен быть сохранён.',
-      cozyLine,
     };
   }
 
@@ -45,7 +46,6 @@ export function getTodaySaveReaction(params: {
     return {
       headline: 'Ядро стабилизируется.',
       detail: 'День восстановления сохранён. Персонаж продолжает путь — можно идти мягко.',
-      cozyLine,
     };
   }
 
@@ -54,7 +54,6 @@ export function getTodaySaveReaction(params: {
       headline: 'Тело сегодня работало.',
       detail:
         'Маршрут движения удержан через физическую активность. Движение засчитано — теперь защити ресурс.',
-      cozyLine,
     };
   }
 
@@ -62,7 +61,6 @@ export function getTodaySaveReaction(params: {
     return {
       headline: 'Движение удержано.',
       detail: 'Шагов было мало, но тело сегодня работало. День не пустой.',
-      cozyLine,
     };
   }
 
@@ -70,7 +68,6 @@ export function getTodaySaveReaction(params: {
     return {
       headline: 'Движение зафиксировано.',
       detail: 'Шаги отмечены — путь продолжается. Завтра можно вернуться снова.',
-      cozyLine,
     };
   }
 
@@ -78,7 +75,6 @@ export function getTodaySaveReaction(params: {
     return {
       headline: 'Ресурс просел — маршрут жив.',
       detail: 'Туман усталости ослаб, когда день отмечен. Первый шаг сохранён.',
-      cozyLine,
     };
   }
 
@@ -86,7 +82,6 @@ export function getTodaySaveReaction(params: {
     return {
       headline: 'Контроль дня отмечен.',
       detail: 'Маршрут удержан. Питание в фокусе — персонаж сделал шаг вперёд.',
-      cozyLine,
     };
   }
 
@@ -94,7 +89,6 @@ export function getTodaySaveReaction(params: {
     return {
       headline: 'Персонаж сделал шаг вперёд.',
       detail: `Маршрут удержан: ${questDone} из ${questTotal} квестов. Ядро стабильно.`,
-      cozyLine,
     };
   }
 
@@ -102,7 +96,6 @@ export function getTodaySaveReaction(params: {
     return {
       headline: 'Маршрут удержан.',
       detail: 'День сохранён — прогресс засчитан. Можно возвращаться завтра без давления.',
-      cozyLine,
     };
   }
 
@@ -111,13 +104,23 @@ export function getTodaySaveReaction(params: {
       headline: 'День сохранён.',
       detail:
         'Маршрут ждёт отметок — но уже зафиксирован. Можно вернуться и дополнить позже.',
-      cozyLine,
     };
   }
 
   return {
     headline: 'Маршрут удержан.',
     detail: 'День сохранён. Не обязан быть идеальным — достаточно, что путь продолжается.',
-    cozyLine,
   };
+}
+
+export function attachCozySaveFeedback(
+  reaction: TodaySaveReaction,
+  rewards: CozyRewardsGranted | null | undefined,
+  justGranted: boolean,
+): TodaySaveReaction {
+  if (!justGranted || !rewards) return { ...reaction, cozyFeedback: null };
+  if (sumCozyGrantedResources(rewards.resources) <= 0) {
+    return { ...reaction, cozyFeedback: null };
+  }
+  return { ...reaction, cozyFeedback: rewards };
 }

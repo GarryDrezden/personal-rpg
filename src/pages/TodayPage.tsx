@@ -50,7 +50,11 @@ import { DailyMobCard } from '../components/game/DailyMobCard';
 import { getOrCreateDailyMobForEntry } from '../game/dailyMobEngine';
 import { useAppTheme } from '../hooks/useAppTheme';
 import { getDailyMobContextLine } from '../utils/todayMobContext';
-import { getTodaySaveReaction, type TodaySaveReaction } from '../utils/todayDayReaction';
+import {
+  attachCozySaveFeedback,
+  getTodaySaveReaction,
+  type TodaySaveReaction,
+} from '../utils/todayDayReaction';
 import { getBaseSaveSparkLine } from '../game/base/baseProgressionEngine';
 import { getBossCampaignSnapshot } from '../game/bosses/bossCampaignEngine';
 import { shouldShowBodyAbilityHintOnToday } from '../utils/campaignIntegration';
@@ -60,11 +64,13 @@ import { NutritionDayCard } from '../components/nutrition/NutritionDayCard';
 import { PhysicalActivityDayCard } from '../components/today/PhysicalActivityDayCard';
 import { NutritionRecoverySuggestionCard } from '../components/nutrition/NutritionRecoverySuggestionCard';
 import { shouldSuggestNutritionRecovery, isNutritionTrackingEnabled } from '../utils/nutritionEngine';
+import { getCozyHomeState } from '../utils/cozyHomeEngine';
 
 export function TodayPage() {
   const { dailyEntries, measurements, settings, updateDaily, deleteDaily, saveSettings } =
     useAppStore();
   const { themeId } = useAppTheme();
+  const cozyHomeState = useMemo(() => getCozyHomeState(settings), [settings]);
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [routeWelcome, setRouteWelcome] = useState(
@@ -102,8 +108,12 @@ export function TodayPage() {
     const found = dailyEntries.find((e) => e.date === selectedDate);
     setEntry(found ?? emptyDaily(selectedDate));
     setDirty(false);
-    setSaveReaction(null);
   }, [selectedDate, dailyEntries]);
+
+  // Clear save feedback only when switching days — not when dailyEntries updates after save.
+  useEffect(() => {
+    setSaveReaction(null);
+  }, [selectedDate]);
 
   const selectDay = useCallback(
     (date: string) => {
@@ -239,7 +249,11 @@ export function TodayPage() {
     const baseLine = getBaseSaveSparkLine(savedEntry, latestSettings);
     const withBase = baseLine ? { ...reaction, baseLine } : reaction;
     setSaveReaction(
-      opts?.cozyJustGranted ? withBase : { ...withBase, cozyLine: undefined },
+      attachCozySaveFeedback(
+        withBase,
+        savedEntry.cozyRewardsGranted ?? null,
+        Boolean(opts?.cozyJustGranted),
+      ),
     );
   };
 
@@ -568,6 +582,8 @@ export function TodayPage() {
       {saveReaction && !dirty ? (
         <TodaySaveReactionCard
           reaction={saveReaction}
+          homeState={cozyHomeState}
+          themeId={themeId}
           onDismiss={() => setSaveReaction(null)}
         />
       ) : null}

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_APP_SETTINGS } from '../constants/defaults';
 import type { DailyEntry } from '../types';
 import { emptyDaily } from '../store/appStore';
-import { getTodaySaveReaction } from './todayDayReaction';
+import { attachCozySaveFeedback, getTodaySaveReaction } from './todayDayReaction';
 
 function entry(partial: Partial<DailyEntry>): DailyEntry {
   return { ...emptyDaily('2026-07-02'), ...partial };
@@ -40,5 +40,29 @@ describe('getTodaySaveReaction', () => {
       points: 30,
     });
     expect(reaction.headline).toBe('Движение зафиксировано.');
+  });
+
+  it('attaches cozy feedback only on first grant with resources', () => {
+    const base = getTodaySaveReaction({
+      entry: entry({ steps: 1000 }),
+      settings: DEFAULT_APP_SETTINGS,
+      questDone: 0,
+      questTotal: 5,
+      points: 10,
+    });
+    const rewards = {
+      resources: { comfort: 1, materials: 2 },
+      grantedAt: '2026-08-01T12:00:00.000Z',
+      reasons: ['Питание отмечено — в доме стало чуть больше порядка.'],
+    };
+    expect(attachCozySaveFeedback(base, rewards, true).cozyFeedback).toEqual(rewards);
+    expect(attachCozySaveFeedback(base, rewards, false).cozyFeedback).toBeNull();
+    expect(
+      attachCozySaveFeedback(
+        base,
+        { resources: {}, grantedAt: '2026-08-01T12:00:00.000Z' },
+        true,
+      ).cozyFeedback,
+    ).toBeNull();
   });
 });

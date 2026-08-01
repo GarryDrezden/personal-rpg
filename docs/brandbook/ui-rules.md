@@ -192,6 +192,16 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Keep the loop simple: daily care → resources → zone upgrade → home feels warmer.
 - No house editor, drag-and-drop, or infinite decor catalog in v1.
 
+## Cozy Reward Feedback UX Rules
+
+- Show what the home received from the day.
+- Keep it compact — inside or under Today save reaction, not a modal.
+- Do not use modal reward spam.
+- Do not imply perfect days are required.
+- Mention minimal/recovery progress warmly.
+- Always protect idempotency: showing feedback must not grant resources again.
+- CTA opens `/home`; never auto-spend resources.
+
 ## Cozy Home Visual Rules
 
 - **Дом** (`/home`) — главный cozy meta-screen.

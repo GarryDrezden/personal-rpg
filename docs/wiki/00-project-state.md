@@ -68,7 +68,7 @@
 - **Today** (`/today`) — ввод дня, квесты, nutrition modes, **физическая активность**; переключение прошлой недели для дополнения записей; начисление cozy-ресурсов дома при первом сохранении дня
 - **Dashboard** (`/`) — компактная панель: герой, CTA, ресурс дня, зачёт движения (если PA отмечена), квесты, recovery, блок **Cozy Home**
 - **Week** (`/week`) — недельный босс, календарь, бонусы; навигация по прошлым неделям
-- **Дом** (`/home`) — **Cozy Home v1**: ресурсы Уют/Материалы/Сад/Ясность, 8 зон дома L0–3, улучшения
+- **Дом** (`/home`) — **Cozy Home v1**: ресурсы Уют/Материалы/Сад/Ясность, 8 зон дома L0–3, улучшения; после сохранения дня — compact Cozy Reward Feedback
 - **Growth hub** (`/growth/:tab`) — skills, abilities, camp, rewards, achievements, trials; **Growth Hub integration QA (2026-06)** — unified hero panels, tab chrome, trials/achievements copy aligned across tabs
 - **Measurements** (`/measurements`) — замеры, графики; можно редактировать дату и значения в истории
 - **Journey map** (`/journey`) — вертикальная хроника пути (v3): 9 глав + hero stages (20 стадий трансформации)
@@ -285,7 +285,7 @@ Asset Registry 2.0 готов: manifest, backlog, naming, placeholders зафи�
 
 ## Следующий приоритет
 
-Cozy Home v1 + Cozy theme branch layer shipped (registry, placeholders, terminology). Next cozy work: final house/garden illustrations replacing SVG placeholders. Full DF boss art set S01–S13 and season rewards already in-app. Optional: Dashboard declutter or chapter/act boss art (P2). HTTPS — when hosting cert is ready.
+Cozy Home v1 + reward feedback after Today save + Cozy theme branch layer shipped. Next cozy work: final house/garden illustrations replacing SVG placeholders. Full DF boss art set S01–S13 and season rewards already in-app. Optional: Dashboard declutter or chapter/act boss art (P2). HTTPS — when hosting cert is ready.
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

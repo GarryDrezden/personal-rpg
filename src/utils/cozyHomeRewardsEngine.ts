@@ -110,3 +110,41 @@ export function getCozyRewardSummaryLine(granted: {
   if (!granted?.reasons?.length) return null;
   return granted.reasons[0] ?? null;
 }
+
+export function sumCozyGrantedResources(
+  resources: Partial<Record<CozyResourceId, number>> | undefined,
+): number {
+  if (!resources) return 0;
+  let total = 0;
+  for (const n of Object.values(resources)) {
+    total += n ?? 0;
+  }
+  return total;
+}
+
+/** Prefer short human reasons already produced by the engine; cap for UI. */
+export function pickCozyRewardReasons(
+  reasons: string[] | undefined,
+  limit = 3,
+): string[] {
+  if (!reasons?.length) return [];
+  const unique: string[] = [];
+  for (const reason of reasons) {
+    const trimmed = reason.trim();
+    if (!trimmed) continue;
+    if (unique.includes(trimmed)) continue;
+    unique.push(trimmed);
+    if (unique.length >= limit) break;
+  }
+  return unique;
+}
+
+export function listGrantedCozyResources(
+  resources: Partial<Record<CozyResourceId, number>> | undefined,
+): { id: CozyResourceId; amount: number }[] {
+  if (!resources) return [];
+  const order: CozyResourceId[] = ['comfort', 'materials', 'garden', 'clarity'];
+  return order
+    .filter((id) => (resources[id] ?? 0) > 0)
+    .map((id) => ({ id, amount: resources[id] ?? 0 }));
+}
