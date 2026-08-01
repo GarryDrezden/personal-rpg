@@ -316,12 +316,6 @@ export function DashboardPage() {
       data-testid="dashboard-page"
       className={`space-y-3 pb-2${themeId === 'cozy' ? ' cozy-dashboard' : ''}`}
     >
-      {themeId === 'cozy' ? (
-        <>
-          <div className="cozy-dashboard__corner cozy-dashboard__corner--tr" aria-hidden />
-          <div className="cozy-dashboard__corner cozy-dashboard__corner--bl" aria-hidden />
-        </>
-      ) : null}
       {showStartRouteBanner ? (
         <div className="rounded-xl border border-[var(--app-gold)]/25 bg-[var(--app-card)]/70 px-4 py-3 text-sm text-[var(--app-text-muted)]">
           Кампания ждёт первого ритма —{' '}

@@ -32,7 +32,7 @@ export function AppShell() {
             journeyPage
               ? 'w-full px-4 py-6 md:px-6'
               : dashboardPage
-                ? `mx-auto max-w-7xl px-4 py-6${isCozy ? ' cozy-main__inner' : ''}`
+                ? 'mx-auto max-w-7xl px-4 py-6'
                 : 'mx-auto max-w-6xl px-4 py-6'
           }
         >
