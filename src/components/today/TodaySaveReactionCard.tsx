@@ -20,6 +20,9 @@ export function TodaySaveReactionCard({ reaction, onDismiss }: TodaySaveReaction
       {reaction.baseLine ? (
         <p className="mt-2 text-xs font-medium text-[var(--app-gold)]">{reaction.baseLine}</p>
       ) : null}
+      {reaction.cozyLine ? (
+        <p className="mt-2 text-xs text-[var(--app-text-muted)]">{reaction.cozyLine}</p>
+      ) : null}
       {onDismiss ? (
         <button
           type="button"

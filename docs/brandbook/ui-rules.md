@@ -169,6 +169,18 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Explain the result in supportive language.
 - Distinguish step quest vs overall movement credit.
 
+## Cozy Home UX Rules
+
+- Cozy Home is not a chore list.
+- Home upgrades should feel like warm visual rewards for body care.
+- Do not punish the player for slow progress.
+- Minimal days can still bring small home progress.
+- Do not require perfect days for cozy progression.
+- Use warm domestic language: дом, уют, сад, двор, свет, порядок, восстановление, ремонт.
+- Avoid aggressive battle language in Cozy Home.
+- Keep the loop simple: daily care → resources → zone upgrade → home feels warmer.
+- No house editor, drag-and-drop, or infinite decor catalog in v1.
+
 ## Theme / shell UX Rules
 
 - Themes are not just colors: each can have its own metaphor, progression fantasy, assets and copy tone.
@@ -180,8 +192,8 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Cozy / Village Home Recovery: calm, warm, human — **not** battle-first; the player brings the world back to life.
 - Metaphor to keep: the player restores the body; the hero restores the home.
 - Progress fantasy: house repair → rooms → yard → garden → domestic improvements from daily consistency.
-- Cozy Progression: re-frame XP/coins/achievements as home/garden unlocks (exterior, interior, garden, companions, seasonal) — no parallel economy.
-- Reward conversion: daily/weekly signals → cozy upgrade resources (nutrition→materials, steps→yard, sleep→warm light, sober→cleanliness, PA→repair, milestones→stages, seasons→major transforms).
+- Cozy Progression: Cozy Home v1 adds soft spendable resources (Уют / Материалы / Сад / Ясность) from the daily loop; still not a chore list or house sim.
+- Reward conversion: daily signals → cozy resources → zone upgrades on `/home` (nutrition→comfort, steps/PA→materials+garden, sleep→comfort, sober/journal/breaks→clarity).
 - Cozy upgrades must not require perfection; minimal/recovery days still grant small cozy progress.
 - Cozy copywriting: warm, grounded, domestic (дом, двор, сад, уют, очаг, тепло, маленький шаг, забота, свет в окне). Adult and warm — not childish.
 - Cozy avoid: punishment, failure, shame, aggressive battle language, “defeat yourself”, too much darkness, too much childish cuteness.

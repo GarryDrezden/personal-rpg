@@ -222,19 +222,27 @@ export function TodayPage() {
     getDayMode(entry.dayMode) === 'normal' &&
     (momentumSummary.recoverySuggested || momentumSummary.minimalModeSuggested);
 
-  const applySaveReaction = (savedEntry: DailyEntry) => {
+  const applySaveReaction = (
+    savedEntry: DailyEntry,
+    opts?: { cozyJustGranted?: boolean },
+  ) => {
+    const latestSettings = useAppStore.getState().settings;
     const reaction = getTodaySaveReaction({
       entry: savedEntry,
-      settings,
+      settings: latestSettings,
       questDone: stats.done,
       questTotal: stats.total,
       points,
     });
-    const baseLine = getBaseSaveSparkLine(savedEntry, settings);
-    setSaveReaction(baseLine ? { ...reaction, baseLine } : reaction);
+    const baseLine = getBaseSaveSparkLine(savedEntry, latestSettings);
+    const withBase = baseLine ? { ...reaction, baseLine } : reaction;
+    setSaveReaction(
+      opts?.cozyJustGranted ? withBase : { ...withBase, cozyLine: undefined },
+    );
   };
 
   const acceptRecoverySuggestion = async () => {
+    const hadCozyClaim = Boolean(entry.cozyRewardsGranted);
     const updated: DailyEntry = {
       ...entry,
       date: selectedDate,
@@ -244,9 +252,12 @@ export function TodayPage() {
     setEntry(updated);
     setSaving(true);
     try {
-      await updateDaily(updated);
+      const saved = await updateDaily(updated);
+      setEntry(saved);
       setDirty(false);
-      applySaveReaction(updated);
+      applySaveReaction(saved, {
+        cozyJustGranted: !hadCozyClaim && Boolean(saved.cozyRewardsGranted),
+      });
       setRecoveryToast('День восстановления включён');
       setTimeout(() => setRecoveryToast(null), 4000);
     } finally {
@@ -260,6 +271,7 @@ export function TodayPage() {
   };
 
   const acceptMomentumRecovery = async () => {
+    const hadCozyClaim = Boolean(entry.cozyRewardsGranted);
     const updated: DailyEntry = {
       ...entry,
       date: selectedDate,
@@ -269,9 +281,12 @@ export function TodayPage() {
     setEntry(updated);
     setSaving(true);
     try {
-      await updateDaily(updated);
+      const saved = await updateDaily(updated);
+      setEntry(saved);
       setDirty(false);
-      applySaveReaction(updated);
+      applySaveReaction(saved, {
+        cozyJustGranted: !hadCozyClaim && Boolean(saved.cozyRewardsGranted),
+      });
       setRecoveryToast('День восстановления включён');
       setTimeout(() => setRecoveryToast(null), 4000);
     } finally {
@@ -280,6 +295,7 @@ export function TodayPage() {
   };
 
   const acceptMomentumMinimal = async () => {
+    const hadCozyClaim = Boolean(entry.cozyRewardsGranted);
     const updated: DailyEntry = {
       ...entry,
       date: selectedDate,
@@ -289,9 +305,12 @@ export function TodayPage() {
     setEntry(updated);
     setSaving(true);
     try {
-      await updateDaily(updated);
+      const saved = await updateDaily(updated);
+      setEntry(saved);
       setDirty(false);
-      applySaveReaction(updated);
+      applySaveReaction(saved, {
+        cozyJustGranted: !hadCozyClaim && Boolean(saved.cozyRewardsGranted),
+      });
       setRecoveryToast('Минимальный день включён');
       setTimeout(() => setRecoveryToast(null), 4000);
     } finally {
@@ -363,16 +382,20 @@ export function TodayPage() {
   const saveDay = async () => {
     setSaving(true);
     try {
-      const saved = { ...entry, date: selectedDate };
-      await updateDaily(saved);
+      const hadCozyClaim = Boolean(entry.cozyRewardsGranted);
+      const saved = await updateDaily({ ...entry, date: selectedDate });
+      setEntry(saved);
       setDirty(false);
-      applySaveReaction(saved);
+      applySaveReaction(saved, {
+        cozyJustGranted: !hadCozyClaim && Boolean(saved.cozyRewardsGranted),
+      });
     } finally {
       setSaving(false);
     }
   };
 
   const enableMinimalDay = async () => {
+    const hadCozyClaim = Boolean(entry.cozyRewardsGranted);
     const updated: DailyEntry = {
       ...entry,
       date: selectedDate,
@@ -382,9 +405,12 @@ export function TodayPage() {
     setEntry(updated);
     setSaving(true);
     try {
-      await updateDaily(updated);
+      const saved = await updateDaily(updated);
+      setEntry(saved);
       setDirty(false);
-      applySaveReaction(updated);
+      applySaveReaction(saved, {
+        cozyJustGranted: !hadCozyClaim && Boolean(saved.cozyRewardsGranted),
+      });
       setRecoveryToast('Минимальный день включён');
       setTimeout(() => setRecoveryToast(null), 4000);
     } finally {

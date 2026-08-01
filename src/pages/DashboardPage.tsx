@@ -40,6 +40,7 @@ import { getPlateauSnapshot, setManualPlateauActive } from '../game/plateau/plat
 import { getBaseProgressionSnapshot } from '../game/base/baseProgressionEngine';
 import { getBossCampaignSnapshot } from '../game/bosses/bossCampaignEngine';
 import { CampaignProgressDashboardSection } from '../components/dashboard/CampaignProgressDashboardSection';
+import { CozyHomeDashboardCard } from '../components/cozy/CozyHomeDashboardCard';
 import { getNextBodyAbilities } from '../utils/bodyAbilityEngine';
 import { getBodyAbilityV1Summary } from '../game/bodyAbilities/bodyAbilityV1Engine';
 import { useAchievementStore } from '../store/achievementStore';
@@ -383,6 +384,8 @@ export function DashboardPage() {
           />
         </>
       )}
+
+      <CozyHomeDashboardCard settings={settings} />
 
       <CampaignProgressDashboardSection
         season={seasonSnapshot}

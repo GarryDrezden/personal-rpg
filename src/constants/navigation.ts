@@ -8,6 +8,7 @@ import {
   Gauge,
   HelpCircle,
   Home,
+  House,
   Lightbulb,
   Map,
   Route,
@@ -51,6 +52,7 @@ export const navGroups: NavGroup[] = [
     hint: 'Мир и карта пути',
     items: [
       { to: '/journey', icon: Route, label: 'Путь', shortLabel: 'Путь' },
+      { to: '/home', icon: House, label: 'Дом', shortLabel: 'Дом' },
       { to: '/seasons', icon: Scroll, label: 'Летопись', shortLabel: 'Сезоны' },
       { to: '/codex', icon: BookOpen, label: 'Кодекс', shortLabel: 'Кодекс' },
       { to: '/map', icon: Map, label: 'Карта навыков' },

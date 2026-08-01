@@ -55,6 +55,11 @@ export interface DailyEntry {
   physicalActivityLevel?: PhysicalActivityLevel | null;
   physicalActivityDuration?: PhysicalActivityDuration | null;
   physicalActivityNote?: string | null;
+  /**
+   * Cozy Home: ресурсы за день начислены один раз (idempotent claim).
+   * Повторное редактирование дня не дублирует начисление.
+   */
+  cozyRewardsGranted?: import('./cozyHome').CozyRewardsGranted | null;
 }
 
 export interface MeasurementEntry {
@@ -155,6 +160,16 @@ export type {
   BodyAbilityV1Item,
   BodyAbilityV1Summary,
 } from './bodyAbilityV1';
+export type {
+  CozyHomeState,
+  CozyHomeZoneState,
+  CozyHomeZoneId,
+  CozyResourceId,
+  CozyHomeZoneConfig,
+  CozyHomeUpgradeLevel,
+  CozyRewardsGranted,
+  CozyHomeZoneCategory,
+} from './cozyHome';
 
 export interface AppSettings {
   defaultCaloriesLimit: number;
@@ -199,6 +214,8 @@ export interface AppSettings {
   bodyAbilityState?: import('./bodyAbilityV1').BodyAbilityState;
   /** Plateau Mode v1 — удержание перевала */
   plateauState?: import('./plateauV1').PlateauState;
+  /** Cozy Home v1 — восстановление деревенского дома */
+  cozyHome?: import('./cozyHome').CozyHomeState;
 }
 
 export interface AppData {

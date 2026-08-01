@@ -65,9 +65,10 @@
 
 ### Экраны и навигация
 
-- **Today** (`/today`) — ввод дня, квесты, nutrition modes, **физическая активность**; переключение прошлой недели для дополнения записей
-- **Dashboard** (`/`) — компактная панель: герой, CTA, ресурс дня, зачёт движения (если PA отмечена), квесты, recovery
+- **Today** (`/today`) — ввод дня, квесты, nutrition modes, **физическая активность**; переключение прошлой недели для дополнения записей; начисление cozy-ресурсов дома при первом сохранении дня
+- **Dashboard** (`/`) — компактная панель: герой, CTA, ресурс дня, зачёт движения (если PA отмечена), квесты, recovery, блок **Cozy Home**
 - **Week** (`/week`) — недельный босс, календарь, бонусы; навигация по прошлым неделям
+- **Дом** (`/home`) — **Cozy Home v1**: ресурсы Уют/Материалы/Сад/Ясность, 8 зон дома L0–3, улучшения
 - **Growth hub** (`/growth/:tab`) — skills, abilities, camp, rewards, achievements, trials; **Growth Hub integration QA (2026-06)** — unified hero panels, tab chrome, trials/achievements copy aligned across tabs
 - **Measurements** (`/measurements`) — замеры, графики; можно редактировать дату и значения в истории
 - **Journey map** (`/journey`) — вертикальная хроника пути (v3): 9 глав + hero stages (20 стадий трансформации)
@@ -99,6 +100,7 @@
 - Achievements (категории + редкость)
 - Recovery / minimal day
 - Momentum, Freedom Score, Body abilities
+- **Cozy Home v1** — деревенский дом как cozy meta progression
 - Weekly boss (trials), daily mobs (codex)
 - Chapter bosses (journey map narrative)
 - Nutrition tracking (disabled / simple / precise modes)
@@ -283,7 +285,7 @@ Asset Registry 2.0 готов: manifest, backlog, naming, placeholders зафи�
 
 ## Следующий приоритет
 
-Full boss art set for season mini-bosses (S01–S13) and season reward tokens (S01–S13) are in-app. Next: Dashboard declutter (optional) or chapter/act boss art (P2). HTTPS — when hosting cert is ready.
+Cozy Home v1 shipped (logic + UI). Next cozy work: UI direction pass / home preview art. Full boss art set S01–S13 and season rewards already in-app. Optional: Dashboard declutter or chapter/act boss art (P2). HTTPS — when hosting cert is ready.
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

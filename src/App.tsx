@@ -116,6 +116,12 @@ const SeasonsPage = lazy(() =>
 
 );
 
+const CozyHomePage = lazy(() =>
+
+  import('./pages/CozyHomePage').then((m) => ({ default: m.CozyHomePage })),
+
+);
+
 
 
 function LoadingScreen() {
@@ -241,6 +247,8 @@ function AuthenticatedApp() {
           <Route path="/measurements" element={<MeasurementsPage />} />
 
           <Route path="/journey" element={<JourneyMapPage />} />
+
+          <Route path="/home" element={<CozyHomePage />} />
 
           <Route path="/seasons" element={<SeasonsPage />} />
 

@@ -3,6 +3,7 @@ import type { AppSettings } from '../types';
 import { normalizeBodyAbilityState } from '../game/bodyAbilities/bodyAbilityV1Engine';
 import { normalizePlateauState } from '../game/plateau/plateauEngine';
 import { normalizeNutritionTrackingMode } from './nutritionEngine';
+import { normalizeCozyHomeState } from './cozyHomeEngine';
 
 /** Синхронизирует weightGoal / targetWeight после загрузки или сохранения через API. */
 export function normalizeAppSettings(
@@ -48,5 +49,6 @@ export function normalizeAppSettings(
       settings.bodyAbilityState ?? fallback.bodyAbilityState,
     ),
     plateauState: normalizePlateauState(settings.plateauState ?? fallback.plateauState),
+    cozyHome: normalizeCozyHomeState(settings.cozyHome ?? fallback.cozyHome),
   };
 }

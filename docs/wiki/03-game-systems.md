@@ -116,6 +116,32 @@ XP за квесты, недельные бонусы, победу над бо�
 
 ---
 
+## Cozy Home v1
+
+**Engines:** `cozyHomeEngine.ts`, `cozyHomeRewardsEngine.ts`  
+**Config:** `constants/cozyHomeConfig.ts`  
+**UI:** `/home` (`CozyHomePage`), Dashboard `CozyHomeDashboardCard`, sidebar «Дом»  
+**State:** `AppSettings.cozyHome`, claim flag `DailyEntry.cozyRewardsGranted`
+
+**Persistence note:** `cozyHome` lives on `AppSettings` (same pattern as `plateauState` / `bodyAbilityState`) and is saved via settings / `user_data.customSettingsBackup` JSON. Ideologically it is game progress, not a UI preference — but in this codebase `AppSettings` is the shared root for both preferences and meta-progression. Do not invent a parallel store for v1; a future split is optional.
+
+Деревенский дом как cozy meta progression: забота о теле даёт ресурсы → ресурсы тратятся на зоны дома → дом становится уютнее.
+
+**Ресурсы:** Уют (`comfort`), Материалы (`materials`), Сад (`garden`), Ясность (`clarity`).
+
+**Зоны (0–3):** крыльцо, прихожая, кухня, спальня, двор, сад, мастерская, уголок спутника (всего 24 улучшения).
+
+**Правила:**
+- ресурсы выдаются за ежедневные действия при сохранении дня (один раз на день, idempotent via `cozyRewardsGranted`);
+- минимальные дни и recovery days тоже дают маленький прогресс;
+- улучшения покупаются за ресурсы; не хватает — UI показывает missing;
+- это не редактор дома и не отдельный список chores;
+- Dark Fantasy theme остаётся; страница Дом доступна в общем стиле приложения.
+
+Отличие от Camp/Base: Camp — derived meta на Growth; Cozy Home — spendable cozy resources + zone upgrades на `/home`.
+
+---
+
 ## Physical Activity / Физическая активность
 
 **Engine:** `movementCreditEngine.ts`  

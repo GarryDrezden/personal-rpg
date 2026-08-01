@@ -4,6 +4,22 @@
 
 ---
 
+## 2026-08-01 — Cozy Home v1 as first cozy meta progression
+
+Context:
+Cozy Theme needs a concrete progression fantasy, not just light colors.
+
+Decision:
+Implement Cozy Home v1: the player earns cozy resources from daily body-care actions and spends them to restore a village house, yard and garden. Page `/home`, eight zones (levels 0–3), four resources (comfort, materials, garden, clarity), idempotent daily claim via `cozyRewardsGranted`, soft defaults for old accounts.
+
+Persistence:
+Store `cozyHome` on `AppSettings` (alongside `plateauState` / `bodyAbilityState`) even though it is game progress, not a preference. In this project `AppSettings` is the shared JSON root persisted through settings / `customSettingsBackup`. No separate progress blob for v1.
+
+Consequences:
+Cozy progression becomes the first non-weight visual meta layer with spendable resources. It integrates with the existing daily loop without becoming another obligation. Distinct from Camp/Base (derived Growth meta). Dark Fantasy theme remains.
+
+---
+
 ## 2026-07-23 — Season reward art set S01–S13 (dedicated webp, in-app)
 
 ### Context

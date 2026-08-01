@@ -46,6 +46,22 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   dailyCalorieLimit: null,
   nutritionMediumOverThreshold: 300,
   nutritionHeavyOverThreshold: 700,
+  cozyHome: {
+    resources: { comfort: 0, materials: 0, garden: 0, clarity: 0 },
+    zones: {
+      porch: { zoneId: 'porch', level: 0 },
+      hallway: { zoneId: 'hallway', level: 0 },
+      kitchen: { zoneId: 'kitchen', level: 0 },
+      bedroom: { zoneId: 'bedroom', level: 0 },
+      yard: { zoneId: 'yard', level: 0 },
+      garden: { zoneId: 'garden', level: 0 },
+      workshop: { zoneId: 'workshop', level: 0 },
+      pet_corner: { zoneId: 'pet_corner', level: 0 },
+    },
+    totalUpgrades: 0,
+    lastUpdatedAt: null,
+    lastUpgrade: null,
+  },
 };
 
 export const DAY_STATUS_THRESHOLDS = [

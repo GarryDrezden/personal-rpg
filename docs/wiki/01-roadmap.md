@@ -184,13 +184,14 @@
 
 **Cozy Progression:** same XP/coins/achievements/daily entries; visual rewards framed as home/garden unlocks (exterior, interior, garden/yard, companion spots, seasonal decor). See [`../brandbook/themes.md`](../brandbook/themes.md) → Cozy Progression + Reward conversion.
 
+- [x] **Cozy Home v1** — page `/home`, 8 zones L0–3, resources comfort/materials/garden/clarity, daily claim, Dashboard card, FAQ
 - [ ] Cozy UI direction pass (cream/honey/sage, rounded cards, less neon/purple; still game-like)
-- [ ] Cozy Dashboard concept (home preview, «что улучшить», resource of home+hero, quests→repair/garden, companion in home)
-- [ ] Cozy Progression unlock catalog (exterior / interior / garden / companions / seasonal)
-- [ ] Reward conversion map (nutrition → materials, steps → yard, sleep → warm light, etc.)
-- [ ] Soft progress on minimal/recovery days — no perfection gate
-- [ ] Wire unlocks to existing XP/coins/achievements — no parallel economy
-- [ ] Cozy house / yard / garden progression scenes
+- [ ] Cozy Dashboard concept deepen (home preview art, companion in home)
+- [ ] Cozy Progression unlock catalog expand (seasonal decor, more rooms)
+- [x] Reward conversion map v1 (daily actions → cozy resources; spend on zones)
+- [x] Soft progress on minimal/recovery days — no perfection gate
+- [ ] Optional later: wire some unlocks also to XP/coins/achievements framing (keep Cozy Home resources)
+- [ ] Cozy house / yard / garden progression scenes (art)
 - [ ] Cozy copy overlay (season flavor, supportive home metaphors)
 - [ ] Align Camp/Base visuals with home restoration
 - [ ] Expand beyond UI shell: Settings `themeId: cozy` already exists; deepen content catalog

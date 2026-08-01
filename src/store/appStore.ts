@@ -22,6 +22,7 @@ import { resolveThemeId } from '../constants/themes';
 import { getStoredThemeId } from '../utils/themeApply';
 import { migrateNutritionSettings } from '../utils/nutritionEngine';
 import { normalizeAppSettings } from '../utils/settingsNormalize';
+import { applyCozyRewardsOnSave } from '../utils/cozyHomeEngine';
 
 function emptyDaily(date: string): DailyEntry {
   return {
@@ -46,6 +47,7 @@ function emptyDaily(date: string): DailyEntry {
     physicalActivityLevel: null,
     physicalActivityDuration: null,
     physicalActivityNote: null,
+    cozyRewardsGranted: null,
   };
 }
 
@@ -53,7 +55,7 @@ interface AppState extends AppData {
   loading: boolean;
   error: string | null;
   init: () => Promise<void>;
-  updateDaily: (entry: DailyEntry) => Promise<void>;
+  updateDaily: (entry: DailyEntry) => Promise<DailyEntry>;
   deleteDaily: (date: string) => Promise<void>;
   addMeasurement: (entry: Omit<MeasurementEntry, 'id'>) => Promise<void>;
   updateMeasurement: (id: string, entry: Omit<MeasurementEntry, 'id'>) => Promise<void>;
@@ -143,16 +145,30 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   updateDaily: async (entry) => {
-    const saved = await getRepository().upsertDaily(entry);
+    const previousEntry =
+      get().dailyEntries.find((e) => e.date === entry.date) ?? null;
+    const applied = applyCozyRewardsOnSave({
+      entry,
+      settings: get().settings,
+      previousEntry,
+    });
+
+    const saved = await getRepository().upsertDaily(applied.entry);
     const entries = get().dailyEntries.filter((e) => e.date !== saved.date);
     const dailyEntries = [...entries, saved].sort((a, b) => a.date.localeCompare(b.date));
     set({ dailyEntries });
+
+    if (applied.granted) {
+      await get().saveSettings(applied.settings);
+    }
+
     syncAchievementsFromData(dailyEntries, get().measurements, get().settings);
     rebuildMomentumHistoryFromDate({
       changedDate: saved.date,
       dailyEntries,
       settings: get().settings,
     });
+    return saved;
   },
 
   deleteDaily: async (date) => {

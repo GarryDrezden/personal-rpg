@@ -12,6 +12,7 @@
 
 ### Added
 
+- Added Cozy Home v1: village house restoration as cozy meta progression (`/home`). Cozy resources: comfort, materials, garden and clarity. Home zones: porch, hallway, kitchen, bedroom, yard, garden, workshop and pet corner (levels 0–3). Daily body-care actions grant resources once per day; Dashboard compact card; FAQ/Справка + wiki.
 - Added Physical Activity concept for non-step body load such as repair, yard work, welding, carrying materials and other physically demanding tasks. Qualitative levels (`none`/`light`/`medium`/`heavy`) + duration; movement credit engine; soft Body XP and Momentum; resource cost for heavy load; sofa magnet suppressed when movement held via activity; FAQ + docs.
 - **Revert hero/death art corruption:** restored clean hero stage + death PNGs from before alpha-underpaint; removed heavy drop-shadow/filters that looked like black outline blur; `GAME_ASSET_VERSION` 49.
 - **Companions epic dark-fantasy set:** all 4 (cat, alabai, raven, fox) restyled with glowing amber eyes, orange lightning/energy, runic gear — matching boss-familiar reference; `GAME_ASSET_VERSION` 48.
