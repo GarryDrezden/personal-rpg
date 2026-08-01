@@ -1,0 +1,14 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="512" height="640" viewBox="0 0 512 640" role="img" aria-label="Cozy avatar placeholder">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff8ee"/>
+      <stop offset="100%" stop-color="#d7e8c9"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="640" fill="url(#g)"/>
+  <ellipse cx="256" cy="560" rx="140" ry="28" fill="#8b7355" opacity=".25"/>
+  <path d="M200 410c0-65 24-110 56-110s56 45 56 110v50H200z" fill="#e0b090"/>
+  <circle cx="256" cy="245" r="54" fill="#f0c8a8"/>
+  <path d="M190 230c16-50 50-72 66-72s50 22 66 72c-20 8-40 12-66 12s-46-4-66-12z" fill="#7a9e6a"/>
+  <text x="256" y="80" text-anchor="middle" font-family="Georgia,serif" font-size="22" fill="#5c4a32">Аватар уютной темы готовится</text>
+</svg>

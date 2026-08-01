@@ -118,6 +118,35 @@ Legacy v1 статусы (`approved`, `draft`, …) сохранены в пол
 
 **Не добавлять** эти категории в машинный `docs/assets/manifest.json`, пока нет реальных ассетов и schema support.
 
+## Theme-scoped asset folders
+
+```
+public/game-assets/themes/cozy/
+  avatars/
+  companions/
+  bosses/
+  mobs/
+  home/
+  journey/
+  artifacts/
+  ui/
+
+public/game-assets/themes/dark-fantasy/
+  avatars/
+  companions/
+  bosses/
+  mobs/
+  journey/
+  artifacts/
+  ui/
+```
+
+**Runtime:** `src/game/themeAssetRegistry.ts` → `getThemeAsset(themeId, kind, entityId)`.
+
+Cozy placeholders (SVG) live under `themes/cozy/**/placeholders/`. Missing cozy final art must fall back to these — never to Dark Fantasy files.
+
+**TODO migration:** current Dark Fantasy art still uses legacy roots (`heroes/`, `bosses/`, `mobs/`, `companions/`, `maps/chapters/`). Reserved `themes/dark-fantasy/` folders are ready for a later move; do not break paths until a dedicated migration pass.
+
 ## Dark MVP Asset Generation Batch 1
 
 Первый **дроп генерации** (4 ассета): onboarding + camp 1–2 + season 1 reward.

@@ -4,6 +4,7 @@ import { useAppStore } from '../store/appStore';
 import { todayISO } from '../utils/dates';
 import { getSeasonHistoryArchive } from '../game/seasons/seasonHistory';
 import { SeasonHistorySection } from '../components/season/SeasonHistorySection';
+import { getThemeTerm } from '../constants/themeTerms';
 import { useAppTheme } from '../hooks/useAppTheme';
 
 export function SeasonsPage() {
@@ -22,12 +23,14 @@ export function SeasonsPage() {
     <div className="space-y-6 pb-8" data-testid="seasons-page">
       <header className={`space-y-2${isCozy ? ' cozy-home-hero' : ''}`}>
         <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-gold)]/70">
-          {isCozy ? 'Садовый журнал' : 'Кампания'}
+          {isCozy ? 'Садовый журнал' : getThemeTerm(themeId, 'campaign')}
         </p>
-        <h1 className="text-2xl font-bold text-[var(--app-text)]">Летопись сезонов</h1>
+        <h1 className="text-2xl font-bold text-[var(--app-text)]">
+          {getThemeTerm(themeId, 'chronicle')}
+        </h1>
         <p className="max-w-2xl text-sm text-[var(--app-text-muted)]">
           {isCozy
-            ? 'Страницы сезонов — как записи в альбоме двора и дома. Мягкие награды без боя.'
+            ? 'Что изменилось за сезон: следы заботы о доме и теле. Награда сезона — маленькое улучшение мира героя.'
             : 'История 28-дневных арок и мягких наград. Сезонные боссы — в '}
           {!isCozy ? (
             <>

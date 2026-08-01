@@ -4,6 +4,9 @@
 
 ### Changed
 
+- Clarified Cozy Theme as a separate theme branch with its own assets, avatars, companions, bosses/mobs presentation and cozy placeholders.
+- Removed Dark Fantasy art as default fallback for Cozy Theme.
+- Added theme-aware terminology rules for Cozy: “Главная помеха” and “Помеха дня” instead of battle-first labels.
 - **Cozy visual refresh:** replaced sterile slate-white light mode with summer-home palette (linen, wood, sage, honey, terracotta). Added `cozy-theme.css` surfaces; restyled `/home`, Dashboard home card, sidebar warmth, and theme-aware Летопись сезонов (garden journal / album). Dark Fantasy tokens and layout unchanged.
 - Clarified Cozy Theme direction as a village home restoration theme: body progress unlocks house, garden, yard and comfort improvements.
 - Clarified that Cozy is a separate visual/gameplay theme, not a replacement for Dark Fantasy.

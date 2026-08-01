@@ -1,0 +1,18 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-label="Cozy chapter placeholder">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#dceef7"/>
+      <stop offset="55%" stop-color="#f7f0e4"/>
+      <stop offset="100%" stop-color="#c8d9b8"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="540" fill="url(#sky)"/>
+  <ellipse cx="700" cy="140" rx="70" ry="28" fill="#fff" opacity=".7"/>
+  <rect x="360" y="250" width="220" height="150" fill="#d2b48c"/>
+  <polygon points="340,260 470,170 600,260" fill="#a67c52"/>
+  <rect x="450" y="320" width="40" height="80" fill="#6b4f3a"/>
+  <circle cx="200" cy="360" r="55" fill="#6b8f5e"/>
+  <circle cx="250" cy="340" r="45" fill="#7a9e6a"/>
+  <rect x="230" y="360" width="18" height="70" fill="#8b7355"/>
+  <text x="480" y="470" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="#5c4a32">Глава пути дома</text>
+</svg>

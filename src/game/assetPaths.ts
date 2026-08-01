@@ -7,24 +7,27 @@ import type {
   HeroStageNumber,
   MobId,
 } from '../types/gameAssets';
+import { GAME_ASSET_BASE_PATH, GAME_ASSET_VERSION, gameAsset } from './assetBase';
 import { getManifestAssetUrl } from './assetManifest';
 import { getLegacyCodexBossManifestAssetId } from './manifestAssetUi';
+import {
+  getCozyHeroPlaceholderPath,
+  getCozyHeroStagePath,
+  getCozyHomeScenePlaceholderPath,
+  getThemeAsset,
+  getThemeAssetCandidates,
+} from './themeAssetRegistry';
 
-/** Base path for drop-in game assets (no code changes needed) */
-export const GAME_ASSET_BASE_PATH = '/game-assets';
-
-/** Bump when replacing PNGs so browsers reload public assets */
-export const GAME_ASSET_VERSION = '55';
+export { GAME_ASSET_BASE_PATH, GAME_ASSET_VERSION, gameAsset };
 
 /** Folder names under heroes/{gender}/variants/ */
 export type HeroAssetVariantFolder = 'dark-fantasy' | 'light';
 
-export function gameAsset(path: string): string {
-  return `${GAME_ASSET_BASE_PATH}/${path}?v=${GAME_ASSET_VERSION}`;
-}
-
-/** Dashboard hero scene backdrop (cliff sunrise) */
-export function getHeroSceneBackdropPath(): string {
+/** Dashboard hero scene backdrop — theme-aware */
+export function getHeroSceneBackdropPath(themeId: AppThemeId = 'darkFantasy'): string {
+  if (themeId === 'cozy') {
+    return getCozyHomeScenePlaceholderPath();
+  }
   return gameAsset('scenes/hero-cliff-sunrise.webp');
 }
 
@@ -89,7 +92,14 @@ export function getCompanionPublicPath(id: CompanionId): string {
   return gameAsset(`companions/${fileMap[id]}`);
 }
 
-export function getCompanionImageCandidates(id: CompanionId): string[] {
+export function getCompanionImageCandidates(
+  id: CompanionId,
+  themeId: AppThemeId = 'darkFantasy',
+): string[] {
+  if (themeId === 'cozy') {
+    const ref = getThemeAsset({ themeId: 'cozy', kind: 'companion', entityId: id });
+    return getThemeAssetCandidates(ref);
+  }
   const legacyPets: Record<CompanionId, string> = {
     golden_chinchilla_cat: '/images/pets/Cat.png',
     alabai: '/images/pets/Dog.png',
@@ -172,16 +182,24 @@ function buildHeroStagePathsForStage(
   stage: HeroStageNumber,
   themeId: AppThemeId,
 ): string[] {
-  const variant = resolveHeroAssetVariant(themeId);
-  const otherVariant: HeroAssetVariantFolder = variant === 'light' ? 'dark-fantasy' : 'light';
+  if (themeId === 'cozy') {
+    // Cozy branch: theme-scoped art → optional light variant → cozy placeholder.
+    // Never fall back to dark-fantasy / legacy dark hero stages.
+    return uniquePaths([
+      getCozyHeroStagePath(gender, stage, 'webp'),
+      getCozyHeroStagePath(gender, stage, 'png'),
+      getGameHeroStageVariantPath(gender, stage, 'light', 'webp'),
+      getGameHeroStageVariantPath(gender, stage, 'light', 'png'),
+      getCozyHeroPlaceholderPath(gender),
+    ]);
+  }
 
+  const variant = resolveHeroAssetVariant(themeId);
   const paths: string[] = [
     getGameHeroStageVariantPath(gender, stage, variant, 'webp'),
     getGameHeroStageLegacyPath(gender, stage, 'webp'),
     getGameHeroStageVariantPath(gender, stage, variant, 'png'),
     getGameHeroStageLegacyPath(gender, stage, 'png'),
-    getGameHeroStageVariantPath(gender, stage, otherVariant, 'webp'),
-    getGameHeroStageVariantPath(gender, stage, otherVariant, 'png'),
   ];
 
   return uniquePaths(paths);
@@ -193,6 +211,23 @@ export function getHeroStageImageCandidates(
   themeId: AppThemeId = 'darkFantasy',
 ): string[] {
   const primaryPaths = buildHeroStagePathsForStage(gender, stage, themeId);
+
+  if (themeId === 'cozy') {
+    // Anchors stay within cozy/light only — then same-theme placeholder.
+    const anchorPaths = HERO_STAGE_ANCHORS.filter((s) => s !== stage)
+      .sort((a, b) => Math.abs(a - stage) - Math.abs(b - stage))
+      .flatMap((anchor) =>
+        uniquePaths([
+          getCozyHeroStagePath(gender, anchor, 'webp'),
+          getGameHeroStageVariantPath(gender, anchor, 'light', 'webp'),
+        ]),
+      );
+    return uniquePaths([
+      ...primaryPaths,
+      ...anchorPaths,
+      getCozyHeroPlaceholderPath(gender),
+    ]);
+  }
 
   const anchorPaths = HERO_STAGE_ANCHORS.filter((s) => s !== stage)
     .sort((a, b) => Math.abs(a - stage) - Math.abs(b - stage))
@@ -210,16 +245,20 @@ export function getHeroStageImageSrc(
 }
 
 function buildHeroDeathPaths(gender: HeroGender, themeId: AppThemeId): string[] {
-  const variant = resolveHeroAssetVariant(themeId);
-  const otherVariant: HeroAssetVariantFolder = variant === 'light' ? 'dark-fantasy' : 'light';
+  if (themeId === 'cozy') {
+    return uniquePaths([
+      gameAsset(`heroes/${gender}/variants/light/death.webp`),
+      gameAsset(`heroes/${gender}/variants/light/death.png`),
+      getCozyHeroPlaceholderPath(gender),
+    ]);
+  }
 
+  const variant = resolveHeroAssetVariant(themeId);
   return uniquePaths([
     gameAsset(`heroes/${gender}/variants/${variant}/death.webp`),
     gameAsset(`heroes/${gender}/death.webp`),
     gameAsset(`heroes/${gender}/variants/${variant}/death.png`),
     gameAsset(`heroes/${gender}/death.png`),
-    gameAsset(`heroes/${gender}/variants/${otherVariant}/death.webp`),
-    gameAsset(`heroes/${gender}/variants/${otherVariant}/death.png`),
   ]);
 }
 

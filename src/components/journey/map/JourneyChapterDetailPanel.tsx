@@ -1,10 +1,13 @@
 import type { AppThemeId } from '../../../types/theme';
 import type { JourneyStageProgress } from '../../../types/journeyMap';
 import { resolveJourneyStageText } from '../../../types/journeyMap';
+import { getThemeTerm } from '../../../constants/themeTerms';
 import { JourneyConditionRow } from '../JourneyConditionRow';
 import { JourneyBossMini } from './JourneyBossMini';
 import { getJourneyMapStageConfig } from '../../../constants/journeyMapConfig';
 import { getChapterBossByChapterId } from '../../../game/bosses/bossConfig';
+import { getBossMeta } from '../../../game/assetRegistry';
+import { getBossPresentation } from '../../../game/themeEntityPresentation';
 
 type JourneyChapterDetailPanelProps = {
   progress: JourneyStageProgress;
@@ -30,6 +33,11 @@ export function JourneyChapterDetailPanel({
   const isCurrent = status === 'current';
   const chapterBadge =
     isCurrent || isCurrentChapter ? 'Текущая глава' : 'Выбранная глава';
+  const bossChapterTerm = getThemeTerm(themeId, 'bossChapter');
+  const cozyBossPresentation =
+    themeId === 'cozy' && config.bossId
+      ? getBossPresentation(themeId, config.bossId, getBossMeta(config.bossId))
+      : null;
 
   return (
     <aside
@@ -73,11 +81,14 @@ export function JourneyChapterDetailPanel({
         {chapterBoss ? (
           <div className="journey-chapter-panel__boss-row" data-testid="journey-chapter-boss">
             <div>
-              <p className="journey-chapter-panel__boss-label">Босс главы</p>
+              <p className="journey-chapter-panel__boss-label">{bossChapterTerm}</p>
               <p className="journey-chapter-panel__boss-name">
-                {chapterBoss.icon} {chapterBoss.title}
+                {chapterBoss.icon}{' '}
+                {cozyBossPresentation?.title ?? chapterBoss.title}
               </p>
-              <p className="mt-1 text-xs text-[var(--app-text-muted)]">{chapterBoss.weaknessText}</p>
+              <p className="mt-1 text-xs text-[var(--app-text-muted)]">
+                {cozyBossPresentation?.description ?? chapterBoss.weaknessText}
+              </p>
             </div>
             {config.bossId ? (
               <JourneyBossMini bossId={config.bossId} status={status} size="md" />
@@ -90,8 +101,10 @@ export function JourneyChapterDetailPanel({
         ) : config.bossId ? (
           <div className="journey-chapter-panel__boss-row">
             <div>
-              <p className="journey-chapter-panel__boss-label">Босс главы</p>
-              <p className="journey-chapter-panel__boss-name">Страж пути</p>
+              <p className="journey-chapter-panel__boss-label">{bossChapterTerm}</p>
+              <p className="journey-chapter-panel__boss-name">
+                {cozyBossPresentation?.title ?? 'Страж пути'}
+              </p>
             </div>
             <JourneyBossMini bossId={config.bossId} status={status} size="md" />
           </div>

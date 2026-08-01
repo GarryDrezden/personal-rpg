@@ -2,6 +2,9 @@ import type { MobId } from '../../types/gameAssets';
 import { getMobMeta } from '../../game/assetRegistry';
 import { getMobWeaknessText } from '../../game/dailyMobEngine';
 import { useAppStore } from '../../store/appStore';
+import { useAppTheme } from '../../hooks/useAppTheme';
+import { getThemeTerm } from '../../constants/themeTerms';
+import { getMobPresentation } from '../../game/themeEntityPresentation';
 import { Card } from '../ui/Card';
 import { GameAssetImage } from './GameAssetImage';
 
@@ -14,11 +17,13 @@ type DailyMobCardProps = {
 export function DailyMobCard({ mobId, compact = false, contextLine }: DailyMobCardProps) {
   const meta = getMobMeta(mobId);
   const settings = useAppStore((s) => s.settings);
+  const { themeId, isCozy } = useAppTheme();
+  const presentation = getMobPresentation(themeId, mobId, meta);
 
   return (
     <Card data-testid="daily-mob-card" className={compact ? 'p-4' : ''}>
       <p className="text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
-        Моб дня
+        {getThemeTerm(themeId, 'mob')}
       </p>
       <div className={`mt-3 flex gap-4 ${compact ? 'items-center' : 'flex-col sm:flex-row'}`}>
         <div
@@ -28,20 +33,23 @@ export function DailyMobCard({ mobId, compact = false, contextLine }: DailyMobCa
         >
           <GameAssetImage
             variant="mob"
-            src={meta.image}
-            alt={meta.title}
+            src={presentation.imagePath}
+            alt={presentation.title}
+            fallbackCandidates={presentation.imageCandidates.slice(1)}
             className="h-full w-full"
             imageClassName="object-contain"
           />
         </div>
         <div className="min-w-0">
-          <h3 className="font-semibold text-[var(--app-text)]">{meta.title}</h3>
-          <p className="text-xs text-[var(--app-primary)]">{meta.subtitle}</p>
+          <h3 className="font-semibold text-[var(--app-text)]">{presentation.title}</h3>
+          <p className="text-xs text-[var(--app-primary)]">{presentation.subtitle}</p>
           {!compact && (
-            <p className="mt-1 text-sm text-[var(--app-text-muted)]">{meta.description}</p>
+            <p className="mt-1 text-sm text-[var(--app-text-muted)]">{presentation.description}</p>
           )}
           <p className="mt-2 text-xs font-medium text-[var(--app-text)]">
-            {getMobWeaknessText(meta.weakness, { settings, mobId })}
+            {isCozy
+              ? presentation.description
+              : getMobWeaknessText(meta.weakness, { settings, mobId })}
           </p>
           {contextLine ? (
             <p className="mt-1 text-xs text-[var(--app-text-muted)]">{contextLine}</p>

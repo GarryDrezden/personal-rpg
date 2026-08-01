@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
+  getCompanionImageCandidates,
   getGameHeroStageLegacyPath,
   getGameHeroStageVariantPath,
+  getHeroSceneBackdropPath,
   getHeroStageImageCandidates,
   resolveHeroAssetVariant,
 } from './assetPaths';
+import { getThemeAsset, getThemeAssetCandidates } from './themeAssetRegistry';
 
 describe('resolveHeroAssetVariant', () => {
   it('maps cozy to light and darkFantasy to dark-fantasy', () => {
@@ -14,9 +17,18 @@ describe('resolveHeroAssetVariant', () => {
 });
 
 describe('getHeroStageImageCandidates', () => {
-  it('uses light variant webp first for cozy theme', () => {
+  it('uses cozy theme path first for cozy theme', () => {
     const [first] = getHeroStageImageCandidates('male', 5, 'cozy');
-    expect(first).toContain('/variants/light/stage-05.webp');
+    expect(first).toContain('/themes/cozy/avatars/male/stage-05.webp');
+  });
+
+  it('never falls back to dark-fantasy hero art in cozy', () => {
+    const candidates = getHeroStageImageCandidates('male', 5, 'cozy');
+    expect(candidates.some((p) => p.includes('dark-fantasy'))).toBe(false);
+    expect(candidates.some((p) => p.includes('/heroes/male/stage-'))).toBe(false);
+    expect(candidates.some((p) => p.includes('cozy/avatars/placeholders/male-placeholder'))).toBe(
+      true,
+    );
   });
 
   it('uses dark-fantasy variant webp first for dark theme', () => {
@@ -36,6 +48,32 @@ describe('getHeroStageImageCandidates', () => {
     expect(
       candidates.some((p) => p.includes('stage-19.webp') || p.includes('stage-02.webp')),
     ).toBe(true);
+  });
+});
+
+describe('theme-aware companions and backdrop', () => {
+  it('keeps cozy companion candidates inside cozy theme paths', () => {
+    const candidates = getCompanionImageCandidates('alabai', 'cozy');
+    expect(candidates.every((p) => p.includes('/themes/cozy/'))).toBe(true);
+    expect(candidates.some((p) => p.includes('dark-fantasy') || p.includes('/images/pets/'))).toBe(
+      false,
+    );
+  });
+
+  it('uses cozy home scene for cozy dashboard backdrop', () => {
+    expect(getHeroSceneBackdropPath('cozy')).toContain(
+      '/themes/cozy/home/placeholders/home-scene-placeholder',
+    );
+    expect(getHeroSceneBackdropPath('darkFantasy')).toContain('hero-cliff-sunrise');
+  });
+});
+
+describe('getThemeAsset', () => {
+  it('returns cozy placeholder fallback for missing cozy boss art', () => {
+    const ref = getThemeAsset({ themeId: 'cozy', kind: 'boss', entityId: 'misty_baron' });
+    const candidates = getThemeAssetCandidates(ref);
+    expect(ref.path).toContain('/themes/cozy/bosses/misty_baron.webp');
+    expect(candidates.at(-1)).toContain('/themes/cozy/bosses/placeholders/boss-placeholder');
   });
 });
 

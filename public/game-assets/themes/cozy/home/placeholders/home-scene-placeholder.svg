@@ -1,0 +1,19 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-label="Cozy home zone placeholder">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8f2dc"/>
+      <stop offset="45%" stop-color="#fff8ee"/>
+      <stop offset="100%" stop-color="#d7e8c9"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="640" fill="url(#sky)"/>
+  <ellipse cx="480" cy="560" rx="360" ry="50" fill="#8fae7a" opacity=".45"/>
+  <rect x="330" y="280" width="300" height="200" fill="#e0c9a6" stroke="#8b7355" stroke-width="8"/>
+  <polygon points="300,290 480,160 660,290" fill="#b08968"/>
+  <rect x="450" y="370" width="60" height="110" fill="#7a5c3e"/>
+  <rect x="380" y="330" width="50" height="50" fill="#f4e6c3" stroke="#8b7355" stroke-width="4"/>
+  <circle cx="180" cy="360" r="70" fill="#6b8f5e"/>
+  <circle cx="230" cy="330" r="55" fill="#7a9e6a"/>
+  <rect x="200" y="380" width="22" height="90" fill="#8b7355"/>
+  <text x="480" y="540" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="#5c4a32">Иллюстрация зоны в работе</text>
+</svg>

@@ -1,6 +1,9 @@
 import type { BossId, ChapterNumber } from '../../types/gameAssets';
+import { getThemeTerm } from '../../constants/themeTerms';
 import { getBossMeta, getArtifactMeta } from '../../game/assetRegistry';
 import { getLegacyCodexBossManifestAssetId } from '../../game/manifestAssetUi';
+import { getBossPresentation } from '../../game/themeEntityPresentation';
+import { useAppTheme } from '../../hooks/useAppTheme';
 import { Card } from '../ui/Card';
 import { GameAssetImage } from './GameAssetImage';
 import { ManifestArtScene } from './ManifestArtScene';
@@ -80,6 +83,8 @@ export function ChapterBossCard({
   compact = false,
 }: ChapterBossCardProps) {
   const meta = getBossMeta(bossId);
+  const { themeId, isCozy } = useAppTheme();
+  const presentation = getBossPresentation(themeId, bossId, meta);
   const imageStatus = status === 'locked' ? 'locked' : status === 'active' ? 'current' : 'unlocked';
   const locked = status === 'locked';
 
@@ -87,7 +92,7 @@ export function ChapterBossCard({
     <Card data-testid="chapter-boss-card" className={compact ? 'p-4' : ''}>
       <div className="flex items-center justify-between gap-2">
         <p className="text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
-          Босс главы
+          {getThemeTerm(themeId, 'bossChapter')}
         </p>
         <span className="rounded-full bg-[var(--app-bg-soft)] px-2 py-0.5 text-[10px] text-[var(--app-text-muted)]">
           {statusLabel[status]}
@@ -95,23 +100,45 @@ export function ChapterBossCard({
       </div>
 
       <div className="mt-3">
-        <ChapterBossArt
-          bossId={bossId}
-          title={meta.title}
-          imageSrc={meta.image}
-          imageStatus={imageStatus}
-          locked={locked}
-          compact={compact}
-        />
+        {isCozy ? (
+          <div
+            className={`relative overflow-hidden rounded-xl border border-[var(--app-wood)]/35 bg-gradient-to-b from-[#fff8ee] to-[#e4efe0] ${
+              compact
+                ? 'aspect-video w-full max-h-[11rem]'
+                : 'aspect-video w-full max-h-[13.75rem] sm:max-h-[16.25rem]'
+            }`}
+            data-testid={`chapter-boss-art-${bossId}`}
+          >
+            <GameAssetImage
+              variant="boss"
+              src={presentation.imagePath}
+              alt={presentation.title}
+              fallbackCandidates={presentation.imageCandidates.slice(1)}
+              status={imageStatus}
+              className="absolute inset-0 h-full w-full"
+              imageClassName="h-full w-full object-contain object-center"
+              fit="boss"
+            />
+          </div>
+        ) : (
+          <ChapterBossArt
+            bossId={bossId}
+            title={presentation.title}
+            imageSrc={presentation.imagePath}
+            imageStatus={imageStatus}
+            locked={locked}
+            compact={compact}
+          />
+        )}
       </div>
 
       <div className="mt-3 min-w-0">
-        <h3 className="font-semibold text-[var(--app-text)]">{meta.title}</h3>
+        <h3 className="font-semibold text-[var(--app-text)]">{presentation.title}</h3>
         <p className="text-xs text-[var(--app-primary)]">
-          {chapter ? `Глава ${chapter}` : meta.subtitle}
+          {chapter ? `Глава ${chapter}` : presentation.subtitle}
         </p>
         {!compact && (
-          <p className="mt-1 text-sm text-[var(--app-text-muted)]">{meta.description}</p>
+          <p className="mt-1 text-sm text-[var(--app-text-muted)]">{presentation.description}</p>
         )}
         {meta.rewardArtifactId && (
           <p className="mt-2 text-xs text-[var(--app-text-muted)]">

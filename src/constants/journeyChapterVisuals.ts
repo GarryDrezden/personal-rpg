@@ -1,3 +1,8 @@
+import type { AppThemeId } from '../types/theme';
+import {
+  getThemeAsset,
+  getThemeAssetCandidates,
+} from '../game/themeAssetRegistry';
 import type { JourneyTerrainType } from './journeyMapConfig';
 
 export type JourneyChapterVisual = {
@@ -136,8 +141,19 @@ export function getJourneyChapterVisual(chapterNumber: number): JourneyChapterVi
   return JOURNEY_CHAPTER_VISUALS[key];
 }
 
-/** Resolve chapter art URLs to try (.webp first, then png/jpg) */
-export function getChapterArtCandidates(chapterNumber: number): string[] {
+/** Resolve chapter art URLs to try (.webp first, then png/jpg). Cozy never falls back to DF maps. */
+export function getChapterArtCandidates(
+  chapterNumber: number,
+  themeId: AppThemeId = 'darkFantasy',
+): string[] {
+  if (themeId === 'cozy') {
+    const ref = getThemeAsset({
+      themeId: 'cozy',
+      kind: 'chapter_background',
+      entityId: String(chapterNumber),
+    });
+    return getThemeAssetCandidates(ref);
+  }
   const visual = getJourneyChapterVisual(chapterNumber);
   return [visual.artPath, ...visual.artPathFallbacks];
 }

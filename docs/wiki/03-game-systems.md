@@ -116,6 +116,21 @@ XP за квесты, недельные бонусы, победу над бо�
 
 ---
 
+## Theme-aware Presentation
+
+The same gameplay entity can have different presentation per theme.
+
+Example:
+- Dark Fantasy: Boss / Mob / Curse / Battle
+- Cozy: Main Obstacle / Daily Obstacle / Disorder / Restoration
+
+Core logic remains shared.
+Presentation, copy and assets are theme-specific.
+
+**Code:** `src/game/themeAssetRegistry.ts`, `src/game/themeEntityPresentation.ts`, `src/constants/themeTerms.ts`.
+
+Cozy never falls back to Dark Fantasy art by default — missing cozy art uses same-theme placeholders under `public/game-assets/themes/cozy/`.
+
 ## Cozy Home v1
 
 **Engines:** `cozyHomeEngine.ts`, `cozyHomeRewardsEngine.ts`  

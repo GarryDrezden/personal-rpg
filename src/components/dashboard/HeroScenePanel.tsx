@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Coins, Flame } from 'lucide-react';
 import { getChapterMeta } from '../../constants/gameChapters';
+import { getThemeTerm } from '../../constants/themeTerms';
 import { getCompanionMeta, getHeroStageMeta } from '../../game/assetRegistry';
+import { getCompanionPresentation } from '../../game/themeEntityPresentation';
 import { useGameHeroState } from '../../hooks/useGameHeroState';
 import { useHeroStageAssets } from '../../hooks/useHeroStageAssets';
 import { useAppStore } from '../../store/appStore';
@@ -37,7 +39,7 @@ export function HeroScenePanel({
   todayCoins,
   availableCoins,
 }: HeroScenePanelProps) {
-  const { isDarkFantasy } = useAppTheme();
+  const { themeId, isDarkFantasy, isCozy } = useAppTheme();
   const game = useGameHeroState();
   const { measurements, settings } = useAppStore();
   const pathSetup = getPathSetupState(measurements, settings);
@@ -45,6 +47,12 @@ export function HeroScenePanel({
   const stageMeta = getHeroStageMeta(game.profile.heroGender, game.stage);
   const heroAssets = useHeroStageAssets(game.profile.heroGender, game.stage);
   const companionMeta = getCompanionMeta(game.profile.activeCompanionId);
+  const companionPresentation = getCompanionPresentation(
+    themeId,
+    game.profile.activeCompanionId,
+    companionMeta,
+  );
+  const backdropSrc = getHeroSceneBackdropPath(themeId);
   const mood = getDayMoodPhrase(todayPoints);
   const rank = getLevelRankTitle(level);
   const xp = getLevelFromXp(totalXp);
@@ -60,13 +68,9 @@ export function HeroScenePanel({
 
   const shellClass = isDarkFantasy
     ? 'overflow-hidden rounded-2xl border border-[var(--app-border)] bg-gradient-to-br from-[#171329] via-[#111022] to-[#090812] shadow-[var(--app-shadow)] hero-glow'
-    : 'overflow-hidden rounded-2xl border border-amber-200/60 bg-gradient-to-br from-amber-50 via-white to-orange-50 shadow-md';
+    : 'overflow-hidden rounded-2xl border border-[var(--app-border)] bg-gradient-to-br from-[#fff8ee] via-[#f7f0e4] to-[#e8efe4] shadow-[var(--app-shadow)]';
 
-  const sceneBg = isDarkFantasy
-    ? 'bg-[#0c0a12]'
-    : 'bg-gradient-to-b from-[color-mix(in_srgb,var(--app-primary)_6%,#1a1520)] via-[#1e1a28] to-[#14121c]';
-
-  const backdropSrc = getHeroSceneBackdropPath();
+  const sceneBg = isCozy ? 'bg-[#efe4d2]' : 'bg-[#0c0a12]';
 
   return (
     <section
@@ -146,14 +150,28 @@ export function HeroScenePanel({
               loading="eager"
               decoding="async"
             />
-            {/* Readability overlays — keep UI + hero crisp */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/10 to-black/55" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_70%,transparent_20%,rgba(0,0,0,0.45)_100%)]" />
-            {/* Soft contact shadow on cliff ledge */}
-            <div className="absolute bottom-[7%] left-1/2 h-3 w-[42%] max-w-[11rem] -translate-x-1/2 rounded-[100%] bg-black/45 blur-md" />
+            <div
+              className={`absolute inset-0 ${
+                isCozy
+                  ? 'bg-gradient-to-b from-[#f1ebe0]/35 via-transparent to-[#efe4d2]/70'
+                  : 'bg-gradient-to-b from-black/45 via-black/10 to-black/55'
+              }`}
+            />
+            {!isCozy ? (
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_70%,transparent_20%,rgba(0,0,0,0.45)_100%)]" />
+            ) : null}
+            <div
+              className={`absolute bottom-[7%] left-1/2 h-3 w-[42%] max-w-[11rem] -translate-x-1/2 rounded-[100%] blur-md ${
+                isCozy ? 'bg-[#8b7355]/25' : 'bg-black/45'
+              }`}
+            />
           </div>
 
-          <div className="absolute left-2 top-2 z-20 rounded-full border border-[var(--app-border)] bg-black/45 px-2.5 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm">
+          <div
+            className={`absolute left-2 top-2 z-20 rounded-full border border-[var(--app-border)] px-2.5 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm ${
+              isCozy ? 'bg-[var(--app-card-strong)]/90' : 'bg-black/45'
+            }`}
+          >
             Ур. {level}
           </div>
 
@@ -183,19 +201,35 @@ export function HeroScenePanel({
 
             <div
               data-testid="hero-scene-companion"
-              className="absolute bottom-3 right-2 z-30 max-w-[7.5rem] rounded-lg border border-amber-400/35 bg-black/50 px-2 py-1.5 backdrop-blur-sm sm:bottom-4 sm:right-3"
+              className={`absolute bottom-3 right-2 z-30 max-w-[7.5rem] rounded-lg border px-2 py-1.5 backdrop-blur-sm sm:bottom-4 sm:right-3 ${
+                isCozy
+                  ? 'border-[var(--app-border)] bg-[var(--app-card-strong)]/92'
+                  : 'border-amber-400/35 bg-black/50'
+              }`}
             >
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-amber-200/90">
+              <p
+                className={`text-[10px] font-semibold uppercase tracking-wide ${
+                  isCozy ? 'text-[var(--app-garden)]' : 'text-amber-200/90'
+                }`}
+              >
                 Спутник
               </p>
-              <p className="truncate text-[11px] font-semibold leading-tight text-amber-100">
-                {companionMeta.title}
+              <p
+                className={`truncate text-[11px] font-semibold leading-tight ${
+                  isCozy ? 'text-[var(--app-text)]' : 'text-amber-100'
+                }`}
+              >
+                {companionPresentation.title}
               </p>
               <Link
                 to="/today"
-                className="mt-0.5 block truncate text-[10px] font-medium text-amber-300/85 hover:text-amber-200 hover:underline"
+                className={`mt-0.5 block truncate text-[10px] font-medium hover:underline ${
+                  isCozy
+                    ? 'text-[var(--app-garden)] hover:brightness-110'
+                    : 'text-amber-300/85 hover:text-amber-200'
+                }`}
               >
-                Квесты дня →
+                {getThemeTerm(themeId, 'quest')} →
               </Link>
             </div>
           </div>

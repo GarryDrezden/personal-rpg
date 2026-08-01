@@ -3,6 +3,7 @@ import {
   getChapterArtCandidates,
   getJourneyChapterVisual,
 } from '../../../../constants/journeyChapterVisuals';
+import { useAppTheme } from '../../../../hooks/useAppTheme';
 
 export type JourneyVignetteStatus = 'completed' | 'current' | 'locked';
 
@@ -34,6 +35,7 @@ function tryLoadImage(urls: string[]): Promise<string | null> {
 }
 
 export function JourneyChapterVignette({ chapterNumber, status }: JourneyChapterVignetteProps) {
+  const { themeId, isCozy } = useAppTheme();
   const visual = getJourneyChapterVisual(chapterNumber);
   const [resolvedArtUrl, setResolvedArtUrl] = useState<string | null>(null);
 
@@ -41,20 +43,24 @@ export function JourneyChapterVignette({ chapterNumber, status }: JourneyChapter
     let cancelled = false;
     setResolvedArtUrl(null);
 
-    void tryLoadImage(getChapterArtCandidates(chapterNumber)).then((url) => {
+    void tryLoadImage(getChapterArtCandidates(chapterNumber, themeId)).then((url) => {
       if (!cancelled) setResolvedArtUrl(url);
     });
 
     return () => {
       cancelled = true;
     };
-  }, [chapterNumber]);
+  }, [chapterNumber, themeId]);
+
+  const gradientFallback = isCozy
+    ? 'linear-gradient(180deg, #dceef7 0%, #f7f0e4 52%, #c8d9b8 100%)'
+    : visual.gradient;
 
   return (
     <div
-      className={`journey-v3-vignette journey-v3-vignette--${status}`}
+      className={`journey-v3-vignette journey-v3-vignette--${status}${isCozy ? ' journey-v3-vignette--cozy' : ''}`}
       data-chapter={chapterNumber}
-      style={{ ['--chapter-gradient-fallback' as string]: visual.gradient }}
+      style={{ ['--chapter-gradient-fallback' as string]: gradientFallback }}
       aria-hidden
     >
       <div

@@ -48,6 +48,7 @@ import { Card } from '../components/ui/Card';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { DailyMobCard } from '../components/game/DailyMobCard';
 import { getOrCreateDailyMobForEntry } from '../game/dailyMobEngine';
+import { useAppTheme } from '../hooks/useAppTheme';
 import { getDailyMobContextLine } from '../utils/todayMobContext';
 import { getTodaySaveReaction, type TodaySaveReaction } from '../utils/todayDayReaction';
 import { getBaseSaveSparkLine } from '../game/base/baseProgressionEngine';
@@ -63,6 +64,7 @@ import { shouldSuggestNutritionRecovery, isNutritionTrackingEnabled } from '../u
 export function TodayPage() {
   const { dailyEntries, measurements, settings, updateDaily, deleteDaily, saveSettings } =
     useAppStore();
+  const { themeId } = useAppTheme();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [routeWelcome, setRouteWelcome] = useState(
@@ -336,7 +338,7 @@ export function TodayPage() {
     : null;
   const dailyMobContext =
     dailyMobId && isEditingToday
-      ? getDailyMobContextLine(dailyMobId, entry, settings)
+      ? getDailyMobContextLine(dailyMobId, entry, settings, themeId)
       : undefined;
   const dayMode = getDayMode(entry.dayMode);
   const seasonSnapshot = useMemo(

@@ -1,6 +1,8 @@
 import type { CompanionId } from '../../types/gameAssets';
 import { getCompanionImageCandidates } from '../../game/assetPaths';
 import { getCompanionMeta } from '../../game/assetRegistry';
+import { getCompanionPresentation } from '../../game/themeEntityPresentation';
+import { useAppTheme } from '../../hooks/useAppTheme';
 import { GameAssetImage } from './GameAssetImage';
 
 /**
@@ -32,7 +34,10 @@ export function HeroCompanionOverlay({
   className = '',
   showLabel = false,
 }: HeroCompanionOverlayProps) {
+  const { themeId, isCozy } = useAppTheme();
   const meta = getCompanionMeta(companionId);
+  const presentation = getCompanionPresentation(themeId, companionId, meta);
+  const candidates = getCompanionImageCandidates(companionId, themeId);
   // Push fully outside the legs; slight bottom inset so paws sit on the same ground plane
   const sideClass =
     side === 'left'
@@ -46,17 +51,25 @@ export function HeroCompanionOverlay({
     >
       <GameAssetImage
         variant="companion"
-        src={meta.image}
-        alt={meta.title}
-        fallbackCandidates={getCompanionImageCandidates(companionId).slice(1)}
+        src={presentation.imagePath}
+        alt={presentation.title}
+        fallbackCandidates={candidates.slice(1)}
         status="unlocked"
         fit="companion"
         className="h-auto w-full bg-transparent"
-        imageClassName="object-contain object-bottom drop-shadow-[0_8px_12px_rgba(0,0,0,0.65)]"
+        imageClassName={`object-contain object-bottom ${
+          isCozy
+            ? 'drop-shadow-[0_6px_10px_rgba(92,74,50,0.28)]'
+            : 'drop-shadow-[0_8px_12px_rgba(0,0,0,0.65)]'
+        }`}
       />
       {showLabel ? (
-        <p className="mt-0.5 max-w-[7rem] truncate text-center text-[10px] font-semibold leading-tight text-amber-200/90">
-          {meta.title}
+        <p
+          className={`mt-0.5 max-w-[7rem] truncate text-center text-[10px] font-semibold leading-tight ${
+            isCozy ? 'text-[var(--app-garden)]' : 'text-amber-200/90'
+          }`}
+        >
+          {presentation.title}
         </p>
       ) : null}
     </div>

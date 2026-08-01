@@ -5,6 +5,7 @@ import {
   COZY_RESOURCE_LABELS,
   getCozyZoneConfig,
 } from '../constants/cozyHomeConfig';
+import { getCozyHomeScenePlaceholderPath } from '../game/themeAssetRegistry';
 import {
   getCozyHomeProgress,
   getCozyHomeState,
@@ -57,6 +58,29 @@ export function CozyHomePage() {
           уже отмеченных дней.
         </p>
       </header>
+
+      <section
+        aria-label="Вид дома"
+        className="cozy-surface overflow-hidden"
+        data-testid="cozy-home-scene"
+      >
+        <div className="relative aspect-[16/9] max-h-[18rem] w-full overflow-hidden sm:max-h-[22rem]">
+          <img
+            src={getCozyHomeScenePlaceholderPath()}
+            alt="Дом героя — иллюстрация зоны в работе"
+            className="h-full w-full object-cover"
+            loading="eager"
+            decoding="async"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#efe4d2]/85 via-transparent to-transparent" />
+          <div className="absolute bottom-0 left-0 p-3 sm:p-4">
+            <p className="text-sm font-semibold text-[var(--app-text)]">Дом ждёт сегодняшнего шага</p>
+            <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">
+              Двор, сад и комнаты оживают по мере заботы о теле
+            </p>
+          </div>
+        </div>
+      </section>
 
       <section aria-label="Ресурсы дома" className="flex flex-wrap gap-2">
         {badges.map((b) => (

@@ -1,5 +1,6 @@
 import type { AppSettings, DailyEntry } from '../types';
 import type { MobId } from '../types/gameAssets';
+import type { AppThemeId } from '../types/theme';
 import { MOB_IDS } from '../types/gameAssets';
 import { getDailyResource, normalizeSleepQuality } from './resourceEngine';
 import { getDayMode } from './stepsEngine';
@@ -73,31 +74,47 @@ export function getDailyMobContextLine(
   mobId: MobId,
   entry: DailyEntry,
   settings: AppSettings,
+  themeId: AppThemeId = 'darkFantasy',
 ): string {
   const mode = getDayMode(entry.dayMode);
   const resource = getDailyResource(entry);
   const movement = getMovementCredit(entry, settings);
+  const cozy = themeId === 'cozy';
 
   if (mode === 'minimal') {
-    return 'Образ минимального дня — маршрут удержан без идеала.';
+    return cozy
+      ? 'Минимальный день — дом всё равно чуть теплее.'
+      : 'Образ минимального дня — маршрут удержан без идеала.';
   }
   if (mode === 'recovery') {
-    return 'Моб слабеет, когда день восстановления отмечен.';
+    return cozy
+      ? 'Помеха смягчается, когда отмечен день восстановления.'
+      : 'Моб слабеет, когда день восстановления отмечен.';
   }
   if (mobId === 'fog_of_fatigue' && hasMarkedPhysicalActivity(entry)) {
-    return 'Туман поднялся после тяжёлой нагрузки. Он уязвим к сну, перерывам и восстановлению.';
+    return cozy
+      ? 'Туман над двором после тяжёлой нагрузки. Уходит после сна, паузы и восстановления.'
+      : 'Туман поднялся после тяжёлой нагрузки. Он уязвим к сну, перерывам и восстановлению.';
   }
   if (resource.level === 'low') {
-    return 'Низкий ресурс — игровой образ усталости, не приговор.';
+    return cozy
+      ? 'Низкий ресурс — мягкий образ усталости, не приговор.'
+      : 'Низкий ресурс — игровой образ усталости, не приговор.';
   }
   if (mobId === 'sofa_magnet') {
-    return 'Диванный магнит слабеет от любого движения в квестах.';
+    return cozy
+      ? 'Сонный плед слабеет от любого движения в задачах дня.'
+      : 'Диванный магнит слабеет от любого движения в квестах.';
   }
   if (mobId === 'empty_day') {
-    return 'Пустой день можно заполнить одной отметкой — моб отступит.';
+    return cozy
+      ? 'Тихую комнату можно согреть одной отметкой — помеха уйдёт.'
+      : 'Пустой день можно заполнить одной отметкой — моб отступит.';
   }
   if (mobId === 'fog_of_fatigue') {
-    return 'Туман усталости рассеивается, когда день отмечен.';
+    return cozy
+      ? 'Туман над двором рассеивается, когда день отмечен.'
+      : 'Туман усталости рассеивается, когда день отмечен.';
   }
   if (mobId === 'gray_heaviness') {
     return 'Серая тягость — знак перегруза. Мягкий день тоже ход.';
@@ -106,7 +123,11 @@ export function getDailyMobContextLine(
     return 'День не пустой: активность была не в шагах, а в работе тела.';
   }
   if (isDayEmpty(entry, settings)) {
-    return 'Отметь главное в квестах — образ дня прояснится.';
+    return cozy
+      ? 'Отметь главное в задачах дня — помеха прояснится.'
+      : 'Отметь главное в квестах — образ дня прояснится.';
   }
-  return 'Моб дня — игровой образ состояния, не оценка тебя.';
+  return cozy
+    ? 'Помеха дня — мягкий образ состояния, не оценка тебя.'
+    : 'Моб дня — игровой образ состояния, не оценка тебя.';
 }

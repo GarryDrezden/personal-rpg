@@ -1,6 +1,6 @@
 # Текущее состояние проекта
 
-> **Единый источник правды.** Обновлено: 2026-08-01.
+> **Единый источник правды.** Обновлено: 2026-08-01 (Cozy theme branch layer).
 
 ## Краткое описание
 
@@ -152,7 +152,7 @@ The project supports multiple visual/gameplay themes. Themes are not just colors
 
 **Not in near-term roadmap:** Cyberpunk.
 
-Cozy does **not** replace Dark Fantasy and is **not** a post-dark stage. Core fantasy: the player restores the body; the hero restores the home. Tone: calm, warm, human — not battle-first; the player brings the world back to life. UI shell (`themeId: cozy`) uses summer-home palette (linen/wood/sage/honey), Cozy Home `/home`, warmer Dashboard, theme-aware Летопись — not sterile white light mode.
+Cozy does **not** replace Dark Fantasy and is **not** a post-dark stage. Core fantasy: the player restores the body; the hero restores the home. Tone: calm, warm, human — not battle-first; the player brings the world back to life. UI shell (`themeId: cozy`) uses summer-home palette (linen/wood/sage/honey), Cozy Home `/home`, warmer Dashboard, theme-aware Летопись — not sterile white light mode. Presentation layer is theme-branched: cozy assets/placeholders + terminology («Главная помеха» / «Помеха дня»); Dark Fantasy art is not the default cozy fallback.
 
 См. [`07-decision-log.md`](07-decision-log.md), [`../brandbook/themes.md`](../brandbook/themes.md).
 
@@ -285,7 +285,7 @@ Asset Registry 2.0 готов: manifest, backlog, naming, placeholders зафи�
 
 ## Следующий приоритет
 
-Cozy Home v1 shipped (logic + UI). Next cozy work: UI direction pass / home preview art. Full boss art set S01–S13 and season rewards already in-app. Optional: Dashboard declutter or chapter/act boss art (P2). HTTPS — when hosting cert is ready.
+Cozy Home v1 + Cozy theme branch layer shipped (registry, placeholders, terminology). Next cozy work: final house/garden illustrations replacing SVG placeholders. Full DF boss art set S01–S13 and season rewards already in-app. Optional: Dashboard declutter or chapter/act boss art (P2). HTTPS — when hosting cert is ready.
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-08-01 — Cozy as a separate theme branch (not light DF)
+
+**Context:**  
+Cozy still risked showing Dark Fantasy boss/mob/avatar art as a soft fallback, which pulled the theme back into battle fantasy.
+
+**Decision:**  
+Treat Cozy as a parallel presentation branch: shared core data, separate assets/paths, terminology, and placeholders. Add `themeAssetRegistry` + `themeEntityPresentation` + `THEME_TERMS`. Cozy fallbacks stay inside `public/game-assets/themes/cozy/`. Dark Fantasy keeps legacy paths for now (migration TODO).
+
+**Consequence:**  
+Dashboard/Today/Home/Journey/Chronicle in Cozy speak recovery-home language («Главная помеха», «Помеха дня») without DF horror art. Internal mob/boss ids unchanged.
+
 ## 2026-08-01 — Cozy theme visual language: summer home (not sterile light mode)
 
 Context:

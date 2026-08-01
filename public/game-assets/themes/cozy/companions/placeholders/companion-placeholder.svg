@@ -1,0 +1,16 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Cozy companion placeholder">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f1ebe0"/>
+      <stop offset="100%" stop-color="#dce8d0"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="36" fill="url(#g)"/>
+  <ellipse cx="256" cy="320" rx="90" ry="70" fill="#c4a484"/>
+  <circle cx="256" cy="220" r="58" fill="#d2b48c"/>
+  <ellipse cx="200" cy="180" rx="18" ry="28" fill="#c4a484"/>
+  <ellipse cx="312" cy="180" rx="18" ry="28" fill="#c4a484"/>
+  <circle cx="238" cy="215" r="6" fill="#5c4a32"/>
+  <circle cx="274" cy="215" r="6" fill="#5c4a32"/>
+  <text x="256" y="430" text-anchor="middle" font-family="Georgia,serif" font-size="24" fill="#5c4a32">Спутник появится позже</text>
+</svg>

@@ -36,6 +36,17 @@
 Two app themes: Cozy Light / Dark Fantasy.
 Hero assets follow theme assignment in manifest (see [`themes.md`](themes.md)).
 
+## Theme Branching Rules
+
+- Themes are not simple color modes.
+- Each major theme can have its own presentation layer, assets, terminology and visual metaphor.
+- Core data remains shared.
+- Dark Fantasy assets must not be used as default fallback inside Cozy Theme.
+- Cozy fallback should use cozy placeholders.
+- Theme-specific bosses/mobs may share internal ids but must have theme-specific presentation.
+
+Runtime helpers: `themeAssetRegistry.ts`, `themeEntityPresentation.ts`, `themeTerms.ts`.
+
 ## Components reference
 
 | Area | Key components |

@@ -3,6 +3,7 @@ import { Coins, Flame } from 'lucide-react';
 import { getChapterMeta } from '../../constants/gameChapters';
 import { getCompanionImageCandidates, getHeroSceneBackdropPath } from '../../game/assetPaths';
 import { getCompanionMeta, getHeroStageMeta } from '../../game/assetRegistry';
+import { getCompanionPresentation } from '../../game/themeEntityPresentation';
 import { useGameHeroState } from '../../hooks/useGameHeroState';
 import { useHeroStageAssets } from '../../hooks/useHeroStageAssets';
 import { useAppTheme } from '../../hooks/useAppTheme';
@@ -47,19 +48,31 @@ type DashboardCommandBridgeProps = {
 };
 
 function CompanionStatusChip({ companionId }: { companionId: CompanionId }) {
+  const { themeId, isCozy } = useAppTheme();
   const meta = getCompanionMeta(companionId);
-  const candidates = getCompanionImageCandidates(companionId);
+  const presentation = getCompanionPresentation(themeId, companionId, meta);
+  const candidates = getCompanionImageCandidates(companionId, themeId);
 
   return (
     <Link
       to="/settings"
       data-testid="companion-status-chip"
-      className="inline-flex max-w-[11rem] items-center gap-2.5 rounded-2xl border border-amber-400/40 bg-black/55 py-1.5 pl-1.5 pr-3 shadow-[0_4px_16px_rgba(0,0,0,0.35)] backdrop-blur-sm transition hover:border-amber-300/60 hover:bg-black/65 sm:max-w-[13rem]"
+      className={
+        isCozy
+          ? 'inline-flex max-w-[11rem] items-center gap-2.5 rounded-2xl border border-[var(--app-border)] bg-[var(--app-card-strong)]/90 py-1.5 pl-1.5 pr-3 shadow-[var(--app-shadow)] transition hover:brightness-105 sm:max-w-[13rem]'
+          : 'inline-flex max-w-[11rem] items-center gap-2.5 rounded-2xl border border-amber-400/40 bg-black/55 py-1.5 pl-1.5 pr-3 shadow-[0_4px_16px_rgba(0,0,0,0.35)] backdrop-blur-sm transition hover:border-amber-300/60 hover:bg-black/65 sm:max-w-[13rem]'
+      }
     >
-      <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-gradient-to-b from-amber-900/30 to-black/50 ring-1 ring-amber-400/25 sm:h-16 sm:w-16">
+      <span
+        className={
+          isCozy
+            ? 'relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-[color-mix(in_srgb,var(--app-garden)_12%,var(--app-card))] ring-1 ring-[var(--app-border)] sm:h-16 sm:w-16'
+            : 'relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-gradient-to-b from-amber-900/30 to-black/50 ring-1 ring-amber-400/25 sm:h-16 sm:w-16'
+        }
+      >
         <GameAssetImage
           variant="companion"
-          src={meta.image}
+          src={presentation.imagePath}
           alt=""
           fallbackCandidates={candidates.slice(1)}
           status="unlocked"
@@ -69,11 +82,23 @@ function CompanionStatusChip({ companionId }: { companionId: CompanionId }) {
         />
       </span>
       <span className="min-w-0">
-        <span className="block text-[10px] font-semibold uppercase tracking-wide text-amber-200/85">
+        <span
+          className={
+            isCozy
+              ? 'block text-[10px] font-semibold uppercase tracking-wide text-[var(--app-garden)]'
+              : 'block text-[10px] font-semibold uppercase tracking-wide text-amber-200/85'
+          }
+        >
           Спутник
         </span>
-        <span className="block truncate text-sm font-bold leading-tight text-amber-50">
-          {meta.title}
+        <span
+          className={
+            isCozy
+              ? 'block truncate text-sm font-bold leading-tight text-[var(--app-text)]'
+              : 'block truncate text-sm font-bold leading-tight text-amber-50'
+          }
+        >
+          {presentation.title}
         </span>
       </span>
     </Link>
@@ -96,7 +121,7 @@ export function DashboardCommandBridge({
   onAcceptMomentumMinimal,
   onDismissMomentumHelp,
 }: DashboardCommandBridgeProps) {
-  const { isDarkFantasy } = useAppTheme();
+  const { themeId, isDarkFantasy, isCozy } = useAppTheme();
   const game = useGameHeroState();
   const { measurements, settings, dailyEntries } = useAppStore();
   const pathSetup = getPathSetupState(measurements, settings);
@@ -113,11 +138,11 @@ export function DashboardCommandBridge({
     ? Math.round(game.stageProgress.progressToNextStage)
     : 0;
   const showMilestones = pathSetup.kind === 'ready';
-  const backdropSrc = getHeroSceneBackdropPath();
+  const backdropSrc = getHeroSceneBackdropPath(themeId);
 
   const shellClass = isDarkFantasy
     ? 'overflow-hidden rounded-2xl border border-[var(--app-border)] bg-gradient-to-br from-[#171329] via-[#111022] to-[#090812] shadow-[var(--app-shadow)] hero-glow'
-    : 'overflow-hidden rounded-2xl border border-amber-200/60 bg-gradient-to-br from-amber-50 via-white to-orange-50 shadow-md';
+    : 'overflow-hidden rounded-2xl border border-[var(--app-border)] bg-gradient-to-br from-[#fff8ee] via-[#f1ebe0] to-[#e4efe0] shadow-[var(--app-shadow)]';
 
   return (
     <section data-testid="dashboard-command-bridge" className={shellClass}>
@@ -183,7 +208,9 @@ export function DashboardCommandBridge({
         {/* Center — hero scene */}
         <div
           data-testid="command-bridge-hero"
-          className="relative min-h-[22rem] overflow-hidden border-b border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] bg-[#0c0a12] lg:min-h-[28rem] lg:border-b-0 lg:border-r"
+          className={`relative min-h-[22rem] overflow-hidden border-b border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] lg:min-h-[28rem] lg:border-b-0 lg:border-r ${
+            isCozy ? 'bg-[#efe4d2]' : 'bg-[#0c0a12]'
+          }`}
         >
           <div className="pointer-events-none absolute inset-0" aria-hidden>
             <img
@@ -193,11 +220,25 @@ export function DashboardCommandBridge({
               loading="eager"
               decoding="async"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/50" />
-            <div className="absolute bottom-[7%] left-1/2 h-3 w-[42%] max-w-[11rem] -translate-x-1/2 rounded-[100%] bg-black/45 blur-md" />
+            <div
+              className={`absolute inset-0 ${
+                isCozy
+                  ? 'bg-gradient-to-b from-[#f1ebe0]/35 via-transparent to-[#efe4d2]/70'
+                  : 'bg-gradient-to-b from-black/40 via-transparent to-black/50'
+              }`}
+            />
+            <div
+              className={`absolute bottom-[7%] left-1/2 h-3 w-[42%] max-w-[11rem] -translate-x-1/2 rounded-[100%] blur-md ${
+                isCozy ? 'bg-[#8b7355]/25' : 'bg-black/45'
+              }`}
+            />
           </div>
 
-          <div className="absolute left-2 top-2 z-20 rounded-full border border-[var(--app-border)] bg-black/45 px-2.5 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm">
+          <div
+            className={`absolute left-2 top-2 z-20 rounded-full border border-[var(--app-border)] px-2.5 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm ${
+              isCozy ? 'bg-[var(--app-card-strong)]/90' : 'bg-black/45'
+            }`}
+          >
             Ур. {level}
           </div>
 
