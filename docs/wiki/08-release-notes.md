@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Improved Cozy Home visual direction with warm village-home surfaces, botanical background accents and more material zone cards.
 - **Cozy atmosphere polish:** layered summer-home shell (linen wash, soft sun, faint botanical corners, paper texture), richer material card surfaces, warmer dashboard hero glow — without heavy illustration noise. Dark Fantasy unchanged.
 - Clarified Cozy Theme as a separate theme branch with its own assets, avatars, companions, bosses/mobs presentation and cozy placeholders.
 - Removed Dark Fantasy art as default fallback for Cozy Theme.

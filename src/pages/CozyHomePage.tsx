@@ -1,26 +1,42 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import {
   COZY_HOME_ZONE_IDS,
-  COZY_RESOURCE_LABELS,
   getCozyZoneConfig,
 } from '../constants/cozyHomeConfig';
-import { getCozyHomeScenePlaceholderPath } from '../game/themeAssetRegistry';
 import {
   getCozyHomeProgress,
   getCozyHomeState,
   upgradeCozyZone,
   withCozyHomeState,
 } from '../utils/cozyHomeEngine';
+import { CozyHomeScenePlaceholder } from '../components/cozy/CozyHomeScenePlaceholder';
 import { CozyHomeZoneCard, formatResourceBadges } from '../components/cozy/CozyHomeZoneCard';
 import type { CozyHomeZoneId, CozyResourceId } from '../types/cozyHome';
 
-const CHIP_CLASS: Record<CozyResourceId, string> = {
-  comfort: 'cozy-chip cozy-chip--comfort',
-  materials: 'cozy-chip cozy-chip--materials',
-  garden: 'cozy-chip cozy-chip--garden',
-  clarity: 'cozy-chip cozy-chip--clarity',
+const RESOURCE_META: Record<
+  CozyResourceId,
+  { icon: string; chipClass: string }
+> = {
+  comfort: { icon: '🕯️', chipClass: 'cozy-resource-chip cozy-resource-chip--comfort' },
+  materials: { icon: '🪵', chipClass: 'cozy-resource-chip cozy-resource-chip--materials' },
+  garden: { icon: '🌿', chipClass: 'cozy-resource-chip cozy-resource-chip--garden' },
+  clarity: { icon: '✨', chipClass: 'cozy-resource-chip cozy-resource-chip--clarity' },
 };
+
+function homeStatusLine(percent: number, totalResources: number): string {
+  if (totalResources === 0 && percent === 0) {
+    return 'Сегодня дом ждёт маленького шага.';
+  }
+  if (percent >= 70) {
+    return 'Дом уже отвечает теплом — осталось бережно довести зоны до порядка.';
+  }
+  if (percent >= 30) {
+    return 'Каждая отметка дня приносит немного света, порядка и уюта.';
+  }
+  return 'Забота о теле превращается в материалы, сад, уют и ясность.';
+}
 
 export function CozyHomePage() {
   const { settings, saveSettings } = useAppStore();
@@ -29,11 +45,21 @@ export function CozyHomePage() {
   const home = useMemo(() => getCozyHomeState(settings), [settings]);
   const progress = useMemo(() => getCozyHomeProgress(home), [home]);
   const badges = useMemo(() => formatResourceBadges(home.resources), [home.resources]);
+  const totalResources = useMemo(
+    () => badges.reduce((sum, b) => sum + b.value, 0),
+    [badges],
+  );
+  const statusLine = homeStatusLine(progress.percent, totalResources);
 
-  const lastLine = useMemo(() => {
+  const lastUpgrade = useMemo(() => {
     if (!home.lastUpgrade) return null;
     const zone = getCozyZoneConfig(home.lastUpgrade.zoneId);
-    return `${zone.title}: ${home.lastUpgrade.title}`;
+    return {
+      icon: zone.icon,
+      title: zone.title,
+      line: home.lastUpgrade.title,
+      at: home.lastUpgrade.at,
+    };
   }, [home.lastUpgrade]);
 
   const handleUpgrade = async (zoneId: CozyHomeZoneId) => {
@@ -47,96 +73,140 @@ export function CozyHomePage() {
   };
 
   return (
-    <div className="space-y-6 pb-6" data-testid="cozy-home-page">
-      <header className="cozy-home-hero">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--app-garden)]">
-          Деревенский дом
+    <div className="cozy-home-page space-y-5 pb-6" data-testid="cozy-home-page">
+      <header className="cozy-home-page__header">
+        <div className="cozy-home-page__header-mark" aria-hidden />
+        <p className="cozy-home-page__eyebrow">Деревенский дом</p>
+        <h1 className="cozy-home-page__title">Дом</h1>
+        <p className="cozy-home-page__lead">
+          Тело возвращает силы — дом возвращает тепло.
         </p>
-        <h1 className="mt-1 text-2xl font-bold text-[var(--app-text)]">Дом</h1>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--app-text-muted)]">
-          Тело возвращает силы — дом возвращает тепло. Летний свет, дерево и сад растут из
-          уже отмеченных дней.
-        </p>
+        <p className="cozy-home-page__status">{statusLine}</p>
       </header>
 
       <section
-        aria-label="Вид дома"
-        className="cozy-surface overflow-hidden"
+        className="cozy-home-hero-block"
+        aria-label="Дом становится теплее"
         data-testid="cozy-home-scene"
       >
-        <div className="relative aspect-[16/9] max-h-[18rem] w-full overflow-hidden sm:max-h-[22rem]">
-          <img
-            src={getCozyHomeScenePlaceholderPath()}
-            alt="Дом героя — иллюстрация зоны в работе"
-            className="h-full w-full object-cover"
-            loading="eager"
-            decoding="async"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#efe4d2]/85 via-transparent to-transparent" />
-          <div className="absolute bottom-0 left-0 p-3 sm:p-4">
-            <p className="text-sm font-semibold text-[var(--app-text)]">Дом ждёт сегодняшнего шага</p>
-            <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">
-              Двор, сад и комнаты оживают по мере заботы о теле
+        <CozyHomeScenePlaceholder />
+
+        <div className="cozy-home-hero-block__body">
+          <p className="cozy-home-hero-block__eyebrow">Восстановление</p>
+          <h2 className="cozy-home-hero-block__title">Дом становится теплее</h2>
+
+          <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
+            <p className="text-sm font-semibold text-[var(--app-text)]">
+              Восстановлено {progress.done} / {progress.total} улучшений
             </p>
+            <p className="text-xs font-medium text-[var(--app-garden)]">{progress.percent}%</p>
+          </div>
+          <div className="cozy-progress-track mt-2">
+            <div
+              className="cozy-progress-fill transition-all"
+              style={{ width: `${progress.percent}%` }}
+            />
+          </div>
+
+          <p className="mt-3 text-sm leading-relaxed text-[var(--app-text-muted)]">
+            {progress.done === 0
+              ? 'Пока дом ждёт первого улучшения — даже маленький день уже что-то меняет.'
+              : 'Двор, сад и комнаты оживают по мере заботы о теле.'}
+          </p>
+
+          <div className="cozy-resource-grid mt-4" aria-label="Ресурсы дома">
+            {badges.map((b) => (
+              <div key={b.id} className={RESOURCE_META[b.id].chipClass}>
+                <span className="cozy-resource-chip__icon" aria-hidden>
+                  {RESOURCE_META[b.id].icon}
+                </span>
+                <div className="min-w-0">
+                  <p className="cozy-resource-chip__label">{b.label}</p>
+                  <p className="cozy-resource-chip__value">{b.value}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section aria-label="Ресурсы дома" className="flex flex-wrap gap-2">
-        {badges.map((b) => (
-          <span key={b.id} className={CHIP_CLASS[b.id]}>
-            <span aria-hidden>{b.id === 'garden' ? '🌿' : b.id === 'comfort' ? '🕯️' : b.id === 'materials' ? '🪵' : '✨'}</span>
-            {b.label} {b.value}
-          </span>
-        ))}
+      {totalResources === 0 ? (
+        <section className="cozy-home-empty" data-testid="cozy-home-empty-resources">
+          <p className="cozy-home-empty__title">Пока ресурсы спят</p>
+          <p className="cozy-home-empty__text">
+            Сначала сохрани день на странице «Сегодня». Даже минимальный день принесёт
+            немного уюта для дома.
+          </p>
+          <Link to="/today" className="cozy-home-empty__cta">
+            Открыть день
+          </Link>
+        </section>
+      ) : null}
+
+      <section className="cozy-home-changed">
+        <p className="cozy-home-changed__label">Что изменилось в доме</p>
+        {lastUpgrade ? (
+          <div className="cozy-home-changed__row">
+            <span className="cozy-home-changed__icon" aria-hidden>
+              {lastUpgrade.icon}
+            </span>
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-[var(--app-text)]">
+                {lastUpgrade.title}: {lastUpgrade.line}
+              </p>
+              {lastUpgrade.at ? (
+                <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">
+                  {lastUpgrade.at.slice(0, 10)}
+                </p>
+              ) : null}
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm leading-relaxed text-[var(--app-text-muted)]">
+            Пока тихо. Сохрани день на «Сегодня» — появятся материалы, уют и ясность для
+            первых улучшений.
+          </p>
+        )}
       </section>
 
-      <section className="cozy-surface px-4 py-3.5">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <p className="text-sm font-semibold text-[var(--app-text)]">
-            Восстановлено {progress.done} / {progress.total} улучшений
-          </p>
-          <p className="text-xs font-medium text-[var(--app-garden)]">{progress.percent}%</p>
-        </div>
-        <div className="cozy-progress-track mt-2.5">
-          <div className="cozy-progress-fill transition-all" style={{ width: `${progress.percent}%` }} />
-        </div>
-        <p className="mt-2.5 text-xs leading-relaxed text-[var(--app-text-muted)]">
-          Уют, материалы, сад и ясность приходят из питания, движения, сна, перерывов и
-          спокойных дней — не из отдельного списка дел.
-        </p>
-      </section>
+      <details className="cozy-home-sources">
+        <summary className="cozy-home-sources__summary">Откуда берутся ресурсы?</summary>
+        <ul className="cozy-home-sources__list">
+          <li>
+            <span aria-hidden>🕯️</span> Питание и дневник → Уют
+          </li>
+          <li>
+            <span aria-hidden>🪵</span> Шаги и физическая активность → Материалы
+          </li>
+          <li>
+            <span aria-hidden>🌿</span> Прогулки и дни без алкоголя → Сад
+          </li>
+          <li>
+            <span aria-hidden>✨</span> Сон, перерывы и ясный день → Ясность
+          </li>
+        </ul>
+      </details>
 
-      {lastLine ? (
-        <section className="cozy-surface-soft px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-garden)]">
-            Что изменилось в доме
-          </p>
-          <p className="mt-1 text-sm text-[var(--app-text)]">{lastLine}</p>
-        </section>
-      ) : (
-        <section className="cozy-surface-soft px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
-            Что изменилось в доме
-          </p>
-          <p className="mt-1 text-sm text-[var(--app-text-muted)]">
-            Пока тихо. Сохрани день на «Сегодня» — появятся{' '}
-            {COZY_RESOURCE_LABELS.materials.toLowerCase()},{' '}
-            {COZY_RESOURCE_LABELS.comfort.toLowerCase()} и ясность для первых улучшений.
-          </p>
-        </section>
-      )}
-
-      <section aria-label="Зоны дома" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {COZY_HOME_ZONE_IDS.map((zoneId) => (
-          <CozyHomeZoneCard
-            key={zoneId}
-            home={home}
-            zoneId={zoneId}
-            busy={busyZone === zoneId}
-            onUpgrade={(id) => void handleUpgrade(id)}
-          />
-        ))}
+      <section aria-label="Зоны дома">
+        <div className="mb-3 flex items-end justify-between gap-2">
+          <div>
+            <h2 className="text-sm font-semibold text-[var(--app-text)]">Зоны дома</h2>
+            <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">
+              Комнаты, двор и сад ждут восстановления
+            </p>
+          </div>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {COZY_HOME_ZONE_IDS.map((zoneId) => (
+            <CozyHomeZoneCard
+              key={zoneId}
+              home={home}
+              zoneId={zoneId}
+              busy={busyZone === zoneId}
+              onUpgrade={(id) => void handleUpgrade(id)}
+            />
+          ))}
+        </div>
       </section>
     </div>
   );

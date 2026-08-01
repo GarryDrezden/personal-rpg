@@ -192,6 +192,20 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Keep the loop simple: daily care → resources → zone upgrade → home feels warmer.
 - No house editor, drag-and-drop, or infinite decor catalog in v1.
 
+## Cozy Home Visual Rules
+
+- **Дом** (`/home`) — главный cozy meta-screen.
+- Страница должна ощущаться как тёплый деревенский дом и сад, а не как таблица улучшений.
+- Использовать дерево, зелень, летний свет, мягкие натуральные поверхности (лён / бумага / штукатурка).
+- Hero-блок дома важнее обычных карточек: прогресс, ресурсы, статус, мягкая сцена/placeholder.
+- Placeholder дома — CSS/SVG силуэт (дом, солнце, кусты, тёплое окно), без технического «PLACEHOLDER».
+- Resource chips: Уют (honey), Материалы (wood), Сад (sage), Ясность (soft sky/gold) — читаемые, не огромные.
+- Карточки зон — маленькие комнаты/участки с мягким тоном по типу зоны; «Можно улучшить» видно сразу.
+- Орнаменты допустимы только фоново и низкоконтрастно (листья, веточки).
+- Не использовать dark fantasy art или battle tone.
+- Empty states должны поддерживать, а не обвинять.
+- Даже минимальный день может дать маленький уютный прогресс.
+
 ## Theme / shell UX Rules
 
 - Themes are not just colors: each can have its own metaphor, progression fantasy, assets and copy tone.
@@ -211,7 +225,7 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Cozy UI: **not** sterile white SaaS / not “lightened Dark Fantasy”. Summer home language: linen/cream/beige base, sage garden, honey sun, wood brown, soft terracotta. Rounded paper/wood cards, gentle shadows, no purple accents as secondary. Adult premium cozy — not cartoon, not neon green.
 - Cozy tokens live in `src/index.css` (`[data-theme='cozy']`) + patterns in `src/styles/cozy-theme.css` (surfaces, chips, zone cards, season chronicle forks, sidebar warmth).
 - Cozy Dashboard: warmer shell + integrated «Дом становится теплее»; campaign cards keep hierarchy but sit on natural surfaces. Still one clear daily action.
-- Cozy Home `/home`: zone cards as domestic spaces (level pills, soft unavailable, honey CTA), resource chips by material color.
+- Cozy Home `/home`: hero restoration block + material zone cards (level pills, ready badges, soft unavailable, honey CTA), resource chips by material color — not a flat upgrade table.
 - Cozy Seasons: “садовый журнал / сезонный альбом” — theme-forked chronicle hero/cards (no hard-coded violet panels under cozy).
 - Active theme work order: Cozy → Slavic / Forest Myth → Athlete Return / Sports Comeback.
 - Cyberpunk is not in the near-term theme roadmap.

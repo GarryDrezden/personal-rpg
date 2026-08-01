@@ -15,6 +15,17 @@ type CozyHomeZoneCardProps = {
   busy?: boolean;
 };
 
+const ZONE_TONE: Record<CozyHomeZoneId, string> = {
+  porch: 'cozy-zone-card--porch',
+  hallway: 'cozy-zone-card--cream',
+  kitchen: 'cozy-zone-card--cream',
+  bedroom: 'cozy-zone-card--cream',
+  yard: 'cozy-zone-card--garden',
+  garden: 'cozy-zone-card--garden',
+  workshop: 'cozy-zone-card--wood',
+  pet_corner: 'cozy-zone-card--companion',
+};
+
 export function CozyHomeZoneCard({
   home,
   zoneId,
@@ -23,68 +34,89 @@ export function CozyHomeZoneCard({
 }: CozyHomeZoneCardProps) {
   const { config, level, current, next, check } = getCozyZoneDisplay(home, zoneId);
   const isMax = check.isMax;
+  const canUpgrade = check.canUpgrade;
+  const tone = ZONE_TONE[zoneId] ?? '';
 
   return (
     <article
       data-testid={`cozy-zone-${zoneId}`}
-      className={`cozy-zone-card${isMax ? ' cozy-zone-card--max' : ''}`}
+      className={[
+        'cozy-zone-card',
+        tone,
+        isMax ? 'cozy-zone-card--max' : '',
+        canUpgrade ? 'cozy-zone-card--ready' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
-      <div className="flex items-start gap-3 pl-1">
-        <span
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[var(--app-border)] bg-[color-mix(in_srgb,var(--app-panel-highlight)_80%,var(--app-garden)_20%)] text-xl"
-          aria-hidden
-        >
+      <div className="cozy-zone-card__ornament" aria-hidden />
+
+      <div className="flex items-start gap-3">
+        <span className="cozy-zone-card__icon" aria-hidden>
           {config.icon}
         </span>
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <h3 className="text-base font-semibold text-[var(--app-text)]">{config.title}</h3>
-            <span className="cozy-zone-level">Ур. {level}/3</span>
+            <span className="cozy-zone-level">Уровень {level} / 3</span>
           </div>
-          <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">{config.shortTitle} · зона дома</p>
+          {canUpgrade ? (
+            <span className="cozy-zone-ready-badge mt-1.5 inline-flex">Можно улучшить</span>
+          ) : null}
+          {isMax ? (
+            <span className="cozy-zone-max-badge mt-1.5 inline-flex">Восстановлено</span>
+          ) : null}
         </div>
       </div>
 
-      <p className="mt-3 pl-1 text-sm leading-relaxed text-[var(--app-text)]">
-        {current.description}
-      </p>
-
-      {isMax ? (
-        <p className="mt-3 pl-1 text-sm font-medium text-[var(--app-garden)]">
-          Зона восстановлена
-        </p>
-      ) : next ? (
-        <div className="mt-3 space-y-1.5 rounded-xl bg-[color-mix(in_srgb,var(--app-panel-highlight)_70%,transparent)] px-3 py-2.5 text-sm">
-          <p className="text-[var(--app-text-muted)]">
-            Дальше:{' '}
-            <span className="font-medium text-[var(--app-text)]">{next.description}</span>
-          </p>
-          {next.cost ? (
-            <p className="text-xs text-[var(--app-wood)]">Стоимость: {formatCozyCost(next.cost)}</p>
-          ) : null}
+      <div className="mt-3 space-y-2.5">
+        <div>
+          <p className="cozy-zone-card__label">Сейчас</p>
+          <p className="text-sm leading-relaxed text-[var(--app-text)]">{current.description}</p>
         </div>
-      ) : null}
+
+        {isMax ? (
+          <p className="text-sm font-medium text-[var(--app-garden)]">
+            Зона восстановлена — здесь уже тепло и порядок.
+          </p>
+        ) : next ? (
+          <div className="cozy-zone-card__next">
+            <p className="cozy-zone-card__label">Следующее улучшение</p>
+            <p className="text-sm font-medium text-[var(--app-text)]">{next.description}</p>
+            {next.cost ? (
+              <p className="mt-1.5 text-xs text-[var(--app-wood)]">
+                Стоимость: {formatCozyCost(next.cost)}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
 
       <div className="mt-auto pt-4">
-        {isMax ? null : check.canUpgrade ? (
+        {isMax ? (
+          <button
+            type="button"
+            disabled
+            className="cozy-zone-btn cozy-zone-btn--done w-full"
+          >
+            Зона восстановлена
+          </button>
+        ) : canUpgrade ? (
           <button
             type="button"
             disabled={busy}
             onClick={() => onUpgrade(zoneId)}
-            className="btn-primary w-full rounded-xl px-3 py-2.5 text-sm font-semibold disabled:opacity-60"
+            className="btn-primary cozy-zone-btn cozy-zone-btn--ready w-full disabled:opacity-60"
           >
             Улучшить
           </button>
         ) : (
           <div className="space-y-2">
-            <p className="text-xs text-[var(--app-text-muted)]">
-              Пока не хватает: {formatMissingResources(check.missingResources)}
+            <p className="text-xs leading-relaxed text-[var(--app-text-muted)]">
+              Не хватает: {formatMissingResources(check.missingResources)}.
+              Сегодняшние действия могут принести материалы и уют.
             </p>
-            <button
-              type="button"
-              disabled
-              className="w-full rounded-xl border border-[var(--app-border)] bg-[color-mix(in_srgb,var(--app-bg-soft)_80%,transparent)] px-3 py-2.5 text-sm font-semibold text-[var(--app-text-muted)]"
-            >
+            <button type="button" disabled className="cozy-zone-btn cozy-zone-btn--wait w-full">
               Улучшить
             </button>
           </div>

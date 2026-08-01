@@ -142,6 +142,8 @@ Cozy never falls back to Dark Fantasy art by default — missing cozy art uses s
 
 Деревенский дом как cozy meta progression: забота о теле даёт ресурсы → ресурсы тратятся на зоны дома → дом становится уютнее.
 
+**Presentation note:** Cozy Home is not a resource table; it is a visual meta-progression for restoring the home (hero scene, warm resource chips, zone cards as rooms/yard/garden).
+
 **Ресурсы:** Уют (`comfort`), Материалы (`materials`), Сад (`garden`), Ясность (`clarity`).
 
 **Зоны (0–3):** крыльцо, прихожая, кухня, спальня, двор, сад, мастерская, уголок спутника (всего 24 улучшения).
