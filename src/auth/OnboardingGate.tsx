@@ -30,9 +30,11 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
     if (settings.onboardingCompleted === true) return;
     if (pending) return;
     // Soft migration: mark legacy/progress users completed without forcing UI.
+    // Read latest store snapshot to avoid overwriting concurrent settings writes.
     migratedRef.current = true;
-    void saveSettings(withOnboardingCompletedFlag(settings));
-  }, [pending, saveSettings, settings]);
+    const latest = useAppStore.getState().settings;
+    void saveSettings(withOnboardingCompletedFlag(latest));
+  }, [pending, saveSettings, settings.onboardingCompleted]);
 
   if (pending && location.pathname !== '/start') {
     return <Navigate to="/start" replace />;

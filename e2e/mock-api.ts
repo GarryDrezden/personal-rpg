@@ -1,14 +1,50 @@
 type MockSettings = {
   themeId?: 'cozy' | 'darkFantasy';
   enableSleepTracking?: boolean;
+  enableAlcoholTracking?: boolean;
+  enablePhysicalActivityTracking?: boolean;
+  onboardingCompleted?: boolean;
+  onboardingCompletedAt?: string | null;
+  activeCompanionId?: string;
+  nutritionTrackingMode?: 'disabled' | 'simple' | 'precise' | 'detailed';
+  dailyCalorieLimit?: number | null;
   defaultCaloriesLimit: number;
   defaultStepsGoal: number;
+  defaultStepsMinimum?: number;
+  defaultStepsNormal?: number;
+  defaultStepsExcellent?: number;
   defaultGymTarget: number;
   defaultWeeklyPointsGoal: number;
   weightGoal: number;
+  targetWeight?: number | null;
+  heroGender?: 'male' | 'female';
+  gender: 'male' | 'female';
   pointSettings: Record<string, number>;
   weeklySettings: unknown[];
-  gender: 'male' | 'female';
+  cozyHome?: Record<string, unknown>;
+};
+
+type MockProfile = {
+  id: string;
+  userId: string;
+  displayName: string | null;
+  heroGender: 'male' | 'female' | 'neutral' | null;
+  startWeight: number | null;
+  targetWeight: number | null;
+  height: number | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type MockUserSettings = {
+  id: string;
+  userId: string;
+  themeId: string;
+  nutritionTrackingMode: 'simple' | 'detailed';
+  dailyCalorieLimit: number | null;
+  activeCompanionId: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 type MockAppData = {
@@ -19,13 +55,36 @@ type MockAppData = {
   settings: MockSettings;
 };
 
-function createDefaultSettings(): MockSettings {
+export type MockApiOptions = {
+  /** New account: force onboarding gate. */
+  freshOnboarding?: boolean;
+  measurements?: unknown[];
+  dailyEntries?: unknown[];
+  settings?: Partial<MockSettings>;
+  profile?: Partial<MockProfile>;
+};
+
+/** Match real backend `/api/...` only — not Vite `/src/api/*.ts` modules. */
+export function isBackendApiUrl(url: string): boolean {
+  try {
+    const { pathname } = new URL(url);
+    return pathname === '/api' || pathname.startsWith('/api/');
+  } catch {
+    return false;
+  }
+}
+
+function createDefaultSettings(completed: boolean): MockSettings {
   return {
     defaultCaloriesLimit: 2650,
     defaultStepsGoal: 11500,
+    defaultStepsMinimum: 7000,
+    defaultStepsNormal: 11500,
+    defaultStepsExcellent: 14000,
     defaultGymTarget: 2,
     defaultWeeklyPointsGoal: 500,
     weightGoal: 100,
+    targetWeight: 100,
     pointSettings: {
       caloriesOk: 40,
       stepsOk: 35,
@@ -46,18 +105,64 @@ function createDefaultSettings(): MockSettings {
     },
     weeklySettings: [],
     gender: 'male',
+    heroGender: 'male',
     themeId: 'cozy',
     enableSleepTracking: false,
+    enableAlcoholTracking: true,
+    enablePhysicalActivityTracking: true,
+    activeCompanionId: 'golden_chinchilla_cat',
+    nutritionTrackingMode: 'simple',
+    dailyCalorieLimit: null,
+    onboardingCompleted: completed,
+    onboardingCompletedAt: completed ? '2026-01-01T00:00:00.000Z' : null,
+    cozyHome: {
+      resources: { comfort: 0, materials: 0, garden: 0, clarity: 0 },
+      zones: {},
+      totalUpgrades: 0,
+      lastUpdatedAt: null,
+      lastUpgrade: null,
+    },
   };
 }
 
-export function createDefaultAppData(): MockAppData {
+function createDefaultProfile(fresh: boolean): MockProfile {
+  return {
+    id: 'profile-1',
+    userId: 'user-1',
+    displayName: fresh ? null : 'Герой',
+    heroGender: fresh ? null : 'male',
+    startWeight: fresh ? null : 90,
+    targetWeight: fresh ? null : 80,
+    height: fresh ? null : 175,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+  };
+}
+
+function createUserSettings(settings: MockSettings): MockUserSettings {
+  return {
+    id: 'settings-1',
+    userId: 'user-1',
+    themeId: settings.themeId ?? 'cozy',
+    nutritionTrackingMode:
+      settings.nutritionTrackingMode === 'precise' ||
+      settings.nutritionTrackingMode === 'detailed'
+        ? 'detailed'
+        : 'simple',
+    dailyCalorieLimit: settings.dailyCalorieLimit ?? null,
+    activeCompanionId: settings.activeCompanionId ?? 'golden_chinchilla_cat',
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+  };
+}
+
+export function createDefaultAppData(completed = true): MockAppData {
   return {
     dailyEntries: [],
     measurements: [],
     rewards: [],
     bankDeposits: [],
-    settings: createDefaultSettings(),
+    settings: createDefaultSettings(completed),
   };
 }
 
@@ -100,62 +205,178 @@ export const SEED_MEASUREMENTS = [
   },
 ];
 
-export function createMockApiHandler(initial?: Partial<MockAppData>) {
-  let data: MockAppData = {
-    ...createDefaultAppData(),
-    ...initial,
-    settings: {
-      ...createDefaultSettings(),
-      ...initial?.settings,
-    },
-    measurements: initial?.measurements ?? [],
+function json(data: unknown, status = 200) {
+  return {
+    status,
+    contentType: 'application/json',
+    body: JSON.stringify(data),
   };
+}
+
+export function createMockApiHandler(initial?: MockApiOptions) {
+  const fresh = Boolean(initial?.freshOnboarding);
+  let profile = {
+    ...createDefaultProfile(fresh),
+    ...initial?.profile,
+  };
+  let appData: MockAppData = {
+    ...createDefaultAppData(!fresh),
+    dailyEntries: initial?.dailyEntries ?? [],
+    measurements: initial?.measurements ?? [],
+    settings: {
+      ...createDefaultSettings(!fresh),
+      ...initial?.settings,
+      onboardingCompleted:
+        initial?.settings?.onboardingCompleted ?? (!fresh ? true : false),
+    },
+  };
+  let userSettings = createUserSettings(appData.settings);
+
+  const authPayload = () => ({
+    user: {
+      id: 'user-1',
+      login: 'e2e-user',
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+    },
+    profile,
+    settings: userSettings,
+    authToken: 'e2e-token',
+  });
 
   return async (route: import('@playwright/test').Route) => {
     const request = route.request();
+    if (!isBackendApiUrl(request.url())) {
+      await route.continue();
+      return;
+    }
+
     const url = new URL(request.url());
     const path = url.pathname.replace(/^\/api/, '') || '/';
     const method = request.method();
 
+    if (
+      (path === '/auth/me' || path === '/auth/login' || path === '/auth/register') &&
+      (method === 'GET' || method === 'POST')
+    ) {
+      await route.fulfill(json(authPayload()));
+      return;
+    }
+
+    if (path === '/auth/logout' && method === 'POST') {
+      await route.fulfill(json({ ok: true }));
+      return;
+    }
+
+    if (path === '/data' && method === 'GET') {
+      await route.fulfill(
+        json({
+          profile,
+          settings: userSettings,
+          data: {
+            dailyEntries: appData.dailyEntries,
+            measurements: appData.measurements,
+            rewards: appData.rewards,
+            bankDeposits: appData.bankDeposits,
+            customSettingsBackup: appData.settings,
+          },
+        }),
+      );
+      return;
+    }
+
+    if (path.startsWith('/data/') && method === 'PUT') {
+      const type = path.replace('/data/', '');
+      const body = (request.postDataJSON() ?? {}) as { payload?: unknown };
+      const payload = body.payload;
+      if (type === 'customSettingsBackup' && payload && typeof payload === 'object') {
+        appData = {
+          ...appData,
+          settings: {
+            ...appData.settings,
+            ...(payload as MockSettings),
+          },
+        };
+        userSettings = createUserSettings(appData.settings);
+      } else if (type === 'dailyEntries' && Array.isArray(payload)) {
+        appData = { ...appData, dailyEntries: payload };
+      } else if (type === 'measurements' && Array.isArray(payload)) {
+        appData = { ...appData, measurements: payload };
+      }
+      await route.fulfill(
+        json({
+          type,
+          payload,
+          updatedAt: new Date().toISOString(),
+        }),
+      );
+      return;
+    }
+
+    if (path === '/profile' && method === 'PATCH') {
+      const body = (request.postDataJSON() ?? {}) as Partial<MockProfile>;
+      profile = {
+        ...profile,
+        ...body,
+        updatedAt: new Date().toISOString(),
+      };
+      await route.fulfill(json(profile));
+      return;
+    }
+
+    if (path === '/settings' && method === 'PATCH') {
+      const body = (request.postDataJSON() ?? {}) as Partial<MockUserSettings>;
+      userSettings = {
+        ...userSettings,
+        ...body,
+        updatedAt: new Date().toISOString(),
+      };
+      if (body.themeId) {
+        appData.settings.themeId = body.themeId as MockSettings['themeId'];
+      }
+      if (body.activeCompanionId) {
+        appData.settings.activeCompanionId = body.activeCompanionId;
+      }
+      if (body.dailyCalorieLimit !== undefined) {
+        appData.settings.dailyCalorieLimit = body.dailyCalorieLimit;
+      }
+      await route.fulfill(json(userSettings));
+      return;
+    }
+
+    // Legacy local API shapes (fallback)
     if (path === '/' && method === 'GET') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(data),
-      });
+      await route.fulfill(json(appData));
       return;
     }
 
     if (path === '/settings' && method === 'PUT') {
       const body = (request.postDataJSON() ?? {}) as Partial<MockSettings>;
-      data = {
-        ...data,
+      appData = {
+        ...appData,
         settings: {
-          ...data.settings,
+          ...appData.settings,
           ...body,
         },
       };
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(data.settings),
-      });
+      userSettings = createUserSettings(appData.settings);
+      await route.fulfill(json(appData.settings));
       return;
     }
 
     if (path === '/settings' && method === 'GET') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(data.settings),
-      });
+      await route.fulfill(json(appData.settings));
       return;
     }
 
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify([]),
-    });
+    await route.fulfill(json([]));
   };
+}
+
+export async function installMockApi(
+  page: import('@playwright/test').Page,
+  options?: MockApiOptions,
+) {
+  const handler = createMockApiHandler(options);
+  await page.route(isBackendApiUrl, handler);
 }

@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
-import { createMockApiHandler } from './mock-api';
+import { installMockApi } from './mock-api';
 
 test.describe('Settings autosave feedback', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('**/api/**', createMockApiHandler());
+    await installMockApi(page);
     await page.addInitScript(() => localStorage.clear());
   });
 
@@ -22,7 +22,8 @@ test.describe('Settings autosave feedback', () => {
     await expect(page.getByTestId('sleep-tracking-toggle')).toHaveAttribute('aria-checked', 'true');
 
     await page.goto('/today');
-    await expect(page.getByTestId('sleep-day-card')).toBeVisible();
+    // Resource & Rest card is the current Today surface for sleep/energy.
+    await expect(page.getByTestId('rest-day-card')).toBeVisible();
   });
 
   test('theme toggle shows feedback and persists', async ({ page }) => {
@@ -38,6 +39,7 @@ test.describe('Settings autosave feedback', () => {
 
     await page.reload();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'darkFantasy');
-    await expect(page.getByTestId('theme-option-darkFantasy')).toContainText('Активна');
+    await expect(page.getByTestId('theme-option-darkFantasy')).toContainText('Выбрана');
   });
 });
+

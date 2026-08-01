@@ -1,8 +1,8 @@
 import type { Page } from '@playwright/test';
-import { createMockApiHandler, SEED_MEASUREMENTS } from './mock-api';
+import { installMockApi, SEED_MEASUREMENTS } from './mock-api';
 
 export async function setupMeasurementsE2e(page: Page) {
-  await page.route('**/api/**', createMockApiHandler({ measurements: SEED_MEASUREMENTS }));
+  await installMockApi(page, { measurements: SEED_MEASUREMENTS });
   await page.addInitScript(() => {
     if (sessionStorage.getItem('measurements-e2e-seeded') !== '1') {
       localStorage.clear();
