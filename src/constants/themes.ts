@@ -30,8 +30,7 @@ export function getThemeById(id: AppThemeId): AppTheme {
 }
 
 export const THEME_SHELL_CLASS: Record<AppThemeId, string> = {
-  cozy:
-    'min-h-screen bg-[radial-gradient(ellipse_at_12%_0%,rgba(232,197,71,0.22),transparent_42%),radial-gradient(ellipse_at_90%_100%,rgba(95,122,90,0.14),transparent_46%),radial-gradient(ellipse_at_50%_40%,rgba(255,248,238,0.35),transparent_55%),var(--app-bg)] text-[var(--app-text)] transition-colors duration-300',
+  cozy: 'cozy-shell min-h-screen text-[var(--app-text)] transition-colors duration-300',
   darkFantasy:
     'min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(124,58,237,0.28),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(250,204,21,0.10),transparent_28%),var(--app-bg)] text-[var(--app-text)] transition-colors duration-300',
 };

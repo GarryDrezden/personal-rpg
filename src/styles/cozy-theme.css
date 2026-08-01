@@ -4,19 +4,125 @@
  * Prefer CSS variables — do not hardcode purple/neon into cozy screens.
  */
 
+/* ——— Atmosphere shell (layered summer-home background) ——— */
+.cozy-shell {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--app-bg);
+  background-image:
+    radial-gradient(ellipse 80% 55% at 8% -8%, rgba(244, 220, 150, 0.38), transparent 52%),
+    radial-gradient(ellipse 70% 50% at 96% 108%, rgba(140, 168, 120, 0.2), transparent 50%),
+    radial-gradient(ellipse 55% 40% at 72% 18%, rgba(255, 250, 240, 0.55), transparent 58%),
+    radial-gradient(ellipse 45% 35% at 28% 72%, rgba(196, 168, 120, 0.12), transparent 60%),
+    linear-gradient(168deg, #f7f1e6 0%, #efe6d6 38%, #e8efdf 72%, #eadfcd 100%);
+}
+
+.cozy-atmosphere {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.cozy-shell > *:not(.cozy-atmosphere) {
+  position: relative;
+  z-index: 1;
+}
+
+.cozy-atmosphere__wash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 42% 28% at 18% 12%, rgba(255, 248, 230, 0.55), transparent 70%),
+    radial-gradient(ellipse 36% 30% at 84% 22%, rgba(228, 239, 224, 0.42), transparent 68%),
+    radial-gradient(ellipse 50% 34% at 50% 88%, rgba(232, 196, 168, 0.1), transparent 70%);
+}
+
+.cozy-atmosphere__sun {
+  position: absolute;
+  top: -8%;
+  right: 6%;
+  width: min(42vw, 28rem);
+  height: min(42vw, 28rem);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(244, 220, 150, 0.34) 0%,
+    rgba(244, 220, 150, 0.12) 38%,
+    transparent 70%
+  );
+  filter: blur(2px);
+}
+
+.cozy-atmosphere__texture {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  mix-blend-mode: multiply;
+}
+
+.cozy-atmosphere__botanical {
+  position: absolute;
+  width: min(46vw, 22rem);
+  height: min(46vw, 22rem);
+  opacity: 0.09;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.cozy-atmosphere__botanical--tl {
+  top: -2%;
+  left: -2%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240' fill='none'%3E%3Cpath d='M20 40c40 8 70 40 78 82' stroke='%235c7858' stroke-width='2.2'/%3E%3Cpath d='M42 58c18-22 48-30 72-18' stroke='%235c7858' stroke-width='1.6'/%3E%3Cpath d='M58 88c-8 24 4 52 28 68' stroke='%236d8464' stroke-width='1.8'/%3E%3Cpath d='M98 48c12 26 10 54-6 78' stroke='%235c7858' stroke-width='1.5'/%3E%3Cellipse cx='118' cy='42' rx='14' ry='22' transform='rotate(-28 118 42)' fill='%235c7858' opacity='0.35'/%3E%3Cellipse cx='74' cy='112' rx='16' ry='26' transform='rotate(18 74 112)' fill='%236d8464' opacity='0.28'/%3E%3Cellipse cx='54' cy='72' rx='12' ry='20' transform='rotate(-40 54 72)' fill='%235c7858' opacity='0.3'/%3E%3C/svg%3E");
+}
+
+.cozy-atmosphere__botanical--br {
+  right: -4%;
+  bottom: -4%;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240' fill='none'%3E%3Cpath d='M210 200c-46-6-78-42-84-86' stroke='%238a7052' stroke-width='2'/%3E%3Cpath d='M186 178c-16 24-48 34-74 20' stroke='%235c7858' stroke-width='1.5'/%3E%3Cpath d='M168 150c10-26-2-54-26-70' stroke='%236d8464' stroke-width='1.6'/%3E%3Cellipse cx='132' cy='196' rx='15' ry='24' transform='rotate(32 132 196)' fill='%235c7858' opacity='0.32'/%3E%3Cellipse cx='176' cy='138' rx='13' ry='22' transform='rotate(-22 176 138)' fill='%238a7052' opacity='0.28'/%3E%3Cellipse cx='154' cy='168' rx='11' ry='18' transform='rotate(12 154 168)' fill='%236d8464' opacity='0.26'/%3E%3C/svg%3E");
+}
+
+.cozy-atmosphere__vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 90% 75% at 50% 40%, transparent 45%, rgba(138, 112, 82, 0.06) 100%),
+    linear-gradient(180deg, rgba(255, 250, 242, 0.12) 0%, transparent 22%, transparent 70%, rgba(140, 168, 120, 0.07) 100%);
+}
+
+/* Main content: soft regional light, not flat beige */
+[data-theme='cozy'] main {
+  background:
+    linear-gradient(180deg, rgba(255, 250, 242, 0.28) 0%, transparent 18%),
+    linear-gradient(180deg, transparent 62%, rgba(228, 239, 224, 0.22) 100%);
+}
+
+[data-theme='cozy'] aside.border-r {
+  background:
+    linear-gradient(180deg, #fffaf2 0%, #f3eadc 42%, #e8efe4 100%) !important;
+  box-shadow: 1px 0 0 rgba(138, 112, 82, 0.08);
+}
+
 /* ——— Shared surface utilities (cozy) ——— */
 [data-theme='cozy'] .cozy-surface {
   background:
-    linear-gradient(165deg, rgba(255, 251, 245, 0.94), rgba(245, 236, 220, 0.9));
+    linear-gradient(165deg, rgba(255, 252, 246, 0.96), rgba(246, 237, 220, 0.92)),
+    var(--app-linen);
   border: 1px solid var(--app-border);
   box-shadow: var(--app-shadow);
   border-radius: 1rem;
 }
 
 [data-theme='cozy'] .cozy-surface-soft {
-  background: color-mix(in srgb, var(--app-panel-highlight) 88%, var(--app-garden) 12%);
+  background:
+    linear-gradient(160deg, rgba(255, 251, 244, 0.9), color-mix(in srgb, var(--app-sage-mist) 55%, var(--app-oat)));
   border: 1px solid var(--app-border);
   border-radius: 0.9rem;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset;
 }
 
 [data-theme='cozy'] .cozy-chip {
@@ -120,18 +226,6 @@
   pointer-events: none;
 }
 
-[data-theme='cozy'] .cozy-dash-home {
-  position: relative;
-  overflow: hidden;
-  border-radius: 1rem;
-  border: 1px solid color-mix(in srgb, var(--app-garden) 28%, var(--app-border));
-  background:
-    radial-gradient(ellipse at 100% 0%, rgba(232, 197, 71, 0.16), transparent 40%),
-    linear-gradient(135deg, rgba(255, 250, 242, 0.96), rgba(232, 240, 226, 0.92));
-  padding: 0.85rem 1rem;
-  box-shadow: 0 10px 28px rgba(74, 55, 32, 0.06);
-}
-
 [data-theme='cozy'] .cozy-progress-track {
   height: 0.5rem;
   overflow: hidden;
@@ -145,22 +239,123 @@
   background: linear-gradient(90deg, var(--app-garden), var(--app-sun));
 }
 
-/* Sidebar warmth */
-[data-theme='cozy'] aside.border-r {
-  background:
-    linear-gradient(180deg, #fff8ee 0%, #f0e6d4 48%, #e8efe4 100%) !important;
-}
-
 [data-theme='cozy'] .btn-primary {
-  background: linear-gradient(180deg, #e0b33a, var(--app-primary));
+  background: linear-gradient(180deg, #dfb45a, var(--app-primary));
   color: var(--app-primary-contrast) !important;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 6px 14px rgba(180, 120, 30, 0.18);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 6px 16px rgba(180, 120, 30, 0.16);
 }
 
-/* Soften dashboard cards under cozy */
-[data-theme='cozy'] .cozy-dashboard .rounded-xl,
-[data-theme='cozy'] .cozy-dashboard .rounded-2xl {
-  box-shadow: 0 8px 22px rgba(74, 55, 32, 0.05);
+/* Dashboard atmosphere + material cards */
+[data-theme='cozy'] .cozy-dashboard {
+  position: relative;
+}
+
+[data-theme='cozy'] .cozy-dashboard::before {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: -0.5rem -0.35rem auto;
+  height: min(34rem, 62vh);
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 18%, rgba(255, 248, 230, 0.55), transparent 72%),
+    radial-gradient(ellipse 45% 40% at 12% 30%, rgba(228, 239, 224, 0.35), transparent 70%),
+    radial-gradient(ellipse 40% 35% at 90% 40%, rgba(244, 220, 150, 0.18), transparent 68%);
+  z-index: 0;
+}
+
+[data-theme='cozy'] .cozy-dashboard > *:not(.cozy-dashboard__corner) {
+  position: relative;
+  z-index: 1;
+}
+
+[data-theme='cozy'] .cozy-dashboard__corner {
+  pointer-events: none;
+  position: absolute;
+  width: 7.5rem;
+  height: 7.5rem;
+  opacity: 0.11;
+  z-index: 0;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+[data-theme='cozy'] .cozy-dashboard__corner--tr {
+  top: 0.25rem;
+  right: 0.15rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' fill='none'%3E%3Cpath d='M100 18c-28 6-48 28-52 56' stroke='%235c7858' stroke-width='1.8'/%3E%3Cellipse cx='62' cy='28' rx='9' ry='15' transform='rotate(-35 62 28)' fill='%235c7858' opacity='0.4'/%3E%3Cellipse cx='42' cy='52' rx='8' ry='13' transform='rotate(10 42 52)' fill='%236d8464' opacity='0.35'/%3E%3C/svg%3E");
+}
+
+[data-theme='cozy'] .cozy-dashboard__corner--bl {
+  left: 0.1rem;
+  bottom: 1.5rem;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' fill='none'%3E%3Cpath d='M18 102c8-30 30-50 58-54' stroke='%238a7052' stroke-width='1.6'/%3E%3Cellipse cx='36' cy='72' rx='8' ry='14' transform='rotate(25 36 72)' fill='%235c7858' opacity='0.35'/%3E%3C/svg%3E");
+}
+
+[data-theme='cozy'] .cozy-dashboard .rounded-xl.border,
+[data-theme='cozy'] .cozy-dashboard .rounded-2xl.border {
+  border-color: color-mix(in srgb, var(--app-wood) 28%, rgba(255, 255, 255, 0.35));
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 10px 26px rgba(74, 55, 32, 0.06),
+    0 2px 6px rgba(74, 55, 32, 0.035);
+  backdrop-filter: blur(6px);
+}
+
+[data-theme='cozy'] .cozy-command-bridge {
+  background:
+    radial-gradient(ellipse 55% 40% at 70% 0%, rgba(244, 220, 150, 0.22), transparent 60%),
+    radial-gradient(ellipse 45% 50% at 8% 100%, rgba(140, 168, 120, 0.14), transparent 58%),
+    linear-gradient(155deg, #fffaf2 0%, #f4ebdc 48%, #e8efe4 100%) !important;
+  border-color: color-mix(in srgb, var(--app-wood) 30%, transparent) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 16px 36px rgba(74, 55, 32, 0.08) !important;
+}
+
+[data-theme='cozy'] .cozy-dash-home {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--app-garden) 28%, var(--app-border));
+  padding: 0.85rem 1rem;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(212, 168, 72, 0.18), transparent 42%),
+    radial-gradient(ellipse at 0% 100%, rgba(92, 120, 88, 0.12), transparent 48%),
+    linear-gradient(135deg, rgba(255, 251, 244, 0.97), rgba(232, 239, 224, 0.94));
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 10px 28px rgba(74, 55, 32, 0.06);
+}
+
+[data-theme='cozy'] .cozy-dash-home::after {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  right: 0.4rem;
+  top: 0.35rem;
+  width: 4.5rem;
+  height: 4.5rem;
+  opacity: 0.12;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80' fill='none'%3E%3Cpath d='M62 14c-18 4-30 18-34 36' stroke='%235c7858' stroke-width='1.5'/%3E%3Cellipse cx='40' cy='22' rx='7' ry='12' transform='rotate(-30 40 22)' fill='%235c7858' opacity='0.4'/%3E%3C/svg%3E")
+    no-repeat center / contain;
+}
+
+[data-theme='cozy'] .cozy-main__inner {
+  position: relative;
+}
+
+[data-theme='cozy'] .cozy-main__inner::before {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 12rem;
+  background: linear-gradient(180deg, rgba(255, 250, 242, 0.35), transparent);
+  border-radius: 1rem;
+  z-index: 0;
 }
 
 /* ——— Season chronicle: theme forks ——— */

@@ -56,7 +56,7 @@ export function CozyHomeDashboardCard({ settings }: CozyHomeDashboardCardProps) 
         </p>
       ) : (
         <p className="mt-2 text-sm text-[var(--app-text-muted)]">
-          Сегодняшние квесты принесут материалы, уют и ясность для дома.
+          Задачи дня принесут материалы, уют и ясность для дома.
         </p>
       )}
 

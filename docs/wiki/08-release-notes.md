@@ -4,6 +4,7 @@
 
 ### Changed
 
+- **Cozy atmosphere polish:** layered summer-home shell (linen wash, soft sun, faint botanical corners, paper texture), richer material card surfaces, warmer dashboard hero glow — without heavy illustration noise. Dark Fantasy unchanged.
 - Clarified Cozy Theme as a separate theme branch with its own assets, avatars, companions, bosses/mobs presentation and cozy placeholders.
 - Removed Dark Fantasy art as default fallback for Cozy Theme.
 - Added theme-aware terminology rules for Cozy: “Главная помеха” and “Помеха дня” instead of battle-first labels.

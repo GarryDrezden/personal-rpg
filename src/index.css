@@ -2,44 +2,53 @@
 @import "./styles/journey-map-v3.css";
 @import "./styles/cozy-theme.css";
 
-/* Cozy = summer home: linen, wood, sage, honey — not sterile white SaaS */
+/* Cozy = summer home: warm white, linen, oat, pale wood, sage, honey */
 :root,
 [data-theme='cozy'] {
-  --app-bg: #f1ebe0;
-  --app-bg-soft: #e8e0d2;
-  --app-card: rgba(255, 250, 242, 0.9);
-  --app-card-strong: #fff8ee;
-  --app-border: rgba(139, 115, 85, 0.24);
-  --app-text: #2c2416;
-  --app-text-muted: #6b5e4e;
+  --app-bg: #efe6d6;
+  --app-bg-soft: #e5dcc8;
+  --app-card: rgba(255, 251, 244, 0.86);
+  --app-card-strong: #fffaf2;
+  --app-border: rgba(122, 98, 70, 0.22);
+  --app-text: #2a2318;
+  --app-text-muted: #6a5c4a;
 
   --app-primary: #c4922a;
-  --app-primary-soft: rgba(196, 146, 42, 0.16);
-  --app-primary-contrast: #2c2416;
+  --app-primary-soft: rgba(196, 146, 42, 0.15);
+  --app-primary-contrast: #2a2318;
   --app-gold: #c4922a;
   --app-secondary: #5f7a5a;
   --app-success: #4f7a5c;
   --app-danger: #c45c4a;
   --app-warning: #c47a3a;
 
-  --app-glow: rgba(196, 146, 42, 0.2);
-  --app-shadow: 0 14px 36px rgba(74, 55, 32, 0.09);
-  --app-nav-active-bg: #e4efe0;
-  --app-nav-active-text: #3d5a3e;
-  --app-progress-track: #ddd2c0;
+  --app-glow: rgba(212, 168, 72, 0.22);
+  --app-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 10px 28px rgba(74, 55, 32, 0.07),
+    0 2px 6px rgba(74, 55, 32, 0.04);
+  --app-nav-active-bg: #e2ecda;
+  --app-nav-active-text: #3a553c;
+  --app-progress-track: #ddd0ba;
 
-  /* Cozy material accents */
-  --app-panel-highlight: #f7f0e4;
-  --app-wood: #8b7355;
-  --app-garden: #5f7a5a;
-  --app-sun: #e8c547;
+  /* Material palette */
+  --app-panel-highlight: #f6efe3;
+  --app-wood: #8a7052;
+  --app-garden: #5c7858;
+  --app-sun: #d4a848;
   --app-terracotta: #c4785a;
+  --app-linen: #f7f1e6;
+  --app-oat: #eadfcd;
+  --app-sage-mist: #e4efe0;
+  --app-olive-muted: #6d8464;
+  --app-honey: #d4a848;
+  --app-peach-dust: #e8c4a8;
 
   --chart-1: #c4922a;
-  --chart-2: #5f7a5a;
+  --chart-2: #5c7858;
   --chart-3: #c4785a;
   --chart-4: #7a9bb5;
-  --chart-5: #8b7355;
+  --chart-5: #8a7052;
 }
 
 [data-theme='darkFantasy'] {
@@ -72,6 +81,12 @@
   --app-garden: var(--app-gold);
   --app-sun: #facc15;
   --app-terracotta: #fb923c;
+  --app-linen: var(--app-card-strong);
+  --app-oat: var(--app-bg-soft);
+  --app-sage-mist: rgba(167, 139, 250, 0.12);
+  --app-olive-muted: var(--app-secondary);
+  --app-honey: var(--app-gold);
+  --app-peach-dust: rgba(251, 146, 60, 0.25);
 
   --chart-1: #facc15;
   --chart-2: #a78bfa;

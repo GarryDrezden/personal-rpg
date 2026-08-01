@@ -142,7 +142,7 @@ export function DashboardCommandBridge({
 
   const shellClass = isDarkFantasy
     ? 'overflow-hidden rounded-2xl border border-[var(--app-border)] bg-gradient-to-br from-[#171329] via-[#111022] to-[#090812] shadow-[var(--app-shadow)] hero-glow'
-    : 'overflow-hidden rounded-2xl border border-[var(--app-border)] bg-gradient-to-br from-[#fff8ee] via-[#f1ebe0] to-[#e4efe0] shadow-[var(--app-shadow)]';
+    : 'cozy-command-bridge overflow-hidden rounded-2xl border border-[var(--app-border)] shadow-[var(--app-shadow)]';
 
   return (
     <section data-testid="dashboard-command-bridge" className={shellClass}>
@@ -160,7 +160,11 @@ export function DashboardCommandBridge({
               · {mood} · {rank}
             </span>
           </div>
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[color-mix(in_srgb,var(--app-border)_60%,transparent)] bg-black/20 px-2.5 py-1 text-xs font-semibold tabular-nums text-[var(--app-primary)]">
+          <span
+            className={`inline-flex shrink-0 items-center gap-1 rounded-full border border-[color-mix(in_srgb,var(--app-border)_60%,transparent)] px-2.5 py-1 text-xs font-semibold tabular-nums text-[var(--app-primary)] ${
+              isCozy ? 'bg-[var(--app-card-strong)]/80' : 'bg-black/20'
+            }`}
+          >
             <Coins size={13} />
             {availableCoins.toLocaleString('ru')}
           </span>
