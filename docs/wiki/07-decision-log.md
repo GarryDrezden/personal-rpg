@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-08-01 — Cozy theme visual language: summer home (not sterile light mode)
+
+Context:
+Cozy UI felt like a bleached Dark Fantasy / white SaaS shell — empty backgrounds, purple leftovers, little wood/garden atmosphere.
+
+Decision:
+Rebuild Cozy tokens around linen/paper/wood/sage/honey; add shared surface CSS (`cozy-theme.css`); theme-fork season chronicle components; warm `/home` and Dashboard home card. Keep Dark Fantasy CSS block intact.
+
+Consequences:
+Cozy reads as an independent emotional shell. Further cozy art (house scenes) can sit on this palette without another token rewrite.
+
+---
+
 ## 2026-08-01 — Cozy Home v1 as first cozy meta progression
 
 Context:

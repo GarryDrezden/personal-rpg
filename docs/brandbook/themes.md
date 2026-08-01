@@ -143,8 +143,8 @@ The player brings the world back to life.
 |---------|-------------|
 | Прогресс-метафора | Дом → комнаты → двор → сад → участок; мелкие бытовые улучшения за consistency |
 | Visual mood | Свет, тепло, дерево, сад, мягкий быт, живой дом |
-| Палитра UI | Warm off-white / cream; soft beige, honey, sage, muted green; natural light — less neon/black/purple |
-| UI feel | Cozy idle + house restoration + warm RPG journal + soft progress dashboard (game, not corporate wellness) |
+| Палитра UI | Linen `#f1ebe0`, paper `#fff8ee`, wood border, honey `#c4922a`, sage `#5f7a5a`, terracotta — **not** slate-white + violet |
+| UI feel | Summer village home: wood/paper surfaces, soft vignette shell, garden journal seasons, warm RPG without battle neon |
 | Copy | Честный взрослый тон без shame; упор на уют, ремонт, жизнь в доме |
 | Camp / base | Естественно стыкуется с восстановлением дома и двора |
 | Obstacles | «Запущенность» пространства (холодный очаг, сорняки, хаос в комнатах) — не бой и не тёмные боссы сопротивления |
@@ -329,8 +329,8 @@ It should center on the **hero's home and daily care**.
 - Companion lives in the home/yard, not as a battle familiar only.
 - Soft progress language (улучшить, зажечь, продвинулось, теплее) — see Cozy Theme Copywriting Rules.
 
-**Сегодня в продукте:** `themeId: cozy` переключает светлую оболочку UI + light hero variants; dashboard layout may still share Dark Fantasy structure until Cozy dashboard pass.  
-**Следующий большой слой:** полноценный Cozy content catalog (copy, scenes, house/yard/garden progression unlocks + reward conversion + Cozy dashboard) — active development priority.
+**Сегодня в продукте:** `themeId: cozy` — summer-home palette + surface CSS; Cozy Home `/home`; warmer Dashboard shell; theme-aware Летопись (альбом/журнал). Dark Fantasy shell untouched.  
+**Следующий слой:** hero/scene art for house/garden; further Dashboard declutter of campaign widgets under cozy; optional copy overlay for seasons.
 
 Идея «кот как аватар Cozy» остаётся в [`../wiki/12-ideas-backlog.md`](../wiki/12-ideas-backlog.md) как опциональная ветка, **не** как главный канон Cozy.
 

@@ -4,6 +4,7 @@
 
 ### Changed
 
+- **Cozy visual refresh:** replaced sterile slate-white light mode with summer-home palette (linen, wood, sage, honey, terracotta). Added `cozy-theme.css` surfaces; restyled `/home`, Dashboard home card, sidebar warmth, and theme-aware Летопись сезонов (garden journal / album). Dark Fantasy tokens and layout unchanged.
 - Clarified Cozy Theme direction as a village home restoration theme: body progress unlocks house, garden, yard and comfort improvements.
 - Clarified that Cozy is a separate visual/gameplay theme, not a replacement for Dark Fantasy.
 - Updated theme roadmap: Cozy first, then Slavic/Forest Myth RPG, then Athlete Return/Sports Comeback.

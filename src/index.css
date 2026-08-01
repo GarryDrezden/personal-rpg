@@ -1,36 +1,45 @@
 @import "tailwindcss";
 @import "./styles/journey-map-v3.css";
+@import "./styles/cozy-theme.css";
 
+/* Cozy = summer home: linen, wood, sage, honey — not sterile white SaaS */
 :root,
 [data-theme='cozy'] {
-  --app-bg: #f8fafc;
-  --app-bg-soft: #ffffff;
-  --app-card: rgba(255, 255, 255, 0.92);
-  --app-card-strong: #ffffff;
-  --app-border: rgba(148, 163, 184, 0.22);
-  --app-text: #0f172a;
-  --app-text-muted: #64748b;
+  --app-bg: #f1ebe0;
+  --app-bg-soft: #e8e0d2;
+  --app-card: rgba(255, 250, 242, 0.9);
+  --app-card-strong: #fff8ee;
+  --app-border: rgba(139, 115, 85, 0.24);
+  --app-text: #2c2416;
+  --app-text-muted: #6b5e4e;
 
-  --app-primary: #f59e0b;
-  --app-primary-soft: #fef3c7;
-  --app-primary-contrast: #0f172a;
-  --app-gold: var(--app-primary);
-  --app-secondary: #8b5cf6;
-  --app-success: #10b981;
-  --app-danger: #f43f5e;
-  --app-warning: #f97316;
+  --app-primary: #c4922a;
+  --app-primary-soft: rgba(196, 146, 42, 0.16);
+  --app-primary-contrast: #2c2416;
+  --app-gold: #c4922a;
+  --app-secondary: #5f7a5a;
+  --app-success: #4f7a5c;
+  --app-danger: #c45c4a;
+  --app-warning: #c47a3a;
 
-  --app-glow: rgba(245, 158, 11, 0.18);
-  --app-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
-  --app-nav-active-bg: #fffbeb;
-  --app-nav-active-text: #92400e;
-  --app-progress-track: #e7e5e4;
+  --app-glow: rgba(196, 146, 42, 0.2);
+  --app-shadow: 0 14px 36px rgba(74, 55, 32, 0.09);
+  --app-nav-active-bg: #e4efe0;
+  --app-nav-active-text: #3d5a3e;
+  --app-progress-track: #ddd2c0;
 
-  --chart-1: #f59e0b;
-  --chart-2: #8b5cf6;
-  --chart-3: #10b981;
-  --chart-4: #3b82f6;
-  --chart-5: #f43f5e;
+  /* Cozy material accents */
+  --app-panel-highlight: #f7f0e4;
+  --app-wood: #8b7355;
+  --app-garden: #5f7a5a;
+  --app-sun: #e8c547;
+  --app-terracotta: #c4785a;
+
+  --chart-1: #c4922a;
+  --chart-2: #5f7a5a;
+  --chart-3: #c4785a;
+  --chart-4: #7a9bb5;
+  --chart-5: #8b7355;
 }
 
 [data-theme='darkFantasy'] {
@@ -56,6 +65,13 @@
   --app-nav-active-bg: rgba(124, 58, 237, 0.22);
   --app-nav-active-text: #fde68a;
   --app-progress-track: rgba(148, 163, 184, 0.18);
+
+  /* Aliases so shared cozy-home markup stays readable under darkFantasy */
+  --app-panel-highlight: rgba(24, 20, 44, 0.9);
+  --app-wood: #c4b5fd;
+  --app-garden: var(--app-gold);
+  --app-sun: #facc15;
+  --app-terracotta: #fb923c;
 
   --chart-1: #facc15;
   --chart-2: #a78bfa;

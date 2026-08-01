@@ -1,0 +1,371 @@
+/**
+ * Cozy theme surfaces & page patterns.
+ * Dark Fantasy styles for shared components live here too when they need theme forks.
+ * Prefer CSS variables — do not hardcode purple/neon into cozy screens.
+ */
+
+/* ——— Shared surface utilities (cozy) ——— */
+[data-theme='cozy'] .cozy-surface {
+  background:
+    linear-gradient(165deg, rgba(255, 251, 245, 0.94), rgba(245, 236, 220, 0.9));
+  border: 1px solid var(--app-border);
+  box-shadow: var(--app-shadow);
+  border-radius: 1rem;
+}
+
+[data-theme='cozy'] .cozy-surface-soft {
+  background: color-mix(in srgb, var(--app-panel-highlight) 88%, var(--app-garden) 12%);
+  border: 1px solid var(--app-border);
+  border-radius: 0.9rem;
+}
+
+[data-theme='cozy'] .cozy-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  border: 1px solid var(--app-border);
+  background: var(--app-card-strong);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--app-text);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.55) inset;
+}
+
+[data-theme='cozy'] .cozy-chip--comfort {
+  border-color: color-mix(in srgb, var(--app-sun) 45%, var(--app-border));
+  background: color-mix(in srgb, var(--app-sun) 14%, var(--app-card-strong));
+}
+
+[data-theme='cozy'] .cozy-chip--materials {
+  border-color: color-mix(in srgb, var(--app-wood) 40%, var(--app-border));
+  background: color-mix(in srgb, var(--app-wood) 12%, var(--app-card-strong));
+}
+
+[data-theme='cozy'] .cozy-chip--garden {
+  border-color: color-mix(in srgb, var(--app-garden) 45%, var(--app-border));
+  background: color-mix(in srgb, var(--app-garden) 14%, var(--app-card-strong));
+}
+
+[data-theme='cozy'] .cozy-chip--clarity {
+  border-color: color-mix(in srgb, #7a9bb5 40%, var(--app-border));
+  background: color-mix(in srgb, #7a9bb5 12%, var(--app-card-strong));
+}
+
+[data-theme='cozy'] .cozy-zone-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.15rem;
+  border: 1px solid var(--app-border);
+  background:
+    linear-gradient(160deg, rgba(255, 252, 246, 0.96), rgba(241, 232, 214, 0.92));
+  padding: 1rem;
+  box-shadow: var(--app-shadow);
+}
+
+[data-theme='cozy'] .cozy-zone-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--app-garden) 70%, transparent),
+    color-mix(in srgb, var(--app-sun) 65%, transparent)
+  );
+  opacity: 0.85;
+}
+
+[data-theme='cozy'] .cozy-zone-card--max {
+  background:
+    linear-gradient(160deg, rgba(236, 245, 232, 0.96), rgba(245, 236, 214, 0.92));
+}
+
+[data-theme='cozy'] .cozy-zone-level {
+  display: inline-flex;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--app-garden) 12%, var(--app-card-strong));
+  color: var(--app-garden);
+  padding: 0.1rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+[data-theme='cozy'] .cozy-home-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  border: 1px solid var(--app-border);
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(232, 197, 71, 0.22), transparent 42%),
+    radial-gradient(ellipse at 88% 100%, rgba(95, 122, 90, 0.16), transparent 45%),
+    linear-gradient(145deg, #fff9f0, #efe4d2 55%, #e7efdf);
+  padding: 1.15rem 1.25rem;
+  box-shadow: var(--app-shadow);
+}
+
+[data-theme='cozy'] .cozy-home-hero::after {
+  content: '';
+  position: absolute;
+  right: -12%;
+  top: -30%;
+  width: 42%;
+  height: 140%;
+  background: radial-gradient(circle, rgba(95, 122, 90, 0.1), transparent 68%);
+  pointer-events: none;
+}
+
+[data-theme='cozy'] .cozy-dash-home {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--app-garden) 28%, var(--app-border));
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(232, 197, 71, 0.16), transparent 40%),
+    linear-gradient(135deg, rgba(255, 250, 242, 0.96), rgba(232, 240, 226, 0.92));
+  padding: 0.85rem 1rem;
+  box-shadow: 0 10px 28px rgba(74, 55, 32, 0.06);
+}
+
+[data-theme='cozy'] .cozy-progress-track {
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--app-progress-track);
+}
+
+[data-theme='cozy'] .cozy-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--app-garden), var(--app-sun));
+}
+
+/* Sidebar warmth */
+[data-theme='cozy'] aside.border-r {
+  background:
+    linear-gradient(180deg, #fff8ee 0%, #f0e6d4 48%, #e8efe4 100%) !important;
+}
+
+[data-theme='cozy'] .btn-primary {
+  background: linear-gradient(180deg, #e0b33a, var(--app-primary));
+  color: var(--app-primary-contrast) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 6px 14px rgba(180, 120, 30, 0.18);
+}
+
+/* Soften dashboard cards under cozy */
+[data-theme='cozy'] .cozy-dashboard .rounded-xl,
+[data-theme='cozy'] .cozy-dashboard .rounded-2xl {
+  box-shadow: 0 8px 22px rgba(74, 55, 32, 0.05);
+}
+
+/* ——— Season chronicle: theme forks ——— */
+.season-chronicle-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  padding: 1.15rem 1.25rem;
+}
+
+[data-theme='darkFantasy'] .season-chronicle-hero {
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: linear-gradient(135deg, rgba(20, 16, 31, 0.9), rgba(14, 12, 24, 0.95), #08070f);
+}
+
+[data-theme='cozy'] .season-chronicle-hero {
+  border: 1px solid var(--app-border);
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(232, 197, 71, 0.18), transparent 40%),
+    radial-gradient(ellipse at 100% 100%, rgba(95, 122, 90, 0.14), transparent 42%),
+    linear-gradient(145deg, #fffaf2, #f0e6d4 60%, #e8efe4);
+  box-shadow: var(--app-shadow);
+}
+
+.season-chronicle-icon {
+  display: flex;
+  height: 2.5rem;
+  width: 2.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+}
+
+[data-theme='darkFantasy'] .season-chronicle-icon {
+  border: 1px solid color-mix(in srgb, var(--app-gold) 25%, transparent);
+  background: rgba(14, 12, 20, 0.7);
+  color: var(--app-gold);
+}
+
+[data-theme='cozy'] .season-chronicle-icon {
+  border: 1px solid var(--app-border);
+  background: color-mix(in srgb, var(--app-garden) 12%, var(--app-card-strong));
+  color: var(--app-garden);
+}
+
+.season-chronicle-stat {
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+}
+
+[data-theme='darkFantasy'] .season-chronicle-stat {
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  background: rgba(14, 12, 20, 0.5);
+}
+
+[data-theme='cozy'] .season-chronicle-stat {
+  border: 1px solid var(--app-border);
+  background: color-mix(in srgb, var(--app-card-strong) 90%, var(--app-garden) 10%);
+}
+
+.season-history-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+[data-theme='darkFantasy'] .season-history-card {
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  background: linear-gradient(135deg, rgba(18, 16, 28, 0.95), rgba(14, 12, 22, 0.92), rgba(8, 7, 15, 0.95));
+}
+
+[data-theme='cozy'] .season-history-card {
+  border: 1px solid var(--app-border);
+  background:
+    linear-gradient(155deg, rgba(255, 252, 246, 0.97), rgba(240, 230, 212, 0.94));
+  box-shadow: 0 8px 20px rgba(74, 55, 32, 0.05);
+}
+
+[data-theme='cozy'] .season-history-card--current {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--app-garden) 35%, transparent),
+    0 10px 24px rgba(74, 55, 32, 0.07);
+}
+
+.season-reward-chip {
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+[data-theme='darkFantasy'] .season-reward-chip {
+  background: rgba(14, 12, 20, 0.7);
+}
+
+[data-theme='cozy'] .season-reward-chip {
+  background: var(--app-card-strong);
+}
+
+[data-theme='darkFantasy'] .season-reward-chip--fog {
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  color: color-mix(in srgb, var(--app-text-muted) 55%, transparent);
+}
+[data-theme='darkFantasy'] .season-reward-chip--preview {
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  color: rgba(221, 214, 254, 0.7);
+}
+[data-theme='darkFantasy'] .season-reward-chip--awaiting {
+  border: 1px solid color-mix(in srgb, var(--app-gold) 35%, transparent);
+  color: var(--app-gold);
+}
+[data-theme='darkFantasy'] .season-reward-chip--earned {
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  color: rgba(110, 231, 183, 0.85);
+}
+
+[data-theme='cozy'] .season-reward-chip--fog {
+  border: 1px solid var(--app-border);
+  color: var(--app-text-muted);
+}
+[data-theme='cozy'] .season-reward-chip--preview {
+  border: 1px solid color-mix(in srgb, var(--app-wood) 35%, var(--app-border));
+  color: var(--app-wood);
+}
+[data-theme='cozy'] .season-reward-chip--awaiting {
+  border: 1px solid color-mix(in srgb, var(--app-sun) 45%, var(--app-border));
+  color: #8a6a18;
+}
+[data-theme='cozy'] .season-reward-chip--earned {
+  border: 1px solid color-mix(in srgb, var(--app-garden) 45%, var(--app-border));
+  color: var(--app-garden);
+}
+
+.season-history-thumb {
+  display: flex;
+  height: 3.5rem;
+  width: 3.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  font-size: 1.5rem;
+}
+
+[data-theme='darkFantasy'] .season-history-thumb {
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: rgba(14, 12, 20, 0.8);
+}
+
+[data-theme='cozy'] .season-history-thumb {
+  border: 1px solid var(--app-border);
+  background: color-mix(in srgb, var(--app-garden) 10%, var(--app-card-strong));
+}
+
+[data-theme='cozy'] .season-section-label {
+  color: var(--app-garden) !important;
+  opacity: 0.85;
+}
+
+/* Fallback for zone cards when not under cozy (e.g. darkFantasy visiting /home) */
+[data-theme='darkFantasy'] .cozy-zone-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  border: 1px solid var(--app-border);
+  background: var(--app-card);
+  padding: 1rem;
+}
+
+[data-theme='darkFantasy'] .cozy-zone-level {
+  font-size: 0.75rem;
+  color: var(--app-text-muted);
+}
+
+[data-theme='darkFantasy'] .cozy-chip {
+  display: inline-flex;
+  border-radius: 999px;
+  border: 1px solid var(--app-border);
+  background: var(--app-card);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+[data-theme='darkFantasy'] .cozy-home-hero,
+[data-theme='darkFantasy'] .cozy-dash-home {
+  border-radius: 1rem;
+  border: 1px solid var(--app-border);
+  background: var(--app-card);
+  padding: 1rem;
+}
+
+[data-theme='darkFantasy'] .cozy-progress-track {
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--app-progress-track);
+}
+
+[data-theme='darkFantasy'] .cozy-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--app-gold);
+}

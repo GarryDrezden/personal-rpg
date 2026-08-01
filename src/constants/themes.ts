@@ -5,8 +5,8 @@ export const APP_THEMES: AppTheme[] = [
     id: 'cozy',
     title: 'Светлая уютная',
     description:
-      'Светлая тема про дом в деревне, сад, ремонт и уют. Прогресс тела превращается в восстановление своего пространства.',
-    previewEmoji: '🌤️',
+      'Летний уют: дерево, сад, тёплый свет и дом. Не стерильный light mode — живое пространство, которое восстанавливается вместе с телом.',
+    previewEmoji: '🌿',
   },
   {
     id: 'darkFantasy',
@@ -31,7 +31,7 @@ export function getThemeById(id: AppThemeId): AppTheme {
 
 export const THEME_SHELL_CLASS: Record<AppThemeId, string> = {
   cozy:
-    'min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.18),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.12),transparent_30%),var(--app-bg)] text-[var(--app-text)] transition-colors duration-300',
+    'min-h-screen bg-[radial-gradient(ellipse_at_12%_0%,rgba(232,197,71,0.22),transparent_42%),radial-gradient(ellipse_at_90%_100%,rgba(95,122,90,0.14),transparent_46%),radial-gradient(ellipse_at_50%_40%,rgba(255,248,238,0.35),transparent_55%),var(--app-bg)] text-[var(--app-text)] transition-colors duration-300',
   darkFantasy:
     'min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(124,58,237,0.28),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(250,204,21,0.10),transparent_28%),var(--app-bg)] text-[var(--app-text)] transition-colors duration-300',
 };

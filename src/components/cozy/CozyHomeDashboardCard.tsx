@@ -30,22 +30,16 @@ export function CozyHomeDashboardCard({ settings }: CozyHomeDashboardCardProps) 
   }, [home.resources]);
 
   return (
-    <section
-      data-testid="cozy-home-dashboard-card"
-      className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)]/80 px-4 py-3"
-    >
-      <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-gold)]">
+    <section data-testid="cozy-home-dashboard-card" className="cozy-dash-home">
+      <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-garden)]">
         Дом становится теплее
       </p>
-      <p className="mt-1 text-sm text-[var(--app-text)]">
+      <p className="mt-1 text-sm font-medium text-[var(--app-text)]">
         Восстановлено {progress.done} / {progress.total} улучшений.
       </p>
 
-      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--app-border)]/60">
-        <div
-          className="h-full rounded-full bg-[var(--app-gold)]"
-          style={{ width: `${progress.percent}%` }}
-        />
+      <div className="cozy-progress-track mt-2">
+        <div className="cozy-progress-fill" style={{ width: `${progress.percent}%` }} />
       </div>
 
       {resourceHint ? (
@@ -55,8 +49,10 @@ export function CozyHomeDashboardCard({ settings }: CozyHomeDashboardCardProps) 
       {affordable ? (
         <p className="mt-2 text-sm text-[var(--app-text)]">
           Можно улучшить:{' '}
-          {getCozyZoneConfig(affordable.zoneId).title} —{' '}
-          {affordable.nextLevel.description.toLowerCase()}
+          <span className="font-medium">
+            {getCozyZoneConfig(affordable.zoneId).title}
+          </span>{' '}
+          — {affordable.nextLevel.description.toLowerCase()}
         </p>
       ) : (
         <p className="mt-2 text-sm text-[var(--app-text-muted)]">
@@ -66,7 +62,7 @@ export function CozyHomeDashboardCard({ settings }: CozyHomeDashboardCardProps) 
 
       <Link
         to="/home"
-        className="mt-3 inline-block text-xs font-semibold text-[var(--app-primary)] hover:underline"
+        className="mt-3 inline-block text-xs font-semibold text-[var(--app-garden)] hover:underline"
       >
         Открыть дом
       </Link>

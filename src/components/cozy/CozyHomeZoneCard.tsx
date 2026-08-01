@@ -27,33 +27,40 @@ export function CozyHomeZoneCard({
   return (
     <article
       data-testid={`cozy-zone-${zoneId}`}
-      className="flex flex-col rounded-2xl border border-[var(--app-border)] bg-[var(--app-card)]/85 p-4"
+      className={`cozy-zone-card${isMax ? ' cozy-zone-card--max' : ''}`}
     >
-      <div className="flex items-start gap-3">
-        <span className="text-2xl" aria-hidden>
+      <div className="flex items-start gap-3 pl-1">
+        <span
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[var(--app-border)] bg-[color-mix(in_srgb,var(--app-panel-highlight)_80%,var(--app-garden)_20%)] text-xl"
+          aria-hidden
+        >
           {config.icon}
         </span>
         <div className="min-w-0 flex-1">
-          <h3 className="text-base font-semibold text-[var(--app-text)]">{config.title}</h3>
-          <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">
-            Уровень {level} / 3
-          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="text-base font-semibold text-[var(--app-text)]">{config.title}</h3>
+            <span className="cozy-zone-level">Ур. {level}/3</span>
+          </div>
+          <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">{config.shortTitle} · зона дома</p>
         </div>
       </div>
 
-      <p className="mt-3 text-sm text-[var(--app-text)]">{current.description}</p>
+      <p className="mt-3 pl-1 text-sm leading-relaxed text-[var(--app-text)]">
+        {current.description}
+      </p>
 
       {isMax ? (
-        <p className="mt-3 text-sm font-medium text-[var(--app-gold)]">Зона восстановлена</p>
+        <p className="mt-3 pl-1 text-sm font-medium text-[var(--app-garden)]">
+          Зона восстановлена
+        </p>
       ) : next ? (
-        <div className="mt-3 space-y-1 text-sm">
+        <div className="mt-3 space-y-1.5 rounded-xl bg-[color-mix(in_srgb,var(--app-panel-highlight)_70%,transparent)] px-3 py-2.5 text-sm">
           <p className="text-[var(--app-text-muted)]">
-            Следующее: <span className="text-[var(--app-text)]">{next.description}</span>
+            Дальше:{' '}
+            <span className="font-medium text-[var(--app-text)]">{next.description}</span>
           </p>
           {next.cost ? (
-            <p className="text-xs text-[var(--app-text-muted)]">
-              Стоимость: {formatCozyCost(next.cost)}
-            </p>
+            <p className="text-xs text-[var(--app-wood)]">Стоимость: {formatCozyCost(next.cost)}</p>
           ) : null}
         </div>
       ) : null}
@@ -64,19 +71,19 @@ export function CozyHomeZoneCard({
             type="button"
             disabled={busy}
             onClick={() => onUpgrade(zoneId)}
-            className="btn-primary w-full rounded-lg px-3 py-2 text-sm font-semibold disabled:opacity-60"
+            className="btn-primary w-full rounded-xl px-3 py-2.5 text-sm font-semibold disabled:opacity-60"
           >
             Улучшить
           </button>
         ) : (
           <div className="space-y-2">
             <p className="text-xs text-[var(--app-text-muted)]">
-              Не хватает: {formatMissingResources(check.missingResources)}
+              Пока не хватает: {formatMissingResources(check.missingResources)}
             </p>
             <button
               type="button"
               disabled
-              className="w-full rounded-lg border border-[var(--app-border)] px-3 py-2 text-sm font-semibold text-[var(--app-text-muted)] opacity-70"
+              className="w-full rounded-xl border border-[var(--app-border)] bg-[color-mix(in_srgb,var(--app-bg-soft)_80%,transparent)] px-3 py-2.5 text-sm font-semibold text-[var(--app-text-muted)]"
             >
               Улучшить
             </button>

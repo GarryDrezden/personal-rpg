@@ -8,12 +8,13 @@ type ThemeSelectorProps = {
 function ThemePreview({ themeId }: { themeId: AppThemeId }) {
   if (themeId === 'cozy') {
     return (
-      <div className="mt-3 rounded-2xl border border-[var(--app-border)] bg-[#f8fafc] p-3">
-        <div className="rounded-xl border border-slate-200/80 bg-white p-2 shadow-sm">
-          <div className="mb-2 h-2 w-2/3 rounded-full bg-amber-400" />
+      <div className="mt-3 rounded-2xl border border-[rgba(139,115,85,0.28)] bg-[#f1ebe0] p-3">
+        <div className="rounded-xl border border-[rgba(139,115,85,0.22)] bg-[#fff8ee] p-2 shadow-[0_8px_18px_rgba(74,55,32,0.08)]">
+          <div className="mb-2 h-2 w-2/3 rounded-full bg-gradient-to-r from-[#5f7a5a] to-[#e8c547]" />
           <div className="flex gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-emerald-400" />
-            <span className="h-2 w-2 rounded-full bg-violet-400" />
+            <span className="h-2 w-2 rounded-full bg-[#5f7a5a]" />
+            <span className="h-2 w-2 rounded-full bg-[#c4922a]" />
+            <span className="h-2 w-2 rounded-full bg-[#c4785a]" />
           </div>
         </div>
       </div>

@@ -388,7 +388,7 @@ Themes are not just colors. Each theme can have its own visual metaphor, progres
 | Obstacles / bosses | — | Separate catalogs (not simple recolors) |
 | Copy, season flavor, rewards, assets | — | Full separate overlays |
 
-Settings `themeId` (`cozy` / `darkFantasy`) switches the visual shell today; Cozy’s next work deepens the **house / garden / repair** content layer. See [`07-decision-log.md`](07-decision-log.md), [`../brandbook/themes.md`](../brandbook/themes.md).
+Settings `themeId` (`cozy` / `darkFantasy`) switches the visual shell today. Cozy shell = summer-home tokens + `src/styles/cozy-theme.css` (not slate-white SaaS). Content layer: Cozy Home v1 on `/home`. See [`07-decision-log.md`](07-decision-log.md), [`../brandbook/themes.md`](../brandbook/themes.md).
 
 Нельзя строить годовую игру как один bar «180 кг → 100 кг».
 

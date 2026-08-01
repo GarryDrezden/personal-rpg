@@ -3,20 +3,9 @@ import { getSeasonRewardManifestAssetId } from '../../game/manifestAssetUi';
 import { ManifestArtScene } from '../game/ManifestArtScene';
 import { ProgressBar } from '../ui/ProgressBar';
 
-const REWARD_TONE: Record<SeasonRewardStatus, string> = {
-  fog: 'border-violet-500/20 text-[var(--app-text-muted)]/55',
-  preview: 'border-violet-500/25 text-violet-200/70',
-  awaiting: 'border-[var(--app-gold)]/35 text-[var(--app-gold)]',
-  earned: 'border-emerald-400/30 text-emerald-300/85',
-};
-
 function RewardChip({ status, label }: { status: SeasonRewardStatus; label: string }) {
   return (
-    <span
-      className={`rounded-full border bg-[#0e0c14]/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${REWARD_TONE[status]}`}
-    >
-      {label}
-    </span>
+    <span className={`season-reward-chip season-reward-chip--${status}`}>{label}</span>
   );
 }
 
@@ -31,13 +20,13 @@ export function SeasonHistoryCard({ entry }: { entry: SeasonHistoryEntry }) {
 
   return (
     <article
-      className={`relative overflow-hidden rounded-2xl border border-violet-500/15 bg-gradient-to-br from-[#12101c]/95 via-[#0e0c16]/92 to-[#08070f]/95 p-4 ${
-        isCurrent ? 'ring-1 ring-[var(--app-gold)]/35' : ''
-      } ${isLocked ? 'opacity-70' : ''}`}
+      className={`season-history-card${isCurrent ? ' season-history-card--current ring-1 ring-[var(--app-gold)]/30' : ''}${
+        isLocked ? ' opacity-70' : ''
+      }`}
       data-testid={`season-history-${entry.seasonIndex}`}
     >
       <div className="flex gap-3">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-violet-500/20 bg-[#0e0c14]/80 text-2xl">
+        <div className="season-history-thumb">
           {rewardArtId ? (
             <ManifestArtScene
               assetId={rewardArtId}
@@ -52,7 +41,7 @@ export function SeasonHistoryCard({ entry }: { entry: SeasonHistoryEntry }) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--app-gold)]/70">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--app-gold)]/80">
               Сезон {entry.seasonIndex}
             </p>
             {isCurrent ? (
@@ -74,13 +63,13 @@ export function SeasonHistoryCard({ entry }: { entry: SeasonHistoryEntry }) {
             />
           </div>
           <h3 className="mt-1 text-sm font-semibold text-[var(--app-text)]">{config.title}</h3>
-          <p className="mt-1 text-xs leading-relaxed text-[var(--app-text-muted)]/75">
+          <p className="mt-1 text-xs leading-relaxed text-[var(--app-text-muted)]">
             {entry.recapText}
           </p>
           {!isLocked ? (
             <>
               <div className="mt-2">
-                <div className="mb-1 flex justify-between text-[10px] uppercase tracking-wide text-[var(--app-text-muted)]/55">
+                <div className="mb-1 flex justify-between text-[10px] uppercase tracking-wide text-[var(--app-text-muted)]">
                   <span>{entry.partialStatusLabel}</span>
                   <span>
                     {entry.completedQuestCount}/{entry.questTotal}
@@ -98,10 +87,10 @@ export function SeasonHistoryCard({ entry }: { entry: SeasonHistoryEntry }) {
                   }
                 />
               </div>
-              <p className="mt-2 text-xs text-[var(--app-text-muted)]/70">{rewardLabel}</p>
+              <p className="mt-2 text-xs text-[var(--app-text-muted)]">{rewardLabel}</p>
             </>
           ) : (
-            <p className="mt-2 text-xs text-[var(--app-text-muted)]/55">{rewardLabel}</p>
+            <p className="mt-2 text-xs text-[var(--app-text-muted)]">{rewardLabel}</p>
           )}
         </div>
       </div>

@@ -312,7 +312,10 @@ export function DashboardPage() {
 
 
   return (
-    <div data-testid="dashboard-page" className="space-y-3 pb-2">
+    <div
+      data-testid="dashboard-page"
+      className={`space-y-3 pb-2${themeId === 'cozy' ? ' cozy-dashboard' : ''}`}
+    >
       {showStartRouteBanner ? (
         <div className="rounded-xl border border-[var(--app-gold)]/25 bg-[var(--app-card)]/70 px-4 py-3 text-sm text-[var(--app-text-muted)]">
           Кампания ждёт первого ритма —{' '}

@@ -197,7 +197,10 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Cozy upgrades must not require perfection; minimal/recovery days still grant small cozy progress.
 - Cozy copywriting: warm, grounded, domestic (дом, двор, сад, уют, очаг, тепло, маленький шаг, забота, свет в окне). Adult and warm — not childish.
 - Cozy avoid: punishment, failure, shame, aggressive battle language, “defeat yourself”, too much darkness, too much childish cuteness.
-- Cozy UI: lighter/warmer than Dark Fantasy — cream, honey, sage; rounded cards; gentle shadows; paper/wood hints; home/garden icons; natural light. Still a game, not corporate wellness. Feel: cozy idle + village house restoration + warm RPG journal + soft progress dashboard.
-- Cozy Dashboard: center on home + daily care, not battle scene. Structure: home preview → «Что сегодня можно улучшить?» → one main action → resource («силы дома и героя») → quests as repair/garden progress → companion in home/yard → restoration stage.
+- Cozy UI: **not** sterile white SaaS / not “lightened Dark Fantasy”. Summer home language: linen/cream/beige base, sage garden, honey sun, wood brown, soft terracotta. Rounded paper/wood cards, gentle shadows, no purple accents as secondary. Adult premium cozy — not cartoon, not neon green.
+- Cozy tokens live in `src/index.css` (`[data-theme='cozy']`) + patterns in `src/styles/cozy-theme.css` (surfaces, chips, zone cards, season chronicle forks, sidebar warmth).
+- Cozy Dashboard: warmer shell + integrated «Дом становится теплее»; campaign cards keep hierarchy but sit on natural surfaces. Still one clear daily action.
+- Cozy Home `/home`: zone cards as domestic spaces (level pills, soft unavailable, honey CTA), resource chips by material color.
+- Cozy Seasons: “садовый журнал / сезонный альбом” — theme-forked chronicle hero/cards (no hard-coded violet panels under cozy).
 - Active theme work order: Cozy → Slavic / Forest Myth → Athlete Return / Sports Comeback.
 - Cyberpunk is not in the near-term theme roadmap.

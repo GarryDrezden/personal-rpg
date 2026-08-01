@@ -185,7 +185,8 @@
 **Cozy Progression:** same XP/coins/achievements/daily entries; visual rewards framed as home/garden unlocks (exterior, interior, garden/yard, companion spots, seasonal decor). See [`../brandbook/themes.md`](../brandbook/themes.md) → Cozy Progression + Reward conversion.
 
 - [x] **Cozy Home v1** — page `/home`, 8 zones L0–3, resources comfort/materials/garden/clarity, daily claim, Dashboard card, FAQ
-- [ ] Cozy UI direction pass (cream/honey/sage, rounded cards, less neon/purple; still game-like)
+- [x] Cozy UI direction pass v1 — summer-home palette + surfaces (`cozy-theme.css`); `/home`, Dashboard warmth, theme-aware Летопись; not sterile white
+- [ ] Cozy UI polish v2 — house/garden scene art; further campaign-widget adaptation on Dashboard
 - [ ] Cozy Dashboard concept deepen (home preview art, companion in home)
 - [ ] Cozy Progression unlock catalog expand (seasonal decor, more rooms)
 - [x] Reward conversion map v1 (daily actions → cozy resources; spend on zones)

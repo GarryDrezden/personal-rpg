@@ -152,7 +152,7 @@ The project supports multiple visual/gameplay themes. Themes are not just colors
 
 **Not in near-term roadmap:** Cyberpunk.
 
-Cozy does **not** replace Dark Fantasy and is **not** a post-dark stage. Core fantasy: the player restores the body; the hero restores the home. Tone: calm, warm, human — not battle-first; the player brings the world back to life. UI shell already selectable in Settings (`themeId: cozy`).
+Cozy does **not** replace Dark Fantasy and is **not** a post-dark stage. Core fantasy: the player restores the body; the hero restores the home. Tone: calm, warm, human — not battle-first; the player brings the world back to life. UI shell (`themeId: cozy`) uses summer-home palette (linen/wood/sage/honey), Cozy Home `/home`, warmer Dashboard, theme-aware Летопись — not sterile white light mode.
 
 См. [`07-decision-log.md`](07-decision-log.md), [`../brandbook/themes.md`](../brandbook/themes.md).
 
