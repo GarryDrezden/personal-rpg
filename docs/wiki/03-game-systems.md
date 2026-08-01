@@ -23,6 +23,19 @@
 
 ---
 
+## Onboarding v1 — запуск кампании
+
+**Route:** `/start` · **Gate:** `OnboardingGate` · **Helpers:** `onboardingState.ts`, `onboardingComplete.ts`
+
+Короткий ритуал «Пробуждение ядра» (6 шагов): идея игры → герой → мир → цель тела → ритм дня → спутник → `/today`.
+
+- Forced только для новых аккаунтов без базового профиля и без progress data.
+- Тема: Cozy / Dark Fantasy selectable; Forest Myth / Athlete Return — coming soon.
+- Draft: `settings.onboardingDraft` + localStorage; theme preview сразу.
+- Completion: `onboardingCompleted` + profile/settings persist.
+
+---
+
 ## Daily quests
 
 **Engine:** `questEngine.ts`  

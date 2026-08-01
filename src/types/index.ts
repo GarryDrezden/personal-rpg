@@ -191,6 +191,10 @@ export interface AppSettings {
   habitConfig?: HabitConfig;
   /** Экспериментально: показывать поля сна на TodayPage */
   enableSleepTracking?: boolean;
+  /** Учитывать алкоголь в дневном цикле (default true) */
+  enableAlcoholTracking?: boolean;
+  /** Учитывать физическую активность вне шагов (default true) */
+  enablePhysicalActivityTracking?: boolean;
   /** Пол героя в игровой системе (fallback: gender) */
   heroGender?: import('./gameAssets').HeroGender;
   transformationMode?: import('./gameAssets').TransformationMode;

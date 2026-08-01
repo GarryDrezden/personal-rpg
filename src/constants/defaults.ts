@@ -40,6 +40,8 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   avatarSettings: DEFAULT_AVATAR_SETTINGS,
   themeId: 'cozy',
   enableSleepTracking: false,
+  enableAlcoholTracking: true,
+  enablePhysicalActivityTracking: true,
   transformationMode: 'weight_loss',
   activeCompanionId: 'golden_chinchilla_cat',
   nutritionTrackingMode: 'simple',

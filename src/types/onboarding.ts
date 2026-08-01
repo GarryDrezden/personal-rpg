@@ -1,5 +1,6 @@
 import type { AppThemeId } from './theme';
 import type { CompanionId, HeroGender } from './gameAssets';
+import type { NutritionTrackingMode } from './nutrition';
 
 export type RouteMode = 'soft' | 'normal' | 'strong';
 
@@ -10,16 +11,77 @@ export type FirstFocusId =
   | 'clarity'
   | 'minimal';
 
+/** Profile may store neutral; asset system still uses male/female. */
+export type OnboardingHeroGender = HeroGender | 'neutral';
+
+/** UI-only future theme branches (not in AppThemeId yet). */
+export type FutureThemePreviewId = 'forestMyth' | 'athleteReturn';
+
+export type OnboardingThemeChoiceId = AppThemeId | FutureThemePreviewId;
+
 export interface OnboardingDraft {
+  heroName?: string;
   startWeight?: number;
   targetWeight?: number;
   height?: number;
-  heroGender?: HeroGender;
+  heroGender?: OnboardingHeroGender;
   themeId?: AppThemeId;
   companionId?: CompanionId;
+  /** @deprecated kept for draft migration from older onboarding */
   routeMode?: RouteMode;
+  /** @deprecated kept for draft migration from older onboarding */
   firstFocus?: FirstFocusId;
+  stepsMinimum?: number;
+  stepsNormal?: number;
+  stepsExcellent?: number;
+  nutritionTrackingMode?: NutritionTrackingMode;
+  dailyCalorieLimit?: number | null;
+  alcoholTrackingEnabled?: boolean;
+  sleepTrackingEnabled?: boolean;
+  resourceTrackingEnabled?: boolean;
+  physicalActivityEnabled?: boolean;
 }
+
+export const ONBOARDING_THEME_OPTIONS: {
+  id: OnboardingThemeChoiceId;
+  title: string;
+  description: string;
+  available: boolean;
+  previewEmoji: string;
+}[] = [
+  {
+    id: 'cozy',
+    title: 'Cozy — Дом, сад и уют',
+    description:
+      'Забота о теле превращается в ресурсы для восстановления дома, двора и сада.',
+    available: true,
+    previewEmoji: '🌿',
+  },
+  {
+    id: 'darkFantasy',
+    title: 'Dark Fantasy — Путь сквозь тьму',
+    description:
+      'Каждый день ослабляет помехи, открывает путь и приближает героя к новой форме.',
+    available: true,
+    previewEmoji: '🌙',
+  },
+  {
+    id: 'forestMyth',
+    title: 'Forest Myth — Лесная мифология',
+    description:
+      'Скоро. Путь через лес, ремесло, духов места и восстановление живой земли.',
+    available: false,
+    previewEmoji: '🌲',
+  },
+  {
+    id: 'athleteReturn',
+    title: 'Athlete Return — Возвращение атлета',
+    description:
+      'Скоро. Кампания о возвращении силы, формы, выносливости и спортивной идентичности.',
+    available: false,
+    previewEmoji: '🏅',
+  },
+];
 
 export const FIRST_FOCUS_OPTIONS: {
   id: FirstFocusId;
@@ -48,31 +110,37 @@ export const ONBOARDING_STEP_COPY = [
   {
     title: 'Пробуждение ядра',
     subtitle: 'Кампания начинается',
-    lead: 'Это не гонка и не таблица штрафов. Personal RPG помогает удерживать путь день за днём: отмечать состояние, видеть прогресс и возвращаться завтра.',
-    body: 'Сейчас ядро пробуждается — соберём старт маршрута: тело, героя, спутника и первый фокус. Можно идти мягко, без идеального дня.',
+    lead: 'Это не просто трекер. Это история восстановления: ты отмечаешь день, а герой возвращает силы, открывает путь и меняет свой мир.',
+    body: 'Тело возвращает силы — дом возвращает тепло. Каждый день ослабляет тьму и укрепляет путь. Сейчас ядро пробуждается.',
   },
   {
-    title: 'Стартовая точка',
-    subtitle: 'Отмечаем, откуда начинается путь',
-    lead: 'Эти цифры — не приговор и не норма из таблицы. Маршруту нужна отправная точка, чтобы показывать движение.',
-    body: 'Темп выбираешь ты. Вес важен, но путь шире: движение, ресурс и ясность тоже считаются.',
-  },
-  {
-    title: 'Облик героя',
-    subtitle: 'Персонаж начинает путь',
+    title: 'Герой',
+    subtitle: 'Как зовут героя?',
     lead: 'Герой будет меняться по мере маршрута — не только в цифрах на весах.',
-    body: 'Выбери облик и атмосферу мира. Это визуальный тон кампании, а не экзамен.',
+    body: 'Имя и облик можно уточнить позже. Пустое имя станет «Герой».',
   },
   {
-    title: 'Спутник на маршруте',
-    subtitle: 'Союзник выходит в путь',
-    lead: 'Спутник не оценивает день — он помогает удерживать маршрут рядом.',
-    body: 'Выбери того, кто пойдёт с тобой в первые шаги. Можно сменить позже в настройках.',
+    title: 'Мир',
+    subtitle: 'В какой атмосфере пойдёт кампания?',
+    lead: 'Тема задаёт визуальный язык и метафору мира — не экзамен и не навсегда.',
+    body: 'Выбери доступную ветку. Будущие миры уже видны на горизонте.',
   },
   {
-    title: 'Первый ритм',
-    subtitle: 'Мягкий старт без давления',
-    lead: 'Ритм и фокус задают тон первых недель — без жёстких правил.',
-    body: 'Маршрут открыт. Сегодня не нужно быть идеальным — достаточно удержать первый шаг.',
+    title: 'Цель тела',
+    subtitle: 'Откуда начинается путь тела',
+    lead: 'Эти данные нужны, чтобы игра могла показывать путь тела, стадии героя и долгий прогресс.',
+    body: 'Вес — только один из путей. Персонаж может расти через шаги, сон, ресурс, ясность и возвращение к ритму.',
+  },
+  {
+    title: 'Ритм дня',
+    subtitle: 'Мягкие ориентиры без давления',
+    lead: 'Ритм можно менять позже в настройках.',
+    body: 'Шаги, питание и трекеры — подсказки для дня, а не жёсткие правила.',
+  },
+  {
+    title: 'Кампания начинается',
+    subtitle: 'Спутник выходит в путь',
+    lead: 'Спутник будет появляться рядом с героем и отмечать важные моменты пути.',
+    body: 'Первый след дня уже может принести дому немного уюта — или ослабить первую помеху на пути.',
   },
 ] as const;

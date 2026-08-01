@@ -31,6 +31,12 @@ export function normalizeAppSettings(
     activeCompanionId: settings.activeCompanionId ?? fallback.activeCompanionId,
     enableSleepTracking:
       settings.enableSleepTracking ?? fallback.enableSleepTracking ?? false,
+    enableAlcoholTracking:
+      settings.enableAlcoholTracking ?? fallback.enableAlcoholTracking ?? true,
+    enablePhysicalActivityTracking:
+      settings.enablePhysicalActivityTracking ??
+      fallback.enablePhysicalActivityTracking ??
+      true,
     onboardingCompleted: settings.onboardingCompleted ?? fallback.onboardingCompleted,
     onboardingCompletedAt: settings.onboardingCompletedAt ?? fallback.onboardingCompletedAt,
     onboardingStep: settings.onboardingStep ?? fallback.onboardingStep,

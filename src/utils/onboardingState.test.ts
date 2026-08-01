@@ -9,7 +9,11 @@ import {
   isOnboardingCompleted,
   mergeOnboardingDraft,
   needsOnboarding,
+  validateBodyGoalDraft,
+  ONBOARDING_STEP_COUNT,
 } from './onboardingState';
+import { shouldTreatAsOnboarded } from './onboardingCompletion';
+import { ONBOARDING_DEFAULT_STEPS } from './onboardingDefaults';
 
 function profile(partial: Partial<UserProfile>): UserProfile {
   return {
@@ -47,13 +51,24 @@ describe('onboardingState', () => {
         profile({ heroGender: 'female', startWeight: 90, targetWeight: 75 }),
       ),
     ).toBe(false);
-    expect(isLegacyProfileComplete(profile({ heroGender: 'male', startWeight: 80, targetWeight: 70 }))).toBe(
-      true,
-    );
+    expect(
+      isLegacyProfileComplete(profile({ heroGender: 'male', startWeight: 80 })),
+    ).toBe(true);
+  });
+
+  it('skips onboarding when user already has progress data', () => {
+    expect(
+      needsOnboarding(DEFAULT_APP_SETTINGS, profile({}), { hasProgressData: true }),
+    ).toBe(false);
+    expect(
+      shouldTreatAsOnboarded(DEFAULT_APP_SETTINGS, profile({}), { hasProgressData: true }),
+    ).toBe(true);
   });
 
   it('clamps onboarding step', () => {
-    expect(getOnboardingStep({ ...DEFAULT_APP_SETTINGS, onboardingStep: 99 })).toBe(4);
+    expect(getOnboardingStep({ ...DEFAULT_APP_SETTINGS, onboardingStep: 99 })).toBe(
+      ONBOARDING_STEP_COUNT - 1,
+    );
     expect(getOnboardingStep({ ...DEFAULT_APP_SETTINGS, onboardingStep: -2 })).toBe(0);
   });
 
@@ -71,5 +86,19 @@ describe('onboardingState', () => {
     const soft = applyRouteModeDefaults(base, 'soft');
     expect(soft.defaultWeeklyPointsGoal).toBe(425);
     expect(soft.defaultStepsNormal).toBe(7200);
+  });
+
+  it('soft-validates body goal', () => {
+    expect(validateBodyGoalDraft({ height: 175, startWeight: 90 }).ok).toBe(true);
+    expect(validateBodyGoalDraft({ height: 50 }).ok).toBe(false);
+    expect(
+      validateBodyGoalDraft({ startWeight: 90, targetWeight: 95 }).message,
+    ).toMatch(/меньше/);
+  });
+
+  it('exposes step defaults', () => {
+    expect(ONBOARDING_DEFAULT_STEPS.minimum).toBe(7000);
+    expect(ONBOARDING_DEFAULT_STEPS.normal).toBe(11500);
+    expect(ONBOARDING_DEFAULT_STEPS.excellent).toBe(14000);
   });
 });

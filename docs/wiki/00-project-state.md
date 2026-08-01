@@ -255,13 +255,13 @@ Cozy does **not** replace Dark Fantasy and is **not** a post-dark stage. Core fa
 - **Mobile:** `overflow-x-hidden`, `pb-24` под sticky save bar
 - Storage / DB schema **без изменений**
 
-### Onboarding v1 — Пробуждение ядра ✅ (QA polish)
+### Onboarding v1 — Пробуждение ядра ✅ (campaign launch)
 
-- Маршрут `/start`: 5 шагов (пробуждение → вес/рост → герой/тема → спутник → ритм/фокус)
-- Gate `OnboardingGate` + redirect с `/start` для завершивших
-- RPG-копирайт, sticky CTA на mobile, `max-w-md` ритуал на desktop
-- Reload: step/draft в `customSettingsBackup`; «Назад» тоже сохраняет шаг
-- После завершения → Today с баннером «Ядро пробуждено»
+- Маршрут `/start`: 6 шагов — пробуждение → герой → мир → цель тела → ритм дня → спутник/старт
+- Доступные темы: Cozy / Dark Fantasy; Forest Myth и Athlete Return — «Скоро» (disabled)
+- Gate `OnboardingGate`: forced только для новых без профиля/progress; legacy + soft migration `onboardingCompleted`
+- Draft: settings backup + localStorage; theme preview применяется сразу
+- После завершения → `/today` с мягким стартовым баннером
 
 ### Stabilize — sidecar remote persist ✅
 

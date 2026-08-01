@@ -196,6 +196,25 @@ No schema migration. Settings page unchanged. Asset Registry 2.0 polish deferred
 
 ---
 
+## 2026-08-01 — Onboarding v1 campaign launch reshape
+
+### Context
+
+Core loop is clearer (Today → reaction → resources → Home / Path). First-start needed to feel like launching a recovery campaign, not a settings form. Future theme branches (Forest Myth, Athlete Return) should be visible but not selectable.
+
+### Decision
+
+- Keep route `/start`; expand to 6 steps: intro → hero → world → body goal → daily rhythm → companion/finish.
+- Theme preview applies immediately from draft; Forest Myth / Athlete Return shown as disabled «Скоро».
+- Draft in settings + localStorage; clear on completion.
+- Forced onboarding only for new accounts without profile basics and without daily/measurement progress; soft-migrate `onboardingCompleted` for legacy.
+
+### Consequences
+
+No schema migration. Optional tracker flags (`enableAlcoholTracking`, `enablePhysicalActivityTracking`) stored in settings. FAQ/docs updated.
+
+---
+
 ## 2026-06-06 — Sidecar remote persist (Stabilize)
 
 ### Context

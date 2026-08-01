@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Added Onboarding v1 to start a new campaign with hero, theme, body goal, daily rhythm and companion setup.
+
 ### Changed
 
 - Cozy weekly threats no longer fall back to Dark Fantasy portraits or battle chrome: cozy placeholders, “помеха” copy, and warm Growth → Помехи / Week cards.

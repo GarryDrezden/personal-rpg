@@ -36,15 +36,13 @@
 
 ### Onboarding v1 — Пробуждение ядра ✅
 
-- [x] Стартовый вес
-- [x] Целевой вес
-- [x] Рост
-- [x] Пол героя
-- [x] Тема (cozy / dark fantasy)
-- [x] Спутник
-- [x] Ритм маршрута (мягкий / обычный / усиленный)
-- [x] Первый фокус (питание / движение / ресурс / ясность / минимальный день)
-- [x] Gate + `/start` flow → Today после завершения
+- [x] Имя героя + gender/avatar (в т.ч. нейтральный в профиле)
+- [x] Тема мира: Cozy / Dark Fantasy (+ future Forest Myth / Athlete Return as soon)
+- [x] Цель тела: рост, стартовый вес, целевой вес (мягкая валидация, target optional)
+- [x] Ритм дня: шаги 7k / 11.5k / 14k, nutrition mode, toggles алкоголь / сон·ресурс / PA
+- [x] Спутник + завершение кампании
+- [x] Gate + `/start` flow → Today; legacy users not forced
+- [x] localStorage draft + settings draft persist
 
 ### Asset Registry 2.0 ✅
 

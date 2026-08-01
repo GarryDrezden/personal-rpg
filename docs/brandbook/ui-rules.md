@@ -31,6 +31,14 @@
 - Без shame language
 - Recovery = помощь, не наказание
 
+## Onboarding (`/start`)
+
+- One main question per step; progress «шаг X из 6»
+- Tone: campaign launch («Пробуждение ядра»), not a medical questionnaire
+- Theme-aware surfaces; future themes visible as disabled «Скоро»
+- Sticky Back / Next on mobile; soft validation; skippable target weight
+- After finish → `/today` with soft welcome, not Dashboard dump
+
 ## Themes
 
 Two app themes: Cozy Light / Dark Fantasy.
