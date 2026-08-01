@@ -17,6 +17,10 @@
 - Reserved future Asset Registry path categories for Cozy (`cozy/house/*`, `cozy/garden`, `cozy/yard`, `cozy/companions`, `cozy/decor/seasonal`, `cozy/icons`, `cozy/ui`) in wiki gallery/art backlog — docs only, no house-repair mechanics yet.
 - Updated Settings/FAQ copy for «Светлая уютная» (village home, garden, repair, comfort).
 
+### Changed
+
+- Today v2 polish: day-mode presets, semantic sections (body / path / journal), reaction preview before save, stronger minimal-day and physical-activity surfaces — less questionnaire feel.
+
 ### Added
 
 - Added Cozy Reward Feedback after saving a day, showing granted home resources and the next home improvement.

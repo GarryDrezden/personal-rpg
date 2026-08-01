@@ -192,6 +192,15 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Keep the loop simple: daily care → resources → zone upgrade → home feels warmer.
 - No house editor, drag-and-drop, or infinite decor catalog in v1.
 
+## Today v2 UX Rules
+
+- Group fields by meaning: body care → day path → journal trace — not a flat form.
+- Offer day-mode presets (normal / minimal / recovery) near the top.
+- Highlight minimal day as a valid soft path, not a failure mode.
+- Show a compact reaction preview before save; after save show reaction + cozy reward feedback when granted.
+- Physical activity should feel like a warm body-care card, not a technical dropdown.
+- Avoid questionnaire tone; prefer short supportive leads.
+
 ## Cozy Reward Feedback UX Rules
 
 - Show what the home received from the day.

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import type { DailyEntry } from '../types';
+import type { DailyEntry, DayMode } from '../types';
 import { useAppStore, emptyDaily } from '../store/appStore';
 import { todayISO, formatDateFull, weekStart, weekDays } from '../utils/dates';
 import {
@@ -60,16 +60,23 @@ import { getBossCampaignSnapshot } from '../game/bosses/bossCampaignEngine';
 import { shouldShowBodyAbilityHintOnToday } from '../utils/campaignIntegration';
 import { TodayMinimalQuickCard } from '../components/today/TodayMinimalQuickCard';
 import { TodaySaveReactionCard } from '../components/today/TodaySaveReactionCard';
+import { TodayDayModePresets } from '../components/today/TodayDayModePresets';
+import { TodayReactionPreview } from '../components/today/TodayReactionPreview';
+import { TodaySection } from '../components/today/TodaySection';
 import { NutritionDayCard } from '../components/nutrition/NutritionDayCard';
 import { PhysicalActivityDayCard } from '../components/today/PhysicalActivityDayCard';
 import { NutritionRecoverySuggestionCard } from '../components/nutrition/NutritionRecoverySuggestionCard';
 import { shouldSuggestNutritionRecovery, isNutritionTrackingEnabled } from '../utils/nutritionEngine';
 import { getCozyHomeState } from '../utils/cozyHomeEngine';
+import {
+  getCozyRewardsForEntry,
+  sumCozyGrantedResources,
+} from '../utils/cozyHomeRewardsEngine';
 
 export function TodayPage() {
   const { dailyEntries, measurements, settings, updateDaily, deleteDaily, saveSettings } =
     useAppStore();
-  const { themeId } = useAppTheme();
+  const { themeId, isCozy } = useAppTheme();
   const cozyHomeState = useMemo(() => getCozyHomeState(settings), [settings]);
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -208,7 +215,30 @@ export function TodayPage() {
   const mainQuestsLabel =
     isEditingToday && recoveryState === 'after_bad_day'
       ? 'Минимальный набор'
-      : 'Основные квесты';
+      : isCozy
+        ? 'Главное сегодня'
+        : 'Основные квесты';
+
+  const previewReaction = useMemo(
+    () =>
+      getTodaySaveReaction({
+        entry,
+        settings,
+        questDone: stats.done,
+        questTotal: stats.total,
+        points,
+      }),
+    [entry, settings, stats.done, stats.total, points],
+  );
+
+  const cozyRewardPreview = useMemo(() => {
+    if (entry.cozyRewardsGranted) return null;
+    const reward = getCozyRewardsForEntry(entry, settings);
+    if (sumCozyGrantedResources(reward.resources) <= 0) return null;
+    return reward.resources;
+  }, [entry, settings]);
+
+  const showReactionPreview = dirty || (!saveReaction && !dayEmpty);
 
   const showRecoverySuggestion =
     isEditingToday &&
@@ -410,6 +440,16 @@ export function TodayPage() {
     }
   };
 
+  const selectDayMode = (mode: DayMode) => {
+    patch({
+      dayMode: mode,
+      energyLevel:
+        mode === 'minimal' || mode === 'recovery'
+          ? (entry.energyLevel ?? 2)
+          : entry.energyLevel,
+    });
+  };
+
   const enableMinimalDay = async () => {
     const hadCozyClaim = Boolean(entry.cozyRewardsGranted);
     const updated: DailyEntry = {
@@ -482,7 +522,10 @@ export function TodayPage() {
       : 'Сохранено';
 
   return (
-    <div className="space-y-5 overflow-x-hidden pb-24 lg:space-y-6 lg:pb-8">
+    <div
+      className="today-v2 space-y-5 overflow-x-hidden pb-24 lg:space-y-6 lg:pb-8"
+      data-testid="today-v2"
+    >
       {routeWelcome ? (
         <div
           data-testid="route-opened-banner"
@@ -504,9 +547,12 @@ export function TodayPage() {
           </button>
         </div>
       ) : null}
+
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <h1 className="text-2xl font-bold text-[var(--app-text)]">Квесты дня</h1>
+          <h1 className="text-2xl font-bold text-[var(--app-text)]">
+            {isCozy ? 'Ход дня' : 'Квесты дня'}
+          </h1>
           <p className="text-sm text-[var(--app-text-muted)]">{formatDateFull(selectedDate)}</p>
           {!isEditingToday && (
             <p className="mt-1 text-xs font-medium text-[var(--app-warning)]">
@@ -516,7 +562,7 @@ export function TodayPage() {
             </p>
           )}
           <p className="mt-1 text-sm font-medium text-[var(--app-primary)]">{dayStatus}</p>
-          {dayMode !== 'normal' && isEditingToday ? (
+          {dayMode !== 'normal' ? (
             <p className="mt-1 text-xs text-[var(--app-gold)]">
               {dayMode === 'minimal' ? 'Минимальный день' : 'День восстановления'}
             </p>
@@ -550,46 +596,6 @@ export function TodayPage() {
         </div>
       </header>
 
-      {isEditingToday && dayMode !== 'recovery' ? (
-        <TodayMinimalQuickCard
-          entry={entry}
-          onEnableMinimal={() => void enableMinimalDay()}
-          saving={saving}
-        />
-      ) : null}
-
-      {dailyMobId ? (
-        <DailyMobCard mobId={dailyMobId} compact contextLine={dailyMobContext} />
-      ) : null}
-
-      {isEditingToday ? <SeasonTodayCard season={seasonSnapshot} boss={bossSnapshot} /> : null}
-
-      {bodyAbilityHint && shouldShowBodyAbilityHintOnToday(plateauSnapshot.mode) ? (
-        <BodyAbilityTodayHint hint={bodyAbilityHint} />
-      ) : null}
-
-      {isEditingToday && plateauSnapshot.mode !== 'none' ? (
-        <PlateauTodayCard
-          snapshot={plateauSnapshot}
-          saving={saving}
-          onEnableMinimal={() => void enableMinimalDay()}
-          onMarkPlateau={() => void handleMarkPlateau()}
-          onClearPlateau={() => void handleClearPlateau()}
-          onDismissHint={() => void handleDismissPlateauHint()}
-        />
-      ) : null}
-
-      {saveReaction && !dirty ? (
-        <TodaySaveReactionCard
-          reaction={saveReaction}
-          homeState={cozyHomeState}
-          themeId={themeId}
-          onDismiss={() => setSaveReaction(null)}
-        />
-      ) : null}
-
-      <div className="hidden h-px bg-[var(--app-border)]/60 lg:block" aria-hidden />
-
       <Card>
         <WeekNavigator
           weekStartDate={visibleWeekStart}
@@ -605,11 +611,36 @@ export function TodayPage() {
           dailyEntries={dailyEntries}
           onChange={selectDay}
         />
-        <p className="mt-3 text-xs text-[var(--app-text-muted)]">
-          Можно внести или исправить данные за любой день текущей или прошлой недели — переключи
-          неделю стрелками выше.
-        </p>
       </Card>
+
+      <TodayDayModePresets
+        entry={entry}
+        onSelect={selectDayMode}
+        disabled={saving}
+      />
+
+      {dayMode !== 'recovery' ? (
+        <TodayMinimalQuickCard
+          entry={entry}
+          onEnableMinimal={() => selectDayMode('minimal')}
+          saving={saving}
+        />
+      ) : null}
+
+      {saveReaction && !dirty ? (
+        <TodaySaveReactionCard
+          reaction={saveReaction}
+          homeState={cozyHomeState}
+          themeId={themeId}
+          onDismiss={() => setSaveReaction(null)}
+        />
+      ) : (
+        <TodayReactionPreview
+          reaction={previewReaction}
+          cozyPreview={cozyRewardPreview}
+          visible={showReactionPreview}
+        />
+      )}
 
       {recoveryToast && (
         <p className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-center text-sm font-medium text-[var(--app-success)]">
@@ -651,78 +682,119 @@ export function TodayPage() {
         />
       )}
 
-      <RestDayCard entry={entry} onPatch={patch} />
+      {dailyMobId ? (
+        <DailyMobCard mobId={dailyMobId} compact contextLine={dailyMobContext} />
+      ) : null}
 
-      {isEditingToday && (
-        <MomentumFactorsCard result={todayMomentumResult} />
-      )}
+      {isEditingToday ? <SeasonTodayCard season={seasonSnapshot} boss={bossSnapshot} /> : null}
 
-      {dayEmpty && isEditingToday && recoveryState === 'normal' && dayMode === 'normal' && (
+      {bodyAbilityHint && shouldShowBodyAbilityHintOnToday(plateauSnapshot.mode) ? (
+        <BodyAbilityTodayHint hint={bodyAbilityHint} />
+      ) : null}
+
+      {isEditingToday && plateauSnapshot.mode !== 'none' ? (
+        <PlateauTodayCard
+          snapshot={plateauSnapshot}
+          saving={saving}
+          onEnableMinimal={() => void enableMinimalDay()}
+          onMarkPlateau={() => void handleMarkPlateau()}
+          onClearPlateau={() => void handleClearPlateau()}
+          onDismissHint={() => void handleDismissPlateauHint()}
+        />
+      ) : null}
+
+      {dayEmpty && recoveryState === 'normal' && dayMode === 'normal' && (
         <p className="rounded-2xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-4 text-center text-sm text-[var(--app-text-muted)]">
-          День ещё пустой — начни с одного квеста или включи минимальный день. Маршрут не требует
-          идеала.
+          {isCozy
+            ? 'День ещё тихий — выбери минимальный режим или отметь одно действие. Дом не требует идеала.'
+            : 'День ещё пустой — начни с одного шага или включи минимальный день. Маршрут не требует идеала.'}
         </p>
       )}
 
       {!dayEmpty && !isEditingToday && (
         <p className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-3 text-center text-sm text-[var(--app-text-muted)]">
-          Редактируешь записи за выбранный день. Не забудь нажать «Сохранить день».
+          Редактируешь записи за выбранный день. Не забудь сохранить ход.
         </p>
       )}
 
-      <NutritionDayCard
-        entry={entry}
-        settings={settings}
-        date={selectedDate}
-        onPatch={patch}
-      />
+      <TodaySection
+        accent="body"
+        title={isCozy ? 'Забота о теле' : 'Тело и ресурс'}
+        lead={
+          isCozy
+            ? 'Питание, движение и восстановление — из этого дом получает уют и материалы.'
+            : 'Питание, движение и отдых — основа хода, не анкета.'
+        }
+        testId="today-section-body"
+      >
+        <NutritionDayCard
+          entry={entry}
+          settings={settings}
+          date={selectedDate}
+          onPatch={patch}
+        />
+        <PhysicalActivityDayCard entry={entry} settings={settings} onPatch={patch} />
+        <RestDayCard entry={entry} onPatch={patch} />
+        {isEditingToday ? <MomentumFactorsCard result={todayMomentumResult} /> : null}
+      </TodaySection>
 
-      <PhysicalActivityDayCard entry={entry} settings={settings} onPatch={patch} />
+      <TodaySection
+        accent="path"
+        title={isCozy ? 'Что отметить сегодня' : 'Ход маршрута'}
+        lead={
+          isCozy
+            ? 'Отмечай только то, что было. Остальное можно оставить.'
+            : 'Главное, среднее и бонус — без давления закрыть всё.'
+        }
+        testId="today-section-path"
+      >
+        <div className="space-y-3">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
+            {mainQuestsLabel}
+          </h3>
+          {mainQuests.map((q) => (
+            <QuestCard key={q.id} quest={q} entry={entry} weekly={weekly} onPatch={patch} />
+          ))}
+        </div>
+        <div className="space-y-3">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
+            {isCozy ? 'Если есть силы' : 'Средние квесты'}
+          </h3>
+          {mediumQuests.map((q) => (
+            <QuestCard key={q.id} quest={q} entry={entry} weekly={weekly} onPatch={patch} />
+          ))}
+        </div>
+        <div className="space-y-3">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
+            {isCozy ? 'По желанию' : 'Бонусные квесты'}
+          </h3>
+          {bonusQuests.map((q) => (
+            <QuestCard key={q.id} quest={q} entry={entry} weekly={weekly} onPatch={patch} />
+          ))}
+        </div>
+      </TodaySection>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
-          {mainQuestsLabel}
-        </h2>
-        {mainQuests.map((q) => (
-          <QuestCard
-            key={q.id}
-            quest={q}
-            entry={entry}
-            weekly={weekly}
-            onPatch={patch}
-          />
-        ))}
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
-          Средние квесты
-        </h2>
-        {mediumQuests.map((q) => (
-          <QuestCard
-            key={q.id}
-            quest={q}
-            entry={entry}
-            weekly={weekly}
-            onPatch={patch}
-          />
-        ))}
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
-          Бонусные квесты
-        </h2>
-        {bonusQuests.map((q) => (
-          <QuestCard
-            key={q.id}
-            quest={q}
-            entry={entry}
-            weekly={weekly}
-            onPatch={patch}
-          />
-        ))}
-      </section>
+      <TodaySection
+        accent="trace"
+        title={isCozy ? 'След дня' : 'Дневник'}
+        lead="Одна строка уже считается записью."
+        testId="today-section-trace"
+      >
+        <Card>
+          <label className="block">
+            <span className="mb-2 block text-sm font-medium text-[var(--app-text)]">
+              Заметки дня
+            </span>
+            <textarea
+              value={entry.comment}
+              onChange={(e) => patch({ comment: e.target.value })}
+              rows={3}
+              className="w-full rounded-xl border border-[var(--app-border)] bg-[var(--app-card-strong)] px-4 py-3 text-[var(--app-text)] focus:border-[var(--app-primary)] focus:outline-none"
+              placeholder="Что получилось, что было сложно…"
+            />
+          </label>
+        </Card>
+      </TodaySection>
 
       <Card className={CARD_ACCENT.primary} data-testid="today-day-summary">
         <div className="grid gap-4 sm:grid-cols-2">
@@ -731,8 +803,7 @@ export function TodayPage() {
             <p className="text-3xl font-bold text-[var(--app-primary)]">+{Math.max(0, points)}</p>
             {momentumPoints.multiplier > 1 && isEditingToday && (
               <p className="mt-1 text-xs text-[var(--app-text-muted)]">
-                Бонус инерции: +{Math.round((momentumPoints.multiplier - 1) * 100)}% XP за дневные
-                квесты
+                Бонус инерции: +{Math.round((momentumPoints.multiplier - 1) * 100)}% XP
                 {momentumPoints.base !== points && (
                   <span className="text-[var(--app-text-muted)]">
                     {' '}
@@ -749,13 +820,13 @@ export function TodayPage() {
         </div>
         <div className="mt-4 flex flex-wrap gap-4 text-sm text-[var(--app-text)]">
           <span>
-            Основные:{' '}
+            Главное:{' '}
             <strong>
               {stats.mainDone}/{stats.mainTotal}
             </strong>
           </span>
           <span>
-            Всего квестов:{' '}
+            Всего:{' '}
             <strong>
               {stats.done}/{stats.total}
             </strong>
@@ -763,7 +834,7 @@ export function TodayPage() {
         </div>
         <div className="mt-3">
           <div className="mb-1 flex justify-between text-xs text-[var(--app-text-muted)]">
-            <span>Прогресс квестов</span>
+            <span>Прогресс дня</span>
             <span>{stats.percent}%</span>
           </div>
           <ProgressBar
@@ -772,25 +843,6 @@ export function TodayPage() {
             className="h-2.5"
           />
         </div>
-      </Card>
-
-      <Card>
-        <label className="block">
-          <span className="mb-2 block text-sm font-medium text-[var(--app-text)]">
-            Заметки / дневник дня
-          </span>
-          <p className="mb-2 text-xs leading-relaxed text-[var(--app-text-muted)]/75">
-            Одна строка уже считается записью. Не нужно писать идеально — достаточно оставить след
-            дня.
-          </p>
-          <textarea
-            value={entry.comment}
-            onChange={(e) => patch({ comment: e.target.value })}
-            rows={3}
-            className="w-full rounded-xl border border-[var(--app-border)] bg-[var(--app-card-strong)] px-4 py-3 text-[var(--app-text)] focus:border-[var(--app-primary)] focus:outline-none"
-            placeholder="Что получилось, что было сложно…"
-          />
-        </label>
       </Card>
 
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--app-border)] bg-[var(--app-bg)]/95 px-4 py-3 backdrop-blur-sm lg:hidden">

@@ -1334,3 +1334,244 @@
 .cozy-reward-feedback__cta:hover {
   filter: brightness(1.03);
 }
+
+/* ——— Today v2: sections, presets, preview, PA ——— */
+.today-section__header {
+  padding-inline: 0.15rem;
+}
+
+.today-section__title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--app-text);
+  letter-spacing: -0.01em;
+}
+
+.today-section__lead {
+  margin-top: 0.2rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--app-text-muted);
+}
+
+[data-theme='cozy'] .today-section--body .today-section__title {
+  color: var(--app-wood);
+}
+
+[data-theme='cozy'] .today-section--path .today-section__title {
+  color: var(--app-garden);
+}
+
+.today-presets {
+  border-radius: 1.2rem;
+  border: 1px solid var(--app-border);
+  background: var(--app-card);
+  padding: 1rem 1.05rem;
+  box-shadow: var(--app-shadow);
+}
+
+[data-theme='cozy'] .today-presets {
+  border-color: color-mix(in srgb, var(--app-wood) 26%, var(--app-border));
+  background:
+    radial-gradient(ellipse at 90% 0%, rgba(244, 220, 150, 0.2), transparent 42%),
+    linear-gradient(155deg, #fffaf2, #f0e6d4 60%, #e8efe4);
+}
+
+[data-theme='cozy'] .today-presets--minimal {
+  border-color: color-mix(in srgb, var(--app-sun) 48%, var(--app-border));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--app-sun) 22%, transparent),
+    0 10px 24px rgba(74, 55, 32, 0.06);
+}
+
+.today-presets__eyebrow {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--app-text-muted);
+}
+
+[data-theme='cozy'] .today-presets__eyebrow {
+  color: var(--app-garden);
+}
+
+.today-presets__title {
+  margin-top: 0.15rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--app-text);
+}
+
+.today-presets__lead {
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--app-text-muted);
+}
+
+.today-presets__badge {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--app-sun) 45%, var(--app-border));
+  background: color-mix(in srgb, var(--app-sun) 16%, var(--app-card));
+  padding: 0.2rem 0.6rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #8a6a18;
+}
+
+.today-presets__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+}
+
+@media (min-width: 640px) {
+  .today-presets__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.today-presets__item {
+  border-radius: 0.95rem;
+  border: 1px solid var(--app-border);
+  background: var(--app-card-strong);
+  padding: 0.75rem 0.8rem;
+  text-align: left;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.today-presets__item:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--app-primary) 35%, var(--app-border));
+}
+
+.today-presets__item--featured {
+  border-style: dashed;
+}
+
+.today-presets__item--active {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--app-primary) 50%, var(--app-border));
+  background: color-mix(in srgb, var(--app-primary-soft) 55%, var(--app-card));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--app-primary) 20%, transparent);
+}
+
+[data-theme='cozy'] .today-presets__item--active.today-presets__item--featured {
+  border-color: color-mix(in srgb, var(--app-sun) 55%, var(--app-border));
+  background: color-mix(in srgb, var(--app-sun) 16%, var(--app-card-strong));
+}
+
+.today-presets__item-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--app-text);
+}
+
+.today-presets__item-hint {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--app-text-muted);
+}
+
+.today-minimal-banner {
+  border-radius: 1.1rem;
+  border: 1px dashed var(--app-border);
+  background: var(--app-bg-soft);
+  padding: 0.9rem 1rem;
+}
+
+.today-minimal-banner--active {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--app-gold) 40%, var(--app-border));
+  background: color-mix(in srgb, var(--app-primary-soft) 45%, var(--app-card));
+}
+
+[data-theme='cozy'] .today-minimal-banner--active {
+  border-color: color-mix(in srgb, var(--app-sun) 48%, var(--app-border));
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(244, 220, 150, 0.22), transparent 50%),
+    linear-gradient(155deg, #fffaf2, #f4ebdc);
+}
+
+.today-reaction-preview {
+  border-radius: 1.1rem;
+  border: 1px dashed color-mix(in srgb, var(--app-primary) 35%, var(--app-border));
+  background: color-mix(in srgb, var(--app-primary-soft) 28%, var(--app-card));
+  padding: 0.9rem 1rem;
+}
+
+.today-reaction-preview--cozy {
+  border-color: color-mix(in srgb, var(--app-garden) 35%, var(--app-border));
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(140, 168, 120, 0.12), transparent 50%),
+    linear-gradient(155deg, rgba(255, 251, 244, 0.96), rgba(232, 239, 224, 0.9));
+}
+
+.today-reaction-preview__eyebrow {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--app-text-muted);
+}
+
+.today-reaction-preview__headline {
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--app-text);
+}
+
+.today-reaction-preview__detail {
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--app-text-muted);
+}
+
+.today-reaction-preview__cozy {
+  margin-top: 0.55rem;
+  font-size: 0.75rem;
+  color: var(--app-text-muted);
+}
+
+.today-reaction-preview__hint {
+  margin-top: 0.45rem;
+  font-size: 0.7rem;
+  color: var(--app-text-muted);
+  opacity: 0.9;
+}
+
+.today-pa-card {
+  border-radius: 1.1rem;
+  border: 1px solid var(--app-border);
+  background: var(--app-card);
+  padding: 1rem;
+  box-shadow: var(--app-shadow);
+}
+
+.today-pa-card--cozy {
+  border-color: color-mix(in srgb, var(--app-wood) 26%, var(--app-border));
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(196, 168, 120, 0.14), transparent 45%),
+    linear-gradient(160deg, rgba(255, 252, 246, 0.97), rgba(241, 232, 214, 0.94));
+}
+
+.today-pa-card__xp {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--app-primary) 35%, var(--app-border));
+  background: color-mix(in srgb, var(--app-primary-soft) 50%, var(--app-card));
+  padding: 0.2rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--app-primary);
+}
