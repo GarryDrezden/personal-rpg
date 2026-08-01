@@ -1,6 +1,6 @@
 # Текущее состояние проекта
 
-> **Единый источник правды.** Обновлено: 2026-06-06.
+> **Единый источник правды.** Обновлено: 2026-08-01.
 
 ## Краткое описание
 
@@ -136,10 +136,21 @@
 - **Prompts:** pack files + `_template-nano-banana-asset.md`, `_template-boss.md`
 - **Не в scope:** генерация артов, UI wire, Boss Campaign v2
 
-### Campaign tone (design)
+### Theme Roadmap (design)
 
-- **MVP-1:** Dark Campaign — resistance-state bosses, dark fantasy copy, human hero
-- **Future:** Cozy Campaign — parallel tone, shared mechanics; separate avatar (cat), obstacles, copy, seasons, rewards, assets. **Not** a post-dark stage.
+The project supports multiple visual/gameplay themes. Themes are not just colors — each can have its own visual metaphor, progression fantasy, asset set and copywriting tone.
+
+**Active theme work**
+
+1. Cozy / Village Home Recovery
+2. Slavic / Forest Myth RPG
+3. Athlete Return / Sports Comeback
+
+**Existing theme:** Dark Fantasy remains available as a separate theme.
+
+**Not in near-term roadmap:** Cyberpunk.
+
+Cozy does **not** replace Dark Fantasy and is **not** a post-dark stage. Core fantasy: the player restores the body; the hero restores the home. Tone: calm, warm, human — not battle-first; the player brings the world back to life. UI shell already selectable in Settings (`themeId: cozy`).
 
 См. [`07-decision-log.md`](07-decision-log.md), [`../brandbook/themes.md`](../brandbook/themes.md).
 

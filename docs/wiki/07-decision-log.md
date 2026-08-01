@@ -552,3 +552,33 @@ Dark MVP and future Cozy Campaign Variant are **separate emotional skins** over 
 - Dark MVP Visual Priority Pack v1 — только dark tone
 - Cozy assets tracked in P2/P3 Future Cozy Campaign Variant
 - `themeId: cozy` today ≠ Cozy Campaign content catalog
+
+---
+
+## 2026-08-01 — Cozy Theme: house metaphor + multi-theme roadmap
+
+### Контекст
+
+Риск трактовать Cozy как единственный новый курс проекта, как замену Dark Fantasy, или как «милую idle» без ясной метафоры. Отдельно: Cyberpunk не должен оставаться в near-term ожиданиях.
+
+### Решение
+
+Продукт — **multi-theme**. Dark Fantasy остаётся полноценной темой. Cozy — **следующая крупная визуально-геймдизайнерская тема**, не замена и не post-dark стадия.
+
+**Канон Cozy:** дом в деревне, ремонт, уют, двор, сад, участок.
+
+**Метафора:** пользователь восстанавливает тело, а герой восстанавливает дом.
+
+Кот-аватар и «cute spirits» — не главный канон; опциональный backlog.
+
+**После Cozy:** (1) славянское / лесное мифологическое RPG; (2) спортивная карьера / возвращение атлета.
+
+**Вне near-term:** Cyberpunk.
+
+Settings copy и FAQ обновлены; source of truth — docs/brandbook/themes.md.
+
+### Последствия
+
+- UI description 	hemeId: cozy отражает дом/сад/ремонт
+- Roadmap §10–11 и wiki state/systems синхронизированы
+- Art/copy для Cozy строятся вокруг home restoration, не вокруг cat-only line

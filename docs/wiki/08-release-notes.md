@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Changed
+
+- Clarified Cozy Theme direction as a village home restoration theme: body progress unlocks house, garden, yard and comfort improvements.
+- Clarified that Cozy is a separate visual/gameplay theme, not a replacement for Dark Fantasy.
+- Updated theme roadmap: Cozy first, then Slavic/Forest Myth RPG, then Athlete Return/Sports Comeback.
+- Reserved future Asset Registry path categories for Cozy (`cozy/house/*`, `cozy/garden`, `cozy/yard`, `cozy/companions`, `cozy/decor/seasonal`, `cozy/icons`, `cozy/ui`) in wiki gallery/art backlog — docs only, no house-repair mechanics yet.
+- Updated Settings/FAQ copy for «Светлая уютная» (village home, garden, repair, comfort).
+
 ### Added
 
 - Added Physical Activity concept for non-step body load such as repair, yard work, welding, carrying materials and other physically demanding tasks. Qualitative levels (`none`/`light`/`medium`/`heavy`) + duration; movement credit engine; soft Body XP and Momentum; resource cost for heavy load; sofa magnet suppressed when movement held via activity; FAQ + docs.

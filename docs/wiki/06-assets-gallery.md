@@ -101,7 +101,22 @@ Legacy v1 статусы (`approved`, `draft`, …) сохранены в пол
 4. Bump `GAME_ASSET_VERSION`
 5. Отдельный спринт — wire в UI (не автоматически)
 
-**Future Cozy Campaign** — не входит в этот пакет. См. [`13-art-backlog.md`](13-art-backlog.md) → Future Cozy Campaign Variant.
+**Future Cozy / Village Home Recovery** — не входит в Dark MVP пакет. Зарезервированные path-категории для будущего Asset Registry (TODO — ассетов ещё нет):
+
+| Path prefix | Назначение |
+|-------------|------------|
+| `cozy/house/exterior` | Фасад, крыльцо, крыша, окна, забор, тёплый свет |
+| `cozy/house/interior` | Комнаты, мебель, очаг, кухня, мастерская |
+| `cozy/garden` | Грядки, цветы, травы, кусты, теплица |
+| `cozy/yard` | Двор, дорожки, скамейка, бочка/пруд |
+| `cozy/companions` | Места и предметы для питомцев в доме/дворе |
+| `cozy/decor/seasonal` | Весна / лето / осень / зима / праздники |
+| `cozy/icons` | Мелкие иконки дома/сада для UI |
+| `cozy/ui` | Фоны, текстуры paper/wood, shell-элементы Cozy UI |
+
+См. [`13-art-backlog.md`](13-art-backlog.md) → Future Cozy / Village Home Recovery, [`../brandbook/themes.md`](../brandbook/themes.md).
+
+**Не добавлять** эти категории в машинный `docs/assets/manifest.json`, пока нет реальных ассетов и schema support.
 
 ## Dark MVP Asset Generation Batch 1
 

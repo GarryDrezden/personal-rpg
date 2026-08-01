@@ -17,6 +17,7 @@
 2. Компактные блоки: квесты, неделя, recovery (если нужен)
 3. Герой — один, не carousel всех стадий
 4. Тяжёлые блоки (full codex, all achievements) → Growth/Codex
+5. **Cozy Theme:** center on home + daily care, not battle scene — see [`themes.md`](themes.md) → Cozy Dashboard Concept
 
 ## Navigation
 
@@ -167,3 +168,24 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Heavy activity can hold movement but may lower resource.
 - Explain the result in supportive language.
 - Distinguish step quest vs overall movement credit.
+
+## Theme / shell UX Rules
+
+- Themes are not just colors: each can have its own metaphor, progression fantasy, assets and copy tone.
+- The product is **multi-theme**: Cozy does not replace Dark Fantasy.
+- Same core data/systems; **different progress expression** (see Theme distinction in `themes.md`).
+- Dark Fantasy: bosses, mobs, curses, path through darkness, old form, dramatic chapter road.
+- Cozy: home restoration, garden, repair, warmth, companions, routine, resource, visible comfort, small improvements, peaceful long-term progress.
+- Settings theme cards describe the **emotional shell**, not a different game.
+- Cozy / Village Home Recovery: calm, warm, human — **not** battle-first; the player brings the world back to life.
+- Metaphor to keep: the player restores the body; the hero restores the home.
+- Progress fantasy: house repair → rooms → yard → garden → domestic improvements from daily consistency.
+- Cozy Progression: re-frame XP/coins/achievements as home/garden unlocks (exterior, interior, garden, companions, seasonal) — no parallel economy.
+- Reward conversion: daily/weekly signals → cozy upgrade resources (nutrition→materials, steps→yard, sleep→warm light, sober→cleanliness, PA→repair, milestones→stages, seasons→major transforms).
+- Cozy upgrades must not require perfection; minimal/recovery days still grant small cozy progress.
+- Cozy copywriting: warm, grounded, domestic (дом, двор, сад, уют, очаг, тепло, маленький шаг, забота, свет в окне). Adult and warm — not childish.
+- Cozy avoid: punishment, failure, shame, aggressive battle language, “defeat yourself”, too much darkness, too much childish cuteness.
+- Cozy UI: lighter/warmer than Dark Fantasy — cream, honey, sage; rounded cards; gentle shadows; paper/wood hints; home/garden icons; natural light. Still a game, not corporate wellness. Feel: cozy idle + village house restoration + warm RPG journal + soft progress dashboard.
+- Cozy Dashboard: center on home + daily care, not battle scene. Structure: home preview → «Что сегодня можно улучшить?» → one main action → resource («силы дома и героя») → quests as repair/garden progress → companion in home/yard → restoration stage.
+- Active theme work order: Cozy → Slavic / Forest Myth → Athlete Return / Sports Comeback.
+- Cyberpunk is not in the near-term theme roadmap.

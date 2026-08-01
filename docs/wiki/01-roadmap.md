@@ -172,19 +172,47 @@
 
 ---
 
-## 10. Cozy Campaign (future — parallel tone)
+## 10. Cozy / Village Home Recovery (active theme work)
 
-**Не post-dark.** Альтернативная эмоциональная версия тех же mechanics: day, season, body abilities, plateau, camp/base.
+**Не единственный курс проекта и не замена Dark Fantasy.** Параллельная тема / оболочка над теми же mechanics: day, season, body abilities, plateau, camp/base.
 
-- [ ] Cozy obstacle/boss catalog (сонные духи, игривые блокеры, шкодники)
-- [ ] Cat hero avatar line (20 stages — lighter, agile, energetic, confident)
-- [ ] Separate season flavor, copy, rewards, assets from Dark Campaign
-- [ ] Onboarding / settings: choose campaign tone (future; today `themeId` = UI shell only)
+**Метафора:** the player restores the body; the hero restores the home.
 
-**Shared:** engines, daily metrics, season structure. **Separate:** avatar, enemies, copy, visuals.
+**Tone:** not battle-first — calm, warm, human. The player is not punished by the world; the player brings the world back to life.
 
-См. [`07-decision-log.md`](07-decision-log.md) → Campaign Tone.
+**Progress fantasy:** repair house → clean/improve rooms → restore yard → build garden → cozy furniture & warm light → small domestic unlocks from daily consistency.
 
+**Cozy Progression:** same XP/coins/achievements/daily entries; visual rewards framed as home/garden unlocks (exterior, interior, garden/yard, companion spots, seasonal decor). See [`../brandbook/themes.md`](../brandbook/themes.md) → Cozy Progression + Reward conversion.
+
+- [ ] Cozy UI direction pass (cream/honey/sage, rounded cards, less neon/purple; still game-like)
+- [ ] Cozy Dashboard concept (home preview, «что улучшить», resource of home+hero, quests→repair/garden, companion in home)
+- [ ] Cozy Progression unlock catalog (exterior / interior / garden / companions / seasonal)
+- [ ] Reward conversion map (nutrition → materials, steps → yard, sleep → warm light, etc.)
+- [ ] Soft progress on minimal/recovery days — no perfection gate
+- [ ] Wire unlocks to existing XP/coins/achievements — no parallel economy
+- [ ] Cozy house / yard / garden progression scenes
+- [ ] Cozy copy overlay (season flavor, supportive home metaphors)
+- [ ] Align Camp/Base visuals with home restoration
+- [ ] Expand beyond UI shell: Settings `themeId: cozy` already exists; deepen content catalog
+- [ ] Optional later: alternate avatar experiments (see ideas backlog) — **not** required for Cozy canon
+
+**Shared:** engines, daily metrics, season structure. **Separate when built:** world metaphors, obstacles, copy, visuals.
+
+См. [`07-decision-log.md`](07-decision-log.md), [`../brandbook/themes.md`](../brandbook/themes.md).
+
+---
+
+## 11. Theme Roadmap (active theme work)
+
+Themes are not just colors. Each theme can have its own visual metaphor, progression fantasy, asset set and copywriting tone.
+
+1. **Cozy / Village Home Recovery** — current focus
+2. **Slavic / Forest Myth RPG**
+3. **Athlete Return / Sports Comeback**
+
+**Existing:** Dark Fantasy remains available as a separate theme.
+
+**Not in near-term roadmap:** Cyberpunk.
 ---
 
 ## Позже — графика (параллельно, не блокирует core)
@@ -192,7 +220,7 @@
 - [ ] Массовая генерация и approval hero stages
 - [ ] Мужчина — dark / light (все 20 стадий + death)
 - [ ] Женщина — dark / light (консистентность линейки)
-- [ ] Мобы / боссы dark + **cozy parallel catalogs** (not light reskin of dark bosses)
+- [ ] Мобы / боссы dark + **cozy parallel catalogs** (home/yard blockers, not light reskin of dark bosses)
 - [ ] Codex cinematic showcase polish
 - [ ] VPS / Node backend — когда будет бюджет
 
@@ -209,6 +237,7 @@
 - Public profiles
 - 20 новых экранов за один спринт
 - **Массовая генерация всех ассетов до готового Asset Registry 2.0**
+- **Cyberpunk theme** — вне near-term roadmap (паркуем)
 
 ---
 

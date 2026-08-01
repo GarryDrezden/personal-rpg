@@ -320,20 +320,49 @@ Main principle:
 
 **80 кг — это не один длинный прогресс-бар. Это 12–24 месяца сезонов, глав, навыков, ритуалов, открытий и возвращений.**
 
-### Campaign tones: Dark MVP vs Cozy variant
+### Theme Roadmap
 
-**MVP-1** ships the **Dark Campaign** tone: season names, bosses, copy and visuals frame **resistance states** — fatigue, chaos, empty days, plateau, rollback, night eating, loss of control, the old form. See `bossConfig.ts`, `seasonConfig.ts`.
+The project supports multiple visual/gameplay themes.
 
-The future **Cozy / Light Campaign** is **not** a narrative stage after dark («you finished the hard path, now it's cute»). It is a **parallel emotional version** of the same mechanics:
+Themes are not just colors. Each theme can have its own visual metaphor, progression fantasy, asset set and copywriting tone.
 
-| Layer | Shared | Per tone (separate) |
-|-------|--------|---------------------|
+**Active theme work**
+
+1. Cozy / Village Home Recovery
+2. Slavic / Forest Myth RPG
+3. Athlete Return / Sports Comeback
+
+**Existing theme:** Dark Fantasy remains available as a separate theme.
+
+**Not in near-term roadmap:** Cyberpunk is not planned for the current theme roadmap.
+
+| Theme | Status | Metaphor |
+|-------|--------|----------|
+| **Dark Fantasy** | Existing / available | Resistance states — fatigue, chaos, empty days, plateau, rollback… |
+| **Cozy / Village Home Recovery** | Active theme work | Player restores body → hero restores home; house/rooms/yard/garden unlocks; calm, not battle-first |
+| **Slavic / Forest Myth RPG** | Active theme work (after Cozy) | Folk / woodland path |
+| **Athlete Return / Sports Comeback** | Active theme work (after Slavic) | Athletic return |
+| **Cyberpunk** | Not in near-term | Parked |
+
+**Cozy is not** the sole project direction and **does not** replace Dark Fantasy. It is **not** a post-dark cute chapter.
+
+**Theme distinction — same systems, different progress expression**
+
+| Dark Fantasy | Cozy |
+|--------------|------|
+| bosses, mobs, curses | home restoration, garden, repair |
+| path through darkness | warmth, pets/companions, routine |
+| struggle with old form | resource, visible comfort, small improvements |
+| dramatic chapter road | peaceful long-term progress |
+
+| Layer | Shared | Per theme (when built) |
+|-------|--------|------------------------|
 | Day, season, quests, plateau, camp/base engines | ✅ | — |
-| Avatar | — | Human dark hero **vs** large charming cat (lighter, more agile, energetic, confident) |
-| Obstacles / bosses | — | Dark resistance bosses **vs** cute obstacles, sleepy spirits, playful blockers |
-| Copy, season flavor, rewards, assets | — | Full separate catalogs |
+| World metaphor | — | Dark resistance path **vs** home restoration **vs** later themes |
+| Obstacles / bosses | — | Separate catalogs (not simple recolors) |
+| Copy, season flavor, rewards, assets | — | Full separate overlays |
 
-Onboarding theme (`cozy` / `darkFantasy`) today switches UI shell and hero variants; full Cozy Campaign content is a **future sprint**. See [`07-decision-log.md`](07-decision-log.md), [`../brandbook/themes.md`](../brandbook/themes.md).
+Settings `themeId` (`cozy` / `darkFantasy`) switches the visual shell today; Cozy’s next work deepens the **house / garden / repair** content layer. See [`07-decision-log.md`](07-decision-log.md), [`../brandbook/themes.md`](../brandbook/themes.md).
 
 Нельзя строить годовую игру как один bar «180 кг → 100 кг».
 

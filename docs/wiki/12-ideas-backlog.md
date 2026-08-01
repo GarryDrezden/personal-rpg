@@ -8,19 +8,28 @@
 
 ## 2026-06-06 — Аватар худеющего героя = кот
 
-**Статус:** эволюция → **Cozy Campaign hero** (см. [`07-decision-log.md`](07-decision-log.md) → Campaign Tone)
+**Статус:** опциональная идея / backlog — **не главный канон Cozy** (см. решение 2026-08-01 в [`07-decision-log.md`](07-decision-log.md))
 
-**Суть:** визуальный аватар прогресса в **Cozy Campaign** — не человек, а **крупный обаятельный кот**, который постепенно становится легче, подвижнее, энергичнее и увереннее (20 стадий трансформации).
+**Суть (историческая идея):** визуальный аватар прогресса в Cozy — крупный обаятельный кот (20 стадий).
 
-**Не путать с:** Dark Campaign MVP (human hero) и с `themeId: cozy` в Settings (сегодня — UI shell + light hero variants, не полный cozy catalog).
+**Актуальный канон Cozy:** дом в деревне, ремонт, сад, двор, участок. Метафора: тело → дом. Кот-аватар может обсуждаться позже как эксперимент, но не блокирует Cozy Theme.
 
-**Зачем:** мягкий игровой образ; альтернативный тон тем же механикам — не «после тёмной кампании».
+**Не путать с:** Dark Fantasy (human hero) и с текущим `themeId: cozy` (светлая оболочка UI).
 
-**Вопросы на потом (Cozy Campaign sprint):**
+**Связанные файлы:** `docs/brandbook/themes.md`, компаньон `golden_chinchilla_cat`.
 
-- Отдельный `campaignTone` vs расширение `themeId`?
-- Один кот для всех или варианты окраса?
-- Параллельный `bossConfig` / `seasonConfig` cozy overlay?
-- Отдельный набор ассетов в manifest (`cozyHero`, cozy bosses)?
+---
 
-**Связанные файлы:** `docs/brandbook/themes.md`, `docs/assets/manifest.json`, `src/constants/avatar.ts`, компаньон `golden_chinchilla_cat`.
+## 2026-08-01 — Theme roadmap after Cozy
+
+**Статус:** зафиксировано в Theme Roadmap (`docs/brandbook/themes.md`)
+
+**Active theme work**
+
+1. Cozy / Village Home Recovery
+2. Slavic / Forest Myth RPG
+3. Athlete Return / Sports Comeback
+
+**Existing theme:** Dark Fantasy remains available.
+
+**Not in near-term roadmap:** Cyberpunk.

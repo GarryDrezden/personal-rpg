@@ -231,19 +231,34 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 | Achievement badge set | achievement-badge | Growth | achievements.ts | needed | P2 | iconKey per achievement |
 | Female hero full polish | hero-stage | Dashboard | female 1–20 in-app | in-app | P2 | Already in repo; P2 for theme parity |
 
-### Future Cozy Campaign Variant
+### Future Cozy / Village Home Recovery
 
-**Не часть Dark MVP P0/P1.** Отдельная добрая/мягкая эмоциональная оболочка **тех же** core mechanics (день, сезон, abilities, plateau, camp).
+**Не часть Dark MVP P0/P1.** Отдельная тема (не замена Dark Fantasy): дом в деревне, ремонт, сад, двор. Те же core mechanics; другой progress fantasy.
+
+**Reserved Asset Registry path categories (TODO — no assets yet):**
+
+| Path prefix | Назначение |
+|-------------|------------|
+| `cozy/house/exterior` | House exterior unlocks |
+| `cozy/house/interior` | Interior unlocks |
+| `cozy/garden` | Garden unlocks |
+| `cozy/yard` | Yard unlocks |
+| `cozy/companions` | Companion spots / pet items |
+| `cozy/decor/seasonal` | Seasonal decor |
+| `cozy/icons` | Small home/garden UI icons |
+| `cozy/ui` | Cozy shell backgrounds / textures |
+
+**Будущие ассеты (направление):**
 
 | Будущие ассеты | Описание |
 |----------------|----------|
-| Cozy cat avatar stages | Большой милый кот → легче, подвижнее, увереннее (20 стадий) |
-| Cozy obstacles / шкодники | Вместо dark bosses — игривые блокеры, сонные духи |
-| Cozy camp / home | Отдельные сцены лагеря, не recolor dark base |
-| Cozy rewards | Отдельный flavor наград сезонов |
-| Cozy season copy | Параллельный каталог, не перевод dark имён |
+| Home / stage previews | Стадии восстановления дома для Dashboard |
+| Exterior / interior / garden / yard unlocks | Visual rewards from reward conversion |
+| Companion spots in home/yard | Не только battle familiar |
+| Seasonal decor sets | Весна–зима, праздники |
+| Cozy UI shell art | Cream/honey/sage, paper/wood — still game-like |
 
-**Правило:** не смешивать с dark bosses, не делать simple recolor. См. [`07-decision-log.md`](07-decision-log.md).
+**Правило:** не смешивать с dark bosses, не делать simple recolor. Cat-avatar — optional backlog, не канон. См. [`07-decision-log.md`](07-decision-log.md), [`../brandbook/themes.md`](../brandbook/themes.md).
 
 ---
 
@@ -253,7 +268,7 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 |----------|-----|--------|-------------|
 | Logo dark fantasy | logo | needed | Heraldic Huginn/Muninn |
 | New Game+ art | — | idea | **Out of scope** — track only |
-| Alternate themes | hero-variant | idea | **Cozy Campaign** — parallel content track (cat hero, cozy obstacles), not post-dark stage. See decision log. |
+| Alternate themes | hero-variant | idea | **Cozy / Village Home Recovery** — parallel theme (house/garden), not post-dark. Path categories reserved in gallery. See brandbook themes. |
 | Advanced animations | — | idea | Hero stage transitions |
 | Seasonal recap illustrations | season-recap | idea | No recap screen in v1 |
 | Male hero stages 4–18 root PNG | hero-stage | partial | Variants cover runtime |
