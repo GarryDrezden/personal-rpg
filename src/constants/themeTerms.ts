@@ -19,7 +19,8 @@ export type ThemeTermKey =
   | 'plateauPossible'
   | 'plateauMark'
   | 'plateauUnmark'
-  | 'codex';
+  | 'codex'
+  | 'weeklyTrials';
 
 const DARK_TERMS: Record<ThemeTermKey, string> = {
   boss: 'Босс',
@@ -41,6 +42,7 @@ const DARK_TERMS: Record<ThemeTermKey, string> = {
   plateauMark: 'Я на перевале',
   plateauUnmark: 'Снять отметку перевала',
   codex: 'Кодекс',
+  weeklyTrials: 'Испытания',
 };
 
 const COZY_TERMS: Record<ThemeTermKey, string> = {
@@ -63,6 +65,7 @@ const COZY_TERMS: Record<ThemeTermKey, string> = {
   plateauMark: 'Я на паузе роста',
   plateauUnmark: 'Снять отметку паузы',
   codex: 'Альбом',
+  weeklyTrials: 'Помехи',
 };
 
 export const THEME_TERMS: Record<AppThemeId, Record<ThemeTermKey, string>> = {

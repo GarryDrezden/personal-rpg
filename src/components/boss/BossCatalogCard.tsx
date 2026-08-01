@@ -1,15 +1,20 @@
 import { Link } from 'react-router-dom';
-import { CloudFog, ScrollText, Skull, Swords } from 'lucide-react';
+import { CloudFog, Leaf, ScrollText, Skull, Sprout, Swords } from 'lucide-react';
 import { getBossTemplateById } from '../../constants/bosses';
+import {
+  getThemedWeeklyCatalogStatusLabel,
+  getThemedWeeklyThreatChrome,
+  getThemedWeeklyThreatCopy,
+} from '../../game/themeWeeklyThreatPresentation';
+import { useAppTheme } from '../../hooks/useAppTheme';
 import type { BossCatalogEntry } from '../../utils/bossCatalog';
 import { BossPortrait } from './BossPortrait';
+import { CozyArtPlaceholder } from '../game/CozyArtPlaceholder';
 import {
   DEFEAT_HINT_LABEL,
-  FOG_CALLOUT,
   FOG_PENDING_TEXT,
   TRIALS_CARD,
   TRIALS_FEATURED,
-  TRIALS_STATUS_LABELS,
 } from './trialsUi';
 
 function ThreatProgressBar({
@@ -44,19 +49,31 @@ function ThreatProgressBar({
   );
 }
 
-function statusPill(status: BossCatalogEntry['status']) {
-  const styles: Record<BossCatalogEntry['status'], string> = {
+function statusPill(status: BossCatalogEntry['status'], isCozy: boolean, label: string) {
+  const darkStyles: Record<BossCatalogEntry['status'], string> = {
     pending: 'border-violet-500/25 bg-violet-950/30 text-violet-200/60',
     active: 'border-red-400/35 bg-red-950/35 text-red-200/85',
     failed: 'border-violet-500/20 bg-[#14101c]/80 text-[var(--app-text-muted)]/70',
     defeated: 'border-emerald-400/30 bg-emerald-950/25 text-emerald-200/80',
     perfect: 'border-[var(--app-gold)]/35 bg-[#18120a]/50 text-[var(--app-gold)]/90',
   };
+  const cozyStyles: Record<BossCatalogEntry['status'], string> = {
+    pending: 'border-[var(--app-border)] bg-[var(--app-card-strong)] text-[var(--app-text-muted)]',
+    active:
+      'border-[color-mix(in_srgb,var(--app-sun)_40%,var(--app-border))] bg-[color-mix(in_srgb,var(--app-sun)_14%,var(--app-card))] text-[#8a6a18]',
+    failed: 'border-[var(--app-border)] bg-[var(--app-bg-soft)] text-[var(--app-text-muted)]',
+    defeated:
+      'border-[color-mix(in_srgb,var(--app-garden)_40%,var(--app-border))] bg-[color-mix(in_srgb,var(--app-garden)_12%,var(--app-card))] text-[var(--app-garden)]',
+    perfect:
+      'border-[color-mix(in_srgb,var(--app-sun)_45%,var(--app-border))] bg-[color-mix(in_srgb,var(--app-sun)_16%,var(--app-card))] text-[#8a6a18]',
+  };
   return (
     <span
-      className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${styles[status]}`}
+      className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+        isCozy ? cozyStyles[status] : darkStyles[status]
+      }`}
     >
-      {TRIALS_STATUS_LABELS[status]}
+      {label}
     </span>
   );
 }
@@ -66,79 +83,151 @@ type FeaturedWeeklyBossCardProps = {
 };
 
 export function FeaturedWeeklyBossCard({ entry }: FeaturedWeeklyBossCardProps) {
+  const { themeId, isCozy } = useAppTheme();
   const template = getBossTemplateById(entry.templateId);
   const boss = entry.activeBoss;
+  const chrome = getThemedWeeklyThreatChrome(themeId);
   if (!boss) return null;
 
+  const copy = getThemedWeeklyThreatCopy(themeId, entry.templateId, {
+    title: template.title,
+    subtitle: template.subtitle,
+    description: template.description,
+    accent: template.accent,
+  });
   const damageDealt = 100 - boss.hpPercent;
+  const completed = boss.conditions.filter((c) => c.completed).length;
+  const TitleIcon = isCozy ? Leaf : Skull;
 
   return (
-    <article className={`${TRIALS_FEATURED} p-4 sm:p-6`} data-testid="featured-weekly-boss">
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_10%_0%,rgba(239,68,68,0.12),transparent_55%)]"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-400/25 to-transparent"
-        aria-hidden
-      />
+    <article
+      className={
+        isCozy
+          ? 'cozy-weekly-featured relative overflow-hidden rounded-2xl border border-[color-mix(in_srgb,var(--app-wood)_28%,var(--app-border))] bg-[linear-gradient(155deg,#fffaf2,#f0e6d4_55%,#e8efe4)] p-4 shadow-[0_12px_28px_rgba(74,55,32,0.07)] sm:p-6'
+          : `${TRIALS_FEATURED} p-4 sm:p-6`
+      }
+      data-testid="featured-weekly-boss"
+    >
+      {!isCozy ? (
+        <>
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_10%_0%,rgba(239,68,68,0.12),transparent_55%)]"
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-400/25 to-transparent"
+            aria-hidden
+          />
+        </>
+      ) : (
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_90%_0%,rgba(244,220,150,0.28),transparent_45%),radial-gradient(ellipse_at_0%_100%,rgba(140,168,120,0.16),transparent_50%)]"
+          aria-hidden
+        />
+      )}
 
       <div className="relative flex flex-col gap-5 lg:flex-row lg:items-start">
-        <BossPortrait
-          imagePath={template.imagePath}
-          emoji={template.avatarEmoji}
-          title={template.title}
-          accent={template.accent}
-          size="xl"
-          catalogStatus="active"
-          className="mx-auto shrink-0 lg:mx-0"
-        />
+        {isCozy ? (
+          <CozyArtPlaceholder
+            label={copy.title}
+            layout="portrait-lg"
+            testId="featured-weekly-threat-art"
+            className="mx-auto shrink-0 lg:mx-0"
+          />
+        ) : (
+          <BossPortrait
+            imagePath={template.imagePath}
+            emoji={template.avatarEmoji}
+            title={copy.title}
+            accent={copy.accent}
+            size="xl"
+            catalogStatus="active"
+            className="mx-auto shrink-0 lg:mx-0"
+          />
+        )}
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-red-300/55">
-                Угроза недели
+              <p
+                className={`text-[10px] font-semibold uppercase tracking-[0.2em] ${
+                  isCozy ? 'text-[var(--app-garden)]' : 'text-red-300/55'
+                }`}
+              >
+                {chrome.featuredEyebrow}
               </p>
               <div className="mt-1 flex items-center gap-2">
-                <Skull className="h-5 w-5 shrink-0 text-red-300/75" strokeWidth={1.5} />
+                <TitleIcon
+                  className={`h-5 w-5 shrink-0 ${
+                    isCozy ? 'text-[var(--app-garden)]' : 'text-red-300/75'
+                  }`}
+                  strokeWidth={1.5}
+                />
                 <h2 className="text-xl font-bold text-[var(--app-text)] sm:text-2xl">
-                  {template.title}
+                  {copy.title}
                 </h2>
               </div>
-              <p className="mt-1 text-sm font-medium text-red-200/55">{template.subtitle}</p>
+              <p
+                className={`mt-1 text-sm font-medium ${
+                  isCozy ? 'text-[var(--app-text-muted)]' : 'text-red-200/55'
+                }`}
+              >
+                {copy.subtitle}
+              </p>
             </div>
-            {statusPill('active')}
+            {statusPill(
+              'active',
+              isCozy,
+              getThemedWeeklyCatalogStatusLabel(themeId, 'active'),
+            )}
           </div>
 
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--app-text-muted)]/80">
-            {template.description}
+            {copy.description}
           </p>
 
-          <div className="mt-5 rounded-xl border border-red-400/15 bg-[#0e0c14]/50 px-4 py-3.5">
+          <div
+            className={`mt-5 rounded-xl border px-4 py-3.5 ${
+              isCozy
+                ? 'border-[var(--app-border)] bg-[color-mix(in_srgb,var(--app-card-strong)_88%,var(--app-sage-mist))]'
+                : 'border-red-400/15 bg-[#0e0c14]/50'
+            }`}
+          >
             <div className="mb-2 flex items-center justify-between gap-2">
               <span className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]/70">
-                Сила угрозы
+                {chrome.powerLabel}
               </span>
               <span className="text-sm font-bold text-[var(--app-text)]">{boss.hpPercent}%</span>
             </div>
-            <ThreatProgressBar value={boss.hpPercent} tone="danger" className="h-2.5" />
+            <ThreatProgressBar
+              value={boss.hpPercent}
+              tone={isCozy ? 'gold' : 'danger'}
+              className="h-2.5"
+            />
             <p className="mt-2 text-xs text-[var(--app-text-muted)]/65">
-              Маршрут ослабил угрозу на {damageDealt}% · условий закрыто{' '}
-              {boss.conditions.filter((c) => c.completed).length}/{boss.conditions.length}
+              {chrome.featuredProgress(damageDealt, completed, boss.conditions.length)}
             </p>
           </div>
 
           <div className="mt-4 flex flex-wrap gap-3">
             <Link
               to="/week"
-              className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-[var(--app-gold)]/35 bg-[var(--app-primary-soft)]/35 px-5 py-2.5 text-sm font-semibold text-[var(--app-text)] hover:brightness-105"
+              className={`inline-flex min-h-11 items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold hover:brightness-105 ${
+                isCozy
+                  ? 'border border-[color-mix(in_srgb,var(--app-sun)_40%,var(--app-border))] bg-[linear-gradient(180deg,#dfb45a,var(--app-primary))] text-[var(--app-primary-contrast)]'
+                  : 'border border-[var(--app-gold)]/35 bg-[var(--app-primary-soft)]/35 text-[var(--app-text)]'
+              }`}
             >
-              <Swords className="h-4 w-4 text-[var(--app-gold)]/85" strokeWidth={1.5} />
-              Перейти к испытанию недели
+              {isCozy ? (
+                <Sprout className="h-4 w-4" strokeWidth={1.5} />
+              ) : (
+                <Swords className="h-4 w-4 text-[var(--app-gold)]/85" strokeWidth={1.5} />
+              )}
+              {chrome.featuredCta}
             </Link>
             <span className="self-center text-xs text-[var(--app-text-muted)]/55">
-              +{boss.rewardXp} XP · +{boss.rewardCoins} монет за удержание маршрута
+              +{boss.rewardXp} XP · +{boss.rewardCoins} монет за удержание{' '}
+              {isCozy ? 'ритма' : 'маршрута'}
             </span>
           </div>
         </div>
@@ -152,37 +241,80 @@ type ArchiveBossCodexCardProps = {
 };
 
 export function ArchiveBossCodexCard({ entry }: ArchiveBossCodexCardProps) {
+  const { themeId, isCozy } = useAppTheme();
   const template = getBossTemplateById(entry.templateId);
+  const chrome = getThemedWeeklyThreatChrome(themeId);
+  const copy = getThemedWeeklyThreatCopy(themeId, entry.templateId, {
+    title: template.title,
+    subtitle: template.subtitle,
+    description: template.description,
+    accent: template.accent,
+  });
   const isPending = entry.status === 'pending';
+  const statusLabel = getThemedWeeklyCatalogStatusLabel(themeId, entry.status);
 
   return (
-    <article className={`${TRIALS_CARD} flex h-full flex-col p-4`}>
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-400/10 to-transparent" />
+    <article
+      className={
+        isCozy
+          ? 'cozy-weekly-archive relative flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--app-border)] bg-[linear-gradient(160deg,rgba(255,252,246,0.97),rgba(241,232,214,0.94))] p-4 shadow-[0_8px_20px_rgba(74,55,32,0.05)]'
+          : `${TRIALS_CARD} flex h-full flex-col p-4`
+      }
+    >
+      {!isCozy ? (
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-400/10 to-transparent" />
+      ) : null}
 
       <div className="flex items-start gap-3">
-        <BossPortrait
-          imagePath={template.imagePath}
-          emoji={template.avatarEmoji}
-          title={template.title}
-          accent={template.accent}
-          size="md"
-          catalogStatus={entry.status}
-          className="shrink-0"
-        />
+        {isCozy ? (
+          <CozyArtPlaceholder
+            label={copy.title}
+            layout="portrait"
+            testId={`archive-weekly-threat-art-${entry.templateId}`}
+            className="shrink-0"
+          />
+        ) : (
+          <BossPortrait
+            imagePath={template.imagePath}
+            emoji={template.avatarEmoji}
+            title={copy.title}
+            accent={copy.accent}
+            size="md"
+            catalogStatus={entry.status}
+            className="shrink-0"
+          />
+        )}
 
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <h3 className="truncate font-semibold text-[var(--app-text)]">{template.title}</h3>
-              <p className="mt-0.5 text-xs font-medium text-violet-200/45">{template.subtitle}</p>
+              <h3 className="truncate font-semibold text-[var(--app-text)]">{copy.title}</h3>
+              <p
+                className={`mt-0.5 text-xs font-medium ${
+                  isCozy ? 'text-[var(--app-text-muted)]' : 'text-violet-200/45'
+                }`}
+              >
+                {copy.subtitle}
+              </p>
             </div>
-            {statusPill(entry.status)}
+            {statusPill(entry.status, isCozy, statusLabel)}
           </div>
 
           {isPending ? (
-            <div className={`${FOG_CALLOUT} mt-3 flex items-start gap-2`}>
-              <CloudFog className="mt-0.5 h-3.5 w-3.5 shrink-0 text-violet-300/40" strokeWidth={1.5} />
-              <span>{FOG_PENDING_TEXT}</span>
+            <div
+              className={
+                isCozy
+                  ? 'mt-3 flex items-start gap-2 rounded-lg border border-[var(--app-border)] bg-[var(--app-bg-soft)] px-3 py-2 text-xs leading-snug text-[var(--app-text-muted)]'
+                  : 'mt-3 flex items-start gap-2 rounded-lg border border-violet-500/15 bg-[#0e0c14]/60 px-3 py-2 text-xs leading-snug text-[var(--app-text-muted)]/55'
+              }
+            >
+              <CloudFog
+                className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${
+                  isCozy ? 'text-[var(--app-garden)]' : 'text-violet-300/40'
+                }`}
+                strokeWidth={1.5}
+              />
+              <span>{isCozy ? chrome.fogPending : FOG_PENDING_TEXT}</span>
             </div>
           ) : entry.status !== 'active' ? (
             <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-[var(--app-text-muted)]/60">
@@ -193,10 +325,14 @@ export function ArchiveBossCodexCard({ entry }: ArchiveBossCodexCardProps) {
           ) : null}
 
           {(entry.status === 'failed' || entry.status === 'pending') && (
-            <div className="mt-3 border-t border-violet-500/10 pt-3">
+            <div
+              className={`mt-3 border-t pt-3 ${
+                isCozy ? 'border-[var(--app-border)]' : 'border-violet-500/10'
+              }`}
+            >
               <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--app-text-muted)]/50">
                 <ScrollText className="h-3 w-3" strokeWidth={1.5} />
-                {DEFEAT_HINT_LABEL}
+                {isCozy ? chrome.defeatHint : DEFEAT_HINT_LABEL}
               </p>
               <p className="mt-1 text-xs leading-snug text-[var(--app-text-muted)]/70">
                 {template.defeatHint}
@@ -207,8 +343,12 @@ export function ArchiveBossCodexCard({ entry }: ArchiveBossCodexCardProps) {
           {entry.status === 'defeated' || entry.status === 'perfect' ? (
             <p className="mt-3 text-xs leading-snug text-[var(--app-text-muted)]/55">
               {entry.status === 'perfect'
-                ? 'Маршрут удержан с идеальной чистотой.'
-                : 'Угроза отступила — маршрут выдержал испытание.'}
+                ? isCozy
+                  ? 'Ритм удержан с идеальной чистотой.'
+                  : 'Маршрут удержан с идеальной чистотой.'
+                : isCozy
+                  ? 'Помеха отступила — неделя выдержала ритм.'
+                  : 'Угроза отступила — маршрут выдержал испытание.'}
             </p>
           ) : null}
         </div>

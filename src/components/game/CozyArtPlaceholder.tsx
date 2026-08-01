@@ -1,6 +1,6 @@
 type CozyArtPlaceholderProps = {
   label: string;
-  layout?: 'banner' | 'icon' | 'compact';
+  layout?: 'banner' | 'icon' | 'compact' | 'portrait' | 'portrait-lg';
   testId?: string;
   className?: string;
 };
@@ -12,6 +12,8 @@ const LAYOUT: Record<
   banner: 'h-[5.25rem] w-full sm:h-[7.5rem] md:h-[10rem]',
   icon: 'h-12 w-12 shrink-0',
   compact: 'h-14 w-[5.25rem] shrink-0',
+  portrait: 'h-24 w-24 shrink-0 rounded-2xl',
+  'portrait-lg': 'h-40 w-40 shrink-0 rounded-2xl md:h-48 md:w-48',
 };
 
 /** Warm same-theme stand-in — never shows Dark Fantasy art. */

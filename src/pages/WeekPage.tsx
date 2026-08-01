@@ -25,8 +25,12 @@ import { Badge } from '../components/ui/Badge';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { StatTile } from '../components/ui/StatTile';
 import { Check, X } from 'lucide-react';
+import { useAppTheme } from '../hooks/useAppTheme';
+import { getThemedWeeklyThreatChrome } from '../game/themeWeeklyThreatPresentation';
 
 export function WeekPage() {
+  const { themeId, isCozy } = useAppTheme();
+  const weeklyChrome = getThemedWeeklyThreatChrome(themeId);
   const { dailyEntries, measurements, settings } = useAppStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const today = todayISO();
@@ -139,7 +143,7 @@ export function WeekPage() {
           to="/growth/trials"
           className="text-sm font-medium text-[var(--app-primary)] hover:underline"
         >
-          Испытания недели →
+          {isCozy ? `${weeklyChrome.allTrialsLink} →` : 'Испытания недели →'}
         </Link>
       </header>
 
