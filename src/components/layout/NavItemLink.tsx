@@ -1,5 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import type { LucideIcon } from 'lucide-react';
+import { getThemeTerm } from '../../constants/themeTerms';
+import { useAppTheme } from '../../hooks/useAppTheme';
 
 type NavItemLinkProps = {
   to: string;
@@ -16,7 +18,9 @@ export function NavItemLink({
   onClick,
   size = 'sidebar',
 }: NavItemLinkProps) {
+  const { themeId } = useAppTheme();
   const isDrawer = size === 'drawer';
+  const displayLabel = to === '/codex' ? getThemeTerm(themeId, 'codex') : label;
 
   return (
     <NavLink
@@ -47,7 +51,7 @@ export function NavItemLink({
             <Icon size={isDrawer ? 20 : 17} strokeWidth={2} />
           </span>
           <span className={`truncate font-medium ${isDrawer ? 'text-base' : 'text-sm'}`}>
-            {label}
+            {displayLabel}
           </span>
         </>
       )}

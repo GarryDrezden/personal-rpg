@@ -1,9 +1,16 @@
 import { Link } from 'react-router-dom';
 import type { SeasonSnapshotWithRecap } from '../../game/seasons/seasonEngine';
 import type { BossCampaignSnapshot } from '../../game/bosses/bossTypes';
-import { getSeasonRewardLabel, getSeasonRewardStatus } from '../../game/seasons/seasonRecap';
-import { ManifestArtScene } from '../game/ManifestArtScene';
+import { getSeasonRewardStatus } from '../../game/seasons/seasonRecap';
+import {
+  getThemedSeasonBossPresentation,
+  getThemedSeasonRewardLabel,
+  getThemedSeasonRewardName,
+} from '../../game/themeCampaignPresentation';
 import { getSeasonBossManifestAssetId } from '../../game/manifestAssetUi';
+import { useAppTheme } from '../../hooks/useAppTheme';
+import { ManifestArtScene } from '../game/ManifestArtScene';
+import { CozyArtPlaceholder } from '../game/CozyArtPlaceholder';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
 
@@ -15,6 +22,7 @@ type SeasonTodayCardProps = {
 const VISIBLE_QUESTS = 3;
 
 export function SeasonTodayCard({ season, boss }: SeasonTodayCardProps) {
+  const { themeId, isCozy } = useAppTheme();
   const topQuests = season.quests
     .filter((q) => !q.completed)
     .sort((a, b) => b.current / b.target - a.current / a.target)
@@ -24,10 +32,19 @@ export function SeasonTodayCard({ season, boss }: SeasonTodayCardProps) {
     topQuests.length > 0 ? topQuests : season.quests.slice(0, VISIBLE_QUESTS);
 
   const bossArtId = boss ? getSeasonBossManifestAssetId(season.seasonIndex) : undefined;
-  const rewardLabel = getSeasonRewardLabel(
-    getSeasonRewardStatus(season.partialStatus, false),
+  const rewardName = getThemedSeasonRewardName(
+    themeId,
+    season.seasonIndex,
     season.config.rewardName,
   );
+  const rewardLabel = getThemedSeasonRewardLabel(
+    themeId,
+    getSeasonRewardStatus(season.partialStatus, false),
+    rewardName,
+  );
+  const bossPresentation = boss
+    ? getThemedSeasonBossPresentation(themeId, boss.currentBoss, boss.bossStatus)
+    : null;
 
   return (
     <Card
@@ -53,13 +70,13 @@ export function SeasonTodayCard({ season, boss }: SeasonTodayCardProps) {
         {rewardLabel}
         {' · '}
         <Link to="/seasons" className="font-medium text-[var(--app-primary)] hover:underline">
-          Летопись
+          {isCozy ? 'Дневник' : 'Летопись'}
         </Link>
       </p>
 
       <div className="mt-3">
         <div className="mb-1 flex justify-between text-xs text-[var(--app-text-muted)]">
-          <span>Путь сезона</span>
+          <span>{isCozy ? 'Путь сезона дома' : 'Путь сезона'}</span>
           <span>
             {season.dayNumber}/{season.seasonLength}
           </span>
@@ -90,12 +107,18 @@ export function SeasonTodayCard({ season, boss }: SeasonTodayCardProps) {
         className="mt-3 rounded-lg border border-[var(--app-border)]/80 bg-[var(--app-card)]/50 px-3 py-2.5"
         data-testid="season-boss-line"
       >
-        {boss ? (
+        {boss && bossPresentation ? (
           <div className="flex items-start gap-3">
-            {bossArtId ? (
+            {isCozy ? (
+              <CozyArtPlaceholder
+                label={bossPresentation.shortTitle}
+                layout="compact"
+                testId="season-boss-art"
+              />
+            ) : bossArtId ? (
               <ManifestArtScene
                 assetId={bossArtId}
-                alt={boss.currentBoss.title}
+                alt={bossPresentation.title}
                 layout="boss-compact"
                 testId="season-boss-art"
               />
@@ -108,10 +131,14 @@ export function SeasonTodayCard({ season, boss }: SeasonTodayCardProps) {
               </span>
             )}
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-[var(--app-text)]">{boss.currentBoss.title}</p>
-              <p className="mt-0.5 text-xs text-[var(--app-gold)]">{boss.bossStatusLabel}</p>
-              <p className="mt-1 text-xs text-[var(--app-text-muted)]">{boss.nextWeaknessHint}</p>
-              {boss.weaknessSignals.length > 0 ? (
+              <p className="text-xs font-semibold text-[var(--app-text)]">
+                {bossPresentation.shortTitle}
+              </p>
+              <p className="mt-0.5 text-xs text-[var(--app-gold)]">{bossPresentation.statusLabel}</p>
+              <p className="mt-1 text-xs text-[var(--app-text-muted)]">
+                {bossPresentation.weaknessText}
+              </p>
+              {!isCozy && boss.weaknessSignals.length > 0 ? (
                 <p className="mt-1 text-xs text-[var(--app-text-muted)]">
                   {boss.weaknessSignals.join(' · ')}
                 </p>

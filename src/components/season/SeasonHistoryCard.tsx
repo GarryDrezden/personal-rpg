@@ -1,6 +1,12 @@
 import type { SeasonHistoryEntry, SeasonRewardStatus } from '../../game/seasons/seasonTypes';
 import { getSeasonRewardManifestAssetId } from '../../game/manifestAssetUi';
+import {
+  getThemedSeasonRewardLabel,
+  getThemedSeasonRewardName,
+} from '../../game/themeCampaignPresentation';
+import { useAppTheme } from '../../hooks/useAppTheme';
 import { ManifestArtScene } from '../game/ManifestArtScene';
+import { CozyArtPlaceholder } from '../game/CozyArtPlaceholder';
 import { ProgressBar } from '../ui/ProgressBar';
 
 function RewardChip({ status, label }: { status: SeasonRewardStatus; label: string }) {
@@ -12,7 +18,10 @@ function RewardChip({ status, label }: { status: SeasonRewardStatus; label: stri
 const REWARD_EMOJI = '✨';
 
 export function SeasonHistoryCard({ entry }: { entry: SeasonHistoryEntry }) {
-  const { config, isCurrent, isLocked, rewardStatus, rewardLabel } = entry;
+  const { themeId, isCozy } = useAppTheme();
+  const { config, isCurrent, isLocked, rewardStatus } = entry;
+  const rewardName = getThemedSeasonRewardName(themeId, entry.seasonIndex, config.rewardName);
+  const rewardLabel = getThemedSeasonRewardLabel(themeId, rewardStatus, rewardName);
   const rewardArtId =
     !isLocked && rewardStatus === 'earned'
       ? getSeasonRewardManifestAssetId(entry.seasonIndex)
@@ -27,10 +36,17 @@ export function SeasonHistoryCard({ entry }: { entry: SeasonHistoryEntry }) {
     >
       <div className="flex gap-3">
         <div className="season-history-thumb">
-          {rewardArtId ? (
+          {rewardArtId && isCozy ? (
+            <CozyArtPlaceholder
+              label={rewardName}
+              layout="compact"
+              testId={`season-history-reward-art-${entry.seasonIndex}`}
+              className="h-full w-full rounded-none border-0"
+            />
+          ) : rewardArtId ? (
             <ManifestArtScene
               assetId={rewardArtId}
-              alt={config.rewardName}
+              alt={rewardName}
               layout="boss-compact"
               testId={`season-history-reward-art-${entry.seasonIndex}`}
               className="h-full w-full rounded-none border-0"

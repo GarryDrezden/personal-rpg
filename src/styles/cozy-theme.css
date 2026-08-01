@@ -112,6 +112,23 @@
   box-shadow: 1px 0 0 rgba(138, 112, 82, 0.08);
 }
 
+/* Cozy art placeholder — soft home/garden card, never DF art */
+.cozy-art-placeholder {
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(212, 168, 72, 0.2), transparent 45%),
+    radial-gradient(ellipse at 15% 85%, rgba(92, 120, 88, 0.16), transparent 50%),
+    linear-gradient(145deg, #fffaf2, #efe6d6 55%, #e4efe0);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+}
+
+.cozy-art-placeholder__leaf {
+  position: absolute;
+  inset: 18% 22%;
+  opacity: 0.22;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80' fill='none'%3E%3Cpath d='M40 12c14 10 22 26 22 40-14 0-28-6-40-18C16 40 14 26 22 16c6-2 12-2 18-4z' fill='%235c7858'/%3E%3Cpath d='M40 18v40' stroke='%238a7052' stroke-width='2'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
 /* ——— Shared surface utilities (cozy) ——— */
 [data-theme='cozy'] .cozy-surface {
   background:

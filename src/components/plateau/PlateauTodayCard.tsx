@@ -1,6 +1,9 @@
 import type { PlateauSnapshot } from '../../types/plateauV1';
-import { ManifestArtScene } from '../game/ManifestArtScene';
+import { getThemeTerm } from '../../constants/themeTerms';
 import { PLATEAU_ARTIFACT_PASS_STONE_ASSET_ID } from '../../game/manifestAssetUi';
+import { useAppTheme } from '../../hooks/useAppTheme';
+import { ManifestArtScene } from '../game/ManifestArtScene';
+import { CozyArtPlaceholder } from '../game/CozyArtPlaceholder';
 import { Card } from '../ui/Card';
 
 type PlateauTodayCardProps = {
@@ -20,10 +23,25 @@ export function PlateauTodayCard({
   onClearPlateau,
   onDismissHint,
 }: PlateauTodayCardProps) {
+  const { themeId, isCozy } = useAppTheme();
   if (snapshot.mode === 'none') return null;
 
   const isActive = snapshot.mode === 'active';
   const isSoftHint = snapshot.mode === 'soft_hint';
+  const plateauArt = isCozy ? (
+    <CozyArtPlaceholder
+      label={getThemeTerm(themeId, 'plateauPossible')}
+      layout="icon"
+      testId="plateau-artifact-art"
+    />
+  ) : (
+    <ManifestArtScene
+      assetId={PLATEAU_ARTIFACT_PASS_STONE_ASSET_ID}
+      alt="Камень перевала"
+      layout="artifact-icon"
+      testId="plateau-artifact-art"
+    />
+  );
 
   if (isSoftHint) {
     return (
@@ -32,15 +50,10 @@ export function PlateauTodayCard({
         className="border-[var(--app-gold)]/20 bg-[var(--app-primary-soft)]/25 px-4 py-3"
       >
         <div className="flex items-start gap-3">
-          <ManifestArtScene
-            assetId={PLATEAU_ARTIFACT_PASS_STONE_ASSET_ID}
-            alt="Камень перевала"
-            layout="artifact-icon"
-            testId="plateau-artifact-art"
-          />
+          {plateauArt}
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--app-gold)]">
-              Возможный перевал
+              {getThemeTerm(themeId, 'plateauPossible')}
             </p>
             <p className="mt-1 text-sm text-[var(--app-text)]">{snapshot.title}</p>
             <p className="mt-1 text-xs text-[var(--app-text-muted)]">{snapshot.supportiveLine}</p>
@@ -53,7 +66,7 @@ export function PlateauTodayCard({
             onClick={onMarkPlateau}
             className="rounded-lg bg-[var(--app-primary)] px-3 py-2 text-xs font-semibold text-slate-950 disabled:opacity-50"
           >
-            Я на перевале
+            {getThemeTerm(themeId, 'plateauMark')}
           </button>
           <button
             type="button"
@@ -74,15 +87,12 @@ export function PlateauTodayCard({
       className="border-[var(--app-gold)]/25 bg-[var(--app-primary-soft)]/35"
     >
       <div className="flex items-start gap-3">
-        <ManifestArtScene
-          assetId={PLATEAU_ARTIFACT_PASS_STONE_ASSET_ID}
-          alt="Камень перевала — удержание маршрута"
-          layout="artifact-icon"
-          testId="plateau-artifact-art"
-        />
+        {plateauArt}
         <div className="min-w-0 flex-1">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--app-gold)]">
-            {isActive ? 'Удержание перевала' : 'Возможный перевал'}
+            {isActive
+              ? getThemeTerm(themeId, 'plateauActive')
+              : getThemeTerm(themeId, 'plateauPossible')}
           </p>
           <h2 className="mt-1 text-base font-semibold text-[var(--app-text)]">{snapshot.title}</h2>
           <p className="mt-1 text-sm text-[var(--app-text-muted)]">{snapshot.description}</p>
@@ -101,7 +111,9 @@ export function PlateauTodayCard({
       <p className="mt-2 text-xs text-[var(--app-text-muted)]">
         {snapshot.hasWeightData
           ? `Дней без нового лучшего веса: ${snapshot.daysSinceBestWeight}`
-          : 'Отметь перевал вручную, если это про твой маршрут сейчас.'}
+          : isCozy
+            ? 'Отметь паузу роста вручную, если сейчас так и есть.'
+            : 'Отметь перевал вручную, если это про твой маршрут сейчас.'}
       </p>
 
       <div className="mt-3 flex flex-wrap gap-2">
@@ -121,7 +133,7 @@ export function PlateauTodayCard({
               onClick={onClearPlateau}
               className="rounded-lg border border-[var(--app-border)] px-3 py-2 text-xs font-medium text-[var(--app-text-muted)]"
             >
-              Перевал пройден
+              {isCozy ? 'Пауза пройдена' : 'Перевал пройден'}
             </button>
           </>
         ) : (
@@ -132,7 +144,7 @@ export function PlateauTodayCard({
               onClick={onMarkPlateau}
               className="rounded-lg bg-[var(--app-primary)] px-3 py-2 text-xs font-semibold text-slate-950 disabled:opacity-50"
             >
-              Я на перевале
+              {getThemeTerm(themeId, 'plateauMark')}
             </button>
             <button
               type="button"

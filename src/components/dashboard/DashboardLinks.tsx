@@ -1,18 +1,21 @@
 import { Link } from 'react-router-dom';
+import { getThemeTerm } from '../../constants/themeTerms';
+import { useAppTheme } from '../../hooks/useAppTheme';
 import { Card } from '../ui/Card';
 
-const links = [
-  { to: '/today', label: 'Квесты дня' },
-  { to: '/codex', label: 'Кодекс' },
-  { to: '/journey', label: 'Путь' },
-  { to: '/momentum', label: 'Инерция' },
-  { to: '/freedom', label: 'Свобода' },
-  { to: '/week', label: 'Неделя' },
-  { to: '/measurements', label: 'Замеры' },
-  { to: '/achievements', label: 'Достижения' },
-] as const;
-
 export function DashboardLinks() {
+  const { themeId, isCozy } = useAppTheme();
+  const links = [
+    { to: '/today', label: isCozy ? 'Задачи дня' : 'Квесты дня' },
+    { to: '/codex', label: getThemeTerm(themeId, 'codex') },
+    { to: '/journey', label: 'Путь' },
+    { to: '/momentum', label: 'Инерция' },
+    { to: '/freedom', label: 'Свобода' },
+    { to: '/week', label: 'Неделя' },
+    { to: '/measurements', label: 'Замеры' },
+    { to: '/achievements', label: 'Достижения' },
+  ] as const;
+
   return (
     <Card className="p-4">
       <p className="text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">

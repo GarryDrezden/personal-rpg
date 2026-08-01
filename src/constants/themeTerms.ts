@@ -6,12 +6,20 @@ export type ThemeTermKey =
   | 'bossActive'
   | 'mob'
   | 'quest'
+  | 'questsPlural'
   | 'victory'
   | 'campaign'
   | 'chronicle'
   | 'weaknessHint'
   | 'bossAccent'
-  | 'codexEntities';
+  | 'codexEntities'
+  | 'camp'
+  | 'campStages'
+  | 'plateauActive'
+  | 'plateauPossible'
+  | 'plateauMark'
+  | 'plateauUnmark'
+  | 'codex';
 
 const DARK_TERMS: Record<ThemeTermKey, string> = {
   boss: 'Босс',
@@ -19,12 +27,20 @@ const DARK_TERMS: Record<ThemeTermKey, string> = {
   bossActive: 'Текущий босс',
   mob: 'Моб дня',
   quest: 'Квест',
+  questsPlural: 'квестов',
   victory: 'Победа',
   campaign: 'Кампания',
   chronicle: 'Летопись сезонов',
   weaknessHint: 'Уязвим',
   bossAccent: 'Квесты дня приближают победу над боссом главы →',
   codexEntities: 'Стадии, спутники, мобы, боссы и артефакты — в кодексе пути.',
+  camp: 'Лагерь героя',
+  campStages: 'Стадии лагеря',
+  plateauActive: 'Удержание перевала',
+  plateauPossible: 'Возможный перевал',
+  plateauMark: 'Я на перевале',
+  plateauUnmark: 'Снять отметку перевала',
+  codex: 'Кодекс',
 };
 
 const COZY_TERMS: Record<ThemeTermKey, string> = {
@@ -33,12 +49,20 @@ const COZY_TERMS: Record<ThemeTermKey, string> = {
   bossActive: 'Главная помеха',
   mob: 'Помеха дня',
   quest: 'Задача дня',
+  questsPlural: 'задач',
   victory: 'Дом стал теплее',
   campaign: 'Путь дома',
   chronicle: 'Сезонный дневник',
   weaknessHint: 'Уходит после',
   bossAccent: 'Задачи дня помогают привести дом и день в порядок →',
-  codexEntities: 'Стадии, спутники и образы пути — в кодексе. В уютной теме — свои иллюстрации.',
+  codexEntities: 'Стадии, спутники и образы пути — в альбоме. В уютной теме — свои иллюстрации.',
+  camp: 'Укрытие дома',
+  campStages: 'Стадии укрытия',
+  plateauActive: 'Спокойная площадка',
+  plateauPossible: 'Возможная пауза роста',
+  plateauMark: 'Я на паузе роста',
+  plateauUnmark: 'Снять отметку паузы',
+  codex: 'Альбом',
 };
 
 export const THEME_TERMS: Record<AppThemeId, Record<ThemeTermKey, string>> = {

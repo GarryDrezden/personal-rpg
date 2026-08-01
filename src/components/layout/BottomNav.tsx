@@ -7,11 +7,14 @@ import {
   mobileDrawerPaths,
   mobileTabNav,
 } from '../../constants/navigation';
+import { getThemeTerm } from '../../constants/themeTerms';
+import { useAppTheme } from '../../hooks/useAppTheme';
 import { NavItemLink } from './NavItemLink';
 
 export function BottomNav() {
   const [moreOpen, setMoreOpen] = useState(false);
   const location = useLocation();
+  const { themeId } = useAppTheme();
   const moreActive = mobileDrawerPaths.some((path) => isNavPathActive(location.pathname, path));
 
   return (
@@ -89,7 +92,7 @@ export function BottomNav() {
                     <Icon size={21} strokeWidth={isActive ? 2.25 : 2} />
                   </span>
                   <span className={`text-[11px] leading-none ${isActive ? 'font-bold' : 'font-medium'}`}>
-                    {shortLabel ?? label}
+                    {to === '/codex' ? getThemeTerm(themeId, 'codex') : (shortLabel ?? label)}
                   </span>
                 </>
               )}

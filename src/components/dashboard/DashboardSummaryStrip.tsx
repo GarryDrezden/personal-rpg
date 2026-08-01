@@ -1,15 +1,18 @@
 import { Link } from 'react-router-dom';
 import { BookOpen, Gauge, Route, TrendingUp } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-
-const links: { to: string; label: string; icon: LucideIcon }[] = [
-  { to: '/growth/camp', label: 'Лагерь', icon: TrendingUp },
-  { to: '/journey', label: 'Путь', icon: Route },
-  { to: '/momentum', label: 'Инерция', icon: Gauge },
-  { to: '/codex', label: 'Кодекс', icon: BookOpen },
-];
+import { getThemeTerm } from '../../constants/themeTerms';
+import { useAppTheme } from '../../hooks/useAppTheme';
 
 export function DashboardSummaryStrip() {
+  const { themeId, isCozy } = useAppTheme();
+  const links: { to: string; label: string; icon: LucideIcon }[] = [
+    { to: '/growth/camp', label: isCozy ? 'Укрытие' : 'Лагерь', icon: TrendingUp },
+    { to: '/journey', label: 'Путь', icon: Route },
+    { to: '/momentum', label: 'Инерция', icon: Gauge },
+    { to: '/codex', label: getThemeTerm(themeId, 'codex'), icon: BookOpen },
+  ];
+
   return (
     <nav
       data-testid="dashboard-summary-strip"

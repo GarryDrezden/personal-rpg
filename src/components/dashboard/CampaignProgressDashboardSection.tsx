@@ -4,7 +4,9 @@ import type { BodyAbilityV1Summary } from '../../types/bodyAbilityV1';
 import type { PlateauSnapshot } from '../../types/plateauV1';
 import type { BaseProgressionSnapshot } from '../../types/baseV1';
 import type { BossCampaignSnapshot } from '../../game/bosses/bossTypes';
+import { getThemeTerm } from '../../constants/themeTerms';
 import { shouldShowPlateauDashboardSummary } from '../../utils/campaignIntegration';
+import { useAppTheme } from '../../hooks/useAppTheme';
 import { SeasonDashboardSummary } from '../season/SeasonDashboardSummary';
 import { BodyAbilityDashboardSummary } from '../bodyAbilities/BodyAbilityDashboardSummary';
 import { PlateauDashboardSummary } from '../plateau/PlateauDashboardSummary';
@@ -27,23 +29,24 @@ export function CampaignProgressDashboardSection({
   bossSnapshot,
   onTogglePlateauManual,
 }: CampaignProgressDashboardSectionProps) {
+  const { themeId, isCozy } = useAppTheme();
   const showPlateau = shouldShowPlateauDashboardSummary(plateauSnapshot.mode);
 
   return (
     <section data-testid="campaign-progress-dashboard" className="space-y-2">
       <div className="flex flex-wrap items-center justify-between gap-2 px-0.5">
         <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--app-text-muted)]">
-          Кампания
+          {getThemeTerm(themeId, 'campaign')}
         </h2>
         <div className="flex flex-wrap gap-3 text-xs">
           <Link to="/seasons" className="font-medium text-[var(--app-primary)] hover:underline">
-            Летопись сезонов
+            {getThemeTerm(themeId, 'chronicle')}
           </Link>
           <Link to="/growth/abilities" className="font-medium text-[var(--app-primary)] hover:underline">
             Способности
           </Link>
           <Link to="/growth/camp" className="font-medium text-[var(--app-primary)] hover:underline">
-            Лагерь
+            {isCozy ? 'Укрытие' : 'Лагерь'}
           </Link>
           <Link to="/journey" className="font-medium text-[var(--app-primary)] hover:underline">
             Путь
