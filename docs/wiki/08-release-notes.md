@@ -2,9 +2,14 @@
 
 ## Unreleased
 
+### Fixed
+
+- Production “Failed to fetch” on register: diagnosed self-signed HTTPS cert (`UntrustedRoot`); API itself was healthy. Documented Let’s Encrypt requirement; PWA no longer NetworkFirst-caches `/api` (was able to mask TLS failures); clearer client network/SSL error text.
+
 ### Added
 
 - Added Onboarding v1 to start a new campaign with hero, theme, body goal, daily rhythm and companion setup.
+- Added `scripts/smoke-production-api.ps1` for production API smoke via `curl -k`.
 
 ### Changed
 

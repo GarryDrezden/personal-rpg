@@ -25,20 +25,11 @@ export default defineConfig({
         navigateFallback: 'index.html',
         navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
+          // Never cache /api — auth/data must always hit the network.
+          // Previous NetworkFirst + cacheable statuses [0,200] could mask TLS failures.
           {
             urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'personal-rpg-api',
-              networkTimeoutSeconds: 10,
-              expiration: {
-                maxEntries: 32,
-                maxAgeSeconds: 5 * 60,
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
+            handler: 'NetworkOnly',
           },
           {
             urlPattern: /\/game-assets\/.+\.(?:png|webp|svg)$/i,

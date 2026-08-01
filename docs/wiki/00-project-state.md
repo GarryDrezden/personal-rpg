@@ -270,14 +270,15 @@ Cozy does **not** replace Dark Fantasy and is **not** a post-dark stage. Core fa
 - Guard: пустой remote не затирает local; hydrate не создаёт save loop
 - Local fallback для legacy/unauthenticated режима
 
-### Stabilize — auth/session + production smoke (HTTP) ✅
+### Stabilize — auth/session + production API ✅ (TLS cert action required)
 
-- Production URL сейчас: **`http://fit-rpg.ru`** (SSL ещё не настроен — это ожидаемо)
-- Cookie: `Path=/`, `HttpOnly`, `SameSite=Lax`, **без `Secure`** на HTTP (`secure_cookie => false` на сервере)
-- Dual auth: cookie `pr_session` + Bearer token в `sessionStorage`
-- Automated API smoke (2026-07-02): register, login, logout, `/api/auth/me`, `dailyEntries`, achievements, `coinTransactions`, `momentumHistory` — OK
-- SPA: `index.html` + assets — OK по HTTP
-- **HTTPS** (`https://fit-rpg.ru`) → 404 nginx — **не блокер**, future hardening после выпуска сертификата
+- Production URL: **`https://fit-rpg.ru`** (HTTP → 301 HTTPS, HSTS on)
+- PHP API healthy: `/api/health.php` `"ok": true`; register/me/data work server-side
+- Cookie: `pr_session`; `Secure; HttpOnly; SameSite=Lax; Path=/` on HTTPS
+- CORS `allowed_origin` already `https://fit-rpg.ru` on server
+- **Blocker for browser smoke:** site currently serves a **self-signed** certificate (`UntrustedRoot`) → browsers show `Failed to fetch` on `/api/auth/register` even though PHP returns 201 via `curl -k`
+- **Hosting action:** replace with Let’s Encrypt (or other public CA); then re-run UI register → onboarding → Today
+- Local helper: `scripts/smoke-production-api.ps1`
 
 ### Готовность к visual generation / Boss Campaign v2
 

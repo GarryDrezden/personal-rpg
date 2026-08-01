@@ -1,4 +1,6 @@
 RewriteEngine On
+# /api/* must never fall through to SPA index.html.
+# Note: production front may be nginx — panel must map /api to PHP the same way.
 # Pass Authorization header to PHP (Apache / LSAPI)
 RewriteCond %{HTTP:Authorization} .
 RewriteRule ^api/.* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

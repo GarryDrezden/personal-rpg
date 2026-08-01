@@ -1,10 +1,10 @@
 # Shared hosting: PHP + MySQL production
 
-> Обновлено: 2026-06-06
+> Обновлено: 2026-08-02
 
 ## Почему не Node на production
 
-Текущий хостинг — **shared hosting** (ispmanager, PHP 8.2 LSAPI, MySQL, FTP).
+Текущий хостинг — **shared hosting** (ispmanager, PHP 8.2, nginx + PHP, MySQL, FTP).
 
 - Нет постоянного Node.js-процесса
 - Deploy через GitHub Actions: `dist/` + `api/` + `.htaccess`
@@ -20,12 +20,42 @@ React (dist/)  →  /api/*  →  api/index.php  →  MySQL
 
 ## Production URL (current)
 
-| Phase | URL | Status |
-|-------|-----|--------|
-| **Current** | `http://fit-rpg.ru` | Active — use for smoke tests and daily use |
-| **Future** | `https://fit-rpg.ru` | SSL not configured yet — 404 nginx is expected until certificate is issued |
+| URL | Status |
+|-----|--------|
+| `https://fit-rpg.ru` | Active site + HSTS |
+| `http://fit-rpg.ru` | 301 → HTTPS |
 
-Do **not** treat HTTPS 404 as a deploy blocker while HTTP works.
+### Critical: TLS must be a public CA cert
+
+**2026-08-01 incident:** browser registration showed `Failed to fetch` while PHP API was healthy.
+
+Root cause: **self-signed certificate** (`CN=fit-rpg.ru`, issuer = subject, chain `UntrustedRoot`).
+
+What still worked:
+
+- `GET /api/health.php` → `"ok": true` (PHP/MySQL/tables OK)
+- `POST /api/auth/register` via `curl -k` → `201` + `Set-Cookie: pr_session=...; Secure; HttpOnly; SameSite=Lax`
+- CORS for `Origin: https://fit-rpg.ru` already correct
+
+What failed in browsers that do not trust the cert:
+
+- `fetch('/api/auth/register')` → `TypeError: Failed to fetch`
+- Cursor/automation browsers often hard-fail (`chrome-error://`)
+
+**Fix on hosting (ispmanager):** issue a real certificate (Let’s Encrypt / panel SSL), not a self-signed one. Until then, UI may open from SW cache while API calls still fail TLS.
+
+Check chain:
+
+```text
+# should NOT be issuer == subject self-signed
+# should show Let's Encrypt (or another public CA)
+```
+
+After installing LE:
+
+1. `https://fit-rpg.ru/api/health.php` opens in a fresh incognito window without cert warnings
+2. Register from the UI works
+3. `config.php`: `'allowed_origin' => 'https://fit-rpg.ru'`, `'secure_cookie' => true` (or omit for auto-detect)
 
 ---
 
@@ -34,60 +64,45 @@ Do **not** treat HTTPS 404 as a deploy blocker while HTTP works.
 1. [ ] Deploy зелёный (GitHub Actions)
 2. [ ] На FTP есть `api/`, `index.html`, `.htaccess`
 3. [ ] На FTP **нет** `api/config/config.php` из Git (создаётся вручную)
-4. [ ] В ispmanager создана БД `vh388565_rpg` (+ пользователь)
+4. [ ] В ispmanager создана БД (+ пользователь)
 5. [ ] В phpMyAdmin выполнен SQL из `api/migrations/001_create_accounts_tables.sql`
 6. [ ] Создан `api/config/config.php` по шаблону
-7. [ ] Открыть `http://fit-rpg.ru/api/health.php` — `"ok": true`
-8. [ ] Регистрация на сайте работает
+7. [ ] **Доверенный** HTTPS (не self-signed)
+8. [ ] Открыть `https://fit-rpg.ru/api/health.php` — `"ok": true`
+9. [ ] Регистрация на сайте работает из обычного браузера
 
-### HTTP cookie settings (current)
-
-На HTTP production **`secure_cookie` должен быть `false`** в `api/config/config.php`:
+### HTTPS cookie / CORS settings
 
 ```php
 'auth' => [
-    'cookie_name' => 'pr_session',
-    'session_days' => 30,
-    'secure_cookie' => false,  // required on http:// until SSL
-    'same_site' => 'Lax',
+  'cookie_name' => 'pr_session',
+  'session_days' => 30,
+  'secure_cookie' => true,
+  'same_site' => 'Lax',
 ],
 'app' => [
-    'allowed_origin' => 'http://fit-rpg.ru',
+  'allowed_origin' => 'https://fit-rpg.ru',
+  'debug' => false,
 ],
 ```
 
-Проверка: после register в Network → `Set-Cookie: pr_session=...; path=/; HttpOnly; SameSite=Lax` — **без** флага `Secure`.
+Проверка cookie после register: `Set-Cookie: pr_session=...; Path=/; Secure; HttpOnly; SameSite=Lax`.
 
-### Future: HTTPS / SSL hardening
+### API smoke without browser trust
 
-После выпуска сертификата в ispmanager:
+If local tooling rejects the cert, use:
 
-1. Проверить `https://fit-rpg.ru/api/health.php` → OK
-2. В `config.php`: `'secure_cookie' => true`, `'allowed_origin' => 'https://fit-rpg.ru'`
-3. Включить редирект HTTP → HTTPS в панели
-4. Повторить smoke на HTTPS
+```powershell
+powershell -File scripts/smoke-production-api.ps1
+```
 
-### Production smoke (auth + user_data + sidecars)
-
-Тестировать на **`http://fit-rpg.ru`** (не https, пока нет SSL).
-
-После пунктов 1–8:
-
-1. Register нового пользователя
-2. Today: заполнить и сохранить день
-3. Спровоцировать achievement / coins / momentum (обычный сценарий)
-4. Reload — daily data + sidecars на месте
-5. Logout → `/api/auth/me` = 401
-6. Login → данные восстановились
-7. Другой браузер / инкогнито → login → те же sidecars
-8. Network: нет 401 на `/api/data/*` после login
+(uses `curl -k`; verifies health → OPTIONS → register → me → data → logout → 401)
 
 ---
 
 ## 1. База данных в ispmanager
 
-1. **Базы данных** → создать БД (если ещё нет):
-   - Имя: `vh388565_rpg`
+1. **Базы данных** → создать БД (если ещё нет)
 2. Создать пользователя MySQL с доступом к этой БД
 3. Запомнить: **логин**, **пароль**, **имя БД**
 
@@ -96,162 +111,130 @@ Do **not** treat HTTPS 404 as a deploy blocker while HTTP works.
 ## 2. Миграция через phpMyAdmin
 
 1. ispmanager → **phpMyAdmin**
-2. Выбрать базу `vh388565_rpg`
+2. Выбрать базу
 3. Вкладка **SQL**
-4. Скопировать содержимое файла:
+4. Выполнить `api/migrations/001_create_accounts_tables.sql`
 
-   `api/migrations/001_create_accounts_tables.sql`
-
-5. **Выполнить**
-
-Должны появиться таблицы: `users`, `user_profiles`, `user_settings`, `user_data`, `auth_sessions`.
+Таблицы: `users`, `user_profiles`, `user_settings`, `user_data`, `auth_sessions`.
 
 ---
 
 ## 3. Файл `api/config/config.php`
 
-**Не коммитить в Git.** Создать на хостинге через File Manager или FTP.
-
-Скопировать из `api/config/config.example.php` и подставить реальные данные:
-
-```php
-<?php
-
-return [
-    'database' => [
-        'host' => 'localhost',
-        'name' => 'vh388565_rpg',
-        'user' => 'vh388565_user',
-        'password' => 'REAL_PASSWORD_FROM_PANEL',
-        'charset' => 'utf8mb4',
-    ],
-    'auth' => [
-        'cookie_name' => 'pr_session',
-        'session_days' => 30,
-        'secure_cookie' => false,
-        'same_site' => 'Lax',
-    ],
-    'app' => [
-        'allowed_origin' => 'http://fit-rpg.ru',
-        'debug' => false,
-    ],
-];
-```
-
-Путь на сервере: `api/config/config.php` (рядом с `config.example.php`).
+**Не коммитить в Git.** Создать на хостинге по `api/config/config.example.php`.
 
 ---
 
 ## 4. Проверка health
 
-Открыть в браузере:
-
 ```text
-http://fit-rpg.ru/api/health.php
+https://fit-rpg.ru/api/health.php
 ```
 
-Ожидаемый результат:
-
-```json
-{
-  "ok": true,
-  "mysqlConfigExists": true,
-  "mysqlConnect": true,
-  "usersTable": true
-}
-```
+Ожидается `"ok": true` (pdo_mysql, mysqlConnect, users/auth_sessions/user_data tables, api files).
 
 ---
 
-## 5. Auth endpoints
+## 5. Auth / data endpoints
 
 | URL | Метод | Назначение |
 |-----|-------|------------|
+| `/api/health.php` | GET | Диагностика |
 | `/api/auth/register` | POST | Регистрация |
 | `/api/auth/login` | POST | Вход |
 | `/api/auth/logout` | POST | Выход |
 | `/api/auth/me` | GET | Текущий пользователь |
+| `/api/data` | GET | Профиль + settings + user_data |
+| `/api/data/:type` | PUT | Persist typed payload |
+| `/api/profile` | PATCH | Profile |
+| `/api/settings` | PATCH | User settings row |
 
-Cookie: `pr_session` (httpOnly, Secure на HTTPS).
+Frontend uses **relative** `/api/...` + `credentials: 'include'`. Do not point `VITE_API_BASE_URL` at localhost or `http://` when UI is HTTPS.
 
 ---
 
-## 6. Routing (.htaccess)
+## 6. Routing
 
-Корневой `.htaccess`:
+### Apache `.htaccess` (also deployed)
 
 ```apache
 RewriteEngine On
+RewriteCond %{HTTP:Authorization} .
+RewriteRule ^api/.* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteRule ^api/health\.php$ api/health.php [L]
 RewriteRule ^api(/.*)?$ api/index.php [L,QSA]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.html [L]
 ```
 
-Если `/api/auth/me` отдаёт HTML вместо JSON — API уходит в React. Проверь `.htaccess` на FTP.
+`/api/*` must **not** fall into SPA `index.html`.
+
+### nginx (current production front)
+
+Production answers with `Server: nginx`. Panel/nginx must already map `/api` to PHP (`api/index.php` or equivalent). If `/api/auth/me` returns HTML, fix nginx `try_files` / PHP location — not React routes.
+
+Verified working path shape:
+
+```text
+/api/auth/register  → PHP JSON
+/api/health.php     → PHP JSON
+```
 
 ---
 
-## 7. Типичные ошибки
+## 7. CORS / headers
 
-### 401 на всех страницах после login
+Same-origin (`https://fit-rpg.ru` → `/api`) does not need CORS for normal browser calls.
 
-- Cookie не ставится → на HTTP проверь `secure_cookie => false` (не `true` без SSL)
-- После SSL: `secure_cookie => true` и HTTPS redirect
-- Неверный домен в `allowed_origin` (сейчас `http://fit-rpg.ru`)
+If `Origin` is sent, API echoes:
+
+- `Access-Control-Allow-Origin: https://fit-rpg.ru` (exact match to `allowed_origin`)
+- `Access-Control-Allow-Credentials: true`
+- methods/headers for preflight
+- OPTIONS → `204`
+
+Never use `*` with credentials.
+
+---
+
+## 8. Типичные ошибки
+
+### Failed to fetch on register (HTTPS open, API “dead”)
+
+1. Self-signed / untrusted TLS chain ← **most common after enabling HTTPS**
+2. SW serving cached shell while network API fails TLS (API routes are NetworkOnly now)
+3. Mixed content if UI is HTTPS but API base is `http://`
+
+### 401 после login
+
+- Cookie not stored (Secure on HTTP, wrong Path/domain)
+- `allowed_origin` mismatch (only matters for cross-origin)
 
 ### 503 API configuration error
 
-- Нет файла `api/config/config.php`
-- Ошибка в DATABASE_URL / credentials
+- Missing `api/config/config.php` / bad DB credentials
 
 ### 500 после register
 
-- Не выполнена SQL migration
-- Нет таблицы `users`
-
-### CORS
-
-На одном домене CORS не нужен. Frontend использует `/api` + `credentials: 'include'`.
-
-### Cookie после register (401 fix)
-
-1. Network → `POST /api/auth/register` → header `Set-Cookie: pr_session=...; Path=/`
-2. Следующий запрос → `Cookie: pr_session=...`
-3. При `debug: true`: `GET /api/auth/debug` — статус сессии
-4. HTTPS за proxy: PHP учитывает `X-Forwarded-Proto` для `Secure`
-
-### Белый экран
-
-- Ошибка в frontend build — смотри консоль браузера
-- PHP fatal — временно `'debug' => true` в config (только для диагностики, потом выключить)
+- Migration not applied
 
 ---
 
-## 8. Deploy workflow
+## 9. Deploy workflow
 
-GitHub Actions собирает `deploy-bundle/`:
+GitHub Actions builds `deploy-bundle/`:
 
-- `dist/` → корень сайта
+- `dist/` → site root
 - `api/` → `api/`
 - `.htaccess`
 
-**Не деплоится:** `backend/`, `src/`, `api/config/config.php`, `.env`
-
-После push в `main` — workflow вручную или auto (если настроен push trigger).
-
----
-
-## 9. Импорт данных
-
-**Основной путь:** баннер localStorage после входа → PUT `/api/data/:type`.
-
-SQLite import — опционально, не нужен если данных на prod не было.
+**Not deployed:** `backend/`, `src/`, `api/config/config.php`, `.env`
 
 ---
 
 ## 10. Node backend (`backend/`)
 
-Оставлен для будущего VPS. **Не требуется** для текущего shared hosting.
+Оставлен для будущего VPS. **Не требуется** для shared hosting.
 
 См. [`backend/README.md`](../../backend/README.md)
