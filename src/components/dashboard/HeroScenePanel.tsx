@@ -13,6 +13,7 @@ import { getDayStatus } from '../../utils/points';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import { getHeroSceneBackdropPath } from '../../game/assetPaths';
 import { GameAssetImage } from '../game/GameAssetImage';
+import { HeroStateChrome } from '../avatar/HeroStateChrome';
 import { HeroCompanionOverlay } from '../game/HeroCompanionOverlay';
 import { DailyMobMiniCard } from '../game/DailyMobMiniCard';
 import { ChapterBossMiniCard } from '../game/ChapterBossMiniCard';
@@ -45,7 +46,9 @@ export function HeroScenePanel({
   const pathSetup = getPathSetupState(measurements, settings, themeId);
   const chapter = getChapterMeta(game.chapter);
   const stageMeta = getHeroStageMeta(game.profile.heroGender, game.stage);
-  const heroAssets = useHeroStageAssets(game.profile.heroGender, game.stage);
+  const heroAssets = useHeroStageAssets(game.profile.heroGender, game.bodyStage, {
+    heroState: game.heroState,
+  });
   const companionMeta = getCompanionMeta(game.profile.activeCompanionId);
   const companionPresentation = getCompanionPresentation(
     themeId,
@@ -206,16 +209,23 @@ export function HeroScenePanel({
               style={{ height: DASHBOARD_HERO_HEIGHT, maxHeight: 'calc(100% - 1.5rem)' }}
             >
               <div className="relative h-full w-full max-w-[12.5rem] sm:max-w-[13.5rem] lg:max-w-[14.5rem]">
-                <GameAssetImage
-                  variant="hero"
-                  src={heroAssets.src}
-                  alt={stageMeta.title}
-                  fallbackCandidates={heroAssets.fallbackCandidates}
-                  status="unlocked"
-                  fit="hero"
-                  className="relative z-10 h-full w-full items-end bg-transparent"
-                  imageClassName="drop-shadow-[0_8px_18px_rgba(0,0,0,0.55)]"
-                />
+                <HeroStateChrome
+                  themeId={themeId}
+                  heroState={game.heroState}
+                  showLabel={false}
+                  className="relative z-10 h-full w-full"
+                >
+                  <GameAssetImage
+                    variant="hero"
+                    src={heroAssets.src}
+                    alt={stageMeta.title}
+                    fallbackCandidates={heroAssets.fallbackCandidates}
+                    status="unlocked"
+                    fit="hero"
+                    className="h-full w-full items-end bg-transparent"
+                    imageClassName="drop-shadow-[0_8px_18px_rgba(0,0,0,0.55)]"
+                  />
+                </HeroStateChrome>
                 <HeroCompanionOverlay
                   companionId={game.profile.activeCompanionId}
                   side="left"

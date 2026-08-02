@@ -16,6 +16,7 @@ import type { CompanionId } from '../../types/gameAssets';
 import type { NextBestAction } from '../../types/nextBestAction';
 import type { MomentumSummary } from '../../types/momentum';
 import { GameAssetImage } from '../game/GameAssetImage';
+import { HeroStateChrome } from '../avatar/HeroStateChrome';
 import { ChapterBossMiniCard } from '../game/ChapterBossMiniCard';
 import { DailyMobMiniCard } from '../game/DailyMobMiniCard';
 import { ProgressBar } from '../ui/ProgressBar';
@@ -127,7 +128,9 @@ export function DashboardCommandBridge({
   const pathSetup = getPathSetupState(measurements, settings, themeId);
   const chapter = getChapterMeta(game.chapter);
   const stageMeta = getHeroStageMeta(game.profile.heroGender, game.stage);
-  const heroAssets = useHeroStageAssets(game.profile.heroGender, game.stage);
+  const heroAssets = useHeroStageAssets(game.profile.heroGender, game.bodyStage, {
+    heroState: game.heroState,
+  });
   const mood = getDayMoodPhrase(todayPoints, themeId);
   const rank = getLevelRankTitle(level, themeId);
   const xp = getLevelFromXp(totalXp);
@@ -272,19 +275,28 @@ export function DashboardCommandBridge({
           <div className="relative z-10 flex h-full min-h-[22rem] items-end justify-center px-2 pb-3 pt-10 lg:min-h-[28rem]">
             <div
               data-testid="hero-scene-character"
+              data-hero-state={game.heroState}
+              data-body-stage={game.bodyStage}
               className="relative flex w-full max-w-[16rem] items-end justify-center sm:max-w-[18rem]"
               style={{ height: HERO_HEIGHT, maxHeight: 'calc(100% - 2rem)' }}
             >
-              <GameAssetImage
-                variant="hero"
-                src={heroAssets.src}
-                alt={stageMeta.title}
-                fallbackCandidates={heroAssets.fallbackCandidates}
-                status="unlocked"
-                fit="hero"
-                className="relative z-10 h-full w-full items-end bg-transparent"
-                imageClassName="drop-shadow-[0_8px_18px_rgba(0,0,0,0.55)]"
-              />
+              <HeroStateChrome
+                themeId={themeId}
+                heroState={game.heroState}
+                showLabel={false}
+                className="relative z-10 h-full w-full"
+              >
+                <GameAssetImage
+                  variant="hero"
+                  src={heroAssets.src}
+                  alt={stageMeta.title}
+                  fallbackCandidates={heroAssets.fallbackCandidates}
+                  status="unlocked"
+                  fit="hero"
+                  className="h-full w-full items-end bg-transparent"
+                  imageClassName="drop-shadow-[0_8px_18px_rgba(0,0,0,0.55)]"
+                />
+              </HeroStateChrome>
             </div>
           </div>
         </div>

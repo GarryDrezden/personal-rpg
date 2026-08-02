@@ -121,14 +121,13 @@ function resolveCozyAsset(
   switch (kind) {
     case 'hero_avatar': {
       const st = (stage ?? 1) as HeroStageNumber;
-      const n = String(st).padStart(2, '0');
       return {
         themeId: 'cozy',
         kind,
         entityId,
         stage: st,
         path: getCozyHeroStagePath(g, st),
-        fallbackPath: cozyThemeAsset(`avatars/placeholders/${g}/stage-${n}.svg`),
+        fallbackPath: cozyThemeAsset(`avatars/placeholders/${g}.svg`),
         placeholder: true,
       };
     }

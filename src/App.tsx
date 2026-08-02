@@ -122,6 +122,14 @@ const CozyHomePage = lazy(() =>
 
 );
 
+const AvatarPipelineDevPage = import.meta.env.DEV
+  ? lazy(() =>
+      import('./pages/dev/AvatarPipelineDevPage').then((m) => ({
+        default: m.AvatarPipelineDevPage,
+      })),
+    )
+  : null;
+
 
 
 function LoadingScreen() {
@@ -267,6 +275,10 @@ function AuthenticatedApp() {
           <Route path="/faq" element={<FaqPage />} />
 
           <Route path="/codex" element={<GameCodexPage />} />
+
+          {AvatarPipelineDevPage ? (
+            <Route path="/dev/avatar-pipeline" element={<AvatarPipelineDevPage />} />
+          ) : null}
 
         </Route>
 

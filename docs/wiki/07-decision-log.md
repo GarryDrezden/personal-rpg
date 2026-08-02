@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-08-02 — Avatar Assets Pipeline v1
+
+**Context:**  
+Placeholders and legacy DF hero paths were enough to ship stages, but adding final art without a manifest/resolver would recreate cross-theme leaks, nearest-stage lies, and hardcoded UI paths.
+
+**Decision:**  
+Ship pipeline: theme-scoped folders, 80-slot manifest (`default` track), unified `getResolvedAvatarStageAsset`, same-theme-only fallback, Hero State SVG/CSS overlays (not 20×4 body sheets), DEV `/dev/avatar-pipeline`, `npm run validate:avatars`, approval statuses, future `avatarTrackId`. Do not generate final 80 images in this pass.
+
+**Consequence:**  
+Art can land gradually as `stage-XX.webp`; engine weights unchanged; Cozy never reads DF bodies.
+
 ## 2026-08-02 — Avatar Stages v1 Calibration (Body Stage ≠ Hero State)
 
 **Context:**  

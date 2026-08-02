@@ -347,13 +347,35 @@ Vertical **chapter road** — 9 глав в ширине обычного кон
 
 Это **визуальное отражение**, не медицинская оценка. Disclaimer на `/freedom`.
 
-**Theme-aware assets (общий stage id, разные картинки):**
-
-- Cozy: `themes/cozy/avatars/{gender}/stage-NN.*` → placeholder `…/placeholders/{gender}/stage-NN.svg`
-- Dark Fantasy: `heroes/{gender}/variants/dark-fantasy/stage-NN.*` → placeholder `themes/dark-fantasy/avatars/placeholders/{gender}/stage-NN.svg`
+**Theme-aware assets (общий stage id, разные картинки):** см. [Avatar Assets Pipeline v1](#avatar-assets-pipeline-v1).
 
 Dashboard: «Стадия тела: N из 20» + «Состояние героя: …».  
 `/freedom`: отдельно «что изменило тело» / «что изменило состояние».
+
+---
+
+## Avatar Assets Pipeline v1
+
+**Manifest:** `src/constants/avatarAssetManifest.ts`  
+**Resolver:** `src/game/avatar/avatarAssetResolver.ts` → `getResolvedAvatarStageAsset`  
+**Overlays:** `themes/{theme}/avatars/hero-state/*-overlay.svg` + `HeroStateChrome`  
+**QA:** `/dev/avatar-pipeline` (DEV only) · `npm run validate:avatars` · [`docs/art/avatar-stage-qa-checklist.md`](../art/avatar-stage-qa-checklist.md)
+
+Матрица v1: **2 темы × 2 пола × 20 стадий = 80** body assets.  
+Hero State **не** имеет отдельного body PNG на каждую стадию — только UI chrome/overlay.
+
+| Правило | Значение |
+|---------|----------|
+| Body art key | `themeId + gender + bodyStage` (+ future `trackId`) |
+| Naming | `stage-01.webp` … `stage-20.webp` |
+| Canvas | 1536×2048, transparent WebP, shared baseline |
+| Fallback | same-theme gender → neutral placeholder |
+| Forbidden | Cozy↔DF, male↔female, nearest-stage in production |
+| Workflow | generated → draft → QA → approved → runtime |
+| Draft in prod | only if `VITE_ENABLE_DRAFT_AVATAR_ASSETS=true` |
+| Future | `avatarTrackId` (`small_goal`…`very_large_goal`) — types ready, runtime `default` |
+
+Source WIP: `art-source/avatar-generation/` (not served). Runtime only normalized theme paths (+ DF legacy mapping until migration).
 
 ---
 

@@ -56,7 +56,9 @@ export function AvatarStageDriversCard({ snapshot }: AvatarStageDriversCardProps
   const { settings } = useAppStore();
   const profile = resolveGameProfile(settings);
   const stageMeta = getHeroStageMeta(profile.heroGender, snapshot.bodyStage);
-  const heroAssets = useHeroStageAssets(profile.heroGender, snapshot.bodyStage);
+  const heroAssets = useHeroStageAssets(profile.heroGender, snapshot.bodyStage, {
+    heroState: snapshot.heroState,
+  });
   const heroStateLabel = getHeroStateLabel(snapshot.heroState);
 
   return (

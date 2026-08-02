@@ -18,6 +18,8 @@
 3. Герой — один, не carousel всех стадий
 4. Тяжёлые блоки (full codex, all achievements) → Growth/Codex
 5. **Cozy Theme:** center on home + daily care, not battle scene — see [`themes.md`](themes.md) → Cozy Dashboard Concept
+6. **Avatar layers:** show «Стадия тела» and «Состояние героя» separately — never one misleading slim-%; body art from `bodyStage` only; Hero State via overlay/chrome (`HeroStateChrome`)
+7. Avatar paths only via `getResolvedAvatarStageAsset` / `useHeroStageAssets` — no hardcoded theme paths in panels
 
 ## Navigation
 

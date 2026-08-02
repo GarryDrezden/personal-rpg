@@ -145,6 +145,22 @@ public/game-assets/themes/dark-fantasy/
 
 Cozy placeholders (SVG) live under `themes/cozy/**/placeholders/`. Missing cozy final art must fall back to these — never to Dark Fantasy files.
 
+### Avatar body sets (Pipeline v1)
+
+```
+themes/{cozy|dark-fantasy}/avatars/
+  male/stage-01.webp … stage-20.webp
+  female/stage-01.webp … stage-20.webp
+  neutral/placeholder.svg
+  placeholders/{male,female,neutral}.svg
+  hero-state/{depleted,steady,energized,strong}-overlay.svg
+```
+
+- Manifest statuses: `missing` | `placeholder` | `draft` | `approved` | `deprecated`
+- Dev QA grid: `/dev/avatar-pipeline`
+- Checklist: [`docs/art/avatar-stage-qa-checklist.md`](../art/avatar-stage-qa-checklist.md)
+- Future `avatarTrackId` folders: `…/avatars/{gender}/tracks/{trackId}/stage-XX.webp` (not populated in v1)
+
 **Cozy Content Pack v1 (copy, not new art):** entity IDs stay shared; titles/descriptions for bosses→«главные помехи», mobs→«помехи дня», journey chapters and seasons diary come from `cozyContentPack` / `themeContentRegistry`. Placeholders remain the art fallback until final cozy illustrations exist.
 
 **TODO migration:** current Dark Fantasy art still uses legacy roots (`heroes/`, `bosses/`, `mobs/`, `companions/`, `maps/chapters/`). Reserved `themes/dark-fantasy/` folders are ready for a later move; do not break paths until a dedicated migration pass.

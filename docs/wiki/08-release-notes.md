@@ -8,6 +8,7 @@
 
 ### Added
 
+- **Avatar Assets Pipeline v1:** theme-scoped avatar folders, 80-slot manifest + unified resolver, same-theme placeholders (no Cozy↔DF fallback), Hero State overlays, DEV `/dev/avatar-pipeline`, `npm run validate:avatars`, approval workflow, future `avatarTrackId`, QA checklist. Final 80 body images not generated yet.
 - **Avatar Stages v1 Calibration:** split **Body Stage** (best weight + measurements → silhouette art 1–20) from **Hero State** (`depleted`/`steady`/`energized`/`strong` from abilities, habits, momentum, seasons). Habits no longer slim the body sprite. Dashboard: «Стадия тела» + «Состояние героя»; `/freedom` explains body vs state drivers. Best-weight latch vs day rebound. Calibration QA profiles + docs.
 - **Avatar Stages v1:** composite hero stage from weight, waist, Body Abilities, steps, nutrition, lifestyle and campaign milestones (`avatarProgress` 0–100, 20 stages). Theme-aware stage placeholders (Cozy / Dark Fantasy, shared stage id). Dashboard shows current stage; `/freedom` explains drivers. Safe defaults for legacy users. Not a medical body score.
 - **Freedom Body Map UX polish:** personal map hero summary, status-distinct cards (locked / suggested / unlocked / archived), filter tabs (Все / Можно подтвердить / Открыто / Долгий путь), Cozy vs Dark Fantasy copy, mobile-friendly grid.

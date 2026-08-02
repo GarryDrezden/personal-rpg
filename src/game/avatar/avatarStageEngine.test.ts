@@ -281,19 +281,17 @@ describe('Avatar Stages v1 Calibration QA', () => {
 });
 
 describe('AvatarStageAssets', () => {
-  it('uses shared stage id with theme-specific placeholder paths', () => {
+  it('uses shared stage id with theme-specific gender placeholders', () => {
     const cozy = getAvatarStagePlaceholderPath('cozy', 'male', 5);
     const dark = getAvatarStagePlaceholderPath('darkFantasy', 'male', 5);
-    expect(cozy).toContain('themes/cozy/avatars/placeholders/male/stage-05.svg');
-    expect(dark).toContain(
-      'themes/dark-fantasy/avatars/placeholders/male/stage-05.svg',
-    );
+    expect(cozy).toContain('themes/cozy/avatars/placeholders/male.svg');
+    expect(dark).toContain('themes/dark-fantasy/avatars/placeholders/male.svg');
+    expect(cozy).not.toEqual(dark);
   });
 
-  it('lists stage placeholder among cozy candidates', () => {
+  it('lists same-theme cozy candidates without DF leak', () => {
     const candidates = getAvatarStageImageCandidates('female', 3, 'cozy');
-    expect(
-      candidates.some((c) => c.includes('placeholders/female/stage-03.svg')),
-    ).toBe(true);
+    expect(candidates.every((c) => c.includes('themes/cozy/'))).toBe(true);
+    expect(candidates.some((c) => c.includes('placeholders/female'))).toBe(true);
   });
 });

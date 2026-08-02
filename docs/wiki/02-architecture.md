@@ -91,21 +91,28 @@ Legacy redirects: `/skills` → `/growth/skills`, `/bosses` → `/growth/trials`
 
 ```text
 public/game-assets/
-  heroes/{male,female}/stage-XX.png
-  heroes/{male,female}/variants/
+  themes/{cozy,dark-fantasy}/avatars/{male,female}/stage-XX.webp
+  themes/{cozy,dark-fantasy}/avatars/placeholders/{male,female,neutral}.svg
+  themes/{cozy,dark-fantasy}/avatars/hero-state/*-overlay.svg
+  heroes/{male,female}/…          ← DF legacy (migration TODO)
   companions/  mobs/  bosses/  artifacts/
   maps/journey-map-bg-*.png
 
-docs/assets/manifest.json     ← статусы, темы, notes
-src/game/assetPaths.ts        ← runtime paths + GAME_ASSET_VERSION
-src/constants/journeyMapConfig.ts  ← journey map layout
+art-source/avatar-generation/   ← WIP sources (not runtime)
+
+src/constants/avatarAssetManifest.ts
+src/game/avatar/avatarAssetResolver.ts
+src/game/assetPaths.ts          ← GAME_ASSET_VERSION + legacy helpers
+docs/assets/manifest.json
 ```
 
-**Правила:**
+**Avatar pipeline rules:**
 
-- Не перемещать файлы без обновления `assetPaths.ts`
-- При замене PNG — bump `GAME_ASSET_VERSION`
-- Новые variant-папки — для будущих тем, не ломая текущие пути
+- One resolver: `getResolvedAvatarStageAsset` (no hardcoded paths in UI)
+- No cross-theme fallback; production missing stage → same-theme placeholder
+- Body Stage selects silhouette; Hero State is overlay/chrome only
+- Bump `GAME_ASSET_VERSION` when replacing runtime art
+- `npm run validate:avatars` before approving sets
 
 ## Testing
 
