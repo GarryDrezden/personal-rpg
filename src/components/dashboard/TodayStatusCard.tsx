@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { useAppTheme } from '../../hooks/useAppTheme';
+import { getThemedDashboardCopy } from '../../constants/themeContentRegistry';
 import { getDayMoodPhrase } from '../../utils/dashboard';
 import { getDayStatus } from '../../utils/points';
 import { Card } from '../ui/Card';
@@ -14,6 +16,8 @@ type TodayStatusCardProps = {
 };
 
 export function TodayStatusCard({ todayPoints, todayCoins, integrated }: TodayStatusCardProps) {
+  const { themeId } = useAppTheme();
+  const dash = getThemedDashboardCopy(themeId);
   const displayXp = Math.max(0, todayPoints);
   const status = getDayStatus(todayPoints);
   const badgeVariant = displayXp >= 70 ? 'success' : displayXp >= 40 ? 'default' : 'danger';
@@ -25,7 +29,7 @@ export function TodayStatusCard({ todayPoints, todayCoins, integrated }: TodaySt
         integrated ? 'mt-3 px-3 py-2 text-sm' : 'mt-4 px-4 py-2.5 text-sm'
       }`}
     >
-      Открыть квесты дня →
+      {themeId === 'cozy' ? 'Открыть задачи дня →' : 'Открыть квесты дня →'}
     </Link>
   );
 
@@ -56,7 +60,12 @@ export function TodayStatusCard({ todayPoints, todayCoins, integrated }: TodaySt
           <p className="text-sm text-[var(--app-text-muted)]">Сегодняшний статус</p>
           <p className="mt-1 text-2xl font-bold text-[var(--app-primary)]">+{displayXp} XP</p>
           <p className="mt-0.5 text-sm text-[var(--app-text-muted)]">+{todayCoins} монет за день</p>
-          <p className="mt-1 text-sm text-[var(--app-text)]">{getDayMoodPhrase(todayPoints)}</p>
+          <p className="mt-1 text-sm text-[var(--app-text)]">
+            {getDayMoodPhrase(todayPoints, themeId)}
+          </p>
+          {themeId === 'cozy' ? (
+            <p className="mt-1 text-xs text-[var(--app-text-muted)]">{dash.openDaySubtitle}</p>
+          ) : null}
         </div>
         <Badge variant={badgeVariant}>{status}</Badge>
       </div>

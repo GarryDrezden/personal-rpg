@@ -14,6 +14,7 @@ import {
 import { CozyHomeScenePlaceholder } from '../components/cozy/CozyHomeScenePlaceholder';
 import { CozyHomeZoneCard, formatResourceBadges } from '../components/cozy/CozyHomeZoneCard';
 import type { CozyHomeZoneId, CozyResourceId } from '../types/cozyHome';
+import { getThemedEmptyStateCopy } from '../constants/themeContentRegistry';
 
 const RESOURCE_META: Record<
   CozyResourceId,
@@ -110,7 +111,7 @@ export function CozyHomePage() {
 
           <p className="mt-3 text-sm leading-relaxed text-[var(--app-text-muted)]">
             {progress.done === 0
-              ? 'Пока дом ждёт первого улучшения — даже маленький день уже что-то меняет.'
+              ? getThemedEmptyStateCopy('cozy', 'noUpgrades').description
               : 'Двор, сад и комнаты оживают по мере заботы о теле.'}
           </p>
 
@@ -132,10 +133,11 @@ export function CozyHomePage() {
 
       {totalResources === 0 ? (
         <section className="cozy-home-empty" data-testid="cozy-home-empty-resources">
-          <p className="cozy-home-empty__title">Пока ресурсы спят</p>
+          <p className="cozy-home-empty__title">
+            {getThemedEmptyStateCopy('cozy', 'noResources').title}
+          </p>
           <p className="cozy-home-empty__text">
-            Сначала сохрани день на странице «Сегодня». Даже минимальный день принесёт
-            немного уюта для дома.
+            {getThemedEmptyStateCopy('cozy', 'noResources').description}
           </p>
           <Link to="/today" className="cozy-home-empty__cta">
             Открыть день

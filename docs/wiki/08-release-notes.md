@@ -8,6 +8,7 @@
 
 ### Added
 
+- Added Cozy Content Pack v1 with separate journey chapters, obstacles, daily reactions and seasonal diary copy.
 - Added Onboarding v1 to start a new campaign with hero, theme, body goal, daily rhythm and companion setup.
 - Added `scripts/smoke-production-api.ps1` for production API smoke via `curl -k`.
 

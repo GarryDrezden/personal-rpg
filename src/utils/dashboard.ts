@@ -1,21 +1,25 @@
+import type { AppThemeId } from '../types/theme';
+import { getThemedDashboardCopy } from '../constants/themeContentRegistry';
 import { getLevelInfo } from './levels';
 
-export function getDayMoodPhrase(points: number): string {
-  if (points <= 0) return 'День только начинается';
-  if (points < 40) return 'Разгоняемся';
-  if (points < 70) return 'Режим держится';
-  if (points < 100) return 'Хороший день';
-  return 'Отличный день';
+export function getDayMoodPhrase(points: number, themeId: AppThemeId = 'darkFantasy'): string {
+  const mood = getThemedDashboardCopy(themeId).mood;
+  if (points <= 0) return mood.idle;
+  if (points < 40) return mood.warming;
+  if (points < 70) return mood.held;
+  if (points < 100) return mood.good;
+  return mood.great;
 }
 
-export function getLevelRankTitle(level: number): string {
-  if (level >= 20) return 'Легенда привычек';
-  if (level >= 15) return 'Мастер режима';
-  if (level >= 10) return 'Ветеран пути';
-  if (level >= 7) return 'Опытный боец';
-  if (level >= 4) return 'Уверенный старт';
-  if (level >= 2) return 'Ученик системы';
-  return 'Новичок';
+export function getLevelRankTitle(level: number, themeId: AppThemeId = 'darkFantasy'): string {
+  const ranks = getThemedDashboardCopy(themeId).rank;
+  if (level >= 20) return ranks[20];
+  if (level >= 15) return ranks[15];
+  if (level >= 10) return ranks[10];
+  if (level >= 7) return ranks[7];
+  if (level >= 4) return ranks[4];
+  if (level >= 2) return ranks[2];
+  return ranks[0];
 }
 
 export function getLevelFromXp(totalXp: number) {

@@ -1,7 +1,9 @@
 import type { AppSettings, DailyEntry } from '../types';
 import type { DailyQuest, QuestStatus } from '../types/quests';
+import type { AppThemeId } from '../types/theme';
 import { BUILTIN_HABITS } from '../constants/builtinHabits';
 import { SKILL_XP_AWARDS } from '../constants/skills';
+import { getThemedQuestCopy } from '../constants/themeContentRegistry';
 import { resolveHabitConfig } from './habitConfig';
 import { getWeeklySettingsForDate } from './points';
 import { getDayMode, getStepsStatus } from './stepsEngine';
@@ -45,8 +47,10 @@ export function getDailyQuests(params: {
   date: string;
   dailyEntries: DailyEntry[];
   settings: AppSettings;
+  themeId?: AppThemeId;
 }): DailyQuest[] {
   const { date, dailyEntries, settings } = params;
+  const themeId = params.themeId ?? settings.themeId ?? 'cozy';
   const entry = getEntryForDate(date, dailyEntries);
   const weekly = getWeeklySettingsForDate(date, settings);
   const p = settings.pointSettings;
@@ -72,9 +76,18 @@ export function getDailyQuests(params: {
     }
 
     const limit = getEffectiveCalorieLimit(settings, date);
+    const nutritionCopy = getThemedQuestCopy(
+      themeId,
+      'nutrition',
+      {
+        title: mode === 'precise' ? 'Калории внесены' : 'Питание отмечено',
+        actionLabel: mode === 'precise' ? 'Внести калории' : 'Отметить питание',
+      },
+      { nutritionMode: mode === 'precise' ? 'precise' : 'simple' },
+    );
     quests.push({
       id: 'nutrition',
-      title: mode === 'precise' ? 'Калории внесены' : 'Питание отмечено',
+      title: nutritionCopy.title,
       description:
         mode === 'precise'
           ? limit
@@ -86,7 +99,7 @@ export function getDailyQuests(params: {
       icon: '🍽️',
       points: getNutritionPoints({ entry, settings }),
       skillXp: skillXp('control', SKILL_XP_AWARDS.caloriesLogged),
-      actionLabel: mode === 'precise' ? 'Внести калории' : 'Отметить питание',
+      actionLabel: nutritionCopy.actionLabel ?? 'Отметить питание',
     });
   }
 
@@ -142,16 +155,20 @@ export function getDailyQuests(params: {
           ? SKILL_XP_AWARDS.stepsMinimum
           : 0;
 
+  const stepsCopy = getThemedQuestCopy(themeId, 'steps', {
+    title: 'Шаги',
+    actionLabel: 'Внести шаги',
+  });
   quests.push({
     id: 'steps',
-    title: 'Шаги',
+    title: stepsCopy.title,
     description: stepsDescription,
     category: 'main',
     status: stepsStatus,
     icon: '👟',
     points: stepsInfo.points,
     skillXp: stepsSkillXp > 0 ? skillXp('body', stepsSkillXp) : undefined,
-    actionLabel: 'Внести шаги',
+    actionLabel: stepsCopy.actionLabel ?? 'Внести шаги',
     stepsInfo,
   });
 
@@ -161,16 +178,20 @@ export function getDailyQuests(params: {
     alcoholStatus = 'failed';
   }
 
+  const alcoholCopy = getThemedQuestCopy(themeId, 'alcohol', {
+    title: 'День без алкоголя',
+    actionLabel: 'Отметить',
+  });
   quests.push({
     id: 'alcohol',
-    title: 'День без алкоголя',
-    description: 'Трезвый день',
+    title: alcoholCopy.title,
+    description: themeId === 'cozy' ? 'Ясный вечер без алкоголя' : 'Трезвый день',
     category: 'main',
     status: alcoholStatus,
     icon: '💧',
     points: p.noAlcohol,
     skillXp: skillXp('clarity', SKILL_XP_AWARDS.noAlcohol),
-    actionLabel: 'Отметить',
+    actionLabel: alcoholCopy.actionLabel ?? 'Отметить',
   });
 
   for (const habit of BUILTIN_HABITS) {
@@ -183,12 +204,22 @@ export function getDailyQuests(params: {
       habit.id === 'gym'
         ? `Недельный прогресс: ${gymCount}/${weekly.gymTarget}`
         : habit.id === 'journal'
-          ? 'Отметка или строка в «Заметки / дневник дня»'
+          ? themeId === 'cozy'
+            ? 'Отметка или строка в дневнике дома'
+            : 'Отметка или строка в «Заметки / дневник дня»'
           : (override?.description ?? habit.description);
+
+    const habitTitle = override?.title ?? habit.title;
+    const habitCopy = override?.title
+      ? { title: habitTitle, actionLabel: 'Выполнено' as const }
+      : getThemedQuestCopy(themeId, habit.id, {
+          title: habitTitle,
+          actionLabel: 'Выполнено',
+        });
 
     quests.push({
       id: habit.id,
-      title: override?.title ?? habit.title,
+      title: habitCopy.title,
       description,
       category: habit.category,
       status: completed ? 'done' : 'neutral',
@@ -199,7 +230,7 @@ export function getDailyQuests(params: {
         habit.skillId && habit.skillXpAmount
           ? skillXp(habit.skillId, habit.skillXpAmount)
           : undefined,
-      actionLabel: 'Выполнено',
+      actionLabel: habitCopy.actionLabel ?? 'Выполнено',
     });
   }
 

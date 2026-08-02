@@ -124,12 +124,12 @@ export function DashboardCommandBridge({
   const { themeId, isDarkFantasy, isCozy } = useAppTheme();
   const game = useGameHeroState();
   const { measurements, settings, dailyEntries } = useAppStore();
-  const pathSetup = getPathSetupState(measurements, settings);
+  const pathSetup = getPathSetupState(measurements, settings, themeId);
   const chapter = getChapterMeta(game.chapter);
   const stageMeta = getHeroStageMeta(game.profile.heroGender, game.stage);
   const heroAssets = useHeroStageAssets(game.profile.heroGender, game.stage);
-  const mood = getDayMoodPhrase(todayPoints);
-  const rank = getLevelRankTitle(level);
+  const mood = getDayMoodPhrase(todayPoints, themeId);
+  const rank = getLevelRankTitle(level, themeId);
   const xp = getLevelFromXp(totalXp);
   const dayStatus = getDayStatus(todayPoints);
   const displayXp = Math.max(0, todayPoints);

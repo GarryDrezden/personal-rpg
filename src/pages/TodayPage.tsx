@@ -176,8 +176,9 @@ export function TodayPage() {
         date: selectedDate,
         dailyEntries: entriesForQuests,
         settings,
+        themeId,
       }),
-    [selectedDate, entriesForQuests, settings],
+    [selectedDate, entriesForQuests, settings, themeId],
   );
 
   const stats = getQuestCompletionStats(quests);
@@ -227,8 +228,9 @@ export function TodayPage() {
         questDone: stats.done,
         questTotal: stats.total,
         points,
+        themeId,
       }),
-    [entry, settings, stats.done, stats.total, points],
+    [entry, settings, stats.done, stats.total, points, themeId],
   );
 
   const cozyRewardPreview = useMemo(() => {
@@ -275,6 +277,7 @@ export function TodayPage() {
       questDone: stats.done,
       questTotal: stats.total,
       points,
+      themeId: latestSettings.themeId ?? themeId,
     });
     const baseLine = getBaseSaveSparkLine(savedEntry, latestSettings);
     const withBase = baseLine ? { ...reaction, baseLine } : reaction;
@@ -706,7 +709,7 @@ export function TodayPage() {
       {dayEmpty && recoveryState === 'normal' && dayMode === 'normal' && (
         <p className="rounded-2xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-4 text-center text-sm text-[var(--app-text-muted)]">
           {isCozy
-            ? 'День ещё тихий — выбери минимальный режим или отметь одно действие. Дом не требует идеала.'
+            ? 'Дом пока тихий. Отметь хотя бы один след дня — питание, маршрут или ресурс.'
             : 'День ещё пустой — начни с одного шага или включи минимальный день. Маршрут не требует идеала.'}
         </p>
       )}

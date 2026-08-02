@@ -1,18 +1,29 @@
 import { Link } from 'react-router-dom';
 import type { NextBestAction } from '../../types/nextBestAction';
+import { getThemedDashboardCopy } from '../../constants/themeContentRegistry';
+import { useAppTheme } from '../../hooks/useAppTheme';
 
 type DashboardPrimaryCtaProps = {
   action: NextBestAction;
 };
 
 export function DashboardPrimaryCta({ action }: DashboardPrimaryCtaProps) {
+  const { themeId, isCozy } = useAppTheme();
+  const dash = getThemedDashboardCopy(themeId);
+  const description =
+    isCozy && (action.id === 'start_system' || action.actionLabel === 'Открыть день')
+      ? action.id === 'start_system' || action.priority === 'base'
+        ? dash.openDaySubtitle
+        : action.description
+      : action.description;
+
   return (
     <section
       data-testid="dashboard-primary-cta"
       className="rounded-2xl border border-[color-mix(in_srgb,var(--app-primary)_35%,var(--app-border))] bg-[color-mix(in_srgb,var(--app-primary)_8%,var(--app-card))] p-4 shadow-[0_4px_24px_rgba(0,0,0,0.12)]"
     >
       <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--app-primary)]">
-        Главное действие дня
+        {isCozy ? 'Дом ждёт шага' : 'Главное действие дня'}
       </p>
 
       <div className="mt-2 flex items-start gap-3">
@@ -22,7 +33,7 @@ export function DashboardPrimaryCta({ action }: DashboardPrimaryCtaProps) {
         <div className="min-w-0 flex-1">
           <h2 className="text-lg font-bold leading-snug text-[var(--app-text)]">{action.title}</h2>
           <p className="mt-1 text-sm leading-relaxed text-[var(--app-text-muted)]">
-            {action.description}
+            {description}
           </p>
         </div>
       </div>

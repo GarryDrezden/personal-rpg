@@ -27,9 +27,9 @@ export function CharacterHero({
   availableCoins,
   avatar,
 }: CharacterHeroProps) {
-  const { isDarkFantasy } = useAppTheme();
-  const mood = getDayMoodPhrase(todayPoints);
-  const rank = getLevelRankTitle(level);
+  const { themeId, isDarkFantasy } = useAppTheme();
+  const mood = getDayMoodPhrase(todayPoints, themeId);
+  const rank = getLevelRankTitle(level, themeId);
   const dayStatus = getDayStatus(todayPoints);
   const displayXp = Math.max(0, todayPoints);
 

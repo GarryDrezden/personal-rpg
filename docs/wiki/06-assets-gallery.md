@@ -145,6 +145,8 @@ public/game-assets/themes/dark-fantasy/
 
 Cozy placeholders (SVG) live under `themes/cozy/**/placeholders/`. Missing cozy final art must fall back to these — never to Dark Fantasy files.
 
+**Cozy Content Pack v1 (copy, not new art):** entity IDs stay shared; titles/descriptions for bosses→«главные помехи», mobs→«помехи дня», journey chapters and seasons diary come from `cozyContentPack` / `themeContentRegistry`. Placeholders remain the art fallback until final cozy illustrations exist.
+
 **TODO migration:** current Dark Fantasy art still uses legacy roots (`heroes/`, `bosses/`, `mobs/`, `companions/`, `maps/chapters/`). Reserved `themes/dark-fantasy/` folders are ready for a later move; do not break paths until a dedicated migration pass.
 
 ## Dark MVP Asset Generation Batch 1

@@ -233,6 +233,15 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Empty states должны поддерживать, а не обвинять.
 - Даже минимальный день может дать маленький уютный прогресс.
 
+## Cozy Content Rules
+
+- Do not copy Dark Fantasy content and only rename it.
+- Cozy conflict should feel like household, garden, rhythm or recovery obstacles.
+- Avoid horror, curses, domination and dramatic battle metaphors.
+- Use repair, warmth, order, light, garden, home and small-step language.
+- Even hard days should sound like the house asking for recovery, not like the player losing a battle.
+- Shared IDs are fine; presentation (`cozyContentPack` + `themeContentRegistry`) must diverge.
+
 ## Theme / shell UX Rules
 
 - Themes are not just colors: each can have its own metaphor, progression fantasy, assets and copy tone.

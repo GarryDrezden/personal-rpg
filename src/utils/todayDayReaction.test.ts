@@ -8,47 +8,91 @@ function entry(partial: Partial<DailyEntry>): DailyEntry {
   return { ...emptyDaily('2026-07-02'), ...partial };
 }
 
+const darkSettings = { ...DEFAULT_APP_SETTINGS, themeId: 'darkFantasy' as const };
+const cozySettings = { ...DEFAULT_APP_SETTINGS, themeId: 'cozy' as const };
+
 describe('getTodaySaveReaction', () => {
-  it('returns minimal day reaction', () => {
+  it('returns dark fantasy minimal day reaction', () => {
     const reaction = getTodaySaveReaction({
       entry: entry({ dayMode: 'minimal' }),
-      settings: DEFAULT_APP_SETTINGS,
+      settings: darkSettings,
       questDone: 0,
       questTotal: 5,
       points: 10,
+      themeId: 'darkFantasy',
     });
     expect(reaction.headline).toBe('Маршрут удержан.');
   });
 
-  it('returns recovery reaction', () => {
+  it('returns cozy minimal day reaction', () => {
+    const reaction = getTodaySaveReaction({
+      entry: entry({ dayMode: 'minimal' }),
+      settings: cozySettings,
+      questDone: 0,
+      questTotal: 5,
+      points: 10,
+      themeId: 'cozy',
+    });
+    expect(reaction.headline).toBe('Минимальный день тоже удержал дом живым.');
+  });
+
+  it('returns dark fantasy recovery reaction', () => {
     const reaction = getTodaySaveReaction({
       entry: entry({ dayMode: 'recovery' }),
-      settings: DEFAULT_APP_SETTINGS,
+      settings: darkSettings,
       questDone: 1,
       questTotal: 5,
       points: 20,
+      themeId: 'darkFantasy',
     });
     expect(reaction.headline).toBe('Ядро стабилизируется.');
   });
 
-  it('returns movement reaction when steps marked', () => {
+  it('returns cozy recovery reaction', () => {
+    const reaction = getTodaySaveReaction({
+      entry: entry({ dayMode: 'recovery' }),
+      settings: cozySettings,
+      questDone: 1,
+      questTotal: 5,
+      points: 20,
+      themeId: 'cozy',
+    });
+    expect(reaction.headline).toBe('Дом не требует рывка.');
+    expect(reaction.detail).toMatch(/сон|пауз|восстановление/i);
+  });
+
+  it('returns dark fantasy movement reaction when steps marked', () => {
     const reaction = getTodaySaveReaction({
       entry: entry({ steps: 6000 }),
-      settings: DEFAULT_APP_SETTINGS,
+      settings: darkSettings,
       questDone: 0,
       questTotal: 5,
       points: 30,
+      themeId: 'darkFantasy',
     });
     expect(reaction.headline).toBe('Движение зафиксировано.');
+  });
+
+  it('returns cozy steps reaction', () => {
+    const reaction = getTodaySaveReaction({
+      entry: entry({ steps: 6000 }),
+      settings: cozySettings,
+      questDone: 0,
+      questTotal: 5,
+      points: 30,
+      themeId: 'cozy',
+    });
+    expect(reaction.headline).toBe('Маршрут дня отмечен.');
   });
 
   it('attaches cozy feedback only on first grant with resources', () => {
     const base = getTodaySaveReaction({
       entry: entry({ steps: 1000 }),
-      settings: DEFAULT_APP_SETTINGS,
+      settings: cozySettings,
       questDone: 0,
       questTotal: 5,
       points: 10,
+      themeId: 'cozy',
     });
     const rewards = {
       resources: { comfort: 1, materials: 2 },

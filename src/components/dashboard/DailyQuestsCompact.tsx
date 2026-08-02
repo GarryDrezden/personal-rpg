@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { AppSettings, DailyEntry } from '../../types';
+import { getThemedDashboardCopy } from '../../constants/themeContentRegistry';
+import { useAppTheme } from '../../hooks/useAppTheme';
 import { getWeeklySettingsForDate } from '../../utils/points';
 import { getDailyQuests, getQuestCompletionStats } from '../../utils/questEngine';
 import { QuestCard } from '../quests/QuestCard';
@@ -18,6 +20,8 @@ export function DailyQuestsCompact({
   settings,
   date,
 }: DailyQuestsCompactProps) {
+  const { themeId } = useAppTheme();
+  const dash = getThemedDashboardCopy(themeId);
   const entriesForQuests = entry
     ? dailyEntries.map((e) => (e.date === date ? entry : e))
     : dailyEntries;
@@ -26,6 +30,7 @@ export function DailyQuestsCompact({
     date,
     dailyEntries: entriesForQuests,
     settings,
+    themeId,
   });
   const mainQuests = quests.filter((q) => q.category === 'main').slice(0, 3);
   const stats = getQuestCompletionStats(quests);
@@ -57,16 +62,17 @@ export function DailyQuestsCompact({
     >
       <div className="mb-2 flex items-center justify-between gap-2">
         <div>
-          <p className="text-sm font-semibold text-[var(--app-text)]">Квесты дня</p>
+          <p className="text-sm font-semibold text-[var(--app-text)]">{dash.questsTitle}</p>
           <p className="text-xs text-[var(--app-text-muted)]">
-            {stats.mainDone}/{stats.mainTotal} основных · {stats.done}/{stats.total} всего
+            {stats.mainDone}/{stats.mainTotal}{' '}
+            {themeId === 'cozy' ? 'главных' : 'основных'} · {stats.done}/{stats.total} всего
           </p>
         </div>
         <Link
           to="/today"
           className="shrink-0 text-xs font-medium text-[var(--app-primary)] hover:underline"
         >
-          Все →
+          {dash.openQuests}
         </Link>
       </div>
 

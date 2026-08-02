@@ -56,7 +56,7 @@ const COZY_TERMS: Record<ThemeTermKey, string> = {
   campaign: 'Путь дома',
   chronicle: 'Сезонный дневник',
   weaknessHint: 'Уходит после',
-  bossAccent: 'Задачи дня помогают привести дом и день в порядок →',
+  bossAccent: 'Задачи дня помогают вернуть туда свет →',
   codexEntities: 'Стадии, спутники и образы пути — в альбоме. В уютной теме — свои иллюстрации.',
   camp: 'Укрытие дома',
   campStages: 'Стадии укрытия',

@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-08-02 — Cozy Content Pack v1 (presentation branch, shared IDs)
+
+**Context:**  
+Cozy was visually separated, but journey/boss/mob/dashboard copy still often felt like softened Dark Fantasy («босс → помеха» rename only).
+
+**Decision:**  
+Ship Cozy Content Pack v1 as a theme-aware presentation layer: shared core IDs, separate titles/descriptions for 9 journey chapters, main/daily obstacles, Today reactions, quest labels, seasons diary and empty states. Registry helpers live in `themeContentRegistry` / `cozyContentPack`. No new mechanics, no ID migrations, no production API changes.
+
+**Consequence:**  
+Cozy reads as home/garden/repair/warmth; Dark Fantasy battle language remains intact for `themeId === 'darkFantasy'`. Old saves keep working.
+
 ## 2026-08-01 — Cozy as a separate theme branch (not light DF)
 
 **Context:**  

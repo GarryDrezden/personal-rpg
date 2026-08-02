@@ -129,6 +129,36 @@ XP за квесты, недельные бонусы, победу над бо�
 
 ---
 
+## Cozy Content Pack v1
+
+Cozy is not a softened Dark Fantasy copy.
+It uses the same core loop but different presentation:
+
+Dark Fantasy:
+- boss
+- mob
+- battle
+- curse
+- victory
+
+Cozy:
+- main obstacle
+- daily obstacle
+- home restoration
+- disorder
+- warmth returning
+- seasonal journal
+
+Core IDs can be shared (`bossId`, `mobId`, `chapterId`, `questId`, `seasonId`), but user-facing title, copy and art are theme-specific.
+
+**Code:**
+- `src/constants/cozyContentPack.ts` — Cozy titles/descriptions for journey, bosses, mobs, today, quests, seasons, empty states
+- `src/constants/themeContentRegistry.ts` — `getThemedBossPresentation`, `getThemedMobPresentation`, `getThemedJourneyChapterPresentation`, `getThemedSeasonPresentation`, `getThemedTodayCopy`, `getThemedQuestCopy`
+- `src/game/themeEntityPresentation.ts` — image + tone layer over the same IDs
+- `src/constants/themeTerms.ts` — labels («Главная помеха», «Помеха дня», «Задачи дня», «Сезонный дневник»)
+
+Dark Fantasy content and saves stay unchanged.
+
 ## Theme-aware Presentation
 
 The same gameplay entity can have different presentation per theme.

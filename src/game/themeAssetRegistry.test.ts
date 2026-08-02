@@ -26,6 +26,18 @@ describe('theme entity presentation', () => {
     expect(presentation.imageCandidates.every((p) => p.includes('/themes/cozy/'))).toBe(true);
   });
 
+  it('maps cozy bosses to household obstacles', () => {
+    const presentation = getBossPresentation('cozy', 'misty_baron', {
+      title: 'Туманный Барон',
+      subtitle: 'Босс',
+      description: 'Тьма',
+      image: '/game-assets/bosses/misty-baron.png',
+    });
+    expect(presentation.title).toBe('Туманное утро');
+    expect(presentation.title).not.toBe('Туманный Барон');
+    expect(presentation.subtitle).toBe('Главная помеха');
+  });
+
   it('keeps dark fantasy boss presentation unchanged', () => {
     const presentation = getBossPresentation('darkFantasy', 'misty_baron', {
       title: 'Туманный Барон',

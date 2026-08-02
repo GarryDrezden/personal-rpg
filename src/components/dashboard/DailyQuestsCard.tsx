@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
+import { Swords, Home } from 'lucide-react';
 import type { AppSettings, DailyEntry } from '../../types';
+import { getThemedDashboardCopy } from '../../constants/themeContentRegistry';
+import { useAppTheme } from '../../hooks/useAppTheme';
 import { getWeeklySettingsForDate } from '../../utils/points';
 import { getDailyQuests, getQuestCompletionStats } from '../../utils/questEngine';
 import { QuestCard } from '../quests/QuestCard';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
-import { Swords } from 'lucide-react';
 
 type DailyQuestsCardProps = {
   entry: DailyEntry | undefined;
@@ -20,6 +22,8 @@ export function DailyQuestsCard({
   settings,
   date,
 }: DailyQuestsCardProps) {
+  const { themeId, isCozy } = useAppTheme();
+  const dash = getThemedDashboardCopy(themeId);
   const entriesForQuests = entry
     ? dailyEntries.map((e) => (e.date === date ? entry : e))
     : dailyEntries;
@@ -28,6 +32,7 @@ export function DailyQuestsCard({
     date,
     dailyEntries: entriesForQuests,
     settings,
+    themeId,
   });
   const mainQuests = quests.filter((q) => q.category === 'main');
   const stats = getQuestCompletionStats(quests);
@@ -56,11 +61,16 @@ export function DailyQuestsCard({
     <Card data-testid="dashboard-daily-quests">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <Swords className="text-[var(--app-primary)]" size={22} />
+          {isCozy ? (
+            <Home className="text-[var(--app-primary)]" size={22} />
+          ) : (
+            <Swords className="text-[var(--app-primary)]" size={22} />
+          )}
           <div>
-            <h2 className="text-lg font-semibold text-[var(--app-text)]">Квесты дня</h2>
+            <h2 className="text-lg font-semibold text-[var(--app-text)]">{dash.questsTitle}</h2>
             <p className="text-sm text-[var(--app-text-muted)]">
-              Основные {stats.mainDone}/{stats.mainTotal} · всего {stats.done}/{stats.total}
+              {isCozy ? 'Главные' : 'Основные'} {stats.mainDone}/{stats.mainTotal} · всего{' '}
+              {stats.done}/{stats.total}
             </p>
           </div>
         </div>
@@ -68,7 +78,7 @@ export function DailyQuestsCard({
           to="/today"
           className="shrink-0 rounded-xl border border-[var(--app-border)] bg-[var(--app-card-strong)] px-3 py-1.5 text-sm font-medium text-[var(--app-primary)] hover:brightness-[1.03]"
         >
-          Открыть квесты →
+          {isCozy ? 'Открыть задачи →' : 'Открыть квесты →'}
         </Link>
       </div>
 

@@ -1,6 +1,11 @@
 import type { AppThemeId } from '../types/theme';
 import type { BossId, CompanionId, MobId } from '../types/gameAssets';
 import {
+  COZY_BOSS_COPY,
+  COZY_FALLBACK_ENTITY,
+  COZY_MOB_COPY,
+} from '../constants/cozyContentPack';
+import {
   getThemeAsset,
   getThemeAssetCandidates,
   type ThemeAssetRef,
@@ -19,98 +24,6 @@ export type ThemedEntityPresentation = {
   placeholder: boolean;
   tone: ThemedEntityTone;
   asset: ThemeAssetRef;
-};
-
-const COZY_MOB: Record<
-  MobId,
-  { title: string; subtitle: string; description: string }
-> = {
-  sofa_magnet: {
-    title: 'Сонный плед',
-    subtitle: 'Тянет остаться на диване',
-    description: 'Мягкая тяжесть вечера. Уходит после короткой прогулки или зарядки.',
-  },
-  snack_chaos: {
-    title: 'Вечерняя кладовая',
-    subtitle: 'Хаос перекусов уходит в порядок',
-    description: 'Когда на кухне нет опоры, тянет к лишнему. Честная отметка питания помогает.',
-  },
-  fog_of_fatigue: {
-    title: 'Туман над двором',
-    subtitle: 'Усталость смягчает день',
-    description: 'Сон и короткая пауза разгоняют туман. Дом не требует идеальности.',
-  },
-  empty_day: {
-    title: 'Тихая комната',
-    subtitle: 'День без отметок',
-    description: 'Даже минимальный ход возвращает тепло в комнату.',
-  },
-  impulse_of_rollback: {
-    title: 'Скрипучая дверь',
-    subtitle: 'Импульс отката',
-    description: 'Один срыв не ломает дом. Вернись к простому шагу.',
-  },
-  night_call: {
-    title: 'Ночной свет на кухне',
-    subtitle: 'Поздний зов',
-    description: 'Тёплый свет и короткий ритуал помогают не сорваться ночью.',
-  },
-  gray_heaviness: {
-    title: 'Серая тяжесть',
-    subtitle: 'Низкий ресурс',
-    description: 'Восстановление и мягкий день возвращают ясность.',
-  },
-  sweet_whisper: {
-    title: 'Сладкий шёпот',
-    subtitle: 'Сладость зовёт',
-    description: 'Порядок на кухне и честная отметка ослабляют шёпот.',
-  },
-};
-
-const COZY_BOSS: Record<
-  BossId,
-  { title: string; subtitle: string; description: string }
-> = {
-  misty_baron: {
-    title: 'Туманный двор',
-    subtitle: 'Главная помеха главы',
-    description: 'Заросшие дорожки и туман усталости. Расчистка и движение возвращают свет.',
-  },
-  resource_devourer: {
-    title: 'Сквозняк усталости',
-    subtitle: 'Главная помеха главы',
-    description: 'Вытягивает силы. Сон, паузы и мягкий режим закрывают сквозняк.',
-  },
-  divan_king: {
-    title: 'Плед без движения',
-    subtitle: 'Главная помеха главы',
-    description: 'Дом ждёт шага во двор. Даже короткая прогулка ослабляет плед.',
-  },
-  lord_of_empty_day: {
-    title: 'Заброшенная комната',
-    subtitle: 'Главная помеха главы',
-    description: 'Пустые дни остужают дом. Любая честная отметка зажигает окно.',
-  },
-  chain_of_rollback: {
-    title: 'Цепь старых привычек',
-    subtitle: 'Главная помеха главы',
-    description: 'Скрипит, но не держит навечно. Серия возвратов ослабляет звено.',
-  },
-  night_feast_baron: {
-    title: 'Ночной стол без меры',
-    subtitle: 'Главная помеха главы',
-    description: 'Вечерний хаос на кухне. Порядок и честность возвращают тепло.',
-  },
-  promise_collector: {
-    title: 'Стопка неначатого',
-    subtitle: 'Главная помеха главы',
-    description: 'Обещания без хода. Один маленький шаг важнее идеального плана.',
-  },
-  old_form_guardian: {
-    title: 'Старый сарай привычек',
-    subtitle: 'Главная помеха главы',
-    description: 'Хранит старую форму. Двор, сад и регулярность открывают новую дверь.',
-  },
 };
 
 const COZY_COMPANION: Record<
@@ -159,7 +72,7 @@ export function getMobPresentation(
     };
   }
 
-  const cozy = COZY_MOB[mobId];
+  const cozy = COZY_MOB_COPY[mobId] ?? COZY_FALLBACK_ENTITY;
   const asset = getThemeAsset({ themeId: 'cozy', kind: 'mob', entityId: mobId });
   return {
     entityId: mobId,
@@ -195,7 +108,7 @@ export function getBossPresentation(
     };
   }
 
-  const cozy = COZY_BOSS[bossId];
+  const cozy = COZY_BOSS_COPY[bossId] ?? COZY_FALLBACK_ENTITY;
   const asset = getThemeAsset({ themeId: 'cozy', kind: 'boss', entityId: bossId });
   return {
     entityId: bossId,
