@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-08-02 — Avatar Stages v1 Calibration (Body Stage ≠ Hero State)
+
+**Context:**  
+v1 blended habits into one stage, so ideal routines could visually “slim” a large hero without weight/waist change — false body transformation.
+
+**Decision:**  
+Split into **Body Stage** (silhouette from best weight + measurements only) and **Hero State** (posture/energy from abilities, habits, momentum, campaign). Body art uses `bodyStage` only. Habits improve Hero State on plateau without shrinking body volume. Best-weight latch blocks day-to-day rebound rollback.
+
+**Consequence:**  
+Dashboard shows two lines («Стадия тела» / «Состояние героя»); Freedom explains body vs state drivers separately; calibration QA profiles lock the anti-false-slim rule.
+
 ## 2026-08-02 — Avatar Stages v1 (composite, not weight-only)
 
 **Context:**  
@@ -13,7 +24,7 @@ Hero stage was driven almost entirely by weight path. Users on plateau (waist, a
 Ship `AvatarStageEngine`: weighted blend into `avatarProgress` 0–100 → 20 stages. Weight remains important but cannot alone grant late stages. Non-weight signals can nudge stage while weight is stalled. Same stage id across themes; Cozy and Dark Fantasy use different art/placeholders. Explicit non-medical disclaimer.
 
 **Consequence:**  
-Dashboard / Freedom reflect composite progress; legacy empty saves stay at stage 1; weight-only engine kept for comparison diagnostics.
+Superseded in calibration: habits moved to Hero State; body art gated by Body Stage.
 
 ## 2026-08-02 — Body Abilities Quality Pass (archetype-validated grids)
 

@@ -114,13 +114,13 @@ export function HeroScenePanel({
 
         <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-[var(--app-text-muted)]">
           <span data-testid="dashboard-avatar-stage">
-            Стадия {game.stage}/20
+            Стадия тела: {game.bodyStage} из 20
           </span>
           <span className="text-[var(--app-border)]" aria-hidden>
             ·
           </span>
-          <span className="font-semibold tabular-nums text-[var(--app-primary)]">
-            {Math.round(game.avatarProgress)}% пути героя
+          <span data-testid="dashboard-hero-state" className="font-semibold text-[var(--app-primary)]">
+            Состояние героя: {game.heroStateLabel}
           </span>
           <span className="text-[var(--app-border)]" aria-hidden>
             ·
@@ -129,7 +129,7 @@ export function HeroScenePanel({
             to="/freedom"
             className="font-medium text-[var(--app-primary)] hover:underline"
           >
-            Почему стадия сдвинулась →
+            Почему изменилось →
           </Link>
         </div>
 
@@ -143,9 +143,9 @@ export function HeroScenePanel({
           />
         ) : null}
 
-        {(showMilestones || game.hasAvatarPath) && game.stage < 20 ? (
+        {(showMilestones || game.hasAvatarPath) && game.bodyStage < 20 ? (
           <p className="mt-2 text-[11px] text-[var(--app-text-muted)]">
-            До следующей стадии:{' '}
+            До следующей стадии тела:{' '}
             <span className="font-semibold tabular-nums text-[var(--app-primary)]">
               {nextStagePercent}%
             </span>
@@ -200,6 +200,8 @@ export function HeroScenePanel({
           <div className="relative z-10 flex h-full min-h-[24rem] items-end justify-center overflow-visible px-2 pb-2 pt-4 lg:min-h-[25rem] lg:px-4 lg:pb-3 lg:pt-5">
             <div
               data-testid="hero-scene-character"
+              data-hero-state={game.heroState}
+              data-body-stage={game.bodyStage}
               className="relative z-10 flex w-full max-w-[20rem] items-end justify-center overflow-visible bg-transparent sm:max-w-[22rem] lg:max-w-[24rem]"
               style={{ height: DASHBOARD_HERO_HEIGHT, maxHeight: 'calc(100% - 1.5rem)' }}
             >

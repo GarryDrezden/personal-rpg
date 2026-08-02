@@ -303,35 +303,57 @@ Vertical **chapter road** — 9 глав в ширине обычного кон
 
 ---
 
-## Hero stages / Avatar Stages v1
+## Hero stages / Avatar Stages v1 (Calibration)
 
 **Engine:** `src/game/avatar/avatarStageEngine.ts` (`resolveAvatarStageSnapshot`)  
 **Assets helper:** `src/game/avatar/avatarStageAssets.ts`  
 **Titles:** `heroStages.ts`  
-**Legacy weight-only math:** `heroProgressEngine.ts` (diagnostics / comparison)
+**Legacy weight-only math:** `heroProgressEngine.ts` (diagnostics)
 
-20 стадий героя. `avatarProgress` 0–100 собирается из нескольких опор:
+Два визуальных слоя (не смешивать в один «% похудения»):
 
-| Сигнал | Вес в прогрессе |
-|--------|-----------------|
-| weight progress | 0.34 |
-| waist / measurements | 0.16 |
-| unlocked Body Abilities | 0.16 |
-| step consistency | 0.12 |
-| nutrition / control | 0.10 |
-| alcohol / sleep / resource | 0.07 |
-| campaign milestones | 0.05 |
+### 1. Body Stage (силуэт)
 
-Стадия **не** выдаётся только по весу: полный путь веса без остальных опор даёт лишь часть `avatarProgress`. Если вес стоит, но растут талия / способности / стабильность — стадия может немного продвинуться.
+Меняет объём тела, живот/талию, полноту лица, шею, посадку одежды.  
+**Art key:** `bodyStage` 1–20. `bodyProgress` 0–100.
 
-Это **визуальное отражение прогресса**, не медицинская оценка тела и не обещание конкретного внешнего результата. UI disclaimer на `/freedom` и в snapshot.
+| Сигнал | Вес в Body Stage |
+|--------|------------------|
+| лучший подтверждённый вес | 0.72 |
+| талия | 0.20 |
+| другие замеры (живот/бёдра/грудь) | 0.08 |
+
+Вес + замеры = **100%** Body Stage (≥75–85%). Шаги, питание, сон, способности и ресурс **не** уменьшают объём тела.
+
+Откат веса не откатывает картинку: используется лучший вес. Небольшое уменьшение талии может чуть сдвинуть Body Stage при стабильном весе.
+
+### 2. Hero State (состояние)
+
+Меняет осанку/энергию/собранность chrome (не силуэт).  
+`heroStateProgress` 0–100 → `depleted` / `steady` / `energized` / `strong` (UI: на исходе / ровный / собран / уверен).
+
+| Сигнал | Вес в Hero State |
+|--------|------------------|
+| Body Abilities | 0.22 |
+| стабильность шагов | 0.18 |
+| питание | 0.16 |
+| алкоголь / сон / ресурс | 0.18 |
+| Momentum | 0.14 |
+| главы и сезоны | 0.12 |
+
+При плато Body Stage может стоять, Hero State продолжает расти. Hero State может временно просесть по ресурсу/инерции — открытые Body Stages не теряются.
+
+`avatarProgress` — мягкий UI-blend; **ассет тела** выбирается только по `bodyStage`.
+
+Это **визуальное отражение**, не медицинская оценка. Disclaimer на `/freedom`.
 
 **Theme-aware assets (общий stage id, разные картинки):**
 
-- Cozy: `themes/cozy/avatars/{gender}/stage-NN.*` → placeholder `themes/cozy/avatars/placeholders/{gender}/stage-NN.svg`
+- Cozy: `themes/cozy/avatars/{gender}/stage-NN.*` → placeholder `…/placeholders/{gender}/stage-NN.svg`
 - Dark Fantasy: `heroes/{gender}/variants/dark-fantasy/stage-NN.*` → placeholder `themes/dark-fantasy/avatars/placeholders/{gender}/stage-NN.svg`
 
-Dashboard показывает текущую стадию; `/freedom` (`AvatarStageDriversCard`) объясняет, почему стадия сдвинулась. Старые пользователи без данных → stage 1 / progress 0.
+Dashboard: «Стадия тела: N из 20» + «Состояние героя: …».  
+`/freedom`: отдельно «что изменило тело» / «что изменило состояние».
 
 ---
 

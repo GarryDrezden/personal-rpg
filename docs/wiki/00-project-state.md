@@ -104,7 +104,7 @@
 - Weekly boss (trials), daily mobs (codex)
 - Chapter bosses (journey map narrative)
 - Nutrition tracking (disabled / simple / precise modes)
-- Hero / Avatar Stages v1 (20 стадий, composite `avatarProgress`, theme-aware placeholders)
+- Hero / Avatar Stages v1 calibrated (Body Stage silhouette + Hero State energy; theme-aware placeholders)
 - Companions (4 спутника)
 - Next best action, weekly story reports
 

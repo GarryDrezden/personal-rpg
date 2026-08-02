@@ -1,9 +1,11 @@
 import type { AppSettings, DailyEntry, MeasurementEntry } from '../../types';
 import type {
   AvatarStageDriver,
+  AvatarStageLayer,
   AvatarStageSignal,
   AvatarStageSignalId,
   AvatarStageSnapshot,
+  HeroStateLevel,
 } from '../../types/avatarStages';
 import type { HeroStageNumber } from '../../types/gameAssets';
 import { HERO_STAGE_COUNT } from '../../types/gameAssets';
@@ -15,6 +17,8 @@ import {
 } from '../../utils/bodyAbilityPersonalEngine';
 import { getAllBodyAbilityProgress } from '../../utils/bodyAbilityEngine';
 import { todayISO } from '../../utils/dates';
+import { sortMeasurementsByDate } from '../../utils/measurements';
+import { getMomentumSummary } from '../../utils/momentumEngine';
 import {
   getNutritionQuestCompleted,
   isNutritionTrackingEnabled,
@@ -37,38 +41,73 @@ import {
   resolveCampaignStartDate,
 } from '../seasons/seasonEngine';
 
-/** Visual reflection of progress — not a medical body score. */
+/** Visual reflection — not a medical body score. */
 export const AVATAR_STAGE_DISCLAIMER =
-  'Стадии героя — визуальное отражение общего прогресса пути, а не медицинская оценка тела и не обещание конкретного внешнего результата.';
+  'Стадия тела и состояние героя — визуальное отражение пути, а не медицинская оценка и не обещание конкретного внешнего результата.';
 
 /**
- * Signal weights (sum = 1). Weight is important but never the only driver.
- * Non-weight signals can advance stage when weight is stalled.
+ * Body Stage layer (silhouette / volume).
+ * Weight + measurements = 100% of bodyProgress (≥75–85% requirement).
+ * Habits never shrink body volume here.
  */
+export const BODY_STAGE_WEIGHTS = {
+  weight: 0.72,
+  waist: 0.2,
+  measurements: 0.08,
+} as const;
+
+/**
+ * Hero State layer (posture / energy / confidence chrome).
+ * Does not select body silhouette art.
+ */
+export const HERO_STATE_WEIGHTS = {
+  abilities: 0.22,
+  steps: 0.18,
+  nutrition: 0.16,
+  lifestyle: 0.18,
+  momentum: 0.14,
+  campaign: 0.12,
+} as const;
+
+/** @deprecated Use BODY_STAGE_WEIGHTS + HERO_STATE_WEIGHTS */
 export const AVATAR_STAGE_WEIGHTS: Record<AvatarStageSignalId, number> = {
-  weight: 0.34,
-  waist: 0.16,
-  abilities: 0.16,
-  steps: 0.12,
-  nutrition: 0.1,
-  lifestyle: 0.07,
-  campaign: 0.05,
+  weight: BODY_STAGE_WEIGHTS.weight,
+  waist: BODY_STAGE_WEIGHTS.waist,
+  measurements: BODY_STAGE_WEIGHTS.measurements,
+  abilities: HERO_STATE_WEIGHTS.abilities,
+  steps: HERO_STATE_WEIGHTS.steps,
+  nutrition: HERO_STATE_WEIGHTS.nutrition,
+  lifestyle: HERO_STATE_WEIGHTS.lifestyle,
+  momentum: HERO_STATE_WEIGHTS.momentum,
+  campaign: HERO_STATE_WEIGHTS.campaign,
 };
 
-/** Soft reference for waist progress when start/min known (cm lost → 1.0). */
+/** Soft kg scale when target weight is missing (best confirmed loss). */
+const WEIGHT_SOFT_TARGET_KG = 40;
 const WAIST_SOFT_TARGET_CM = 20;
-
-/** Personal map size used to normalize unlocks; classic fallback uses 12. */
+const MEASUREMENTS_SOFT_TARGET_CM = 24;
 const CLASSIC_ABILITY_SOFT_MAX = 12;
 
-const SIGNAL_LABELS: Record<AvatarStageSignalId, string> = {
-  weight: 'Прогресс веса',
-  waist: 'Талия и обхваты',
-  abilities: 'Способности тела',
-  steps: 'Стабильность шагов',
-  nutrition: 'Контроль питания',
-  lifestyle: 'Алкоголь, сон и ресурс',
-  campaign: 'Вехи кампании',
+export const HERO_STATE_LABELS: Record<HeroStateLevel, string> = {
+  depleted: 'на исходе',
+  steady: 'ровный',
+  energized: 'собран',
+  strong: 'уверен',
+};
+
+const SIGNAL_META: Record<
+  AvatarStageSignalId,
+  { layer: AvatarStageLayer; label: string }
+> = {
+  weight: { layer: 'body', label: 'Лучший вес' },
+  waist: { layer: 'body', label: 'Талия' },
+  measurements: { layer: 'body', label: 'Другие замеры' },
+  abilities: { layer: 'hero', label: 'Способности тела' },
+  steps: { layer: 'hero', label: 'Стабильность шагов' },
+  nutrition: { layer: 'hero', label: 'Контроль питания' },
+  lifestyle: { layer: 'hero', label: 'Алкоголь, сон и ресурс' },
+  momentum: { layer: 'hero', label: 'Инерция' },
+  campaign: { layer: 'hero', label: 'Главы и сезоны' },
 };
 
 function ratio01(value: number): number {
@@ -87,6 +126,18 @@ function stageFromProgress(progressPercent: number): HeroStageNumber {
     Math.max(1, Math.floor(ratio * HERO_STAGE_COUNT) + 1),
   );
   return stage as HeroStageNumber;
+}
+
+export function getHeroStateFromProgress(heroStateProgress: number): HeroStateLevel {
+  const p = clamp(heroStateProgress, 0, 100);
+  if (p < 25) return 'depleted';
+  if (p < 50) return 'steady';
+  if (p < 75) return 'energized';
+  return 'strong';
+}
+
+export function getHeroStateLabel(heroState: HeroStateLevel): string {
+  return HERO_STATE_LABELS[heroState];
 }
 
 function countRecentDays(
@@ -111,23 +162,56 @@ function countRecentDays(
   return { hit, span };
 }
 
+/** Best confirmed weight progress — never latest spike / day noise. */
 function calcWeightRatio(params: {
   measurements: MeasurementEntry[];
   targetWeight: number | null | undefined;
 }): number {
   const startWeight = getStartWeight(params.measurements);
   const bestWeight = getBestWeightForWeightLoss(params.measurements);
-  return getWeightLossProgressRatio({
+  const pathRatio = getWeightLossProgressRatio({
     startWeight,
     currentWeight: bestWeight,
     targetWeight: params.targetWeight,
   });
+  if (pathRatio > 0) return pathRatio;
+
+  if (
+    startWeight == null ||
+    bestWeight == null ||
+    bestWeight >= startWeight
+  ) {
+    return 0;
+  }
+  return ratio01((startWeight - bestWeight) / WEIGHT_SOFT_TARGET_KG);
 }
 
 function calcWaistRatio(measurements: MeasurementEntry[]): number {
   const lost = getWaistLossCm(measurements);
   if (lost <= 0) return 0;
   return ratio01(lost / WAIST_SOFT_TARGET_CM);
+}
+
+/** Soft best-loss across belly / hips / chest (not weight). */
+function calcOtherMeasurementsRatio(measurements: MeasurementEntry[]): number {
+  const fields: Array<'belly' | 'hips' | 'chest'> = ['belly', 'hips', 'chest'];
+  let totalLoss = 0;
+  let used = 0;
+  for (const field of fields) {
+    const series = sortMeasurementsByDate(measurements).filter(
+      (m) => m[field] !== null && (m[field] as number) > 0,
+    );
+    if (series.length < 2) continue;
+    const start = series[0]![field] as number;
+    const best = Math.min(...series.map((m) => m[field] as number));
+    const loss = Math.max(0, start - best);
+    if (loss > 0) {
+      totalLoss += loss;
+      used += 1;
+    }
+  }
+  if (used === 0) return 0;
+  return ratio01(totalLoss / MEASUREMENTS_SOFT_TARGET_CM);
 }
 
 function calcAbilitiesRatio(params: {
@@ -160,16 +244,14 @@ function calcStepsRatio(
     isStepsMinimumDone(e.steps, settings, e.date),
   );
   if (span === 0) {
-    // Lifetime soft signal when window empty but history exists.
     const lifetimeNormal = dailyEntries.filter((e) =>
       isStepsNormalDone(e.steps, settings, e.date),
     ).length;
     if (lifetimeNormal === 0) return 0;
     return ratio01(lifetimeNormal / 40);
   }
-  const normalRatio = normal / Math.min(windowDays, Math.max(span, 1));
-  const minRatio = minimum / Math.min(windowDays, Math.max(span, 1));
-  return ratio01(normalRatio * 0.7 + minRatio * 0.3);
+  const denom = Math.min(windowDays, Math.max(span, 1));
+  return ratio01((normal / denom) * 0.7 + (minimum / denom) * 0.3);
 }
 
 function calcNutritionRatio(
@@ -177,10 +259,7 @@ function calcNutritionRatio(
   settings: AppSettings,
   today: string,
 ): number {
-  if (!isNutritionTrackingEnabled(settings)) {
-    // Tracking off: do not punish legacy users — neutral soft zero.
-    return 0;
-  }
+  if (!isNutritionTrackingEnabled(settings)) return 0;
   const windowDays = 28;
   const { hit, span } = countRecentDays(dailyEntries, today, windowDays, (e) =>
     getNutritionQuestCompleted({ entry: e, settings }),
@@ -222,9 +301,21 @@ function calcLifestyleRatio(dailyEntries: DailyEntry[], today: string): number {
     return ratio01((lifeAlcohol / 40) * 0.55 + (lifeRest / 40) * 0.45);
   }
 
-  return ratio01(
-    (alcohol.hit / denom) * 0.55 + (sleepOrEnergy.hit / denom) * 0.45,
-  );
+  return ratio01((alcohol.hit / denom) * 0.55 + (sleepOrEnergy.hit / denom) * 0.45);
+}
+
+function calcMomentumRatio(params: {
+  dailyEntries: DailyEntry[];
+  settings: AppSettings;
+  today: string;
+}): number {
+  const summary = getMomentumSummary({
+    today: params.today,
+    dailyEntries: params.dailyEntries,
+    settings: params.settings,
+  });
+  // Map −100…100 → 0…1. Low momentum can dip Hero State without touching bodyStage.
+  return ratio01((summary.currentValue + 100) / 200);
 }
 
 function calcCampaignRatio(params: {
@@ -273,54 +364,79 @@ function calcCampaignRatio(params: {
   return ratio01((completedBefore + questRatio) / SEASON_COUNT);
 }
 
+function layerWeight(id: AvatarStageSignalId): number {
+  if (id in BODY_STAGE_WEIGHTS) {
+    return BODY_STAGE_WEIGHTS[id as keyof typeof BODY_STAGE_WEIGHTS];
+  }
+  return HERO_STATE_WEIGHTS[id as keyof typeof HERO_STATE_WEIGHTS];
+}
+
 function buildSignal(
   id: AvatarStageSignalId,
   ratio: number,
   detail: string,
 ): AvatarStageSignal {
-  const maxPoints = AVATAR_STAGE_WEIGHTS[id] * 100;
+  const meta = SIGNAL_META[id];
+  const weight = layerWeight(id);
   return {
     id,
+    layer: meta.layer,
     ratio: ratio01(ratio),
-    points: pointsFrom(ratio, AVATAR_STAGE_WEIGHTS[id]),
-    maxPoints: Math.round(maxPoints * 10) / 10,
-    label: SIGNAL_LABELS[id],
+    points: pointsFrom(ratio, weight),
+    maxPoints: Math.round(weight * 1000) / 10,
+    label: meta.label,
     detail,
   };
-}
-
-function buildDrivers(signals: AvatarStageSignal[]): AvatarStageDriver[] {
-  const ranked = [...signals]
-    .filter((s) => s.points > 0)
-    .sort((a, b) => b.points - a.points);
-
-  return ranked.slice(0, 4).map((s) => ({
-    id: s.id,
-    label: s.label,
-    detail: s.detail,
-    why: driverWhy(s),
-  }));
 }
 
 function driverWhy(signal: AvatarStageSignal): string {
   switch (signal.id) {
     case 'weight':
-      return 'Вес сдвинул визуальный путь — но стадия считает и другие опоры.';
+      return 'Лучший подтверждённый вес сдвигает силуэт тела.';
     case 'waist':
-      return 'Обхваты (талия) подтянули стадию даже без скачка веса.';
+      return 'Талия может чуть продвинуть стадию тела даже при стабильном весе.';
+    case 'measurements':
+      return 'Другие обхваты мягко поддерживают силуэт.';
     case 'abilities':
-      return 'Открытые способности тела усиливают образ героя.';
+      return 'Открытые способности усиливают собранность героя.';
     case 'steps':
-      return 'Стабильные шаги держат прогресс формы в движении.';
+      return 'Стабильные шаги держат осанку и энергию пути.';
     case 'nutrition':
-      return 'Контроль питания добавляет устойчивость стадии.';
+      return 'Контроль питания поддерживает состояние героя.';
     case 'lifestyle':
-      return 'Сон, ресурс и дни без алкоголя мягко двигают образ.';
+      return 'Сон, ресурс и дни без алкоголя меняют энергию стойки.';
+    case 'momentum':
+      return 'Инерция влияет на визуальную собранность (может временно просесть).';
     case 'campaign':
-      return 'Вехи сезонов кампании отражаются в стадии героя.';
+      return 'Главы и сезоны добавляют уверенность образа.';
     default:
       return signal.detail;
   }
+}
+
+function buildDrivers(
+  signals: AvatarStageSignal[],
+  limit = 4,
+): AvatarStageDriver[] {
+  return [...signals]
+    .filter((s) => s.points > 0)
+    .sort((a, b) => b.points - a.points)
+    .slice(0, limit)
+    .map((s) => ({
+      id: s.id,
+      layer: s.layer,
+      label: s.label,
+      detail: s.detail,
+      why: driverWhy(s),
+    }));
+}
+
+function sumPoints(signals: AvatarStageSignal[]): number {
+  return clamp(
+    Math.round(signals.reduce((sum, s) => sum + s.points, 0) * 10) / 10,
+    0,
+    100,
+  );
 }
 
 export function resolveAvatarStageSnapshot(params: {
@@ -337,6 +453,7 @@ export function resolveAvatarStageSnapshot(params: {
     targetWeight: profile.targetWeight,
   });
   const waistRatio = calcWaistRatio(params.measurements);
+  const measurementsRatio = calcOtherMeasurementsRatio(params.measurements);
   const abilitiesRatio = calcAbilitiesRatio(params);
   const stepsRatio = calcStepsRatio(params.dailyEntries, params.settings, today);
   const nutritionRatio = calcNutritionRatio(
@@ -345,33 +462,50 @@ export function resolveAvatarStageSnapshot(params: {
     today,
   );
   const lifestyleRatio = calcLifestyleRatio(params.dailyEntries, today);
+  const momentumRatio = calcMomentumRatio({
+    dailyEntries: params.dailyEntries,
+    settings: params.settings,
+    today,
+  });
   const campaignRatio = calcCampaignRatio({
     settings: params.settings,
     dailyEntries: params.dailyEntries,
     today,
   });
 
-  const signals: AvatarStageSignal[] = [
+  const waistCm = getWaistLossCm(params.measurements);
+
+  const bodySignals: AvatarStageSignal[] = [
     buildSignal(
       'weight',
       weightRatio,
       weightRatio > 0
-        ? `Путь веса: ${Math.round(weightRatio * 100)}% к цели`
-        : 'Вес ещё не задаёт путь (нет старта/цели или прогресса)',
+        ? `Лучший вес на пути: ${Math.round(weightRatio * 100)}% шкалы`
+        : 'Нет подтверждённого прогресса веса',
     ),
     buildSignal(
       'waist',
       waistRatio,
       waistRatio > 0
-        ? `Снято с талии: ~${Math.round(waistRatio * WAIST_SOFT_TARGET_CM)} см (мягкая шкала)`
-        : 'Обхваты пока без заметного сдвига',
+        ? `Талия: −${Math.round(waistCm)} см от старта (лучший)`
+        : 'Талия пока без заметного сдвига',
     ),
+    buildSignal(
+      'measurements',
+      measurementsRatio,
+      measurementsRatio > 0
+        ? `Обхваты (живот/бёдра/грудь): ${Math.round(measurementsRatio * 100)}%`
+        : 'Другие замеры пока без сдвига',
+    ),
+  ];
+
+  const heroSignals: AvatarStageSignal[] = [
     buildSignal(
       'abilities',
       abilitiesRatio,
       abilitiesRatio > 0
         ? `Открыто способностей: ${Math.round(abilitiesRatio * 100)}% карты`
-        : 'Способности тела ещё ждут первого открытия',
+        : 'Способности тела ещё ждут открытия',
     ),
     buildSignal(
       'steps',
@@ -397,6 +531,11 @@ export function resolveAvatarStageSnapshot(params: {
         : 'Сон, ресурс и алкоголь почти не отмечены',
     ),
     buildSignal(
+      'momentum',
+      momentumRatio,
+      `Инерция на шкале состояния: ${Math.round(momentumRatio * 100)}%`,
+    ),
+    buildSignal(
       'campaign',
       campaignRatio,
       campaignRatio > 0
@@ -405,47 +544,76 @@ export function resolveAvatarStageSnapshot(params: {
     ),
   ];
 
+  const bodyProgress = sumPoints(bodySignals);
+  const heroStateProgress = sumPoints(heroSignals);
+  const bodyStage = stageFromProgress(bodyProgress);
+  const heroState = getHeroStateFromProgress(heroStateProgress);
   const avatarProgress = clamp(
-    Math.round(signals.reduce((sum, s) => sum + s.points, 0) * 10) / 10,
+    Math.round(bodyProgress * 0.55 + heroStateProgress * 0.45),
     0,
     100,
   );
-  const stage = stageFromProgress(avatarProgress);
 
+  const startWeight = getStartWeight(params.measurements);
+  const bestWeight = getBestWeightForWeightLoss(params.measurements);
   const weightOnlyProgress = getWeightLossProgressPercent({
-    startWeight: getStartWeight(params.measurements),
-    currentWeight: getBestWeightForWeightLoss(params.measurements),
+    startWeight,
+    currentWeight: bestWeight,
     targetWeight: profile.targetWeight,
   });
   const weightOnlyStage = getHeroStageFromWeightLoss({
-    startWeight: getStartWeight(params.measurements),
-    currentWeight: getBestWeightForWeightLoss(params.measurements),
+    startWeight,
+    currentWeight: bestWeight,
     targetWeight: profile.targetWeight,
   });
 
+  const bodyDrivers = buildDrivers(bodySignals, 3);
+  const heroDrivers = buildDrivers(heroSignals, 4);
+  const signals = [...bodySignals, ...heroSignals];
+
   return {
+    bodyProgress,
+    heroStateProgress,
+    bodyStage,
+    heroState,
     avatarProgress,
-    stage,
-    chapter: getChapterFromStage(stage),
+    stage: bodyStage,
+    chapter: getChapterFromStage(bodyStage),
+    bodySignals,
+    heroSignals,
+    bodyDrivers,
+    heroDrivers,
     signals,
-    drivers: buildDrivers(signals),
+    drivers: [...bodyDrivers, ...heroDrivers].slice(0, 5),
     weightOnlyStage,
     weightOnlyProgress: Math.round(weightOnlyProgress * 10) / 10,
-    advancedBeyondWeight: stage > weightOnlyStage,
+    advancedBeyondWeight: bodyStage > weightOnlyStage,
     disclaimer: AVATAR_STAGE_DISCLAIMER,
   };
 }
 
 /** Safe empty snapshot for legacy / no-data users. */
 export function getDefaultAvatarStageSnapshot(): AvatarStageSnapshot {
-  const signals = (Object.keys(AVATAR_STAGE_WEIGHTS) as AvatarStageSignalId[]).map(
-    (id) => buildSignal(id, 0, 'Нет данных — безопасный старт'),
-  );
+  const bodySignals = (
+    Object.keys(BODY_STAGE_WEIGHTS) as Array<keyof typeof BODY_STAGE_WEIGHTS>
+  ).map((id) => buildSignal(id, 0, 'Нет данных — безопасный старт'));
+  const heroSignals = (
+    Object.keys(HERO_STATE_WEIGHTS) as Array<keyof typeof HERO_STATE_WEIGHTS>
+  ).map((id) => buildSignal(id, 0, 'Нет данных — безопасный старт'));
+
   return {
+    bodyProgress: 0,
+    heroStateProgress: 0,
+    bodyStage: 1,
+    heroState: 'depleted',
     avatarProgress: 0,
     stage: 1,
     chapter: 1,
-    signals,
+    bodySignals,
+    heroSignals,
+    bodyDrivers: [],
+    heroDrivers: [],
+    signals: [...bodySignals, ...heroSignals],
     drivers: [],
     weightOnlyStage: 1,
     weightOnlyProgress: 0,
@@ -454,6 +622,11 @@ export function getDefaultAvatarStageSnapshot(): AvatarStageSnapshot {
   };
 }
 
-export function getAvatarStageFromProgress(avatarProgress: number): HeroStageNumber {
-  return stageFromProgress(avatarProgress);
+export function getAvatarStageFromProgress(progress: number): HeroStageNumber {
+  return stageFromProgress(progress);
+}
+
+/** Body silhouette stage from bodyProgress only. */
+export function getBodyStageFromProgress(bodyProgress: number): HeroStageNumber {
+  return stageFromProgress(bodyProgress);
 }

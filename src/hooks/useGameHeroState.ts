@@ -12,7 +12,10 @@ import {
   getNextStageProgress,
   getStartWeight,
 } from '../game/heroProgressEngine';
-import { resolveAvatarStageSnapshot } from '../game/avatar/avatarStageEngine';
+import {
+  getHeroStateLabel,
+  resolveAvatarStageSnapshot,
+} from '../game/avatar/avatarStageEngine';
 import { GAME_ASSET_REGISTRY } from '../game/assetRegistry';
 
 export function useGameHeroState() {
@@ -30,8 +33,8 @@ export function useGameHeroState() {
     const startWeight = getStartWeight(measurements);
     const bestWeight = getBestWeightForWeightLoss(measurements);
     const stageProgress = getNextStageProgress({
-      progressPercent: avatar.avatarProgress,
-      currentStage: avatar.stage,
+      progressPercent: avatar.bodyProgress,
+      currentStage: avatar.bodyStage,
     });
     const bossId = getChapterBossId(avatar.chapter);
     const bossStatus = getBossChapterStatus({
@@ -48,7 +51,7 @@ export function useGameHeroState() {
           artifactId,
           dailyEntries,
           measurements,
-          currentStage: avatar.stage,
+          currentStage: avatar.bodyStage,
           momentumValue: momentumSummary.currentValue,
         });
         return acc;
@@ -60,10 +63,16 @@ export function useGameHeroState() {
       profile,
       startWeight,
       bestWeight,
-      /** Composite avatar progress 0–100 (Avatar Stages v1). */
-      progressPercent: avatar.avatarProgress,
+      /** Body silhouette progress — drives art stage. */
+      progressPercent: avatar.bodyProgress,
+      bodyProgress: avatar.bodyProgress,
+      heroStateProgress: avatar.heroStateProgress,
       avatarProgress: avatar.avatarProgress,
-      stage: avatar.stage,
+      /** Body stage 1–20 (asset key). */
+      stage: avatar.bodyStage,
+      bodyStage: avatar.bodyStage,
+      heroState: avatar.heroState,
+      heroStateLabel: getHeroStateLabel(avatar.heroState),
       chapter: avatar.chapter,
       avatarSnapshot: avatar,
       stageProgress,
@@ -72,10 +81,10 @@ export function useGameHeroState() {
       dailyMobId,
       artifactStatuses,
       hasWeightPath: startWeight !== null && profile.targetWeight !== null,
-      /** True when path is ready via weight target OR other avatar signals. */
       hasAvatarPath:
         (startWeight !== null && profile.targetWeight !== null) ||
-        avatar.avatarProgress > 0,
+        avatar.bodyProgress > 0 ||
+        avatar.heroStateProgress > 0,
     };
   }, [measurements, settings, dailyEntries, today]);
 }

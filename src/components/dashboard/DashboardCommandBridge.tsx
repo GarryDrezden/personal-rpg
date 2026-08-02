@@ -173,13 +173,19 @@ export function DashboardCommandBridge({
 
         <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-[var(--app-text-muted)]">
           <span data-testid="dashboard-avatar-stage">
-            Стадия {game.stage}/20 · {Math.round(game.avatarProgress)}%
+            Стадия тела: {game.bodyStage} из 20
+          </span>
+          <span className="text-[var(--app-border)]" aria-hidden>
+            ·
+          </span>
+          <span data-testid="dashboard-hero-state" className="font-semibold text-[var(--app-primary)]">
+            Состояние героя: {game.heroStateLabel}
           </span>
           <Link
             to="/freedom"
             className="font-medium text-[var(--app-primary)] hover:underline"
           >
-            Почему сдвинулась →
+            Почему изменилось →
           </Link>
         </div>
 
@@ -194,9 +200,9 @@ export function DashboardCommandBridge({
               currentStage={game.stage}
               progressPercent={game.progressPercent}
             />
-            {game.stage < 20 ? (
+            {game.bodyStage < 20 ? (
               <p className="mt-1 text-[11px] text-[var(--app-text-muted)]">
-                До следующей стадии:{' '}
+                До следующей стадии тела:{' '}
                 <span className="font-semibold tabular-nums text-[var(--app-primary)]">
                   {nextStagePercent}%
                 </span>
