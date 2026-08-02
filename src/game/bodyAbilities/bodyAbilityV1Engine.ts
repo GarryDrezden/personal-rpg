@@ -27,6 +27,7 @@ export function normalizeBodyAbilityState(
     unlockedAbilityIds: state?.unlockedAbilityIds ?? [],
     abilityUnlocks: state?.abilityUnlocks ?? [],
     dismissedAbilityHintIds: state?.dismissedAbilityHintIds ?? [],
+    personal: state?.personal,
   };
 }
 

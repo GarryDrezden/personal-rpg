@@ -1,10 +1,12 @@
 import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { useAppTheme } from '../hooks/useAppTheme';
 import { BODY_ABILITY_BRANCHES } from '../constants/bodyAbilities';
 import { BodyAbilityBranchCard } from '../components/bodyAbilities/BodyAbilityBranchCard';
 import { BodyAbilityCard } from '../components/bodyAbilities/BodyAbilityCard';
 import { BodyAbilitySkillBoard } from '../components/bodyAbilities/BodyAbilitySkillBoard';
+import { BodyAbilityPersonalGrid } from '../components/bodyAbilities/BodyAbilityPersonalGrid';
 import {
   getAllBodyAbilityProgress,
   getBodyAbilityBranchSummaries,
@@ -57,6 +59,16 @@ export function BodyAbilitiesPage({ embedded = false }: { embedded?: boolean }) 
 
   return (
     <div className="space-y-10 pb-4" data-testid="growth-abilities-page">
+      <BodyAbilityPersonalGrid embedded={embedded} />
+
+      <p className="text-sm text-[var(--app-text-muted)]">
+        Полная страница карты:{' '}
+        <Link to="/freedom" className="font-medium text-[var(--app-primary)] hover:underline">
+          Свобода тела
+        </Link>
+        . Ниже — дополнительные слои наблюдений и прогресса по данным.
+      </p>
+
       <BodyAbilitySkillBoard embedded={embedded} showPageHero={!embedded} />
 
       {plateauSnapshot.mode !== 'none' && unlockedLegacyCount > 0 ? (

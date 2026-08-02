@@ -6,6 +6,7 @@ import { FreedomScoreCard } from '../components/freedom/FreedomScoreCard';
 import { RemovedLoadCard } from '../components/freedom/RemovedLoadCard';
 import { PlateauCard } from '../components/freedom/PlateauCard';
 import { WeeklyStoryHistory } from '../components/weekly/WeeklyStoryHistory';
+import { BodyAbilityPersonalGrid } from '../components/bodyAbilities/BodyAbilityPersonalGrid';
 import {
   calculateFreedomScore,
   hasFreedomScoreData,
@@ -40,14 +41,16 @@ export function FreedomPage() {
   );
 
   return (
-    <div className="space-y-8 pb-4">
+    <div className="space-y-8 pb-4" data-testid="freedom-page">
       <header>
         <h1 className="text-2xl font-bold text-[var(--app-text)]">Свобода тела</h1>
         <p className="mt-2 max-w-2xl text-sm text-[var(--app-text-muted)]">
-          Свобода тела — это игровой индекс. Он не заменяет вес и не является медицинской оценкой.
-          Он показывает, как разные части системы возвращают движение, контроль и устойчивость.
+          Вес может стоять, но тело всё равно может возвращать возможности. Ниже — персональная
+          карта способностей и игровой индекс свободы.
         </p>
       </header>
+
+      <BodyAbilityPersonalGrid />
 
       <FreedomScoreCard result={freedomScore} hasData={hasData} />
       {hasData ? (

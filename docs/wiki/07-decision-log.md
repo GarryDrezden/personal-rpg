@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-08-02 — Body Abilities personalized grid (not fixed for all)
+
+**Context:**  
+A universal list («tie shoes», «stand from floor», «long routes») is meaningful for large weight-loss goals and insulting/irrelevant for −10 kg or already-mobile users.
+
+**Decision:**  
+Ship a bank of 80+ core abilities + Ability Profile Setup. Selection engine picks 20–30 per user using goalBand, pathTypes, interests, baselineEasy exclusions and hiddenTopics. Themes only change presentation. Subjective mobility changes use suggested_confirmation/manual — never silent auto-unlock.
+
+**Consequence:**  
+`/freedom` becomes the personal map; old `bodyAbilityState` unlocks remain; new data lives in `bodyAbilityState.personal` without DB migration.
+
 ## 2026-08-02 — Cozy Content Pack v1 (presentation branch, shared IDs)
 
 **Context:**  

@@ -56,6 +56,8 @@ export type BodyAbilityState = {
   unlockedAbilityIds: string[];
   abilityUnlocks?: BodyAbilityUnlockRecord[];
   dismissedAbilityHintIds?: string[];
+  /** Personalized Body Abilities grid (v1 profile + selected bank slice). */
+  personal?: import('./bodyAbilityPersonal').BodyAbilitiesPersonalState;
 };
 
 export type BodyAbilityV1Item = {

@@ -8,7 +8,7 @@ import { getThemeTerm } from '../../constants/themeTerms';
 import { shouldShowPlateauDashboardSummary } from '../../utils/campaignIntegration';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import { SeasonDashboardSummary } from '../season/SeasonDashboardSummary';
-import { BodyAbilityDashboardSummary } from '../bodyAbilities/BodyAbilityDashboardSummary';
+import { BodyAbilityPersonalDashboardCard } from '../bodyAbilities/BodyAbilityPersonalDashboardCard';
 import { PlateauDashboardSummary } from '../plateau/PlateauDashboardSummary';
 import { BaseDashboardSummary } from '../base/BaseDashboardSummary';
 
@@ -23,7 +23,7 @@ type CampaignProgressDashboardSectionProps = {
 
 export function CampaignProgressDashboardSection({
   season,
-  bodyAbilitySummary,
+  bodyAbilitySummary: _bodyAbilitySummary,
   plateauSnapshot,
   baseSnapshot,
   bossSnapshot,
@@ -42,8 +42,8 @@ export function CampaignProgressDashboardSection({
           <Link to="/seasons" className="font-medium text-[var(--app-primary)] hover:underline">
             {getThemeTerm(themeId, 'chronicle')}
           </Link>
-          <Link to="/growth/abilities" className="font-medium text-[var(--app-primary)] hover:underline">
-            Способности
+          <Link to="/freedom" className="font-medium text-[var(--app-primary)] hover:underline">
+            Свобода тела
           </Link>
           <Link to="/growth/camp" className="font-medium text-[var(--app-primary)] hover:underline">
             {isCozy ? 'Укрытие' : 'Лагерь'}
@@ -56,7 +56,7 @@ export function CampaignProgressDashboardSection({
       <div className="grid gap-2 sm:grid-cols-2">
         <SeasonDashboardSummary season={season} compact boss={bossSnapshot} />
         <BaseDashboardSummary snapshot={baseSnapshot} compact />
-        <BodyAbilityDashboardSummary summary={bodyAbilitySummary} compact />
+        <BodyAbilityPersonalDashboardCard />
         {showPlateau ? (
           <PlateauDashboardSummary
             snapshot={plateauSnapshot}

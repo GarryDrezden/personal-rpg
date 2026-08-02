@@ -90,17 +90,19 @@
 
 ---
 
-## 5. Body Abilities v1 ✅
+## 5. Body Abilities v1 ✅ → Personalized Content Pack
 
-- [x] Ability categories (mobility, endurance, dailyLife, confidence, clothing, recovery)
-- [x] Manual unlock: «Я заметил улучшение»
-- [x] Automatic soft hints from existing data
-- [x] Storage in `settings.bodyAbilityState` (no DB migration)
-- [x] Dashboard + Today hint + Growth/Freedom integration
+- [x] Ability Profile (goalBand, pathTypes, interests, baselineEasy, hiddenTopics)
+- [x] Ability bank 80+ with metadata + selection engine (20–30 per user)
+- [x] Unlock modes: auto / suggested_confirmation / manual
+- [x] Theme-aware presentation (shared core IDs)
+- [x] Setup wizard on `/freedom` + Growth abilities
+- [x] Dashboard compact card + soft Today hint
+- [x] Legacy observation board kept as secondary layer
 - [ ] Deeper Freedom Score integration (v2)
 - [ ] Ability art/icons (later)
 
-**Критерий готовности v1:** пользователь отмечает наблюдения в жизни; hints не звучат как диагноз; прогресс сохраняется remote/local.
+**Критерий готовности:** персональная сетка, не универсальный список «что станет легче тяжёлому человеку»; старые saves не ломаются.
 
 ---
 

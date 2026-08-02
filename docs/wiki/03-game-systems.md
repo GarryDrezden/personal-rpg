@@ -1082,6 +1082,34 @@ It should reframe stagnation as a defensive phase — «персонаж не с
 
 ---
 
+## Body Abilities — Personalized v1
+
+Body Abilities are personalized.
+The app selects relevant abilities from a larger bank based on:
+- desired weight loss amount;
+- path type;
+- interests;
+- baseline abilities already easy;
+- hidden topics.
+
+Core abilities are shared across themes.
+Presentation is theme-aware.
+
+**Not a fixed list for everyone.** A user aiming for −8 kg and a user aiming for −90 kg get different grids. Baseline «already easy» answers exclude irrelevant early mobility abilities. Hidden topics remove alcohol/appearance/etc. from the map.
+
+**Code:**
+- Types: `src/types/bodyAbilityPersonal.ts`
+- Bank: `src/constants/bodyAbilityBank.ts` (80+)
+- Selection: `src/utils/bodyAbilitySelectionEngine.ts`
+- State/unlock: `src/utils/bodyAbilityPersonalEngine.ts` → `settings.bodyAbilityState.personal`
+- Theme: `src/game/bodyAbilityThemePresentation.ts` → `getThemedBodyAbilityPresentation`
+- UI: `/freedom` (`BodyAbilityPersonalGrid` + setup), Growth abilities, Dashboard card, Today soft hint
+
+**Statuses:** `locked` | `suggested` | `unlocked` | `hidden`  
+**Unlock modes:** `auto` (data thresholds) · `suggested_confirmation` (user confirms) · `manual` («Я заметил»)
+
+Legacy fixed observation abilities remain as a secondary layer under Growth; the personal grid is the primary «Свобода тела» experience.
+
 ## Body Abilities Long-Term System
 
 **Status:** Body Abilities v1 implemented.

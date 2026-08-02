@@ -11,6 +11,8 @@ import { getSeasonSnapshotWithRecap } from '../game/seasons/seasonEngine';
 import { SeasonTodayCard } from '../components/season/SeasonTodayCard';
 import { getTopBodyAbilityV1Hint } from '../game/bodyAbilities/bodyAbilityV1Engine';
 import { BodyAbilityTodayHint } from '../components/bodyAbilities/BodyAbilityTodayHint';
+import { BodyAbilityPersonalTodayHint } from '../components/bodyAbilities/BodyAbilityPersonalTodayHint';
+import { getTopPersonalSuggestedAbility } from '../utils/bodyAbilityPersonalEngine';
 import {
   dismissPlateauSoftHint,
   getPlateauSnapshot,
@@ -411,6 +413,13 @@ export function TodayPage() {
         : null,
     [isEditingToday, settings, dailyEntries, measurements],
   );
+  const personalAbilityHint = useMemo(
+    () =>
+      isEditingToday && (dirty || saveReaction)
+        ? getTopPersonalSuggestedAbility(settings)
+        : null,
+    [isEditingToday, dirty, saveReaction, settings],
+  );
   const plateauSnapshot = useMemo(
     () =>
       getPlateauSnapshot({
@@ -691,7 +700,9 @@ export function TodayPage() {
 
       {isEditingToday ? <SeasonTodayCard season={seasonSnapshot} boss={bossSnapshot} /> : null}
 
-      {bodyAbilityHint && shouldShowBodyAbilityHintOnToday(plateauSnapshot.mode) ? (
+      {personalAbilityHint && shouldShowBodyAbilityHintOnToday(plateauSnapshot.mode) ? (
+        <BodyAbilityPersonalTodayHint ability={personalAbilityHint} />
+      ) : bodyAbilityHint && shouldShowBodyAbilityHintOnToday(plateauSnapshot.mode) ? (
         <BodyAbilityTodayHint hint={bodyAbilityHint} />
       ) : null}
 

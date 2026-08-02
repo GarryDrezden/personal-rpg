@@ -233,6 +233,15 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Empty states должны поддерживать, а не обвинять.
 - Даже минимальный день может дать маленький уютный прогресс.
 
+## Body Abilities UX Rules
+
+- Never show the same fixed mobility list to every user.
+- Setup tone: «карта твоя, не универсальная» — no shame language.
+- Subjective changes (shoes, floor, stairs feel) need user confirmation or manual mark — not silent auto-unlock.
+- Auto unlocks only for clear data thresholds (weight/waist/streaks).
+- Theme changes flavor/title/icon only; core ability IDs stay shared.
+- Empty state on `/freedom`: invite to configure the map, not a medical checklist.
+
 ## Cozy Content Rules
 
 - Do not copy Dark Fantasy content and only rename it.
