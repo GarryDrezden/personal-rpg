@@ -68,7 +68,8 @@ export type BodyAbilitySelectionExplanation = {
   };
 };
 
-function isHiddenByTopics(
+/** True when ability must leave the active grid due to hiddenTopics. */
+export function isBodyAbilityHiddenByTopics(
   ability: BodyAbilityDefinition,
   hidden: BodyAbilityProfile['hiddenTopics'],
 ): boolean {
@@ -77,6 +78,13 @@ function isHiddenByTopics(
   if (byCategory && hidden.includes(byCategory)) return true;
   if (ability.tags.includes('weight') && hidden.includes('weight')) return true;
   return false;
+}
+
+function isHiddenByTopics(
+  ability: BodyAbilityDefinition,
+  hidden: BodyAbilityProfile['hiddenTopics'],
+): boolean {
+  return isBodyAbilityHiddenByTopics(ability, hidden);
 }
 
 function isExcludedByBaseline(

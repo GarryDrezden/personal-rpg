@@ -245,6 +245,9 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Preview copy may say: we will not show what already feels normal for the user.
 - «Пересобрать карту» needs a confirm: unlocked stay; the rest rebuilds. No random shuffle.
 - Ability copy: respectful, no assumed disability, no medical promises. Distinguish body/functional change from route milestones in tone when helpful.
+- Existing users get a soft upgrade banner / Settings entry — never a forced onboarding wall. Cancel must leave the map unchanged.
+- Setup modes: `initial` | `edit` | `regenerate`; rebuild copy warns that unlocked achievements are kept.
+- `/freedom` personal map: feel like a capability map, not an achievement checklist. Unconfigured → primary CTA «Настроить карту тела». Configured → clear summary (goal / path / interests / opened). Cards: suggested soft highlight, unlocked as reward, archived calm. Filters: Все / Можно подтвердить / Открыто / Долгий путь. Cozy = light/home/warmth; Dark Fantasy = seals/artifacts/path. Keep card copy short; mobile = 1 column.
 
 ## Cozy Content Rules
 

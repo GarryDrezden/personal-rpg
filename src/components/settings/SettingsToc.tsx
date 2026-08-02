@@ -1,6 +1,7 @@
 const SECTIONS = [
   { id: 'settings-theme', label: 'Внешний вид' },
   { id: 'settings-pwa', label: 'Приложение' },
+  { id: 'settings-body-map', label: 'Карта тела' },
   { id: 'settings-weight', label: 'Персонаж' },
   { id: 'settings-game-hero', label: 'Герой RPG' },
   { id: 'settings-avatar', label: 'Аватар' },

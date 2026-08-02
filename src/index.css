@@ -168,3 +168,171 @@ body {
 .body-ability-glyph-fallback {
   box-shadow: inset 0 0 24px rgba(139, 92, 246, 0.08);
 }
+
+/* ——— Personal Body Ability map (/freedom) ——— */
+.body-map-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.15rem;
+  padding: 1.15rem 1.2rem;
+}
+
+[data-theme='darkFantasy'] .body-map-hero {
+  border: 1px solid rgba(212, 165, 55, 0.22);
+  background:
+    radial-gradient(ellipse at 10% 0%, rgba(139, 92, 246, 0.16), transparent 45%),
+    linear-gradient(145deg, rgba(20, 16, 31, 0.96), rgba(10, 8, 18, 0.98));
+}
+
+[data-theme='cozy'] .body-map-hero {
+  border: 1px solid var(--app-border);
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(232, 197, 71, 0.2), transparent 42%),
+    radial-gradient(ellipse at 100% 80%, rgba(95, 122, 90, 0.12), transparent 45%),
+    linear-gradient(150deg, #fffaf2, #f3eadc 55%, #e9efe5);
+  box-shadow: var(--app-shadow);
+}
+
+.body-map-stat {
+  border-radius: 0.85rem;
+  padding: 0.7rem 0.8rem;
+}
+
+[data-theme='darkFantasy'] .body-map-stat {
+  border: 1px solid rgba(139, 92, 246, 0.16);
+  background: rgba(14, 12, 20, 0.55);
+}
+
+[data-theme='cozy'] .body-map-stat {
+  border: 1px solid var(--app-border);
+  background: color-mix(in srgb, var(--app-card-strong) 88%, var(--app-garden) 12%);
+}
+
+.body-map-filters {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.15rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.body-map-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.body-map-filter {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  border: 1px solid var(--app-border);
+  background: var(--app-card);
+  padding: 0.45rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--app-text-muted);
+  white-space: nowrap;
+}
+
+.body-map-filter--active {
+  border-color: color-mix(in srgb, var(--app-primary) 55%, var(--app-border));
+  background: color-mix(in srgb, var(--app-primary-soft) 70%, var(--app-card));
+  color: var(--app-text);
+}
+
+.body-map-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+}
+
+@media (min-width: 640px) {
+  .body-map-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.body-map-card {
+  position: relative;
+  border-radius: 1rem;
+  padding: 0.95rem 1rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.body-map-card--locked {
+  border: 1px solid var(--app-border);
+  background: color-mix(in srgb, var(--app-bg-soft) 80%, transparent);
+  opacity: 0.88;
+}
+
+.body-map-card--suggested {
+  border: 1px solid color-mix(in srgb, var(--app-gold) 45%, var(--app-border));
+  background: color-mix(in srgb, var(--app-primary-soft) 35%, var(--app-card));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--app-gold) 12%, transparent);
+}
+
+.body-map-card--unlocked {
+  border: 1px solid color-mix(in srgb, var(--app-gold) 55%, transparent);
+  background:
+    radial-gradient(ellipse at 20% 0%, color-mix(in srgb, var(--app-gold) 18%, transparent), transparent 55%),
+    var(--app-card);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--app-gold) 14%, transparent);
+}
+
+[data-theme='cozy'] .body-map-card--unlocked {
+  border-color: color-mix(in srgb, var(--app-garden) 45%, var(--app-border));
+  background:
+    radial-gradient(ellipse at 15% 0%, rgba(232, 197, 71, 0.22), transparent 50%),
+    var(--app-card);
+}
+
+.body-map-card__badge {
+  flex-shrink: 0;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.body-map-card--locked .body-map-card__badge {
+  background: var(--app-card-strong);
+  color: var(--app-text-muted);
+}
+
+.body-map-card--suggested .body-map-card__badge {
+  background: color-mix(in srgb, var(--app-gold) 22%, var(--app-card));
+  color: var(--app-text);
+}
+
+.body-map-card--unlocked .body-map-card__badge {
+  background: color-mix(in srgb, var(--app-gold) 28%, var(--app-card));
+  color: var(--app-text);
+}
+
+.body-map-archived {
+  border-radius: 1rem;
+  border: 1px dashed var(--app-border);
+  background: color-mix(in srgb, var(--app-bg-soft) 70%, transparent);
+  padding: 0.9rem 1rem;
+}
+
+.body-map-empty-cta {
+  border-radius: 1.15rem;
+  padding: 1.35rem 1.25rem;
+}
+
+[data-theme='darkFantasy'] .body-map-empty-cta {
+  border: 1px solid rgba(212, 165, 55, 0.28);
+  background:
+    radial-gradient(ellipse at 30% 0%, rgba(139, 92, 246, 0.18), transparent 50%),
+    linear-gradient(160deg, rgba(22, 18, 34, 0.98), rgba(10, 8, 18, 0.98));
+}
+
+[data-theme='cozy'] .body-map-empty-cta {
+  border: 1px solid var(--app-border);
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(232, 197, 71, 0.24), transparent 45%),
+    linear-gradient(160deg, #fff8ef, #efe6d6);
+  box-shadow: var(--app-shadow);
+}

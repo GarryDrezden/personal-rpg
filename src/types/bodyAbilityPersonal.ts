@@ -133,6 +133,8 @@ export interface UserBodyAbility {
   confirmedByUser?: boolean;
 }
 
+export type BodyAbilityProfileSetupMode = 'initial' | 'edit' | 'regenerate';
+
 export interface BodyAbilitiesPersonalState {
   profile?: BodyAbilityProfile | null;
   selectedAbilityIds: string[];
@@ -141,8 +143,15 @@ export interface BodyAbilitiesPersonalState {
   lastReviewedAt?: string | null;
   /** Bank version used when the grid was generated. */
   abilityBankVersion?: string | null;
-  /** Unlocked ability IDs kept after regenerate even if not re-selected. */
+  /** Alias of abilityBankVersion for upgrade checks / UI. */
+  generatedFromVersion?: string | null;
+  /** Unlocked ability IDs kept on the active grid after regenerate. */
   retainedUnlockedIds?: string[];
+  /**
+   * Unlocked IDs removed from the active grid (e.g. hiddenTopics)
+   * but kept in history — never deleted.
+   */
+  archivedUnlockedIds?: string[];
 }
 
 export type BodyAbilityPersonalItem = {

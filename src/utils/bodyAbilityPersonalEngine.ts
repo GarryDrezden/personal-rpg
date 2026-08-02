@@ -16,6 +16,7 @@ import {
 } from '../constants/bodyAbilityBank';
 import {
   explainBodyAbilitySelection,
+  isBodyAbilityHiddenByTopics,
   selectPersonalBodyAbilities,
 } from './bodyAbilitySelectionEngine';
 import {
@@ -37,7 +38,9 @@ export function emptyPersonalState(): BodyAbilitiesPersonalState {
     generatedAt: null,
     lastReviewedAt: null,
     abilityBankVersion: null,
+    generatedFromVersion: null,
     retainedUnlockedIds: [],
+    archivedUnlockedIds: [],
   };
 }
 
@@ -46,14 +49,17 @@ export function getPersonalBodyAbilitiesState(
 ): BodyAbilitiesPersonalState {
   const raw = settings.bodyAbilityState?.personal;
   if (!raw) return emptyPersonalState();
+  const abilityBankVersion = raw.abilityBankVersion ?? raw.generatedFromVersion ?? null;
   return {
     profile: raw.profile ?? null,
     selectedAbilityIds: raw.selectedAbilityIds ?? [],
     abilities: raw.abilities ?? {},
     generatedAt: raw.generatedAt ?? null,
     lastReviewedAt: raw.lastReviewedAt ?? null,
-    abilityBankVersion: raw.abilityBankVersion ?? null,
+    abilityBankVersion,
+    generatedFromVersion: raw.generatedFromVersion ?? abilityBankVersion,
     retainedUnlockedIds: raw.retainedUnlockedIds ?? [],
+    archivedUnlockedIds: raw.archivedUnlockedIds ?? [],
   };
 }
 
@@ -65,7 +71,32 @@ export function previewBodyAbilitySelection(profile: BodyAbilityProfile) {
 
 export function isBodyAbilityProfileConfigured(settings: AppSettings): boolean {
   const personal = getPersonalBodyAbilitiesState(settings);
-  return Boolean(personal.profile?.configuredAt && personal.selectedAbilityIds.length > 0);
+  return Boolean(
+    personal.profile?.configuredAt &&
+      personal.profile.goalKg != null &&
+      personal.selectedAbilityIds.length > 0,
+  );
+}
+
+/**
+ * Soft upgrade signal for legacy / outdated personal maps.
+ * Never forces onboarding — UI may show an optional banner/CTA.
+ */
+export function needsBodyAbilityMapUpgrade(settings: AppSettings): boolean {
+  const personal = getPersonalBodyAbilitiesState(settings);
+  const profile = personal.profile;
+  if (!profile?.configuredAt) return true;
+  if (profile.goalKg == null || !Number.isFinite(profile.goalKg)) return true;
+  if (!personal.selectedAbilityIds.length) return true;
+  const version = personal.generatedFromVersion ?? personal.abilityBankVersion;
+  if (!version) return true;
+  if (version !== BODY_ABILITY_BANK_VERSION) return true;
+  return false;
+}
+
+export function hasLegacyBodyAbilityUnlocks(settings: AppSettings): boolean {
+  const v1 = settings.bodyAbilityState?.unlockedAbilityIds ?? [];
+  return v1.length > 0 && !isBodyAbilityProfileConfigured(settings);
 }
 
 function withPersonal(
@@ -94,29 +125,58 @@ export function applyBodyAbilityProfile(
   const previouslyUnlocked = Object.values(previous.abilities).filter(
     (a) => a.status === 'unlocked',
   );
-  const retainedUnlockedIds = preserveUnlocked
-    ? previouslyUnlocked.map((a) => a.abilityId)
-    : [];
+  const previousArchived = previous.archivedUnlockedIds ?? [];
 
   const selectedIds = new Set(selected.map((a) => a.id));
-  for (const id of retainedUnlockedIds) selectedIds.add(id);
+  const retainedUnlockedIds: string[] = [];
+  const archivedUnlockedIds = new Set<string>(
+    preserveUnlocked ? previousArchived : [],
+  );
+
+  if (preserveUnlocked) {
+    for (const unlocked of previouslyUnlocked) {
+      const def = getBodyAbilityDefinition(unlocked.abilityId);
+      if (!def) {
+        archivedUnlockedIds.add(unlocked.abilityId);
+        continue;
+      }
+      if (isBodyAbilityHiddenByTopics(def, profile.hiddenTopics)) {
+        archivedUnlockedIds.add(unlocked.abilityId);
+        continue;
+      }
+      retainedUnlockedIds.push(unlocked.abilityId);
+      selectedIds.add(unlocked.abilityId);
+    }
+    // Previously archived stay archived unless re-selected and not hidden.
+    for (const id of previousArchived) {
+      const def = getBodyAbilityDefinition(id);
+      if (!def) continue;
+      if (selectedIds.has(id) && !isBodyAbilityHiddenByTopics(def, profile.hiddenTopics)) {
+        archivedUnlockedIds.delete(id);
+        if (!retainedUnlockedIds.includes(id)) retainedUnlockedIds.push(id);
+      }
+    }
+  }
 
   const abilities: Record<string, UserBodyAbility> = {};
 
-  for (const id of selectedIds) {
+  const materialize = (id: string, forceUnlocked: boolean) => {
     const def = getBodyAbilityDefinition(id);
-    if (!def) continue;
+    if (!def && !forceUnlocked) return;
     const prev = previous.abilities[id];
-    const wasUnlocked = prev?.status === 'unlocked';
+    const wasUnlocked = prev?.status === 'unlocked' || forceUnlocked;
     abilities[id] = {
       abilityId: id,
       status: wasUnlocked ? 'unlocked' : 'locked',
       selectedAt: prev?.selectedAt ?? now,
-      suggestedAt: wasUnlocked ? null : null,
+      suggestedAt: wasUnlocked ? null : prev?.suggestedAt ?? null,
       unlockedAt: wasUnlocked ? prev?.unlockedAt ?? now : null,
       confirmedByUser: prev?.confirmedByUser,
     };
-  }
+  };
+
+  for (const id of selectedIds) materialize(id, false);
+  for (const id of archivedUnlockedIds) materialize(id, true);
 
   const personal: BodyAbilitiesPersonalState = {
     profile: { ...profile, configuredAt: profile.configuredAt ?? now },
@@ -125,7 +185,11 @@ export function applyBodyAbilityProfile(
     generatedAt: now,
     lastReviewedAt: now,
     abilityBankVersion: BODY_ABILITY_BANK_VERSION,
-    retainedUnlockedIds,
+    generatedFromVersion: BODY_ABILITY_BANK_VERSION,
+    retainedUnlockedIds: [...new Set(retainedUnlockedIds)].sort((a, b) =>
+      a.localeCompare(b),
+    ),
+    archivedUnlockedIds: [...archivedUnlockedIds].sort((a, b) => a.localeCompare(b)),
   };
 
   return withPersonal(settings, personal);
@@ -147,6 +211,23 @@ export function getPersonalAbilityItems(
 ): BodyAbilityPersonalItem[] {
   const personal = getPersonalBodyAbilitiesState(settings);
   return personal.selectedAbilityIds
+    .map((id) => {
+      const definition = getBodyAbilityDefinition(id);
+      const user = personal.abilities[id];
+      if (!definition || !user) return null;
+      return { definition, user };
+    })
+    .filter((x): x is BodyAbilityPersonalItem => x != null);
+}
+
+/** Unlocked abilities kept in history but excluded from the active grid. */
+export function getArchivedUnlockedAbilityItems(
+  settings: AppSettings,
+): BodyAbilityPersonalItem[] {
+  const personal = getPersonalBodyAbilitiesState(settings);
+  const active = new Set(personal.selectedAbilityIds);
+  return (personal.archivedUnlockedIds ?? [])
+    .filter((id) => !active.has(id))
     .map((id) => {
       const definition = getBodyAbilityDefinition(id);
       const user = personal.abilities[id];

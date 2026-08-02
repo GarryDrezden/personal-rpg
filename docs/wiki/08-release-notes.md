@@ -8,6 +8,8 @@
 
 ### Added
 
+- **Freedom Body Map UX polish:** personal map hero summary, status-distinct cards (locked / suggested / unlocked / archived), filter tabs (Все / Можно подтвердить / Открыто / Долгий путь), Cozy vs Dark Fantasy copy, mobile-friendly grid.
+- Added Body Ability Profile setup entry points for existing users through Settings and Freedom page (optional soft upgrade, no forced onboarding; unlocked achievements retained).
 - **Body Abilities Quality Pass:** four QA archetype fixtures; `explainBodyAbilitySelection`; diversity/caps on personal grids; `BodyAbilityKind`; bank version `BODY_ABILITY_BANK_VERSION`; setup preview before save; safe «Пересобрать карту» (keeps unlocked); archetype tests.
 - Added personalized Body Abilities v1: ability profile setup, 80+ bank, selection of 20–30 relevant abilities, auto/suggested/manual unlock, theme-aware presentation, `/freedom` map and Dashboard card.
 - Added Cozy Content Pack v1 with separate journey chapters, obstacles, daily reactions and seasonal diary copy.

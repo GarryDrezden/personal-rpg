@@ -4,6 +4,7 @@ import type {
   BodyAbilityHiddenTopic,
   BodyAbilityInterest,
   BodyAbilityProfile,
+  BodyAbilityProfileSetupMode,
   BodyPathType,
 } from '../../types/bodyAbilityPersonal';
 import {
@@ -16,6 +17,7 @@ import {
 import { previewBodyAbilitySelection } from '../../utils/bodyAbilityPersonalEngine';
 
 type BodyAbilityProfileSetupProps = {
+  mode?: BodyAbilityProfileSetupMode;
   initial?: BodyAbilityProfile | null;
   initialGoalKg?: number | null;
   onComplete: (profile: BodyAbilityProfile) => void;
@@ -56,6 +58,7 @@ function Chip({
 }
 
 export function BodyAbilityProfileSetup({
+  mode = 'initial',
   initial,
   initialGoalKg,
   onComplete,
@@ -79,6 +82,7 @@ export function BodyAbilityProfileSetup({
   );
 
   const band = useMemo(() => goalKgToBand(goalKg), [goalKg]);
+  const isRebuild = mode === 'edit' || mode === 'regenerate';
 
   const draftProfile = useMemo<BodyAbilityProfile>(
     () => ({
@@ -110,16 +114,20 @@ export function BodyAbilityProfileSetup({
   return (
     <section
       data-testid="body-ability-profile-setup"
+      data-setup-mode={mode}
       className="space-y-5 rounded-2xl border border-[var(--app-border)] bg-[var(--app-card)] p-4 sm:p-5"
     >
       <header className="space-y-2">
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--app-gold)]">
           Карта тела · шаг {step + 1} из {totalSteps}
         </p>
-        <h2 className="text-xl font-bold text-[var(--app-text)]">Настрой карту способностей</h2>
+        <h2 className="text-xl font-bold text-[var(--app-text)]">
+          {isRebuild ? 'Изменить карту способностей' : 'Настрой карту способностей'}
+        </h2>
         <p className="text-sm text-[var(--app-text-muted)]">
-          Это нужно, чтобы карта была твоей, а не универсальной. Без стыда — всё можно изменить
-          позже.
+          {isRebuild
+            ? 'Открытые достижения сохранятся. Остальная карта соберётся заново под новые ответы.'
+            : 'Это нужно, чтобы карта была твоей, а не универсальной. Без стыда — всё можно изменить позже.'}
         </p>
       </header>
 
@@ -224,6 +232,12 @@ export function BodyAbilityProfileSetup({
             {preview.stats.count} способностей · мы не будем показывать то, что уже даётся тебе
             нормально.
           </p>
+          {isRebuild ? (
+            <p className="rounded-xl border border-[var(--app-border)] bg-[var(--app-bg-soft)] px-3 py-2 text-xs text-[var(--app-text-muted)]">
+              Открытые достижения сохранятся. Остальная карта будет собрана заново под новые
+              ответы.
+            </p>
+          ) : null}
           <p className="text-xs text-[var(--app-text-muted)]">
             Категории:{' '}
             {Object.entries(preview.stats.byCategory)
@@ -253,8 +267,9 @@ export function BodyAbilityProfileSetup({
               type="button"
               onClick={onCancel}
               className="rounded-xl border border-[var(--app-border)] px-3 py-2 text-sm text-[var(--app-text-muted)]"
+              data-testid="body-ability-setup-cancel"
             >
-              Позже
+              Отмена
             </button>
           ) : null}
           {step > 0 ? (
@@ -283,7 +298,7 @@ export function BodyAbilityProfileSetup({
             onClick={finish}
             className="rounded-xl bg-[var(--app-primary)] px-4 py-2 text-sm font-semibold text-slate-950"
           >
-            Сохранить карту
+            {isRebuild ? 'Сохранить и пересобрать карту' : 'Сохранить карту'}
           </button>
         )}
       </div>

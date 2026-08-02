@@ -25,6 +25,7 @@ import { NumberInput } from '../components/ui/NumberInput';
 import { ThemeSelector } from '../components/settings/ThemeSelector';
 import { InstantSettingRow } from '../components/settings/InstantSettingRow';
 import { SettingsToc } from '../components/settings/SettingsToc';
+import { BodyAbilityMapSettingsCard } from '../components/settings/BodyAbilityMapSettingsCard';
 import { HabitsEditor } from '../components/settings/HabitsEditor';
 import { useAppTheme } from '../hooks/useAppTheme';
 import { useAutosaveStatus } from '../hooks/useAutosaveStatus';
@@ -214,6 +215,8 @@ export function SettingsPage() {
       <div id="settings-pwa" className="scroll-mt-28">
         <PwaInstallCard />
       </div>
+
+      <BodyAbilityMapSettingsCard />
 
       <Card id="settings-experimental" className="scroll-mt-28">
         <h2 className="mb-2 font-semibold text-[var(--app-text)]">Экспериментальные функции</h2>

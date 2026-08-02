@@ -18,15 +18,16 @@ export function BodyAbilityPersonalDashboardCard() {
         <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-gold)]">
           Свобода тела
         </p>
-        <p className="mt-1 text-sm text-[var(--app-text)]">Настрой карту тела</p>
+        <p className="mt-1 text-sm text-[var(--app-text)]">Настроить карту тела</p>
         <p className="mt-1 text-xs text-[var(--app-text-muted)]">
           Игра выберет 20–30 релевантных изменений из большого банка.
         </p>
         <Link
-          to="/freedom"
+          to="/freedom?setup=1"
           className="mt-2 inline-block text-xs font-semibold text-[var(--app-primary)] hover:underline"
+          data-testid="body-ability-dashboard-setup"
         >
-          Настроить карту →
+          Настроить карту тела →
         </Link>
       </section>
     );

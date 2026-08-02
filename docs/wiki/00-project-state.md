@@ -235,6 +235,7 @@ Cozy does **not** replace Dark Fantasy and is **not** a post-dark stage. Core fa
 - **Награда:** умеренные coins + XP при первом открытии (once per ability)
 - Legacy metric-based abilities сохранены в секции «Прогресс по данным»
 - DB schema **без изменений**
+- **Personalized grid:** `/freedom` + Settings «Карта тела»; soft upgrade для legacy users (`needsBodyAbilityMapUpgrade`); unlocked сохраняются при пересборке; `archivedUnlockedIds` для скрытых тем
 
 ### Seasons v1 ✅ → v2 ✅
 

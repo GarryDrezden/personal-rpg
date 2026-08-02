@@ -1141,6 +1141,17 @@ Bank version: `BODY_ABILITY_BANK_VERSION` stored as `abilityBankVersion` / used 
 - After Ability Profile Setup: preview «Вот какой получится твоя карта» (count, categories, 5–6 examples) before save.
 - «Пересобрать карту»: unlocked abilities retained; locked/suggested rebuilt; warning before action. Deterministic for same profile + bank version.
 
+### Existing users (soft upgrade)
+
+Personal Body Abilities setup is optional for legacy accounts — never a forced onboarding redirect.
+
+Entry points:
+- Settings → «Карта тела» → Настроить / Изменить ответы / Пересобрать
+- `/freedom` soft banner when profile missing or bank version stale (`needsBodyAbilityMapUpgrade`)
+- Dashboard card CTA «Настроить карту» → `/freedom?setup=1` when not configured
+
+Unlocked achievements survive rebuild. Hidden-topic exclusions leave unlocked items in `archivedUnlockedIds` («Уже открыто ранее»), not deleted.
+
 **Code:**
 - Types: `src/types/bodyAbilityPersonal.ts`
 - Bank: `src/constants/bodyAbilityBank.ts` (80+)
@@ -1148,7 +1159,8 @@ Bank version: `BODY_ABILITY_BANK_VERSION` stored as `abilityBankVersion` / used 
 - State/unlock: `src/utils/bodyAbilityPersonalEngine.ts` → `settings.bodyAbilityState.personal`
 - QA fixtures: `src/fixtures/bodyAbilityProfiles.ts`
 - Theme: `src/game/bodyAbilityThemePresentation.ts` → `getThemedBodyAbilityPresentation`
-- UI: `/freedom` (`BodyAbilityPersonalGrid` + setup preview + regenerate), Growth abilities, Dashboard card, Today soft hint
+- UI: `/freedom` personal map (`BodyAbilityPersonalGrid` + filters + status cards + setup preview + regenerate), Growth abilities, Dashboard card, Today soft hint
+- Freedom UX helpers: `src/game/bodyAbilityFreedomUi.ts` (filters, themed status/page copy — presentation only)
 
 **Statuses:** `locked` | `suggested` | `unlocked` | `hidden`  
 **Unlock modes:** `auto` (data thresholds) · `suggested_confirmation` (user confirms) · `manual` («Я заметил»)

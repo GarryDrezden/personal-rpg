@@ -266,7 +266,11 @@ describe('Body Abilities quality pass — QA archetypes', () => {
     expect(personal.abilities[firstId]?.status).toBe('unlocked');
     expect(personal.selectedAbilityIds).toContain(firstId);
     expect(personal.abilityBankVersion).toBe(BODY_ABILITY_BANK_VERSION);
-    expect(personal.retainedUnlockedIds).toContain(firstId);
+    expect(personal.generatedFromVersion).toBe(BODY_ABILITY_BANK_VERSION);
+    expect(
+      personal.retainedUnlockedIds?.includes(firstId) ||
+        personal.archivedUnlockedIds?.includes(firstId),
+    ).toBe(true);
   });
 
   it('old empty profile does not crash', () => {
