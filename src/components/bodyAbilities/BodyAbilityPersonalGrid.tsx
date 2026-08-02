@@ -15,9 +15,11 @@ import {
   getPersonalBodyAbilitySummary,
   isBodyAbilityProfileConfigured,
   manuallyUnlockPersonalAbility,
+  regenerateBodyAbilityMap,
   respondToSuggestedAbility,
   syncPersonalBodyAbilityProgress,
 } from '../../utils/bodyAbilityPersonalEngine';
+import { BODY_ABILITY_BANK_VERSION } from '../../constants/bodyAbilityBank';
 import { resolveTargetWeight } from '../../game/gameProfile';
 import { getStartWeight } from '../../game/heroProgressEngine';
 import { BodyAbilityProfileSetup } from './BodyAbilityProfileSetup';
@@ -39,6 +41,7 @@ export function BodyAbilityPersonalGrid({ embedded = false }: BodyAbilityPersona
   const { themeId, isCozy } = useAppTheme();
   const [setupOpen, setSetupOpen] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [regenBusy, setRegenBusy] = useState(false);
 
   const configured = isBodyAbilityProfileConfigured(settings);
   const personal = getPersonalBodyAbilitiesState(settings);
@@ -73,9 +76,23 @@ export function BodyAbilityPersonalGrid({ embedded = false }: BodyAbilityPersona
       : personal.profile?.goalKg ?? null;
 
   const saveProfile = async (profile: BodyAbilityProfile) => {
-    const next = applyBodyAbilityProfile(settings, profile);
+    const next = applyBodyAbilityProfile(settings, profile, { preserveUnlocked: true });
     await saveSettings(next);
     setSetupOpen(false);
+  };
+
+  const handleRegenerate = async () => {
+    if (!personal.profile) return;
+    const ok = window.confirm(
+      'Открытые достижения сохранятся. Остальная карта будет собрана заново.',
+    );
+    if (!ok) return;
+    setRegenBusy(true);
+    try {
+      await saveSettings(regenerateBodyAbilityMap(settings, personal.profile));
+    } finally {
+      setRegenBusy(false);
+    }
   };
 
   const ensureSynced = async () => {
@@ -168,19 +185,33 @@ export function BodyAbilityPersonalGrid({ embedded = false }: BodyAbilityPersona
               {profile.interests.length > 4 ? '…' : ''}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => setSetupOpen(true)}
-            className="rounded-xl border border-[var(--app-border)] px-3 py-2 text-xs font-semibold text-[var(--app-primary)]"
-            data-testid="body-ability-reconfigure"
-          >
-            Настроить карту
-          </button>
+          <div className="flex flex-col items-stretch gap-2 sm:items-end">
+            <button
+              type="button"
+              onClick={() => setSetupOpen(true)}
+              className="rounded-xl border border-[var(--app-border)] px-3 py-2 text-xs font-semibold text-[var(--app-primary)]"
+              data-testid="body-ability-reconfigure"
+            >
+              Настроить карту
+            </button>
+            <button
+              type="button"
+              disabled={regenBusy}
+              onClick={() => void handleRegenerate()}
+              className="rounded-xl border border-[var(--app-border)] px-3 py-2 text-xs text-[var(--app-text-muted)]"
+              data-testid="body-ability-regenerate"
+            >
+              Пересобрать карту
+            </button>
+          </div>
         </div>
         <p className="mt-3 text-sm font-medium text-[var(--app-text)]">
           Открыто {summary.unlockedCount} / {summary.selectedCount}
         </p>
         <p className="mt-1 text-xs text-[var(--app-text-muted)]">{summary.progressLine}</p>
+        <p className="mt-1 text-[10px] text-[var(--app-text-muted)]">
+          Банк {personal.abilityBankVersion ?? BODY_ABILITY_BANK_VERSION}
+        </p>
       </section>
 
       {suggested.length > 0 ? (

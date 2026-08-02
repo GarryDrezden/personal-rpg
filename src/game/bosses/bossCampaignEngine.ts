@@ -6,7 +6,7 @@ import { getDayMode } from '../../utils/stepsEngine';
 import { getNutritionQuestCompleted, isNutritionTrackingEnabled } from '../../utils/nutritionEngine';
 import { getBodyAbilityState } from '../bodyAbilities/bodyAbilityV1Engine';
 import { getPlateauSnapshot } from '../plateau/plateauEngine';
-import { getSeasonSnapshot, getSeasonEntries, getSeasonDateRange, getSeasonIndex, resolveCampaignStartDate } from '../seasons/seasonEngine';
+import { getSeasonSnapshot, getSeasonEntries } from '../seasons/seasonEngine';
 import { getSeasonPartialStatus } from '../seasons/seasonRecap';
 import { todayISO } from '../../utils/dates';
 
@@ -152,19 +152,14 @@ export function getBossCampaignSnapshot(params: {
     dailyEntries: params.dailyEntries,
     today,
   });
-  const campaignStart = resolveCampaignStartDate(
-    params.settings,
-    params.dailyEntries,
-    today,
-  );
-  const seasonIndex = getSeasonIndex(campaignStart, today);
+  const seasonIndex = season.seasonIndex;
   const currentBoss = getSeasonMiniBossByIndex(seasonIndex);
-  const { start: seasonStart } = getSeasonDateRange(campaignStart, seasonIndex);
   const seasonEntries = getSeasonEntries(
     params.dailyEntries,
     season.seasonStartDate,
     season.seasonEndDate,
   );
+  const seasonStart = season.seasonStartDate;
   const signals = countSeasonSignals(seasonEntries, params.settings, seasonStart);
   const plateau = getPlateauSnapshot({
     dailyEntries: params.dailyEntries,

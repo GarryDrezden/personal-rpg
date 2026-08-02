@@ -71,6 +71,8 @@ export type SeasonHistoryEntry = {
   rewardLabel: string;
   isCurrent: boolean;
   isLocked: boolean;
+  /** Cleared/empowered only — never calendar-advanced incomplete arcs. */
+  isCompleted: boolean;
 };
 
 export type SeasonHistoryArchive = {

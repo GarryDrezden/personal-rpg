@@ -11,9 +11,13 @@ import type {
 import type { BodyAbilityState } from '../types/bodyAbilityV1';
 import {
   BODY_ABILITY_BANK,
+  BODY_ABILITY_BANK_VERSION,
   getBodyAbilityDefinition,
 } from '../constants/bodyAbilityBank';
-import { selectPersonalBodyAbilities } from './bodyAbilitySelectionEngine';
+import {
+  explainBodyAbilitySelection,
+  selectPersonalBodyAbilities,
+} from './bodyAbilitySelectionEngine';
 import {
   getWeightLossKg,
   getWaistLossCm,
@@ -32,6 +36,8 @@ export function emptyPersonalState(): BodyAbilitiesPersonalState {
     abilities: {},
     generatedAt: null,
     lastReviewedAt: null,
+    abilityBankVersion: null,
+    retainedUnlockedIds: [],
   };
 }
 
@@ -46,7 +52,15 @@ export function getPersonalBodyAbilitiesState(
     abilities: raw.abilities ?? {},
     generatedAt: raw.generatedAt ?? null,
     lastReviewedAt: raw.lastReviewedAt ?? null,
+    abilityBankVersion: raw.abilityBankVersion ?? null,
+    retainedUnlockedIds: raw.retainedUnlockedIds ?? [],
   };
+}
+
+export function previewBodyAbilitySelection(profile: BodyAbilityProfile) {
+  return explainBodyAbilitySelection(profile, BODY_ABILITY_BANK, {
+    targetCount: 24,
+  });
 }
 
 export function isBodyAbilityProfileConfigured(settings: AppSettings): boolean {
@@ -70,34 +84,62 @@ function withPersonal(
 export function applyBodyAbilityProfile(
   settings: AppSettings,
   profile: BodyAbilityProfile,
-  options?: { targetCount?: number },
+  options?: { targetCount?: number; preserveUnlocked?: boolean },
 ): AppSettings {
+  const preserveUnlocked = options?.preserveUnlocked !== false;
   const selected = selectPersonalBodyAbilities(profile, BODY_ABILITY_BANK, options);
   const now = new Date().toISOString();
   const previous = getPersonalBodyAbilitiesState(settings);
+
+  const previouslyUnlocked = Object.values(previous.abilities).filter(
+    (a) => a.status === 'unlocked',
+  );
+  const retainedUnlockedIds = preserveUnlocked
+    ? previouslyUnlocked.map((a) => a.abilityId)
+    : [];
+
+  const selectedIds = new Set(selected.map((a) => a.id));
+  for (const id of retainedUnlockedIds) selectedIds.add(id);
+
   const abilities: Record<string, UserBodyAbility> = {};
 
-  for (const def of selected) {
-    const prev = previous.abilities[def.id];
-    abilities[def.id] = {
-      abilityId: def.id,
-      status: prev?.status === 'unlocked' ? 'unlocked' : 'locked',
+  for (const id of selectedIds) {
+    const def = getBodyAbilityDefinition(id);
+    if (!def) continue;
+    const prev = previous.abilities[id];
+    const wasUnlocked = prev?.status === 'unlocked';
+    abilities[id] = {
+      abilityId: id,
+      status: wasUnlocked ? 'unlocked' : 'locked',
       selectedAt: prev?.selectedAt ?? now,
-      suggestedAt: prev?.suggestedAt ?? null,
-      unlockedAt: prev?.unlockedAt ?? null,
+      suggestedAt: wasUnlocked ? null : null,
+      unlockedAt: wasUnlocked ? prev?.unlockedAt ?? now : null,
       confirmedByUser: prev?.confirmedByUser,
     };
   }
 
   const personal: BodyAbilitiesPersonalState = {
     profile: { ...profile, configuredAt: profile.configuredAt ?? now },
-    selectedAbilityIds: selected.map((a) => a.id),
+    selectedAbilityIds: [...selectedIds].sort((a, b) => a.localeCompare(b)),
     abilities,
     generatedAt: now,
     lastReviewedAt: now,
+    abilityBankVersion: BODY_ABILITY_BANK_VERSION,
+    retainedUnlockedIds,
   };
 
   return withPersonal(settings, personal);
+}
+
+/** Safe regenerate: unlocked stay; locked/suggested rebuilt from new profile answers. */
+export function regenerateBodyAbilityMap(
+  settings: AppSettings,
+  profile: BodyAbilityProfile,
+): AppSettings {
+  return applyBodyAbilityProfile(settings, profile, {
+    targetCount: 24,
+    preserveUnlocked: true,
+  });
 }
 
 export function getPersonalAbilityItems(

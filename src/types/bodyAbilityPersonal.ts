@@ -75,6 +75,13 @@ export type BodyAbilityDifficulty =
   | 'late'
   | 'epic';
 
+/** Distinguishes felt body/function change from route/habit milestones. */
+export type BodyAbilityKind =
+  | 'body_change'
+  | 'functional_change'
+  | 'route_mastery'
+  | 'milestone';
+
 export type BodyAbilityAutoUnlockType =
   | 'weight_loss_kg'
   | 'waist_loss_cm'
@@ -97,6 +104,7 @@ export interface BodyAbilityDefinition {
   pathTypes?: BodyPathType[];
   unlockMode: BodyAbilityUnlockMode;
   difficulty: BodyAbilityDifficulty;
+  kind: BodyAbilityKind;
   tags: string[];
   excludedByBaselineEasy?: BodyAbilityBaselineEasy[];
   hiddenByTopics?: BodyAbilityHiddenTopic[];
@@ -131,6 +139,10 @@ export interface BodyAbilitiesPersonalState {
   abilities: Record<string, UserBodyAbility>;
   generatedAt?: string | null;
   lastReviewedAt?: string | null;
+  /** Bank version used when the grid was generated. */
+  abilityBankVersion?: string | null;
+  /** Unlocked ability IDs kept after regenerate even if not re-selected. */
+  retainedUnlockedIds?: string[];
 }
 
 export type BodyAbilityPersonalItem = {

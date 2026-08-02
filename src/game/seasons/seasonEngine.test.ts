@@ -2,17 +2,19 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_APP_SETTINGS } from '../../constants/defaults';
 import type { DailyEntry } from '../../types';
 import { emptyDaily } from '../../store/appStore';
-import { SEASON_CONFIGS, SEASON_COUNT, SEASON_LENGTH_DAYS } from './seasonConfig';
+import { SEASON_CONFIGS, SEASON_COUNT } from './seasonConfig';
 import {
+  getCalendarSeasonIndex,
   getRawSeasonIndex,
   getSeasonDateRange,
   getSeasonDayNumber,
   getSeasonIndex,
   getSeasonSnapshot,
   getSeasonSnapshotWithRecap,
+  resolveActiveSeasonIndex,
   resolveCampaignStartDate,
 } from './seasonEngine';
-import { getSeasonPartialStatus } from './seasonRecap';
+import { getSeasonPartialStatus, isSeasonArcCompleted } from './seasonRecap';
 import { buildQuestProgressList } from './seasonQuestProgress';
 
 function entry(date: string, partial: Partial<DailyEntry> = {}): DailyEntry {
@@ -59,16 +61,23 @@ describe('season index and day number', () => {
     expect(getSeasonIndex(start, '2026-01-28')).toBe(1);
   });
 
-  it('moves to season 2 on day 29', () => {
+  it('calendar window moves to season 2 on day 29, but active arc stays on incomplete season 1', () => {
+    expect(getCalendarSeasonIndex(start, '2026-01-29')).toBe(2);
     expect(getSeasonIndex(start, '2026-01-29')).toBe(2);
-    expect(getSeasonDayNumber(start, '2026-01-29')).toBe(1);
+    expect(
+      resolveActiveSeasonIndex({
+        settings: { ...DEFAULT_APP_SETTINGS, startDate: start },
+        dailyEntries: [],
+        today: '2026-01-29',
+      }),
+    ).toBe(1);
+    expect(getSeasonDayNumber(start, '2026-01-29', 1)).toBe(29);
   });
 
-  it('caps at season 13 after a full year', () => {
+  it('caps calendar index at season 13 after a full year', () => {
     const dayAfterYear = '2027-01-10';
     expect(getRawSeasonIndex(start, dayAfterYear)).toBeGreaterThan(SEASON_COUNT);
-    expect(getSeasonIndex(start, dayAfterYear)).toBe(SEASON_COUNT);
-    expect(getSeasonDayNumber(start, dayAfterYear)).toBe(SEASON_LENGTH_DAYS);
+    expect(getCalendarSeasonIndex(start, dayAfterYear)).toBe(SEASON_COUNT);
   });
 });
 
@@ -127,6 +136,8 @@ describe('partial success status', () => {
     expect(getSeasonPartialStatus(3)).toBe('held');
     expect(getSeasonPartialStatus(4)).toBe('cleared');
     expect(getSeasonPartialStatus(5)).toBe('empowered');
+    expect(isSeasonArcCompleted('held')).toBe(false);
+    expect(isSeasonArcCompleted('cleared')).toBe(true);
   });
 });
 

@@ -241,6 +241,10 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Auto unlocks only for clear data thresholds (weight/waist/streaks).
 - Theme changes flavor/title/icon only; core ability IDs stay shared.
 - Empty state on `/freedom`: invite to configure the map, not a medical checklist.
+- After setup, show a short preview («Вот какой получится твоя карта») — count, categories, 5–6 examples — before save. Do not dump all ~24 in the wizard.
+- Preview copy may say: we will not show what already feels normal for the user.
+- «Пересобрать карту» needs a confirm: unlocked stay; the rest rebuilds. No random shuffle.
+- Ability copy: respectful, no assumed disability, no medical promises. Distinguish body/functional change from route milestones in tone when helpful.
 
 ## Cozy Content Rules
 

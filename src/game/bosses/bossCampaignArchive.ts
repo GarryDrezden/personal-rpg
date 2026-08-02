@@ -22,13 +22,13 @@ import { getNutritionQuestCompleted, isNutritionTrackingEnabled } from '../../ut
 import { getBodyAbilityState } from '../bodyAbilities/bodyAbilityV1Engine';
 import { getPlateauSnapshot } from '../plateau/plateauEngine';
 import {
-  getSeasonDateRange,
+  evaluateSeasonProgress,
   getSeasonEntries,
-  getSeasonIndex,
-  getSeasonSnapshot,
+  resolveActiveSeasonIndex,
   resolveCampaignStartDate,
 } from '../seasons/seasonEngine';
-import { getSeasonPartialStatus } from '../seasons/seasonRecap';
+import { isSeasonArcCompleted } from '../seasons/seasonRecap';
+import { SEASON_LENGTH_DAYS } from '../seasons/seasonConfig';
 import { getAllJourneyStageProgress } from '../../utils/journeyMapEngine';
 import { todayISO } from '../../utils/dates';
 import { getSeasonCampaignBossArtUrl } from './bossArt';
@@ -141,31 +141,31 @@ function computeSeasonBossEntry(params: {
     };
   }
 
-  const { start: seasonStart, end: seasonEnd } = getSeasonDateRange(
-    params.campaignStart,
-    params.seasonIndex,
-  );
-  const referenceDay = isCurrent ? params.today : seasonEnd;
-  const season = getSeasonSnapshot({
+  const progress = evaluateSeasonProgress({
     settings: params.settings,
     dailyEntries: params.dailyEntries,
-    today: referenceDay,
+    campaignStartDate: params.campaignStart,
+    seasonIndex: params.seasonIndex,
+    today: params.today,
+    extendOpenEnd: isCurrent,
   });
+  const seasonStart = progress.seasonStartDate;
+  const seasonEnd = progress.seasonEndDate;
   const seasonEntries = getSeasonEntries(params.dailyEntries, seasonStart, seasonEnd);
   const signals = countSeasonSignals(seasonEntries, params.settings, seasonStart);
   const plateau = getPlateauSnapshot({
     dailyEntries: params.dailyEntries,
     measurements: params.measurements,
     settings: params.settings,
-    today: referenceDay,
+    today: isCurrent ? params.today : seasonEnd,
   });
-  const partialStatus = getSeasonPartialStatus(season.completedQuestCount);
-  const partialSealed = partialStatus === 'cleared' || partialStatus === 'empowered';
+  const partialStatus = progress.partialStatus;
+  const partialSealed = isSeasonArcCompleted(partialStatus);
 
   const progressPercent = computeBossProgressPercent({
-    completedQuestCount: season.completedQuestCount,
-    questTotal: season.quests.length,
-    seasonLength: season.seasonLength,
+    completedQuestCount: progress.completedQuestCount,
+    questTotal: progress.quests.length,
+    seasonLength: SEASON_LENGTH_DAYS,
     signals,
     plateauActive: plateau.mode === 'active' && isCurrent,
     baseScore: params.baseScore,
@@ -311,7 +311,12 @@ export function getBossCampaignArchive(params: {
     params.dailyEntries,
     today,
   );
-  const currentSeasonIndex = getSeasonIndex(campaignStart, today);
+  const currentSeasonIndex = resolveActiveSeasonIndex({
+    settings: params.settings,
+    dailyEntries: params.dailyEntries,
+    today,
+    campaignStartDate: campaignStart,
+  });
   const current = getBossCampaignSnapshot(params);
 
   const seasonBosses = SEASON_MINI_BOSSES.map((def) =>

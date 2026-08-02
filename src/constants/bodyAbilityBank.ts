@@ -2,12 +2,16 @@ import type {
   BodyAbilityDefinition,
   BodyAbilityDifficulty,
   BodyAbilityInterest,
+  BodyAbilityKind,
   BodyAbilityUnlockMode,
   BodyPathType,
   WeightLossGoalBand,
   BodyAbilityBaselineEasy,
   BodyAbilityHiddenTopic,
 } from '../types/bodyAbilityPersonal';
+
+/** Bump when bank semantics / exclusions change in a way that should regenerate grids. */
+export const BODY_ABILITY_BANK_VERSION = '2026.08.02-q1';
 
 const ALL_BANDS: WeightLossGoalBand[] = [
   'under_10',
@@ -22,10 +26,39 @@ const HEAVY: WeightLossGoalBand[] = ['20_50', '50_80', '80_plus'];
 const DEEP: WeightLossGoalBand[] = ['50_80', '80_plus'];
 const SHAPE: WeightLossGoalBand[] = ['under_10', '10_20', '20_50'];
 
-type Draft = Omit<BodyAbilityDefinition, 'scoreWeight'> & { scoreWeight?: number };
+type Draft = Omit<BodyAbilityDefinition, 'scoreWeight' | 'kind'> & {
+  scoreWeight?: number;
+  kind?: BodyAbilityKind;
+};
+
+function inferKind(d: Draft): BodyAbilityKind {
+  if (d.kind) return d.kind;
+  if (
+    d.tags.includes('weight') ||
+    d.tags.includes('milestone') ||
+    d.tags.includes('waist')
+  ) {
+    return 'milestone';
+  }
+  if (d.tags.includes('universal')) return 'route_mastery';
+  if (d.unlockMode === 'auto' && d.autoUnlock) return 'route_mastery';
+  if (
+    d.category === 'mobility' ||
+    d.category === 'daily_life' ||
+    d.category === 'stairs_routes' ||
+    d.category === 'flexibility'
+  ) {
+    return 'functional_change';
+  }
+  return 'body_change';
+}
 
 function def(d: Draft): BodyAbilityDefinition {
-  return { scoreWeight: d.scoreWeight ?? 1, ...d };
+  return {
+    scoreWeight: d.scoreWeight ?? 1,
+    ...d,
+    kind: inferKind(d),
+  };
 }
 
 function weightMilestone(
@@ -40,12 +73,13 @@ function weightMilestone(
     description: `Отмеченный рубеж снижения веса на ${kg} кг — один из сигналов пути, не единственный.`,
     category: 'measurements',
     goalBands: bands,
-    pathTypes: ['shape_tuning', 'load_reduction', 'control_return'],
+    pathTypes: ['shape_tuning', 'load_reduction', 'control_return', 'athlete_return'],
     unlockMode: 'auto',
     difficulty,
+    kind: 'milestone',
     tags: ['weight', 'milestone'],
     hiddenByTopics: ['weight'],
-    scoreWeight: 0.7,
+    scoreWeight: 1.05,
     autoUnlock: { type: 'weight_loss_kg', target: kg },
   });
 }
@@ -66,9 +100,10 @@ function waistMilestone(
     pathTypes: ['shape_tuning', 'appearance_focus'],
     unlockMode: 'auto',
     difficulty,
-    tags: ['waist', 'measurements'],
+    kind: 'milestone',
+    tags: ['waist', 'measurements', 'milestone'],
     hiddenByTopics: ['measurements', 'appearance'],
-    scoreWeight: 0.85,
+    scoreWeight: 1.05,
     autoUnlock: { type: 'waist_loss_cm', target: cm },
   });
 }
@@ -139,7 +174,8 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
   def({
     id: 'face_softer_load',
     title: 'Лицо выглядит спокойнее',
-    description: 'Меньше ощущения тяжести в лице — наблюдение, не обещание.',
+    description:
+      'Субъективно лицо и общий вид кажутся спокойнее — это наблюдение, не обещание эффекта.',
     category: 'appearance',
     goalBands: LIGHT,
     pathTypes: ['appearance_focus'],
@@ -198,8 +234,8 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
     pathTypes: ['mobility_return', 'athlete_return'],
     unlockMode: 'auto',
     difficulty: 'middle',
-    tags: ['walk', '10k'],
-    excludedByBaselineEasy: ['walk_15k'],
+    tags: ['walk', '10k', 'beginner'],
+    excludedByBaselineEasy: ['walk_10k', 'walk_15k'],
     autoUnlock: { type: 'steps_days_normal', target: 5 },
   }),
   def({
@@ -217,16 +253,17 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
   }),
   def({
     id: 'long_route_held',
-    title: 'Длинный маршрут удержан',
-    description: 'Длинная прогулка пройдена без обязательного «я больше не могу».',
+    title: 'Длинный маршрут без отката',
+    description:
+      'Длинный маршрут или день с высокой нагрузкой удержан без срыва следующего дня.',
     category: 'endurance',
-    secondaryCategories: ['mobility'],
-    goalBands: DEEP,
-    pathTypes: ['mobility_return'],
+    secondaryCategories: ['sport_training'],
+    goalBands: [...HEAVY],
+    pathTypes: ['mobility_return', 'athlete_return', 'load_reduction'],
     unlockMode: 'suggested_confirmation',
     difficulty: 'late',
-    tags: ['walk', 'long'],
-    excludedByBaselineEasy: ['walk_15k'],
+    kind: 'body_change',
+    tags: ['walk', 'long', 'endurance_high'],
   }),
   def({
     id: 'walk_as_base_not_goal',
@@ -237,19 +274,22 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
     pathTypes: ['athlete_return', 'control_return'],
     unlockMode: 'manual',
     difficulty: 'middle',
+    kind: 'body_change',
     tags: ['walk', 'athlete'],
   }),
   def({
     id: 'evening_heaviness_less',
-    title: 'Меньше тяжести к вечеру',
-    description: 'К вечеру тело реже просит «просто лечь и не двигаться».',
+    title: 'Вечер переносится спокойнее',
+    description:
+      'После обычного дня тело реже просит полностью выключиться к вечеру.',
     category: 'endurance',
     secondaryCategories: ['sleep_resource'],
     goalBands: HEAVY,
-    pathTypes: ['load_reduction', 'resource_recovery'],
+    pathTypes: ['load_reduction', 'resource_recovery', 'athlete_return'],
     unlockMode: 'suggested_confirmation',
     difficulty: 'middle',
-    tags: ['fatigue'],
+    kind: 'body_change',
+    tags: ['fatigue', 'recovery_feel'],
   }),
 
   // ——— Stairs / routes ———
@@ -358,6 +398,7 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
     unlockMode: 'manual',
     difficulty: 'late',
     tags: ['space'],
+    excludedByBaselineEasy: ['car_ok', 'daily_chores_ok'],
     hiddenByTopics: ['daily_life_limitations'],
   }),
   def({
@@ -375,15 +416,18 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
   }),
   def({
     id: 'legs_back_load_less',
-    title: 'Меньше нагрузки на ноги и спину',
-    description: 'День реже заканчивается ощущением перегруза ног и спины.',
+    title: 'Тело легче переносит дневную нагрузку',
+    description:
+      'После обычного дня ноги и спина реже ощущаются перегруженными — наблюдение, не диагноз.',
     category: 'daily_life',
-    secondaryCategories: ['mobility'],
+    secondaryCategories: ['endurance'],
     goalBands: DEEP,
-    pathTypes: ['load_reduction'],
+    pathTypes: ['load_reduction', 'athlete_return'],
     unlockMode: 'suggested_confirmation',
     difficulty: 'late',
-    tags: ['load'],
+    kind: 'body_change',
+    tags: ['load', 'recovery_feel'],
+    excludedByBaselineEasy: ['daily_chores_ok'],
     hiddenByTopics: ['daily_life_limitations'],
   }),
   def({
@@ -396,6 +440,7 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
     unlockMode: 'suggested_confirmation',
     difficulty: 'early',
     tags: ['rise'],
+    excludedByBaselineEasy: ['stand_from_floor', 'stand_long'],
     hiddenByTopics: ['daily_life_limitations'],
   }),
   def({
@@ -771,7 +816,7 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
     unlockMode: 'auto',
     difficulty: 'early',
     tags: ['minimal', 'universal'],
-    scoreWeight: 1.2,
+    scoreWeight: 0.45,
     autoUnlock: { type: 'recovery_days', target: 1 },
   }),
   def({
@@ -784,7 +829,7 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
     unlockMode: 'auto',
     difficulty: 'early',
     tags: ['universal', 'data'],
-    scoreWeight: 1.3,
+    scoreWeight: 0.4,
     autoUnlock: { type: 'calorie_tracking_days', target: 1 },
   }),
   def({
@@ -798,7 +843,7 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
     difficulty: 'early',
     tags: ['walk', 'universal', 'beginner'],
     excludedByBaselineEasy: ['walk_10k', 'walk_15k'],
-    scoreWeight: 1.1,
+    scoreWeight: 0.4,
     autoUnlock: { type: 'steps_days_minimum', target: 3 },
   }),
   def({
@@ -812,7 +857,7 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
     unlockMode: 'manual',
     difficulty: 'early',
     tags: ['universal', 'evening'],
-    scoreWeight: 1.1,
+    scoreWeight: 0.5,
   }),
   def({
     id: 'journal_presence',
@@ -824,7 +869,7 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
     unlockMode: 'manual',
     difficulty: 'early',
     tags: ['universal', 'journal'],
-    scoreWeight: 1.1,
+    scoreWeight: 0.45,
   }),
   def({
     id: 'flexibility_reach',
@@ -871,18 +916,27 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
     pathTypes: ['mobility_return'],
     unlockMode: 'suggested_confirmation',
     difficulty: 'epic',
-    tags: ['mobility', 'epic'],
+    tags: ['mobility', 'epic', 'functional_limitation'],
+    excludedByBaselineEasy: [
+      'walk_15k',
+      'stairs_ok',
+      'stand_from_floor',
+      'daily_chores_ok',
+    ],
     hiddenByTopics: ['daily_life_limitations'],
   }),
   def({
     id: 'load_reduction_felt',
-    title: 'Нагрузка на тело снизилась',
-    description: 'Повседневная нагрузка на суставы и опору ощущается мягче.',
-    category: 'daily_life',
+    title: 'Тело легче несёт свой вес',
+    description:
+      'Повседневная нагрузка ощущается мягче — как сигнал пути, а не как медицинский вывод.',
+    category: 'endurance',
+    secondaryCategories: ['daily_life'],
     goalBands: DEEP,
-    pathTypes: ['load_reduction'],
+    pathTypes: ['load_reduction', 'athlete_return'],
     unlockMode: 'suggested_confirmation',
     difficulty: 'epic',
+    kind: 'body_change',
     tags: ['load', 'epic'],
   }),
   def({
@@ -894,8 +948,9 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
     pathTypes: ['control_return'],
     unlockMode: 'manual',
     difficulty: 'epic',
+    kind: 'route_mastery',
     tags: ['control', 'epic', 'universal'],
-    scoreWeight: 1.15,
+    scoreWeight: 0.55,
   }),
   def({
     id: 'clothes_choice_wider',
@@ -1017,8 +1072,37 @@ export const BODY_ABILITY_BANK: BodyAbilityDefinition[] = [
     unlockMode: 'manual',
     difficulty: 'middle',
     tags: ['plateau', 'universal'],
-    scoreWeight: 1.2,
+    scoreWeight: 0.5,
     hiddenByTopics: ['weight'],
+  }),
+  def({
+    id: 'training_load_recover',
+    title: 'Нагрузка и восстановление в паре',
+    description:
+      'После тренировки или тяжёлого дня восстановление снова становится частью режима.',
+    category: 'sport_training',
+    secondaryCategories: ['sleep_resource'],
+    goalBands: ALL_BANDS,
+    pathTypes: ['athlete_return', 'resource_recovery'],
+    unlockMode: 'suggested_confirmation',
+    difficulty: 'middle',
+    kind: 'body_change',
+    tags: ['athlete', 'recovery_feel'],
+    hiddenByTopics: ['sport'],
+  }),
+  def({
+    id: 'waist_clothes_bridge',
+    title: 'Замеры и одежда сходятся',
+    description: 'Изменение замеров совпадает с ощущением, что одежда села иначе.',
+    category: 'measurements',
+    secondaryCategories: ['appearance'],
+    goalBands: SHAPE,
+    pathTypes: ['shape_tuning', 'appearance_focus'],
+    unlockMode: 'manual',
+    difficulty: 'middle',
+    kind: 'body_change',
+    tags: ['waist', 'clothes'],
+    hiddenByTopics: ['measurements', 'appearance'],
   }),
 ];
 

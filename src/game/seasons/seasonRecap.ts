@@ -23,12 +23,20 @@ export const REWARD_STATUS_LABELS: Record<SeasonRewardStatus, string> = {
   earned: 'У тебя',
 };
 
+/** Quests required to clear a season arc (MVP completion gate). */
+export const SEASON_QUESTS_TO_CLEAR = 4;
+
 export function getSeasonPartialStatus(completedQuestCount: number): SeasonPartialStatus {
   if (completedQuestCount >= 5) return 'empowered';
-  if (completedQuestCount >= 4) return 'cleared';
+  if (completedQuestCount >= SEASON_QUESTS_TO_CLEAR) return 'cleared';
   if (completedQuestCount >= 3) return 'held';
   if (completedQuestCount >= 1) return 'marked';
   return 'started';
+}
+
+/** Season arc is finished only by quest progress — never by calendar alone. */
+export function isSeasonArcCompleted(partialStatus: SeasonPartialStatus): boolean {
+  return partialStatus === 'cleared' || partialStatus === 'empowered';
 }
 
 export function getSeasonRewardStatus(
@@ -68,7 +76,15 @@ export function getSeasonHistoryRecapText(
   config: SeasonConfig,
   isPast: boolean,
 ): string {
-  if (!isPast) return getSeasonRecapText(status, config);
+  if (!isPast) {
+    if (!isSeasonArcCompleted(status)) {
+      return 'Арка ещё не завершена. Путь сезона продолжается — новая арка откроется после этой.';
+    }
+    return getSeasonRecapText(status, config);
+  }
+  if (!isSeasonArcCompleted(status)) {
+    return 'Прогресс сезона не завершён. Арка продолжается — не считаем её пройденной.';
+  }
   if (status === 'started') {
     return 'Сезон прошёл тихо. След всё равно остался — следующий круг будет яснее.';
   }
@@ -76,4 +92,11 @@ export function getSeasonHistoryRecapText(
     return 'Сезон оставил метки маршрута. Не идеально — и этого достаточно.';
   }
   return getSeasonRecapText(status, config);
+}
+
+export function getSeasonContinuingArcLabel(themeId?: 'cozy' | 'darkFantasy'): string {
+  if (themeId === 'cozy') {
+    return 'Сезонный дневник ещё открыт';
+  }
+  return 'Арка ещё не завершена';
 }

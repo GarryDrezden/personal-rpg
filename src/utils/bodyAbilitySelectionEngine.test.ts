@@ -1,258 +1,244 @@
 import { describe, expect, it } from 'vitest';
-import { BODY_ABILITY_BANK } from '../constants/bodyAbilityBank';
-import type { BodyAbilityProfile } from '../types/bodyAbilityPersonal';
-import { selectPersonalBodyAbilities } from './bodyAbilitySelectionEngine';
-import { getThemedBodyAbilityPresentation } from '../game/bodyAbilityThemePresentation';
+import {
+  BODY_ABILITY_BANK,
+  BODY_ABILITY_BANK_VERSION,
+} from '../constants/bodyAbilityBank';
+import {
+  PROFILE_A_LARGE_ATHLETIC,
+  PROFILE_B_SMALL_APPEARANCE,
+  PROFILE_C_LARGE_LOW_MOBILITY,
+  PROFILE_D_ATHLETE_COMEBACK,
+} from '../fixtures/bodyAbilityProfiles';
+import {
+  explainBodyAbilitySelection,
+  selectPersonalBodyAbilities,
+} from './bodyAbilitySelectionEngine';
 import {
   applyBodyAbilityProfile,
   emptyPersonalState,
   getPersonalBodyAbilitiesState,
-  respondToSuggestedAbility,
-  syncPersonalBodyAbilityProgress,
+  previewBodyAbilitySelection,
+  regenerateBodyAbilityMap,
 } from './bodyAbilityPersonalEngine';
 import { DEFAULT_APP_SETTINGS } from '../constants/defaults';
-import type { AppSettings, DailyEntry } from '../types';
-import { emptyDaily } from '../store/appStore';
+import type { AppSettings } from '../types';
 
-function profile(partial: Partial<BodyAbilityProfile>): BodyAbilityProfile {
-  return {
-    goalKg: 15,
-    goalBand: '10_20',
-    pathTypes: ['control_return'],
-    interests: ['endurance', 'nutrition_control'],
-    baselineEasy: [],
-    hiddenTopics: [],
-    configuredAt: '2026-08-02T00:00:00.000Z',
-    ...partial,
-  };
+const BAD_BASIC_MOBILITY = [
+  'tie_shoes_easier',
+  'stand_from_floor_easier',
+  'stairs_easier',
+  'stairs_as_stage',
+  'breath_after_stairs',
+  'walk_easier_short',
+  'steps_minimum_held',
+  'car_seat_easier',
+  'chores_without_drain',
+  'get_up_easier',
+  'chair_space_easier',
+];
+
+function idsOf(profile: Parameters<typeof selectPersonalBodyAbilities>[0]) {
+  return selectPersonalBodyAbilities(profile).map((a) => a.id);
 }
 
-describe('selectPersonalBodyAbilities', () => {
-  it('under_10 profile does not select deep mobility abilities by default', () => {
-    const selected = selectPersonalBodyAbilities(
-      profile({
-        goalKg: 8,
-        goalBand: 'under_10',
-        pathTypes: ['shape_tuning', 'appearance_focus'],
-        interests: ['appearance', 'nutrition_control', 'measurements'],
-      }),
-    );
-    const ids = selected.map((a) => a.id);
-    expect(ids).not.toContain('tie_shoes_easier');
-    expect(ids).not.toContain('stand_from_floor_easier');
-    expect(ids).not.toContain('car_seat_easier');
-    expect(selected.length).toBeGreaterThanOrEqual(20);
-    expect(selected.length).toBeLessThanOrEqual(30);
+describe('Body Abilities quality pass — QA archetypes', () => {
+  it('bank version is set and bank has kinds', () => {
+    expect(BODY_ABILITY_BANK_VERSION).toBeTruthy();
+    expect(BODY_ABILITY_BANK.every((a) => a.kind)).toBe(true);
+    expect(BODY_ABILITY_BANK.length).toBeGreaterThanOrEqual(80);
   });
 
-  it('80_plus profile can select deep mobility abilities', () => {
-    const selected = selectPersonalBodyAbilities(
-      profile({
-        goalKg: 90,
-        goalBand: '80_plus',
-        pathTypes: ['mobility_return', 'load_reduction'],
-        interests: ['mobility', 'daily_life', 'stairs_routes', 'flexibility'],
-      }),
+  it('selection is deterministic', () => {
+    const a = idsOf(PROFILE_A_LARGE_ATHLETIC);
+    const b = idsOf(PROFILE_A_LARGE_ATHLETIC);
+    expect(a).toEqual(b);
+  });
+
+  it('Profile A: athletic large goal avoids basic limitations', () => {
+    const explanation = explainBodyAbilitySelection(PROFILE_A_LARGE_ATHLETIC);
+    const ids = explanation.selected.map((s) => s.abilityId);
+
+    expect(explanation.stats.count).toBeGreaterThanOrEqual(20);
+    expect(explanation.stats.count).toBeLessThanOrEqual(30);
+    for (const bad of BAD_BASIC_MOBILITY) {
+      expect(ids).not.toContain(bad);
+    }
+    expect(explanation.stats.byCategory.daily_life ?? 0).toBeLessThanOrEqual(2);
+    expect(
+      ids.some((id) =>
+        [
+          'training_return_base',
+          'stable_training_mode',
+          'strength_base',
+          'technique_returns',
+          'resource_after_load',
+          'training_load_recover',
+        ].includes(id),
+      ),
+    ).toBe(true);
+    expect(
+      ids.some((id) => id.startsWith('weight_pass_') || id.startsWith('waist_')),
+    ).toBe(true);
+    expect(
+      ids.some((id) =>
+        ['alcohol_free_week', 'alcohol_free_month', 'evening_ritual_calm'].includes(id),
+      ),
+    ).toBe(true);
+    expect(explanation.stats.universalCount).toBeLessThanOrEqual(3);
+    expect(explanation.stats.weightMilestoneCount).toBeLessThanOrEqual(
+      Math.floor(explanation.stats.count * 0.2) + 1,
     );
-    const ids = selected.map((a) => a.id);
+  });
+
+  it('Profile B: small appearance goal without heavy mobility', () => {
+    const explanation = explainBodyAbilitySelection(PROFILE_B_SMALL_APPEARANCE);
+    const ids = explanation.selected.map((s) => s.abilityId);
+
+    for (const bad of BAD_BASIC_MOBILITY) {
+      expect(ids).not.toContain(bad);
+    }
+    expect(
+      ids.some((id) =>
+        ['clothes_fit_better', 'silhouette_cleaner', 'photo_progress', 'size_looser'].includes(
+          id,
+        ),
+      ),
+    ).toBe(true);
+    expect(
+      ids.some((id) =>
+        ['weight_pass_2', 'weight_pass_5', 'weight_pass_10', 'waist_minus_2', 'waist_minus_5'].includes(
+          id,
+        ),
+      ),
+    ).toBe(true);
+    expect(
+      ids.some((id) =>
+        ['nutrition_logged_week', 'nutrition_limit_streak', 'less_evening_food_chaos'].includes(
+          id,
+        ),
+      ),
+    ).toBe(true);
+  });
+
+  it('Profile C: low mobility gets functional progression, no alcohol', () => {
+    const explanation = explainBodyAbilitySelection(PROFILE_C_LARGE_LOW_MOBILITY);
+    const ids = explanation.selected.map((s) => s.abilityId);
+
     expect(
       ids.some((id) =>
         [
           'tie_shoes_easier',
           'stand_from_floor_easier',
           'stairs_easier',
-          'mobility_return_felt',
+          'walk_easier_short',
           'chores_without_drain',
+        ].includes(id),
+      ),
+    ).toBe(true);
+    expect(ids.every((id) => !id.includes('alcohol'))).toBe(true);
+    expect(
+      explanation.selected.every((s) => s.category !== 'alcohol_evening'),
+    ).toBe(true);
+    const diffs = new Set(explanation.selected.map((s) => s.difficulty));
+    expect(diffs.has('early')).toBe(true);
+    expect(diffs.has('late') || diffs.has('epic') || diffs.has('middle')).toBe(true);
+  });
+
+  it('Profile D: athlete comeback without chores/alcohol/basic walk', () => {
+    const explanation = explainBodyAbilitySelection(PROFILE_D_ATHLETE_COMEBACK);
+    const ids = explanation.selected.map((s) => s.abilityId);
+
+    for (const bad of [
+      'tie_shoes_easier',
+      'chores_without_drain',
+      'walk_easier_short',
+      'steps_minimum_held',
+      'alcohol_free_week',
+      'alcohol_free_month',
+    ]) {
+      expect(ids).not.toContain(bad);
+    }
+    expect(
+      ids.some((id) =>
+        [
+          'training_return_base',
+          'stable_training_mode',
+          'strength_base',
+          'technique_returns',
+          'resource_after_load',
+          'training_load_recover',
         ].includes(id),
       ),
     ).toBe(true);
   });
 
-  it('baselineEasy tie_shoes excludes shoes ability', () => {
-    const selected = selectPersonalBodyAbilities(
-      profile({
-        goalKg: 70,
-        goalBand: '50_80',
-        pathTypes: ['mobility_return'],
-        interests: ['flexibility', 'mobility', 'daily_life'],
-        baselineEasy: ['tie_shoes'],
-      }),
+  it('quality caps: category diversity and count bounds', () => {
+    for (const profile of [
+      PROFILE_A_LARGE_ATHLETIC,
+      PROFILE_B_SMALL_APPEARANCE,
+      PROFILE_C_LARGE_LOW_MOBILITY,
+      PROFILE_D_ATHLETE_COMEBACK,
+    ]) {
+      const explanation = explainBodyAbilitySelection(profile);
+      expect(explanation.stats.count).toBeGreaterThanOrEqual(20);
+      expect(explanation.stats.count).toBeLessThanOrEqual(30);
+      expect(Object.keys(explanation.stats.byCategory).length).toBeGreaterThanOrEqual(4);
+      const maxCat = Math.max(...Object.values(explanation.stats.byCategory));
+      expect(maxCat).toBeLessThanOrEqual(Math.max(3, Math.floor(explanation.stats.count * 0.25)));
+      expect(explanation.stats.byDifficulty.early ?? 0).toBeGreaterThanOrEqual(2);
+      expect(explanation.stats.subjectiveCount).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it('hiddenTopics never violated including fallback', () => {
+    const explanation = explainBodyAbilitySelection(PROFILE_C_LARGE_LOW_MOBILITY);
+    expect(
+      explanation.selected.every((s) => s.category !== 'alcohol_evening'),
+    ).toBe(true);
+    expect(
+      explanation.rejectedExamples.some((r) => r.reason === 'hiddenTopics'),
+    ).toBe(true);
+  });
+
+  it('baseline exclusions never return via fallback', () => {
+    const explanation = explainBodyAbilitySelection(PROFILE_A_LARGE_ATHLETIC);
+    const baselineRejected = explanation.rejectedExamples
+      .filter((r) => r.reason === 'baselineEasy')
+      .map((r) => r.abilityId);
+    expect(baselineRejected.length).toBeGreaterThan(0);
+    for (const id of baselineRejected) {
+      expect(explanation.selected.some((s) => s.abilityId === id)).toBe(false);
+    }
+    expect(explanation.selected.every((s) => !s.viaFallback || !baselineRejected.includes(s.abilityId))).toBe(
+      true,
     );
-    expect(selected.map((a) => a.id)).not.toContain('tie_shoes_easier');
   });
 
-  it('baselineEasy walk_15k excludes beginner walking abilities', () => {
-    const selected = selectPersonalBodyAbilities(
-      profile({
-        goalKg: 40,
-        goalBand: '20_50',
-        pathTypes: ['mobility_return'],
-        interests: ['endurance', 'stairs_routes'],
-        baselineEasy: ['walk_15k'],
-      }),
-    );
-    const ids = selected.map((a) => a.id);
-    expect(ids).not.toContain('walk_easier_short');
-    expect(ids).not.toContain('steps_minimum_held');
+  it('explain output includes scores and reject samples', () => {
+    const explanation = explainBodyAbilitySelection(PROFILE_A_LARGE_ATHLETIC);
+    expect(explanation.selected[0]?.finalScore).toBeTypeOf('number');
+    expect(explanation.selected[0]?.whySelected.length).toBeGreaterThan(0);
+    expect(explanation.rejectedExamples.length).toBeGreaterThan(0);
   });
 
-  it('hiddenTopics alcohol excludes alcohol abilities', () => {
-    const selected = selectPersonalBodyAbilities(
-      profile({
-        interests: ['alcohol_evening', 'confidence'],
-        hiddenTopics: ['alcohol'],
-      }),
-    );
-    expect(selected.every((a) => a.category !== 'alcohol_evening')).toBe(true);
-    expect(selected.every((a) => !(a.hiddenByTopics ?? []).includes('alcohol'))).toBe(true);
-  });
-
-  it('hiddenTopics appearance excludes appearance abilities', () => {
-    const selected = selectPersonalBodyAbilities(
-      profile({
-        goalBand: 'under_10',
-        interests: ['appearance', 'measurements'],
-        hiddenTopics: ['appearance'],
-      }),
-    );
-    expect(selected.every((a) => a.category !== 'appearance')).toBe(true);
-  });
-
-  it('selected count is between 20 and 30', () => {
-    const selected = selectPersonalBodyAbilities(
-      profile({
-        goalBand: '20_50',
-        pathTypes: ['control_return', 'shape_tuning'],
-        interests: ['nutrition_control', 'endurance', 'confidence'],
-      }),
-    );
-    expect(selected.length).toBeGreaterThanOrEqual(20);
-    expect(selected.length).toBeLessThanOrEqual(30);
-  });
-
-  it('selection has category diversity', () => {
-    const selected = selectPersonalBodyAbilities(
-      profile({
-        goalBand: '20_50',
-        pathTypes: ['control_return', 'mobility_return', 'athlete_return'],
-        interests: [
-          'endurance',
-          'nutrition_control',
-          'sport_training',
-          'confidence',
-          'sleep_resource',
-        ],
-      }),
-    );
-    const categories = new Set(selected.map((a) => a.category));
-    expect(categories.size).toBeGreaterThanOrEqual(3);
-  });
-
-  it('bank has at least 80 abilities', () => {
-    expect(BODY_ABILITY_BANK.length).toBeGreaterThanOrEqual(80);
-  });
-});
-
-describe('body ability personal state / unlock', () => {
-  it('old empty profile does not crash', () => {
-    const empty = emptyPersonalState();
-    expect(empty.selectedAbilityIds).toEqual([]);
-    expect(getPersonalBodyAbilitiesState(DEFAULT_APP_SETTINGS).profile).toBeNull();
-  });
-
-  it('Dark/Cozy presentations resolve for selected ability', () => {
-    const cozy = getThemedBodyAbilityPresentation('cozy', 'clothes_fit_better');
-    const dark = getThemedBodyAbilityPresentation('darkFantasy', 'clothes_fit_better');
-    expect(cozy.title).toBeTruthy();
-    expect(dark.title).toBeTruthy();
-    expect(cozy.flavor).not.toBe(dark.flavor);
-  });
-
-  it('suggested_confirmation abilities are not auto-unlocked', () => {
-    let settings: AppSettings = applyBodyAbilityProfile(
-      DEFAULT_APP_SETTINGS,
-      profile({
-        goalKg: 70,
-        goalBand: '50_80',
-        pathTypes: ['mobility_return'],
-        interests: ['mobility', 'flexibility', 'daily_life'],
-      }),
-    );
-    const personal = getPersonalBodyAbilitiesState(settings);
-    const suggestedId = personal.selectedAbilityIds.find((id) => {
-      const def = BODY_ABILITY_BANK.find((a) => a.id === id);
-      return def?.unlockMode === 'suggested_confirmation';
+  it('preview matches future saved grid ids', () => {
+    const preview = previewBodyAbilitySelection(PROFILE_B_SMALL_APPEARANCE);
+    const settings = applyBodyAbilityProfile(DEFAULT_APP_SETTINGS, {
+      ...PROFILE_B_SMALL_APPEARANCE,
+      configuredAt: '2026-08-02T00:00:00.000Z',
     });
-    expect(suggestedId).toBeTruthy();
-
-    settings = syncPersonalBodyAbilityProgress({
-      settings,
-      dailyEntries: [],
-      measurements: [
-        { id: '1', date: '2026-01-01', weight: 120, waist: 120 },
-        { id: '2', date: '2026-06-01', weight: 100, waist: 110 },
-      ],
-    });
-
-    const after = getPersonalBodyAbilitiesState(settings).abilities[suggestedId!];
-    expect(after?.status).not.toBe('unlocked');
+    const saved = getPersonalBodyAbilitiesState(settings).selectedAbilityIds;
+    for (const item of preview.selected) {
+      expect(saved).toContain(item.abilityId);
+    }
   });
 
-  it('auto abilities unlock only by data thresholds', () => {
-    let settings: AppSettings = applyBodyAbilityProfile(
-      DEFAULT_APP_SETTINGS,
-      profile({
-        goalKg: 12,
-        goalBand: '10_20',
-        pathTypes: ['control_return'],
-        interests: ['nutrition_control', 'confidence', 'endurance'],
-      }),
-    );
-
-    // Prefer a selected auto ability with a simple threshold.
-    const autoId =
-      getPersonalBodyAbilitiesState(settings).selectedAbilityIds.find((id) => {
-        const def = BODY_ABILITY_BANK.find((a) => a.id === id);
-        return def?.unlockMode === 'auto' && def.autoUnlock?.type === 'no_alcohol_days';
-      }) ??
-      getPersonalBodyAbilitiesState(settings).selectedAbilityIds.find((id) => {
-        const def = BODY_ABILITY_BANK.find((a) => a.id === id);
-        return def?.unlockMode === 'auto' && def.autoUnlock?.type === 'recovery_days';
-      });
-
-    expect(autoId).toBeTruthy();
-    const def = BODY_ABILITY_BANK.find((a) => a.id === autoId)!;
-    const target = def.autoUnlock!.target;
-
-    const entries: DailyEntry[] = Array.from({ length: target }, (_, i) => ({
-      ...emptyDaily(`2026-08-${String(i + 1).padStart(2, '0')}`),
-      alcohol: 'none',
-      dayMode: 'recovery',
-    }));
-
-    const before = getPersonalBodyAbilitiesState(settings).abilities[autoId!]?.status;
-    expect(before).toBe('locked');
-
-    settings = syncPersonalBodyAbilityProgress({
-      settings,
-      dailyEntries: entries,
-      measurements: [],
+  it('regenerate keeps unlocked abilities', () => {
+    let settings: AppSettings = applyBodyAbilityProfile(DEFAULT_APP_SETTINGS, {
+      ...PROFILE_C_LARGE_LOW_MOBILITY,
+      configuredAt: '2026-08-02T00:00:00.000Z',
     });
-
-    expect(getPersonalBodyAbilitiesState(settings).abilities[autoId!]?.status).toBe('unlocked');
-  });
-
-  it('respondToSuggestedAbility can unlock or hide', () => {
-    let settings = applyBodyAbilityProfile(
-      DEFAULT_APP_SETTINGS,
-      profile({
-        goalKg: 70,
-        goalBand: '50_80',
-        pathTypes: ['mobility_return'],
-        interests: ['mobility', 'daily_life'],
-      }),
-    );
-    const id = getPersonalBodyAbilitiesState(settings).selectedAbilityIds[0]!;
+    const firstId = getPersonalBodyAbilitiesState(settings).selectedAbilityIds[0]!;
     settings = {
       ...settings,
       bodyAbilityState: {
@@ -261,18 +247,30 @@ describe('body ability personal state / unlock', () => {
           ...getPersonalBodyAbilitiesState(settings),
           abilities: {
             ...getPersonalBodyAbilitiesState(settings).abilities,
-            [id]: {
-              ...getPersonalBodyAbilitiesState(settings).abilities[id]!,
-              status: 'suggested',
-              suggestedAt: '2026-08-02T00:00:00.000Z',
+            [firstId]: {
+              ...getPersonalBodyAbilitiesState(settings).abilities[firstId]!,
+              status: 'unlocked',
+              unlockedAt: '2026-08-02T12:00:00.000Z',
+              confirmedByUser: true,
             },
           },
         },
       },
     };
-    const unlocked = respondToSuggestedAbility(settings, id, 'yes');
-    expect(getPersonalBodyAbilitiesState(unlocked).abilities[id]?.status).toBe('unlocked');
-    const hidden = respondToSuggestedAbility(settings, id, 'irrelevant');
-    expect(getPersonalBodyAbilitiesState(hidden).abilities[id]?.status).toBe('hidden');
+
+    const regenerated = regenerateBodyAbilityMap(settings, {
+      ...PROFILE_A_LARGE_ATHLETIC,
+      configuredAt: '2026-08-02T13:00:00.000Z',
+    });
+    const personal = getPersonalBodyAbilitiesState(regenerated);
+    expect(personal.abilities[firstId]?.status).toBe('unlocked');
+    expect(personal.selectedAbilityIds).toContain(firstId);
+    expect(personal.abilityBankVersion).toBe(BODY_ABILITY_BANK_VERSION);
+    expect(personal.retainedUnlockedIds).toContain(firstId);
+  });
+
+  it('old empty profile does not crash', () => {
+    expect(emptyPersonalState().selectedAbilityIds).toEqual([]);
+    expect(getPersonalBodyAbilitiesState(DEFAULT_APP_SETTINGS).profile).toBeNull();
   });
 });

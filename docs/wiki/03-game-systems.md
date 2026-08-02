@@ -1097,13 +1097,58 @@ Presentation is theme-aware.
 
 **Not a fixed list for everyone.** A user aiming for −8 kg and a user aiming for −90 kg get different grids. Baseline «already easy» answers exclude irrelevant early mobility abilities. Hidden topics remove alcohol/appearance/etc. from the map.
 
+### Quality principle
+
+Body Ability selection must be validated against real user archetypes.
+
+A technically valid selection is not enough.
+The resulting grid must feel personally relevant, respectful and believable.
+
+Do **not** assume poor mobility from a large goal alone, or good function from a small goal alone. Baseline answers decide functional exclusions.
+
+**QA archetypes** (fixtures in `src/fixtures/bodyAbilityProfiles.ts`):
+
+| ID | Archetype |
+|----|-----------|
+| A | large goal + athletic baseline |
+| B | small goal + appearance focus |
+| C | large goal + low mobility |
+| D | moderate goal + athlete comeback |
+
+Dev helper: `explainBodyAbilitySelection(profile, bank)` — scores, match reasons, rejected examples (baseline / hidden / goalBand). Not shown to users.
+
+### Kinds on the personal map
+
+`BodyAbilityKind`: `body_change` · `functional_change` · `route_mastery` · `milestone`
+
+The personal map includes body/functional changes **and** important route milestones (streaks, training months, weight passes). Docs treat both as part of one card — not a second system.
+
+### Selection quality caps (default target 24, bounds 20–30)
+
+- ≤25% one category
+- ≤20% pure weight milestones
+- ≥4 categories
+- ≥3 early abilities
+- ≥2 late/epic
+- ≥3 interest-matched abilities
+- universal fallback capped (must not flood every map)
+- baselineEasy / hiddenTopics never re-enter via fallback
+
+Bank version: `BODY_ABILITY_BANK_VERSION` stored as `abilityBankVersion` / used on regenerate.
+
+### Setup preview & safe regenerate
+
+- After Ability Profile Setup: preview «Вот какой получится твоя карта» (count, categories, 5–6 examples) before save.
+- «Пересобрать карту»: unlocked abilities retained; locked/suggested rebuilt; warning before action. Deterministic for same profile + bank version.
+
 **Code:**
 - Types: `src/types/bodyAbilityPersonal.ts`
 - Bank: `src/constants/bodyAbilityBank.ts` (80+)
 - Selection: `src/utils/bodyAbilitySelectionEngine.ts`
 - State/unlock: `src/utils/bodyAbilityPersonalEngine.ts` → `settings.bodyAbilityState.personal`
+- QA fixtures: `src/fixtures/bodyAbilityProfiles.ts`
 - Theme: `src/game/bodyAbilityThemePresentation.ts` → `getThemedBodyAbilityPresentation`
-- UI: `/freedom` (`BodyAbilityPersonalGrid` + setup), Growth abilities, Dashboard card, Today soft hint
+- UI: `/freedom` (`BodyAbilityPersonalGrid` + setup preview + regenerate), Growth abilities, Dashboard card, Today soft hint
 
 **Statuses:** `locked` | `suggested` | `unlocked` | `hidden`  
 **Unlock modes:** `auto` (data thresholds) · `suggested_confirmation` (user confirms) · `manual` («Я заметил»)

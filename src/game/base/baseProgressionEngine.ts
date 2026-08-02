@@ -5,15 +5,11 @@ import { hasAnyDailyData } from '../../utils/achievementHelpers';
 import { getDayMode } from '../../utils/stepsEngine';
 import { getNutritionQuestCompleted, isNutritionTrackingEnabled } from '../../utils/nutritionEngine';
 import { getBodyAbilityState } from '../bodyAbilities/bodyAbilityV1Engine';
-import { getSeasonConfigByIndex } from '../seasons/seasonConfig';
-import { buildQuestProgressList } from '../seasons/seasonQuestProgress';
 import {
-  getSeasonDateRange,
-  getSeasonEntries,
-  getSeasonIndex,
+  evaluateSeasonProgress,
+  resolveActiveSeasonIndex,
   resolveCampaignStartDate,
 } from '../seasons/seasonEngine';
-import { getSeasonPartialStatus } from '../seasons/seasonRecap';
 import { getPlateauSnapshot } from '../plateau/plateauEngine';
 import { todayISO } from '../../utils/dates';
 import { BASE_STAGES } from './baseProgressionConfig';
@@ -81,16 +77,24 @@ function countQualifyingSeasons(
   today: string,
 ): number {
   const campaignStart = resolveCampaignStartDate(settings, dailyEntries, today);
-  const currentSeasonIndex = getSeasonIndex(campaignStart, today);
+  const currentSeasonIndex = resolveActiveSeasonIndex({
+    settings,
+    dailyEntries,
+    today,
+    campaignStartDate: campaignStart,
+  });
   let count = 0;
 
   for (let seasonIndex = 1; seasonIndex <= currentSeasonIndex; seasonIndex += 1) {
-    const { start, end } = getSeasonDateRange(campaignStart, seasonIndex);
-    const seasonEntries = getSeasonEntries(dailyEntries, start, end);
-    const config = getSeasonConfigByIndex(seasonIndex);
-    const quests = buildQuestProgressList(config.quests, seasonEntries, settings);
-    const completedQuestCount = quests.filter((q) => q.completed).length;
-    const status = getSeasonPartialStatus(completedQuestCount);
+    const progress = evaluateSeasonProgress({
+      settings,
+      dailyEntries,
+      campaignStartDate: campaignStart,
+      seasonIndex,
+      today,
+      extendOpenEnd: seasonIndex === currentSeasonIndex,
+    });
+    const status = progress.partialStatus;
     if (status === 'held' || status === 'cleared' || status === 'empowered') {
       count += 1;
     }

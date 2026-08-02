@@ -1,18 +1,20 @@
 import { useMemo } from 'react';
 import { Scroll } from 'lucide-react';
 import type { SeasonHistoryArchive } from '../../game/seasons/seasonTypes';
-import { getVisibleSeasonHistory } from '../../game/seasons/seasonHistory';
+import { partitionSeasonHistory } from '../../game/seasons/seasonHistory';
 import { SeasonHistoryCard } from './SeasonHistoryCard';
+import { useAppTheme } from '../../hooks/useAppTheme';
 
 type SeasonHistorySectionProps = {
   archive: SeasonHistoryArchive;
 };
 
 export function SeasonHistorySection({ archive }: SeasonHistorySectionProps) {
-  const visible = useMemo(() => getVisibleSeasonHistory(archive, 2), [archive]);
-  const current = visible.find((e) => e.isCurrent);
-  const open = visible.filter((e) => !e.isLocked && !e.isCurrent);
-  const fog = visible.filter((e) => e.isLocked);
+  const { isCozy } = useAppTheme();
+  const { current, completed, upcoming } = useMemo(
+    () => partitionSeasonHistory(archive),
+    [archive],
+  );
 
   return (
     <section className="space-y-4" data-testid="season-history-section">
@@ -29,8 +31,9 @@ export function SeasonHistorySection({ archive }: SeasonHistorySectionProps) {
               Летопись сезонов
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--app-text-muted)]">
-              28-дневные арки пути — как страницы садового журнала. Награда сезона появляется,
-              когда арка пройдена или усилена. Без боя и без новых обязанностей.
+              {isCozy
+                ? 'Сезонный дневник — арка заботы, а не календарный месяц. Новая страница откроется, когда текущая собрана. Пропущенные дни не закрывают сезон сами.'
+                : 'Сезон — арка кампании, а не календарный месяц. Он остаётся текущим, пока не пройден. Пропуск дней не завершает арку и не открывает следующую.'}
             </p>
           </div>
         </div>
@@ -56,6 +59,16 @@ export function SeasonHistorySection({ archive }: SeasonHistorySectionProps) {
             </dd>
           </div>
         </dl>
+        {current && !current.isCompleted ? (
+          <p
+            className="mt-3 text-xs text-[var(--app-text-muted)]"
+            data-testid="season-arc-continues"
+          >
+            {isCozy
+              ? 'Сезонный дневник ещё открыт. Дом ещё собирает следы этого сезона.'
+              : 'Арка ещё не завершена. Путь сезона продолжается.'}
+          </p>
+        ) : null}
       </div>
 
       {current ? (
@@ -67,26 +80,26 @@ export function SeasonHistorySection({ archive }: SeasonHistorySectionProps) {
         </div>
       ) : null}
 
-      {open.length > 0 ? (
-        <div className="space-y-2">
+      {completed.length > 0 ? (
+        <div className="space-y-2" data-testid="season-completed-section">
           <h3 className="season-section-label text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
             Пройденные арки
           </h3>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-            {[...open].reverse().map((entry) => (
+            {[...completed].reverse().map((entry) => (
               <SeasonHistoryCard key={entry.seasonIndex} entry={entry} />
             ))}
           </div>
         </div>
       ) : null}
 
-      {fog.length > 0 ? (
-        <div className="space-y-2">
+      {upcoming.length > 0 ? (
+        <div className="space-y-2" data-testid="season-upcoming-section">
           <h3 className="text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
             Впереди в тумане
           </h3>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-            {fog.map((entry) => (
+            {upcoming.map((entry) => (
               <SeasonHistoryCard key={entry.seasonIndex} entry={entry} />
             ))}
           </div>

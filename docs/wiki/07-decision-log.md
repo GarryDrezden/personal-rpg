@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-08-02 — Body Abilities Quality Pass (archetype-validated grids)
+
+**Context:**  
+Personalized v1 could produce technically valid but personally wrong grids (e.g. athletic −80 kg flooded with universal fallbacks; weak milestone weight).
+
+**Decision:**  
+Validate selection against four QA archetypes. Add quality caps (category / weight milestones / universal), `BodyAbilityKind`, bank versioning, setup preview, safe regenerate (keep unlocked), and `explainBodyAbilitySelection` for tests. Soften humiliating / medical-sounding copy. Principle: a technically valid selection is not enough — the grid must feel relevant, respectful and believable.
+
+**Consequence:**  
+Athletic large-goal maps drop basic mobility; appearance maps get form/clothes/measurements; low-mobility maps keep functional progression; hiddenTopics and baselineEasy never return via fallback.
+
 ## 2026-08-02 — Body Abilities personalized grid (not fixed for all)
 
 **Context:**  

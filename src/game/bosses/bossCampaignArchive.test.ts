@@ -33,7 +33,7 @@ describe('bossCampaignArchive', () => {
     expect(countSealedCampaignBosses(archive)).toBe(0);
   });
 
-  it('marks future seasons locked and past seasons open', () => {
+  it('keeps season 1 current past calendar day 28 when arc incomplete', () => {
     const entries = Array.from({ length: 40 }, (_, i) => {
       const day = i + 1;
       const date =
@@ -50,12 +50,38 @@ describe('bossCampaignArchive', () => {
       today: '2026-07-10',
     });
 
-    // Day 40 of campaign ≈ season 2
+    // Calendar would be season 2, but quests are not cleared → still season 1
+    expect(archive.current.seasonIndex).toBe(1);
+    expect(archive.seasonBosses[0]?.isCurrent).toBe(true);
+    expect(archive.seasonBosses[0]?.isLocked).toBe(false);
+    expect(archive.seasonBosses[1]?.isLocked).toBe(true);
+    expect(archive.seasonBosses[0]?.progressPercent).toBeGreaterThan(0);
+  });
+
+  it('opens season 2 bosses only after season 1 arc is cleared', () => {
+    const entries = Array.from({ length: 28 }, (_, i) => {
+      const day = i + 1;
+      return entry(`2026-06-${String(day).padStart(2, '0')}`, {
+        steps: 9000,
+        alcohol: 'none',
+        nutritionLevel: 'light',
+        energyLevel: 3,
+        dayMode: day <= 3 ? 'minimal' : 'normal',
+      });
+    });
+
+    const archive = getBossCampaignArchive({
+      dailyEntries: entries,
+      measurements: [],
+      settings: { ...DEFAULT_APP_SETTINGS, startDate: '2026-06-01' },
+      today: '2026-07-05',
+    });
+
     expect(archive.current.seasonIndex).toBe(2);
     expect(archive.seasonBosses[0]?.isLocked).toBe(false);
+    expect(archive.seasonBosses[0]?.isCurrent).toBe(false);
     expect(archive.seasonBosses[1]?.isCurrent).toBe(true);
     expect(archive.seasonBosses[2]?.isLocked).toBe(true);
-    expect(archive.seasonBosses[0]?.progressPercent).toBeGreaterThan(0);
   });
 
   it('derives act progress ranges', () => {

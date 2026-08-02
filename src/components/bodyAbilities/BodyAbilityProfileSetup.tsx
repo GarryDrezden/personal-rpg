@@ -13,6 +13,7 @@ import {
   BODY_PATH_TYPE_LABELS,
   goalKgToBand,
 } from '../../constants/bodyAbilityBank';
+import { previewBodyAbilitySelection } from '../../utils/bodyAbilityPersonalEngine';
 
 type BodyAbilityProfileSetupProps = {
   initial?: BodyAbilityProfile | null;
@@ -79,17 +80,32 @@ export function BodyAbilityProfileSetup({
 
   const band = useMemo(() => goalKgToBand(goalKg), [goalKg]);
 
-  const finish = () => {
-    onComplete({
+  const draftProfile = useMemo<BodyAbilityProfile>(
+    () => ({
       goalKg,
       goalBand: band,
       pathTypes: pathTypes.length ? pathTypes : ['control_return'],
       interests: interests.length ? interests : ['confidence'],
       baselineEasy,
       hiddenTopics,
+      configuredAt: null,
+    }),
+    [goalKg, band, pathTypes, interests, baselineEasy, hiddenTopics],
+  );
+
+  const preview = useMemo(
+    () => (step === 5 ? previewBodyAbilitySelection(draftProfile) : null),
+    [step, draftProfile],
+  );
+
+  const finish = () => {
+    onComplete({
+      ...draftProfile,
       configuredAt: new Date().toISOString(),
     });
   };
+
+  const totalSteps = 6;
 
   return (
     <section
@@ -98,7 +114,7 @@ export function BodyAbilityProfileSetup({
     >
       <header className="space-y-2">
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--app-gold)]">
-          Карта тела · шаг {step + 1} из 5
+          Карта тела · шаг {step + 1} из {totalSteps}
         </p>
         <h2 className="text-xl font-bold text-[var(--app-text)]">Настрой карту способностей</h2>
         <p className="text-sm text-[var(--app-text-muted)]">
@@ -199,6 +215,37 @@ export function BodyAbilityProfileSetup({
         </div>
       ) : null}
 
+      {step === 5 && preview ? (
+        <div className="space-y-3" data-testid="body-ability-setup-preview">
+          <p className="text-sm font-medium text-[var(--app-text)]">
+            Вот какой получится твоя карта
+          </p>
+          <p className="text-sm text-[var(--app-text-muted)]">
+            {preview.stats.count} способностей · мы не будем показывать то, что уже даётся тебе
+            нормально.
+          </p>
+          <p className="text-xs text-[var(--app-text-muted)]">
+            Категории:{' '}
+            {Object.entries(preview.stats.byCategory)
+              .map(([k, v]) => `${BODY_INTEREST_LABELS[k as BodyAbilityInterest] ?? k} (${v})`)
+              .join(' · ')}
+          </p>
+          <ul className="space-y-2">
+            {preview.selected.slice(0, 6).map((item) => (
+              <li
+                key={item.abilityId}
+                className="rounded-xl border border-[var(--app-border)] bg-[var(--app-bg-soft)] px-3 py-2 text-sm text-[var(--app-text)]"
+              >
+                {item.title}
+                <span className="mt-0.5 block text-[11px] text-[var(--app-text-muted)]">
+                  {BODY_INTEREST_LABELS[item.category]} · {item.difficulty}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
       <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
         <div className="flex gap-2">
           {onCancel ? (
@@ -216,18 +263,18 @@ export function BodyAbilityProfileSetup({
               onClick={() => setStep((s) => s - 1)}
               className="rounded-xl border border-[var(--app-border)] px-3 py-2 text-sm text-[var(--app-text)]"
             >
-              Назад
+              {step === 5 ? 'Изменить ответы' : 'Назад'}
             </button>
           ) : null}
         </div>
-        {step < 4 ? (
+        {step < 5 ? (
           <button
             type="button"
             data-testid="body-ability-setup-next"
             onClick={() => setStep((s) => s + 1)}
             className="rounded-xl bg-[var(--app-primary)] px-4 py-2 text-sm font-semibold text-slate-950"
           >
-            Дальше
+            {step === 4 ? 'Посмотреть карту' : 'Дальше'}
           </button>
         ) : (
           <button
@@ -236,7 +283,7 @@ export function BodyAbilityProfileSetup({
             onClick={finish}
             className="rounded-xl bg-[var(--app-primary)] px-4 py-2 text-sm font-semibold text-slate-950"
           >
-            Собрать карту
+            Сохранить карту
           </button>
         )}
       </div>
