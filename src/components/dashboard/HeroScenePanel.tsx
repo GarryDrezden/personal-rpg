@@ -60,9 +60,10 @@ export function HeroScenePanel({
   const displayXp = Math.max(0, todayPoints);
   const badgeVariant = displayXp >= 70 ? 'success' : displayXp >= 40 ? 'default' : 'danger';
 
-  const nextStagePercent = game.hasWeightPath
-    ? Math.round(game.stageProgress.progressToNextStage)
-    : 0;
+  const nextStagePercent =
+    game.hasWeightPath || game.hasAvatarPath
+      ? Math.round(game.stageProgress.progressToNextStage)
+      : 0;
 
   const showMilestones = pathSetup.kind === 'ready';
 
@@ -111,6 +112,27 @@ export function HeroScenePanel({
           {stageMeta.description}
         </p>
 
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-[var(--app-text-muted)]">
+          <span data-testid="dashboard-avatar-stage">
+            Стадия {game.stage}/20
+          </span>
+          <span className="text-[var(--app-border)]" aria-hidden>
+            ·
+          </span>
+          <span className="font-semibold tabular-nums text-[var(--app-primary)]">
+            {Math.round(game.avatarProgress)}% пути героя
+          </span>
+          <span className="text-[var(--app-border)]" aria-hidden>
+            ·
+          </span>
+          <Link
+            to="/freedom"
+            className="font-medium text-[var(--app-primary)] hover:underline"
+          >
+            Почему стадия сдвинулась →
+          </Link>
+        </div>
+
         {pathSetup.kind !== 'ready' ? (
           <DashboardPathEmptyState state={pathSetup} />
         ) : showMilestones ? (
@@ -121,7 +143,7 @@ export function HeroScenePanel({
           />
         ) : null}
 
-        {showMilestones && game.stage < 20 ? (
+        {(showMilestones || game.hasAvatarPath) && game.stage < 20 ? (
           <p className="mt-2 text-[11px] text-[var(--app-text-muted)]">
             До следующей стадии:{' '}
             <span className="font-semibold tabular-nums text-[var(--app-primary)]">

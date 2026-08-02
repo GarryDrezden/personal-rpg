@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-08-02 — Avatar Stages v1 (composite, not weight-only)
+
+**Context:**  
+Hero stage was driven almost entirely by weight path. Users on plateau (waist, abilities, consistency) saw a frozen avatar even when the rest of the campaign moved.
+
+**Decision:**  
+Ship `AvatarStageEngine`: weighted blend into `avatarProgress` 0–100 → 20 stages. Weight remains important but cannot alone grant late stages. Non-weight signals can nudge stage while weight is stalled. Same stage id across themes; Cozy and Dark Fantasy use different art/placeholders. Explicit non-medical disclaimer.
+
+**Consequence:**  
+Dashboard / Freedom reflect composite progress; legacy empty saves stay at stage 1; weight-only engine kept for comparison diagnostics.
+
 ## 2026-08-02 — Body Abilities Quality Pass (archetype-validated grids)
 
 **Context:**  

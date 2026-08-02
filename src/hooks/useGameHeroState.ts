@@ -8,9 +8,11 @@ import { getArtifactUnlockStatus } from '../game/artifactUnlockEngine';
 import { getOrCreateDailyMob } from '../game/dailyMobEngine';
 import { resolveGameProfile } from '../game/gameProfile';
 import {
+  getBestWeightForWeightLoss,
   getNextStageProgress,
-  resolveHeroProgressFromMeasurements,
+  getStartWeight,
 } from '../game/heroProgressEngine';
+import { resolveAvatarStageSnapshot } from '../game/avatar/avatarStageEngine';
 import { GAME_ASSET_REGISTRY } from '../game/assetRegistry';
 
 export function useGameHeroState() {
@@ -19,15 +21,22 @@ export function useGameHeroState() {
   const profile = resolveGameProfile(settings);
 
   return useMemo(() => {
-    const progress = resolveHeroProgressFromMeasurements(measurements, profile.targetWeight);
-    const stageProgress = getNextStageProgress({
-      progressPercent: progress.progressPercent,
-      currentStage: progress.stage,
+    const avatar = resolveAvatarStageSnapshot({
+      dailyEntries,
+      measurements,
+      settings,
+      today,
     });
-    const bossId = getChapterBossId(progress.chapter);
+    const startWeight = getStartWeight(measurements);
+    const bestWeight = getBestWeightForWeightLoss(measurements);
+    const stageProgress = getNextStageProgress({
+      progressPercent: avatar.avatarProgress,
+      currentStage: avatar.stage,
+    });
+    const bossId = getChapterBossId(avatar.chapter);
     const bossStatus = getBossChapterStatus({
-      bossChapter: progress.chapter,
-      currentChapter: progress.chapter,
+      bossChapter: avatar.chapter,
+      currentChapter: avatar.chapter,
     });
     const dailyMobId = getOrCreateDailyMob(today);
     const momentumSummary = getMomentumSummary({ today, dailyEntries, settings });
@@ -39,7 +48,7 @@ export function useGameHeroState() {
           artifactId,
           dailyEntries,
           measurements,
-          currentStage: progress.stage,
+          currentStage: avatar.stage,
           momentumValue: momentumSummary.currentValue,
         });
         return acc;
@@ -49,13 +58,24 @@ export function useGameHeroState() {
 
     return {
       profile,
-      ...progress,
+      startWeight,
+      bestWeight,
+      /** Composite avatar progress 0–100 (Avatar Stages v1). */
+      progressPercent: avatar.avatarProgress,
+      avatarProgress: avatar.avatarProgress,
+      stage: avatar.stage,
+      chapter: avatar.chapter,
+      avatarSnapshot: avatar,
       stageProgress,
       bossId,
       bossStatus,
       dailyMobId,
       artifactStatuses,
-      hasWeightPath: progress.startWeight !== null && profile.targetWeight !== null,
+      hasWeightPath: startWeight !== null && profile.targetWeight !== null,
+      /** True when path is ready via weight target OR other avatar signals. */
+      hasAvatarPath:
+        (startWeight !== null && profile.targetWeight !== null) ||
+        avatar.avatarProgress > 0,
     };
   }, [measurements, settings, dailyEntries, today]);
 }

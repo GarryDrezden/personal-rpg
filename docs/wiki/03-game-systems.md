@@ -303,14 +303,35 @@ Vertical **chapter road** — 9 глав в ширине обычного кон
 
 ---
 
-## Hero stages
+## Hero stages / Avatar Stages v1
 
-**Constants:** `heroStages.ts`, `heroProgressEngine.ts`  
-**Assets:** `public/game-assets/heroes/{gender}/stage-XX.png`
+**Engine:** `src/game/avatar/avatarStageEngine.ts` (`resolveAvatarStageSnapshot`)  
+**Assets helper:** `src/game/avatar/avatarStageAssets.ts`  
+**Titles:** `heroStages.ts`  
+**Legacy weight-only math:** `heroProgressEngine.ts` (diagnostics / comparison)
 
-20 стадий, прогресс ~180 кг → ~100 кг (linear по `progressPercent`). Male: частично готов (1–3, 19–20). Female: полный набор.
+20 стадий героя. `avatarProgress` 0–100 собирается из нескольких опор:
 
-Fallback: ближайший якорь (1, 2, 19, 20) пока PNG отсутствует.
+| Сигнал | Вес в прогрессе |
+|--------|-----------------|
+| weight progress | 0.34 |
+| waist / measurements | 0.16 |
+| unlocked Body Abilities | 0.16 |
+| step consistency | 0.12 |
+| nutrition / control | 0.10 |
+| alcohol / sleep / resource | 0.07 |
+| campaign milestones | 0.05 |
+
+Стадия **не** выдаётся только по весу: полный путь веса без остальных опор даёт лишь часть `avatarProgress`. Если вес стоит, но растут талия / способности / стабильность — стадия может немного продвинуться.
+
+Это **визуальное отражение прогресса**, не медицинская оценка тела и не обещание конкретного внешнего результата. UI disclaimer на `/freedom` и в snapshot.
+
+**Theme-aware assets (общий stage id, разные картинки):**
+
+- Cozy: `themes/cozy/avatars/{gender}/stage-NN.*` → placeholder `themes/cozy/avatars/placeholders/{gender}/stage-NN.svg`
+- Dark Fantasy: `heroes/{gender}/variants/dark-fantasy/stage-NN.*` → placeholder `themes/dark-fantasy/avatars/placeholders/{gender}/stage-NN.svg`
+
+Dashboard показывает текущую стадию; `/freedom` (`AvatarStageDriversCard`) объясняет, почему стадия сдвинулась. Старые пользователи без данных → stage 1 / progress 0.
 
 ---
 

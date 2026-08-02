@@ -121,13 +121,14 @@ function resolveCozyAsset(
   switch (kind) {
     case 'hero_avatar': {
       const st = (stage ?? 1) as HeroStageNumber;
+      const n = String(st).padStart(2, '0');
       return {
         themeId: 'cozy',
         kind,
         entityId,
         stage: st,
         path: getCozyHeroStagePath(g, st),
-        fallbackPath: getCozyHeroPlaceholderPath(g),
+        fallbackPath: cozyThemeAsset(`avatars/placeholders/${g}/stage-${n}.svg`),
         placeholder: true,
       };
     }
@@ -210,7 +211,9 @@ function resolveDarkFantasyAsset(
         entityId,
         stage,
         path: versioned(`heroes/${g}/variants/dark-fantasy/stage-${st}.webp`),
-        fallbackPath: versioned(`heroes/${g}/stage-${st}.webp`),
+        fallbackPath: versioned(
+          `themes/dark-fantasy/avatars/placeholders/${g}/stage-${st}.svg`,
+        ),
         placeholder: false,
       };
     case 'companion':

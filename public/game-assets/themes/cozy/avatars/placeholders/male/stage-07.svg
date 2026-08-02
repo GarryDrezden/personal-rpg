@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="640" viewBox="0 0 512 640" role="img" aria-label="Avatar stage 7 placeholder">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f7f0e4"/>
+      <stop offset="100%" stop-color="#c8d9b8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="640" fill="url(#g)"/>
+  <ellipse cx="256" cy="560" rx="140" ry="28" fill="#5c4a32" opacity=".22"/>
+  <path d="M174 409c0-70 30-120 82-120s82 50 82 120v40H174z" fill="#d4a574"/>
+  <circle cx="256" cy="250" r="58" fill="#e8c4a0"/>
+  <path d="M200 220c10-40 40-60 56-60s46 20 56 60" fill="#6b8f5e"/>
+  <rect x="186" y="36" width="140" height="36" rx="10" fill="#5c4a32" opacity=".9"/>
+  <text x="256" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="20" fill="#f7f0e4">Стадия 7</text>
+  <text x="256" y="610" text-anchor="middle" font-family="Georgia,serif" font-size="16" fill="#5c4a32" opacity=".85">Уютный путь</text>
+</svg>

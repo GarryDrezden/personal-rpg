@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import {
   getHeroDeathImageCandidates,
-  getHeroStageImageCandidates,
   getHeroStageImageSrc,
 } from '../game/assetPaths';
+import { getAvatarStageImageCandidates } from '../game/avatar/avatarStageAssets';
 import { useAppTheme } from './useAppTheme';
 import type { HeroGender, HeroStageNumber } from '../types/gameAssets';
 
@@ -11,7 +11,7 @@ export function useHeroStageAssets(gender: HeroGender, stage: HeroStageNumber) {
   const { themeId } = useAppTheme();
 
   return useMemo(() => {
-    const candidates = getHeroStageImageCandidates(gender, stage, themeId);
+    const candidates = getAvatarStageImageCandidates(gender, stage, themeId);
     return {
       themeId,
       src: candidates[0] ?? getHeroStageImageSrc(gender, stage, themeId),

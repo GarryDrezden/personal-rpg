@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="640" viewBox="0 0 512 640" role="img" aria-label="Avatar stage 10 placeholder">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#171329"/>
+      <stop offset="100%" stop-color="#0a1020"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="640" fill="url(#g)"/>
+  <ellipse cx="256" cy="560" rx="140" ry="28" fill="#fbbf24" opacity=".22"/>
+  <path d="M178 405c0-70 30-120 78-120s78 50 78 120v40H178z" fill="#3d3558"/>
+  <circle cx="256" cy="250" r="58" fill="#c4a882"/>
+  <path d="M200 220c10-40 40-60 56-60s46 20 56 60" fill="#1e293b"/>
+  <rect x="186" y="36" width="140" height="36" rx="10" fill="#fbbf24" opacity=".9"/>
+  <text x="256" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="20" fill="#171329">Стадия 10</text>
+  <text x="256" y="610" text-anchor="middle" font-family="Georgia,serif" font-size="16" fill="#fbbf24" opacity=".85">Тёмный путь</text>
+</svg>

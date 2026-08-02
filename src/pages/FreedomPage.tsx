@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { useAppTheme } from '../hooks/useAppTheme';
 import { FreedomScoreCard } from '../components/freedom/FreedomScoreCard';
+import { AvatarStageDriversCard } from '../components/freedom/AvatarStageDriversCard';
 import { RemovedLoadCard } from '../components/freedom/RemovedLoadCard';
 import { PlateauCard } from '../components/freedom/PlateauCard';
 import { WeeklyStoryHistory } from '../components/weekly/WeeklyStoryHistory';
 import { BodyAbilityPersonalGrid } from '../components/bodyAbilities/BodyAbilityPersonalGrid';
 import { getFreedomMapPageCopy } from '../game/bodyAbilityFreedomUi';
+import { resolveAvatarStageSnapshot } from '../game/avatar/avatarStageEngine';
 import {
   calculateFreedomScore,
   hasFreedomScoreData,
@@ -44,6 +46,11 @@ export function FreedomPage() {
     [engineParams],
   );
 
+  const avatarStage = useMemo(
+    () => resolveAvatarStageSnapshot(engineParams),
+    [engineParams],
+  );
+
   return (
     <div className="space-y-8 pb-4" data-testid="freedom-page">
       <header className="space-y-2">
@@ -62,6 +69,7 @@ export function FreedomPage() {
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--app-text-muted)]">
           {themeId === 'cozy' ? 'Индекс и следы пути' : 'Индекс и следы кампании'}
         </p>
+        <AvatarStageDriversCard snapshot={avatarStage} />
         <FreedomScoreCard result={freedomScore} hasData={hasData} />
         {hasData ? (
           <p className="text-sm text-[var(--app-text-muted)]">

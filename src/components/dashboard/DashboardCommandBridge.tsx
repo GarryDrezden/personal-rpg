@@ -134,9 +134,10 @@ export function DashboardCommandBridge({
   const dayStatus = getDayStatus(todayPoints);
   const displayXp = Math.max(0, todayPoints);
   const badgeVariant = displayXp >= 70 ? 'success' : displayXp >= 40 ? 'default' : 'danger';
-  const nextStagePercent = game.hasWeightPath
-    ? Math.round(game.stageProgress.progressToNextStage)
-    : 0;
+  const nextStagePercent =
+    game.hasWeightPath || game.hasAvatarPath
+      ? Math.round(game.stageProgress.progressToNextStage)
+      : 0;
   const showMilestones = pathSetup.kind === 'ready';
   const backdropSrc = getHeroSceneBackdropPath(themeId);
 
@@ -168,6 +169,18 @@ export function DashboardCommandBridge({
             <Coins size={13} />
             {availableCoins.toLocaleString('ru')}
           </span>
+        </div>
+
+        <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-[var(--app-text-muted)]">
+          <span data-testid="dashboard-avatar-stage">
+            Стадия {game.stage}/20 · {Math.round(game.avatarProgress)}%
+          </span>
+          <Link
+            to="/freedom"
+            className="font-medium text-[var(--app-primary)] hover:underline"
+          >
+            Почему сдвинулась →
+          </Link>
         </div>
 
         {pathSetup.kind !== 'ready' ? (

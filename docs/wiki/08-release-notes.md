@@ -8,6 +8,7 @@
 
 ### Added
 
+- **Avatar Stages v1:** composite hero stage from weight, waist, Body Abilities, steps, nutrition, lifestyle and campaign milestones (`avatarProgress` 0–100, 20 stages). Theme-aware stage placeholders (Cozy / Dark Fantasy, shared stage id). Dashboard shows current stage; `/freedom` explains drivers. Safe defaults for legacy users. Not a medical body score.
 - **Freedom Body Map UX polish:** personal map hero summary, status-distinct cards (locked / suggested / unlocked / archived), filter tabs (Все / Можно подтвердить / Открыто / Долгий путь), Cozy vs Dark Fantasy copy, mobile-friendly grid.
 - Added Body Ability Profile setup entry points for existing users through Settings and Freedom page (optional soft upgrade, no forced onboarding; unlocked achievements retained).
 - **Body Abilities Quality Pass:** four QA archetype fixtures; `explainBodyAbilitySelection`; diversity/caps on personal grids; `BodyAbilityKind`; bank version `BODY_ABILITY_BANK_VERSION`; setup preview before save; safe «Пересобрать карту» (keeps unlocked); archetype tests.
