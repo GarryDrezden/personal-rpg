@@ -235,6 +235,33 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Empty states должны поддерживать, а не обвинять.
 - Даже минимальный день может дать маленький уютный прогресс.
 
+## Cozy Botanical Print
+
+Decorative style for large narrative Cozy surfaces — warm illustrated home chronicle (paper, garden, summer light), not light SaaS and not flat beige minimal UI.
+
+**Tokens** (`[data-theme='cozy']` only in `src/index.css`): `--cozy-paper`, `--cozy-paper-warm`, `--cozy-ink`, `--cozy-forest`, `--cozy-leaf`, `--cozy-leaf-light`, `--cozy-herb`, `--cozy-honey`, `--cozy-wood`, `--cozy-muted`.
+
+**Component:** `CozyBotanicalFrame` / `.cozy-botanical-frame` — variants `subtle` | `medium` | `hero`; SVG foliage corners; light paper texture overlay; `pointer-events: none` on decor; `aria-hidden` on SVG. Under Dark Fantasy renders children only (no botanical chrome).
+
+**Rules:**
+- botanical decoration is contextual, not universal;
+- large narrative surfaces may use illustrated frames;
+- small utility cards stay clean;
+- warm paper, green foliage and light handwritten accents form the cozy visual identity;
+- never reduce readability for decoration.
+
+**Where to use:** Cozy Home hero, Dashboard home block, Seasons / «Сезонный дневник», Cozy onboarding intro, empty states, avatar placeholder scenes, companion cards (non-compact), large illustrative panels.
+
+**Where not to use:** every small card, buttons, tables, long body copy, metrics, navigation.
+
+**Typography:** `.cozy-hand-accent` — Georgia italic for short flavor only (notes, seasonal asides, home status). Do not load random web fonts for handwriting.
+
+**Mobile:** keep 1–2 corners; hide large lower branches; do not shrink useful content width; no horizontal scroll.
+
+**Accessibility:** text contrast on paper; decor never blocks controls; status not by color alone; respect `prefers-reduced-motion`.
+
+**Theme isolation:** Dark Fantasy must not receive botanical tokens, frames, or ornaments.
+
 ## Body Abilities UX Rules
 
 - Never show the same fixed mobility list to every user.
@@ -276,10 +303,10 @@ Game-assets instructions live in FAQ (`src/constants/faqContent.ts`), not on Cod
 - Cozy upgrades must not require perfection; minimal/recovery days still grant small cozy progress.
 - Cozy copywriting: warm, grounded, domestic (дом, двор, сад, уют, очаг, тепло, маленький шаг, забота, свет в окне). Adult and warm — not childish.
 - Cozy avoid: punishment, failure, shame, aggressive battle language, “defeat yourself”, too much darkness, too much childish cuteness.
-- Cozy UI: **not** sterile white SaaS / not “lightened Dark Fantasy”. Summer home language: linen/cream/beige base, sage garden, honey sun, wood brown, soft terracotta. Rounded paper/wood cards, gentle shadows, no purple accents as secondary. Adult premium cozy — not cartoon, not neon green.
-- Cozy tokens live in `src/index.css` (`[data-theme='cozy']`) + patterns in `src/styles/cozy-theme.css` (surfaces, chips, zone cards, season chronicle forks, sidebar warmth).
-- Cozy Dashboard: warmer shell + integrated «Дом становится теплее»; campaign cards keep hierarchy but sit on natural surfaces. Still one clear daily action.
-- Cozy Home `/home`: hero restoration block + material zone cards (level pills, ready badges, soft unavailable, honey CTA), resource chips by material color — not a flat upgrade table.
-- Cozy Seasons: “садовый журнал / сезонный альбом” — theme-forked chronicle hero/cards (no hard-coded violet panels under cozy).
+- Cozy UI: **not** sterile white SaaS / not “lightened Dark Fantasy”. Summer home language: linen/cream/beige base, sage garden, honey sun, wood brown, soft terracotta. Rounded paper/wood cards, gentle shadows, no purple accents as secondary. Adult premium cozy — not cartoon, not neon green. **Cozy Botanical Print** adds cream paper, forest/leaf greens, honey accent, light print texture and sparse handwritten accents on large narrative surfaces only (see Cozy Botanical Print above).
+- Cozy tokens live in `src/index.css` (`[data-theme='cozy']`) + patterns in `src/styles/cozy-theme.css` (surfaces, chips, zone cards, season chronicle forks, botanical frame, sidebar warmth). Botanical `--cozy-*` tokens are cozy-only.
+- Cozy Dashboard: warmer shell + integrated «Дом становится теплее» with botanical frame around the home block only; other panels stay simpler. Still one clear daily action.
+- Cozy Home `/home`: illustrated diary hero (botanical frame + paper) + material zone cards (level pills, ready badges, soft unavailable, honey CTA), resource chips by material color — not a flat upgrade table.
+- Cozy Seasons: “садовый журнал / сезонный альбом” — botanical print on diary hero + current season page; completed/upcoming cards stay quieter (no hard-coded violet panels under cozy).
 - Active theme work order: Cozy → Slavic / Forest Myth → Athlete Return / Sports Comeback.
 - Cyberpunk is not in the near-term theme roadmap.

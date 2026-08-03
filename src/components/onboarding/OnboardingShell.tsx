@@ -5,6 +5,8 @@ import { ONBOARDING_CORE_AWAKENING_ASSET_ID } from '../../game/manifestAssetUi';
 import { getManifestAssetUrl } from '../../game/assetManifest';
 import { OnboardingProgress } from './OnboardingProgress';
 import { ONBOARDING_STEP_COUNT } from '../../utils/onboardingState';
+import { useAppTheme } from '../../hooks/useAppTheme';
+import { CozyBotanicalFrame } from '../cozy/CozyBotanicalFrame';
 
 type OnboardingShellProps = {
   step: number;
@@ -43,12 +45,38 @@ export function OnboardingShell({
   submitting,
   children,
 }: OnboardingShellProps) {
+  const { isCozy } = useAppTheme();
   const onboardingArtSrc = getManifestAssetUrl(ONBOARDING_CORE_AWAKENING_ASSET_ID);
+  const showBotanicalIntro = isCozy && step === 0;
+
+  const panel = (
+    <section
+      className={
+        showBotanicalIntro
+          ? 'onboarding-shell__panel space-y-0'
+          : 'mt-5 flex-1 rounded-3xl border border-[var(--app-border)]/90 bg-[var(--app-card)]/95 p-5 shadow-[var(--app-shadow)] backdrop-blur-sm sm:p-6'
+      }
+    >
+      <div className="space-y-3 text-sm leading-relaxed text-[var(--app-text-muted)]">
+        <p className="text-[var(--app-text)]">{lead}</p>
+        {body ? <p>{body}</p> : null}
+        {showBotanicalIntro ? (
+          <p className="cozy-hand-accent">дом ждёт первого тихого шага</p>
+        ) : null}
+      </div>
+      {children}
+      {error ? (
+        <p className="mt-4 text-sm text-[var(--app-danger)]" role="alert">
+          {error}
+        </p>
+      ) : null}
+    </section>
+  );
 
   return (
     <div
       data-testid="start-route-page"
-      className="relative min-h-screen overflow-x-hidden bg-[var(--app-bg)] text-[var(--app-text)]"
+      className={`relative min-h-screen overflow-x-hidden bg-[var(--app-bg)] text-[var(--app-text)]${isCozy ? ' onboarding-shell--botanical' : ''}`}
     >
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(250,204,21,0.07),transparent_55%)]"
@@ -78,18 +106,15 @@ export function OnboardingShell({
           <p className="text-sm text-[var(--app-text-muted)]">{subtitle}</p>
         </header>
 
-        <section className="mt-5 flex-1 rounded-3xl border border-[var(--app-border)]/90 bg-[var(--app-card)]/95 p-5 shadow-[var(--app-shadow)] backdrop-blur-sm sm:p-6">
-          <div className="space-y-3 text-sm leading-relaxed text-[var(--app-text-muted)]">
-            <p className="text-[var(--app-text)]">{lead}</p>
-            {body ? <p>{body}</p> : null}
+        {showBotanicalIntro ? (
+          <div className="mt-5 flex-1">
+            <CozyBotanicalFrame intensity="medium" paper testId="onboarding-botanical-frame">
+              {panel}
+            </CozyBotanicalFrame>
           </div>
-          {children}
-          {error ? (
-            <p className="mt-4 text-sm text-[var(--app-danger)]" role="alert">
-              {error}
-            </p>
-          ) : null}
-        </section>
+        ) : (
+          panel
+        )}
 
         <div className="sticky bottom-0 mt-5 w-full shrink-0 border-t border-[var(--app-border)]/60 bg-[var(--app-bg)]/95 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 backdrop-blur-sm sm:relative sm:border-0 sm:bg-transparent sm:pb-0 sm:pt-5 sm:backdrop-blur-none">
           {step === 0 ? (
@@ -131,7 +156,7 @@ export function OnboardingShell({
                   data-testid="onboarding-next"
                   onClick={onNext}
                   disabled={submitting || saving || primaryDisabled}
-                  className="btn-primary inline-flex flex-1 items-center justify-center gap-1 rounded-xl px-4 py-3.5 text-sm font-semibold shadow-[0_0_20px_rgba(250,204,21,0.12)] disabled:opacity-50"
+                  className="btn-primary inline-flex flex-1 items-center justify-center gap-1 rounded-xl px-4 py-3.5 text-sm font-semibold disabled:opacity-50"
                 >
                   {primaryLabel}
                   <ChevronRight className="h-4 w-4" aria-hidden />

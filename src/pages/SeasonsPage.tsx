@@ -6,6 +6,7 @@ import { getSeasonHistoryArchive } from '../game/seasons/seasonHistory';
 import { SeasonHistorySection } from '../components/season/SeasonHistorySection';
 import { getThemedSeasonPresentation } from '../constants/themeContentRegistry';
 import { useAppTheme } from '../hooks/useAppTheme';
+import { CozyBotanicalFrame } from '../components/cozy/CozyBotanicalFrame';
 
 export function SeasonsPage() {
   const { dailyEntries, settings } = useAppStore();
@@ -23,47 +24,60 @@ export function SeasonsPage() {
   const isEmpty =
     archive.earnedRewardCount === 0 && (current?.completedQuestCount ?? 0) === 0;
 
+  const header = (
+    <header className={`space-y-2${isCozy ? ' cozy-home-hero' : ''}`}>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-gold)]/70">
+        {seasonCopy.eyebrow}
+      </p>
+      <h1 className="text-2xl font-bold text-[var(--app-text)]">{seasonCopy.title}</h1>
+      <p className="max-w-2xl text-sm text-[var(--app-text-muted)]">{seasonCopy.intro}</p>
+      {isCozy ? (
+        <p className="cozy-hand-accent text-xs">сезонный дневник у окна</p>
+      ) : null}
+      {isCozy ? (
+        <p className="text-xs font-medium text-[var(--app-garden)]">
+          {seasonCopy.careTraces} · {seasonCopy.notes} · {seasonCopy.reward}
+        </p>
+      ) : (
+        <p className="text-sm text-[var(--app-text-muted)]">
+          Сезонные боссы — в{' '}
+          <Link
+            to="/growth/trials"
+            className="font-medium text-[var(--app-primary)] hover:underline"
+          >
+            Испытаниях
+          </Link>
+          .
+        </p>
+      )}
+      {isCozy ? (
+        <p className="text-sm text-[var(--app-text-muted)]">
+          Сезонные заметки — в{' '}
+          <Link
+            to="/growth/trials"
+            className="font-medium text-[var(--app-garden)] hover:underline"
+          >
+            Росте героя
+          </Link>
+          .
+        </p>
+      ) : null}
+    </header>
+  );
+
   return (
     <div className="space-y-6 pb-8" data-testid="seasons-page">
-      <header className={`space-y-2${isCozy ? ' cozy-home-hero' : ''}`}>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-gold)]/70">
-          {seasonCopy.eyebrow}
-        </p>
-        <h1 className="text-2xl font-bold text-[var(--app-text)]">{seasonCopy.title}</h1>
-        <p className="max-w-2xl text-sm text-[var(--app-text-muted)]">{seasonCopy.intro}</p>
-        {isCozy ? (
-          <p className="text-xs font-medium text-[var(--app-garden)]">
-            {seasonCopy.careTraces} · {seasonCopy.notes} · {seasonCopy.reward}
-          </p>
-        ) : (
-          <p className="text-sm text-[var(--app-text-muted)]">
-            Сезонные боссы — в{' '}
-            <Link
-              to="/growth/trials"
-              className="font-medium text-[var(--app-primary)] hover:underline"
-            >
-              Испытаниях
-            </Link>
-            .
-          </p>
-        )}
-        {isCozy ? (
-          <p className="text-sm text-[var(--app-text-muted)]">
-            Сезонные заметки — в{' '}
-            <Link
-              to="/growth/trials"
-              className="font-medium text-[var(--app-garden)] hover:underline"
-            >
-              Росте героя
-            </Link>
-            .
-          </p>
-        ) : null}
-      </header>
+      {isCozy ? (
+        <CozyBotanicalFrame intensity="hero" testId="seasons-header-frame">
+          {header}
+        </CozyBotanicalFrame>
+      ) : (
+        header
+      )}
 
       {isEmpty ? (
         <p
-          className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)] px-4 py-3 text-sm text-[var(--app-text-muted)]"
+          className={`rounded-xl border border-[var(--app-border)] bg-[var(--app-card)] px-4 py-3 text-sm text-[var(--app-text-muted)]${isCozy ? ' seasons-empty--botanical' : ''}`}
           data-testid="seasons-empty"
         >
           {seasonCopy.empty}

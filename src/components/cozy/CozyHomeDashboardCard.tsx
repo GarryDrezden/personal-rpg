@@ -10,6 +10,7 @@ import {
   getCozyHomeProgress,
   getCozyHomeState,
 } from '../../utils/cozyHomeEngine';
+import { CozyBotanicalFrame } from './CozyBotanicalFrame';
 
 type CozyHomeDashboardCardProps = {
   settings: AppSettings;
@@ -30,42 +31,48 @@ export function CozyHomeDashboardCard({ settings }: CozyHomeDashboardCardProps) 
   }, [home.resources]);
 
   return (
-    <section data-testid="cozy-home-dashboard-card" className="cozy-dash-home">
-      <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-garden)]">
-        Дом становится теплее
-      </p>
-      <p className="mt-1 text-sm font-medium text-[var(--app-text)]">
-        Восстановлено {progress.done} / {progress.total} улучшений.
-      </p>
-
-      <div className="cozy-progress-track mt-2">
-        <div className="cozy-progress-fill" style={{ width: `${progress.percent}%` }} />
-      </div>
-
-      {resourceHint ? (
-        <p className="mt-2 text-xs text-[var(--app-text-muted)]">{resourceHint}</p>
-      ) : null}
-
-      {affordable ? (
-        <p className="mt-2 text-sm text-[var(--app-text)]">
-          Можно улучшить:{' '}
-          <span className="font-medium">
-            {getCozyZoneConfig(affordable.zoneId).title}
-          </span>{' '}
-          — {affordable.nextLevel.description.toLowerCase()}
+    <CozyBotanicalFrame
+      intensity="medium"
+      note="дом собирает тепло"
+      testId="cozy-dash-home-frame"
+    >
+      <section data-testid="cozy-home-dashboard-card" className="cozy-dash-home">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-garden)]">
+          Дом становится теплее
         </p>
-      ) : (
-        <p className="mt-2 text-sm text-[var(--app-text-muted)]">
-          Задачи дня принесут материалы, уют и ясность для дома.
+        <p className="mt-1 text-sm font-medium text-[var(--app-text)]">
+          Восстановлено {progress.done} / {progress.total} улучшений.
         </p>
-      )}
 
-      <Link
-        to="/home"
-        className="mt-3 inline-block text-xs font-semibold text-[var(--app-garden)] hover:underline"
-      >
-        Открыть дом
-      </Link>
-    </section>
+        <div className="cozy-progress-track mt-2">
+          <div className="cozy-progress-fill" style={{ width: `${progress.percent}%` }} />
+        </div>
+
+        {resourceHint ? (
+          <p className="mt-2 text-xs text-[var(--app-text-muted)]">{resourceHint}</p>
+        ) : null}
+
+        {affordable ? (
+          <p className="mt-2 text-sm text-[var(--app-text)]">
+            Можно улучшить:{' '}
+            <span className="font-medium">
+              {getCozyZoneConfig(affordable.zoneId).title}
+            </span>{' '}
+            — {affordable.nextLevel.description.toLowerCase()}
+          </p>
+        ) : (
+          <p className="mt-2 text-sm text-[var(--app-text-muted)]">
+            Задачи дня принесут материалы, уют и ясность для дома.
+          </p>
+        )}
+
+        <Link
+          to="/home"
+          className="mt-3 inline-block text-xs font-semibold text-[var(--app-garden)] hover:underline"
+        >
+          Открыть дом
+        </Link>
+      </section>
+    </CozyBotanicalFrame>
   );
 }

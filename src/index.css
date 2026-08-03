@@ -51,6 +51,20 @@
   --chart-5: #8a7052;
 }
 
+/* Cozy Botanical Print tokens — never applied under Dark Fantasy */
+[data-theme='cozy'] {
+  --cozy-paper: #f6efe3;
+  --cozy-paper-warm: #f3e6d2;
+  --cozy-ink: #2a2318;
+  --cozy-forest: #3f5c42;
+  --cozy-leaf: #5c7858;
+  --cozy-leaf-light: #8fad7a;
+  --cozy-herb: #6d8464;
+  --cozy-honey: #d4a848;
+  --cozy-wood: #8a7052;
+  --cozy-muted: #6a5c4a;
+}
+
 [data-theme='darkFantasy'] {
   --app-bg: #090812;
   --app-bg-soft: #111022;

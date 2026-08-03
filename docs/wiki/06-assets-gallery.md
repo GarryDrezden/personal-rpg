@@ -114,6 +114,8 @@ Legacy v1 статусы (`approved`, `draft`, …) сохранены в пол
 | `cozy/icons` | Мелкие иконки дома/сада для UI |
 | `cozy/ui` | Фоны, текстуры paper/wood, shell-элементы Cozy UI |
 
+**Cozy Botanical Print (CSS/SVG, in-app):** decorative identity for large Cozy narrative surfaces — not a raster asset pack. Runtime: `CozyBotanicalFrame` + tokens `--cozy-paper` … `--cozy-muted` in `[data-theme='cozy']` only; foliage corners are inline SVG; paper texture is a light CSS noise overlay. See [`../brandbook/ui-rules.md`](../brandbook/ui-rules.md) → Cozy Botanical Print. Dark Fantasy must not reuse these ornaments.
+
 См. [`13-art-backlog.md`](13-art-backlog.md) → Future Cozy / Village Home Recovery, [`../brandbook/themes.md`](../brandbook/themes.md).
 
 **Не добавлять** эти категории в машинный `docs/assets/manifest.json`, пока нет реальных ассетов и schema support.

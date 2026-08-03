@@ -33,7 +33,7 @@ export function CompanionCard({
         selected
           ? 'border-[var(--app-primary)] bg-[color-mix(in_srgb,var(--app-primary)_12%,var(--app-card))]'
           : 'border-[var(--app-border)] bg-[var(--app-card)] hover:border-[var(--app-primary)]/40'
-      } ${compact ? 'flex items-center gap-4' : ''}`}
+      } ${!compact && isCozy ? 'companion-card--botanical' : ''} ${compact ? 'flex items-center gap-4' : ''}`}
     >
       <div
         className={`relative shrink-0 overflow-hidden rounded-xl border border-[var(--app-border)] ${

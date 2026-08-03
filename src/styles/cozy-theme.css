@@ -1575,3 +1575,242 @@
   font-weight: 700;
   color: var(--app-primary);
 }
+
+/* ——— Cozy Botanical Print ——— */
+.cozy-botanical-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  isolation: isolate;
+}
+
+.cozy-botanical-frame--paper {
+  border: 1px solid color-mix(in srgb, var(--cozy-wood) 28%, var(--app-border));
+  background:
+    linear-gradient(155deg, var(--cozy-paper) 0%, var(--cozy-paper-warm) 55%, color-mix(in srgb, var(--cozy-leaf-light) 14%, var(--cozy-paper)) 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 12px 32px rgba(74, 55, 32, 0.07);
+}
+
+.cozy-botanical-frame__texture {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.045;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.2 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+  mix-blend-mode: multiply;
+}
+
+.cozy-botanical-frame__foliage {
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+  width: 5.5rem;
+  height: 5.5rem;
+  opacity: 0.72;
+}
+
+.cozy-botanical-frame__foliage--tl {
+  top: -0.35rem;
+  left: -0.25rem;
+}
+
+.cozy-botanical-frame__foliage--tr {
+  top: -0.35rem;
+  right: -0.25rem;
+}
+
+.cozy-botanical-frame__foliage--bl {
+  bottom: -0.45rem;
+  left: -0.3rem;
+}
+
+.cozy-botanical-frame__foliage--br {
+  bottom: -0.45rem;
+  right: -0.3rem;
+}
+
+.cozy-botanical-frame--subtle .cozy-botanical-frame__foliage {
+  width: 4rem;
+  height: 4rem;
+  opacity: 0.5;
+}
+
+.cozy-botanical-frame--medium .cozy-botanical-frame__foliage {
+  width: 5.25rem;
+  height: 5.25rem;
+  opacity: 0.68;
+}
+
+.cozy-botanical-frame--hero .cozy-botanical-frame__foliage {
+  width: 6.75rem;
+  height: 6.75rem;
+  opacity: 0.78;
+}
+
+.cozy-botanical-frame__content {
+  position: relative;
+  z-index: 2;
+  padding: 1.1rem 1.2rem;
+}
+
+.cozy-botanical-frame--subtle .cozy-botanical-frame__content {
+  padding: 0.9rem 1rem;
+}
+
+.cozy-botanical-frame--hero .cozy-botanical-frame__content {
+  padding: 1.25rem 1.35rem 1.35rem;
+}
+
+.cozy-botanical-frame__note {
+  position: relative;
+  z-index: 2;
+  margin: 0 1.2rem 1rem;
+}
+
+/* Handwritten accent — flavor only; never for buttons/nav/metrics */
+[data-theme='cozy'] .cozy-hand-accent {
+  font-family: Georgia, 'Times New Roman', ui-serif, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--cozy-forest) 72%, var(--cozy-ink));
+}
+
+[data-theme='cozy'] .cozy-paper-surface {
+  background: var(--cozy-paper);
+}
+
+/* Soft paper wash on existing narrative heroes when frame wraps them */
+[data-theme='cozy'] .cozy-botanical-frame .cozy-home-hero,
+[data-theme='cozy'] .cozy-botanical-frame .cozy-home-hero-block,
+[data-theme='cozy'] .cozy-botanical-frame .cozy-dash-home,
+[data-theme='cozy'] .cozy-botanical-frame .season-chronicle-hero {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+[data-theme='cozy'] .cozy-botanical-frame .cozy-home-hero::after,
+[data-theme='cozy'] .cozy-botanical-frame .cozy-dash-home::after {
+  display: none;
+}
+
+[data-theme='cozy'] .cozy-art-placeholder {
+  background:
+    radial-gradient(ellipse at 12% 20%, color-mix(in srgb, var(--cozy-honey) 22%, transparent), transparent 50%),
+    radial-gradient(ellipse at 88% 80%, color-mix(in srgb, var(--cozy-leaf) 18%, transparent), transparent 48%),
+    linear-gradient(155deg, var(--cozy-paper), var(--cozy-paper-warm));
+}
+
+[data-theme='cozy'] .cozy-art-placeholder__leaf {
+  background: radial-gradient(circle at 30% 40%, var(--cozy-leaf-light), transparent 60%);
+  opacity: 0.35;
+}
+
+[data-theme='cozy'] .companion-card--botanical {
+  border-color: color-mix(in srgb, var(--cozy-leaf) 32%, var(--app-border));
+  background:
+    radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--cozy-honey) 14%, transparent), transparent 45%),
+    linear-gradient(160deg, var(--cozy-paper), color-mix(in srgb, var(--cozy-leaf-light) 12%, var(--cozy-paper-warm)));
+}
+
+[data-theme='cozy'] .onboarding-shell--botanical .onboarding-shell__panel {
+  position: relative;
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--cozy-wood) 30%, var(--app-border));
+  background:
+    linear-gradient(160deg, var(--cozy-paper) 0%, var(--cozy-paper-warm) 60%, color-mix(in srgb, var(--cozy-leaf-light) 10%, var(--cozy-paper)) 100%);
+}
+
+[data-theme='cozy'] .dashboard-empty--botanical {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--cozy-leaf) 28%, var(--app-border));
+  background:
+    linear-gradient(155deg, var(--cozy-paper), color-mix(in srgb, var(--cozy-leaf-light) 12%, var(--cozy-paper-warm)));
+}
+
+[data-theme='cozy'] .seasons-empty--botanical {
+  border-color: color-mix(in srgb, var(--cozy-leaf) 30%, var(--app-border));
+  background:
+    linear-gradient(150deg, var(--cozy-paper), var(--cozy-paper-warm));
+}
+
+@media (max-width: 640px) {
+  .cozy-botanical-frame__foliage--bl,
+  .cozy-botanical-frame__foliage--br {
+    display: none;
+  }
+
+  .cozy-botanical-frame--hero .cozy-botanical-frame__foliage--tr {
+    opacity: 0.45;
+    width: 4.25rem;
+    height: 4.25rem;
+  }
+
+  .cozy-botanical-frame--medium .cozy-botanical-frame__foliage--tr {
+    opacity: 0.4;
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .cozy-botanical-frame__foliage--tl {
+    width: 3.75rem;
+    height: 3.75rem;
+    opacity: 0.55;
+  }
+
+  .cozy-botanical-frame__content {
+    padding: 1rem 0.95rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cozy-botanical-frame__foliage {
+    transition: none;
+  }
+}
+
+[data-theme='cozy'] .cozy-botanical-frame .season-history-card {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+[data-theme='cozy'] .cozy-home-hero-frame .cozy-home-hero-block {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+[data-theme='cozy'] .cozy-botanical-frame .cozy-home-page__header {
+  position: relative;
+  z-index: 2;
+}
+
+[data-theme='cozy'] .cozy-botanical-frame .cozy-home-page__header {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+
+[data-theme='cozy'] .avatar-stage-scene--botanical {
+  border-radius: 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--cozy-leaf) 28%, var(--app-border));
+  background:
+    radial-gradient(ellipse at 88% 12%, color-mix(in srgb, var(--cozy-honey) 18%, transparent), transparent 48%),
+    radial-gradient(ellipse at 8% 90%, color-mix(in srgb, var(--cozy-leaf) 16%, transparent), transparent 50%),
+    linear-gradient(165deg, var(--cozy-paper), var(--cozy-paper-warm));
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+}

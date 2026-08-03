@@ -13,6 +13,7 @@ import {
 } from '../utils/cozyHomeEngine';
 import { CozyHomeScenePlaceholder } from '../components/cozy/CozyHomeScenePlaceholder';
 import { CozyHomeZoneCard, formatResourceBadges } from '../components/cozy/CozyHomeZoneCard';
+import { CozyBotanicalFrame } from '../components/cozy/CozyBotanicalFrame';
 import type { CozyHomeZoneId, CozyResourceId } from '../types/cozyHome';
 import { getThemedEmptyStateCopy } from '../constants/themeContentRegistry';
 
@@ -75,16 +76,28 @@ export function CozyHomePage() {
 
   return (
     <div className="cozy-home-page space-y-5 pb-6" data-testid="cozy-home-page">
-      <header className="cozy-home-page__header">
-        <div className="cozy-home-page__header-mark" aria-hidden />
-        <p className="cozy-home-page__eyebrow">Деревенский дом</p>
-        <h1 className="cozy-home-page__title">Дом</h1>
-        <p className="cozy-home-page__lead">
-          Тело возвращает силы — дом возвращает тепло.
-        </p>
-        <p className="cozy-home-page__status">{statusLine}</p>
-      </header>
+      <CozyBotanicalFrame
+        intensity="medium"
+        note="страница домашнего дневника"
+        testId="cozy-home-header-frame"
+      >
+        <header className="cozy-home-page__header">
+          <div className="cozy-home-page__header-mark" aria-hidden />
+          <p className="cozy-home-page__eyebrow">Деревенский дом</p>
+          <h1 className="cozy-home-page__title">Дом</h1>
+          <p className="cozy-home-page__lead">
+            Тело возвращает силы — дом возвращает тепло.
+          </p>
+          <p className="cozy-home-page__status cozy-hand-accent">{statusLine}</p>
+        </header>
+      </CozyBotanicalFrame>
 
+      <CozyBotanicalFrame
+        intensity="hero"
+        className="cozy-home-hero-frame"
+        contentClassName="!p-0"
+        testId="cozy-home-scene-frame"
+      >
       <section
         className="cozy-home-hero-block"
         aria-label="Дом становится теплее"
@@ -130,8 +143,10 @@ export function CozyHomePage() {
           </div>
         </div>
       </section>
+      </CozyBotanicalFrame>
 
       {totalResources === 0 ? (
+        <CozyBotanicalFrame intensity="subtle" paper testId="cozy-home-empty-frame">
         <section className="cozy-home-empty" data-testid="cozy-home-empty-resources">
           <p className="cozy-home-empty__title">
             {getThemedEmptyStateCopy('cozy', 'noResources').title}
@@ -143,6 +158,7 @@ export function CozyHomePage() {
             Открыть день
           </Link>
         </section>
+        </CozyBotanicalFrame>
       ) : null}
 
       <section className="cozy-home-changed">
