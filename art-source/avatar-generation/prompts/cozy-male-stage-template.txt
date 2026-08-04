@@ -1,0 +1,23 @@
+# Cozy Hero Male — Stage Template
+# Replace {{STAGE}} with 1 | 5 | 10 | 15 | 20 (control set first).
+# ALWAYS attach the approved Cozy Hero Male Base reference image.
+# Keep identity locked; only soft tissue / fit / posture change per bible.
+# Bible: docs/art/characters/cozy-hero-male-bible.md
+# Negative: art-source/avatar-generation/prompts/negative-prompt.txt
+
+same person as reference, identity lock, face lock, age lock 35-38,
+semi-realistic painterly game character, premium narrative idle RPG,
+Cozy Hero Male, very tall 195-200 cm, heavy bone frame, broad shoulders,
+short neat beard, short chestnut-dark blond hair, brown eyes,
+forearm tattoo same as reference, smartwatch same as reference,
+same outfit as reference: plain muted olive forest-green t-shirt,
+grey-brown cargo trousers or shorts, natural sneakers,
+full body, 1536x2048 portrait, transparent background,
+identical camera, identical three-quarter standing pose, feet on baseline,
+arms at sides not covering belly, soft warm daylight same as reference,
+
+BODY STAGE {{STAGE}}:
+{{STAGE_DESCRIPTION}}
+
+gradual realistic fat loss only, keep same bone frame and limb lengths,
+not bodybuilder, not six-pack, not fitness model, not different man

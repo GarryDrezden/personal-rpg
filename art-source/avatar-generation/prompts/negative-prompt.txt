@@ -1,0 +1,18 @@
+# Shared negative prompt — Cozy Hero Male & Female body stages
+# Append to every base and stage generation call.
+
+different person, different face, face morph, identity drift,
+different age, younger, older, de-aging, aging,
+different hairstyle, new haircut, different beard, shaved, long hair,
+different outfit, new clothes, logo, brand, text on shirt, printed tee, watermark,
+cropped feet, cropped hands, cropped head, cut off limbs,
+bodybuilding, bodybuilder, six-pack, shredded abs, gym physique, steroid look,
+fashion model, runway model, glamorous pose, sexualized pose, seductive,
+anime, cartoon, chibi, comic book ink, hyperrealistic photo, selfie,
+dramatic action pose, running, sitting, leaning on furniture, weapon, armor props,
+background scene, room, garden backdrop, furniture, floor shadow plate, glow aura,
+extra fingers, missing fingers, distorted anatomy, broken proportions,
+extreme weight jump, sudden slim, inconsistent limb length, different height,
+male face on female, female face on male, gender swap look,
+plastic skin, oily skin, beauty filter, uncanny valley,
+text, letters, signature, UI chrome, frame border

@@ -8,6 +8,7 @@
 
 ### Added
 
+- **Character Bible v1:** Cozy Hero Male + Female identity canon, shared Avatar Art Direction (canvas, pose, Hero State vs Body Stage, cross-theme identity), generation prompt templates + negative prompt under `art-source/avatar-generation/prompts/`. Final 20 stages not generated yet.
 - **Cozy Botanical Print:** decorative Cozy identity — cream paper tokens (`--cozy-paper` … `--cozy-muted`), reusable `CozyBotanicalFrame` (subtle/medium/hero), light paper texture, sparse handwritten accents. Applied to Home hero, Dashboard home block, Seasons diary, Cozy onboarding intro, empty states, companion cards. Dark Fantasy untouched; small utility cards stay clean.
 - **Avatar Assets Pipeline v1:** theme-scoped avatar folders, 80-slot manifest + unified resolver, same-theme placeholders (no Cozy↔DF fallback), Hero State overlays, DEV `/dev/avatar-pipeline`, `npm run validate:avatars`, approval workflow, future `avatarTrackId`, QA checklist. Final 80 body images not generated yet.
 - **Avatar Stages v1 Calibration:** split **Body Stage** (best weight + measurements → silhouette art 1–20) from **Hero State** (`depleted`/`steady`/`energized`/`strong` from abilities, habits, momentum, seasons). Habits no longer slim the body sprite. Dashboard: «Стадия тела» + «Состояние героя»; `/freedom` explains body vs state drivers. Best-weight latch vs day rebound. Calibration QA profiles + docs.

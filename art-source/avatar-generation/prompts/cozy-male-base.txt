@@ -1,0 +1,19 @@
+# Cozy Hero Male — Base Identity Prompt
+# Use once to approve the locked reference sheet (Stage ~1 or dedicated identity plate).
+# Attach: none required for first pass; after approval, this image becomes the master reference.
+# Canvas: 1536x2048, full body, transparent background preferred (or plain seamless light grey to remove later).
+# Style bible: docs/art/characters/cozy-hero-male-bible.md
+
+semi-realistic painterly game character portrait, premium narrative idle RPG art style,
+adult man age 35-38, very tall about 195-200 cm, heavy athletic bone frame,
+broad shoulders, large ribcage, large arms and legs, sports past readable in frame,
+Stage 1 body: substantial belly and soft mass, functional large man not caricature,
+full body standing, slight three-quarter turn, same camera height as future stages,
+feet flat on ground, arms relaxed at sides, hands not covering belly or waist,
+calm intelligent slightly tired expression, brown eyes, broad forehead,
+straight or slightly strong nose, short neat beard, short dark blond or chestnut hair,
+tattoo on one forearm, smartwatch on one wrist,
+outfit: plain muted olive forest-green t-shirt no logos no text no prints,
+grey-brown casual cargo shorts or trousers, natural-tone sneakers,
+soft warm daylight, clean silhouette, transparent background,
+adult cozy home mood, not cartoon, not anime, not fashion illustration, not photoreal selfie

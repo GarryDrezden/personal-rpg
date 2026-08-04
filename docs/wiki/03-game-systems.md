@@ -359,7 +359,8 @@ Dashboard: «Стадия тела: N из 20» + «Состояние геро�
 **Manifest:** `src/constants/avatarAssetManifest.ts`  
 **Resolver:** `src/game/avatar/avatarAssetResolver.ts` → `getResolvedAvatarStageAsset`  
 **Overlays:** `themes/{theme}/avatars/hero-state/*-overlay.svg` + `HeroStateChrome`  
-**QA:** `/dev/avatar-pipeline` (DEV only) · `npm run validate:avatars` · [`docs/art/avatar-stage-qa-checklist.md`](../art/avatar-stage-qa-checklist.md)
+**QA:** `/dev/avatar-pipeline` (DEV only) · `npm run validate:avatars` · [`docs/art/avatar-stage-qa-checklist.md`](../art/avatar-stage-qa-checklist.md)  
+**Character Bible v1:** [`docs/art/characters/avatar-art-direction.md`](../art/characters/avatar-art-direction.md) · male/female Cozy bibles · prompts in `art-source/avatar-generation/prompts/` (final 20 stages not generated yet)
 
 Матрица v1: **2 темы × 2 пола × 20 стадий = 80** body assets.  
 Hero State **не** имеет отдельного body PNG на каждую стадию — только UI chrome/overlay.

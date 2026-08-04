@@ -161,6 +161,8 @@ themes/{cozy|dark-fantasy}/avatars/
 - Manifest statuses: `missing` | `placeholder` | `draft` | `approved` | `deprecated`
 - Dev QA grid: `/dev/avatar-pipeline`
 - Checklist: [`docs/art/avatar-stage-qa-checklist.md`](../art/avatar-stage-qa-checklist.md)
+- **Character Bible v1:** [`docs/art/characters/avatar-art-direction.md`](../art/characters/avatar-art-direction.md), [`cozy-hero-male-bible.md`](../art/characters/cozy-hero-male-bible.md), [`cozy-hero-female-bible.md`](../art/characters/cozy-hero-female-bible.md)
+- Generation prompts (WIP): `art-source/avatar-generation/prompts/`
 - Future `avatarTrackId` folders: `…/avatars/{gender}/tracks/{trackId}/stage-XX.webp` (not populated in v1)
 
 **Cozy Content Pack v1 (copy, not new art):** entity IDs stay shared; titles/descriptions for bosses→«главные помехи», mobs→«помехи дня», journey chapters and seasons diary come from `cozyContentPack` / `themeContentRegistry`. Placeholders remain the art fallback until final cozy illustrations exist.

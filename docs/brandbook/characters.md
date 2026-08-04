@@ -2,21 +2,29 @@
 
 ## Overview
 
-Два героя: **male** и **female**. По **20 стадий** каждый + фигура **Death** (200 kg silhouette).
+Два героя: **male** и **female**. По **20 стадий тела** каждый.  
+Прогресс: снижение жировой массы у **одного и того же человека**, не набор мышц / fitness arc.
 
-Прогресс: ~180 kg → ~100 kg через **снижение жировой массы**, не через набор мышц.
+## Character Bible v1 (канон)
+
+| Документ | Назначение |
+|----------|------------|
+| [`../art/characters/avatar-art-direction.md`](../art/characters/avatar-art-direction.md) | Общий стиль, canvas, Hero State, cross-theme, QA пары |
+| [`../art/characters/cozy-hero-male-bible.md`](../art/characters/cozy-hero-male-bible.md) | Cozy Hero Male Base |
+| [`../art/characters/cozy-hero-female-bible.md`](../art/characters/cozy-hero-female-bible.md) | Cozy Hero Female Base |
+| `art-source/avatar-generation/prompts/` | Base + stage templates + negative |
+
+**Сейчас:** identity / outfit / progression зафиксированы. **Финальные 20×2 стадии не генерировать**, пока не утверждены base + control stages (1, 5, 10, 15, 20).
 
 ## Anchor stages
 
-Ключевые контрольные точки для генерации и review:
-
 | Stage | Title | Role |
 |-------|-------|------|
-| 1 | Начало пути | Старт, максимальный груз |
-| 5 | Первое облегчение | Первый заметный сдвиг |
-| 10 | Половина первой силы | Ещё крупный, но уже изменился |
+| 1 | Начало пути | Старт, максимальный объём |
+| 5 | Первое облегчение | Первый заметный сдвиг (всё ещё крупный) |
+| 10 | Середина пути | Ещё крупный, но уже изменился |
 | 15 | Форма возвращается | Заметная трансформация |
-| 20 | Перерождение формы | Финал: реалистично похудевший, не fitness model |
+| 20 | Здоровая версия того же человека | Финал: не fitness model |
 
 ## Transformation logic
 
@@ -25,45 +33,34 @@
 - постепенное снижение объёма тела;
 - уже талия, меньше fullness лица;
 - свободнее шея, открытые плечи;
-- лучше осанка, посадка одежды;
-- больше энергии во взгляде.
+- лучше осанка, посадка одежды.
 
-**Не:** bodybuilder arc, visible six-pack, gym physique.
+**Не:** bodybuilder arc, visible six-pack, gym physique, sexualized female pose, outfit swap.
 
-## Stage 10 vs Stage 20
+## Body Stage vs Hero State
 
-- **Stage 10** — ещё заметно крупный, середина пути
-- **Stage 20** — реалистично похудевшая версия того же человека, **не** fitness model
+- **Body Stage** → `stage-XX.webp`
+- **Hero State** (`depleted` / `steady` / `energized` / `strong`) → UI overlay only
 
-## Current asset status (2026-06-06)
-
-| Gender | Coverage |
-|--------|----------|
-| Female | Stages 1–20 + death — **approved set** |
-| Male | Stages 1–3, 19–20 + death — **partial**; 4–18 fallback to anchors |
-
-## File paths
+## Runtime paths (Pipeline v1)
 
 ```
-public/game-assets/heroes/{male,female}/stage-XX.png
-public/game-assets/heroes/{male,female}/death.png
+public/game-assets/themes/cozy/avatars/{male,female}/stage-XX.webp
+public/game-assets/themes/dark-fantasy/avatars/{male,female}/stage-XX.webp
 ```
 
-Approved references (style only, no private photos in repo):
-`heroes/male/_reference/stage-20-approved.png`
+Legacy DF roots may still exist under `heroes/` until migration — see Avatar Assets Pipeline.
 
-## Weight mapping
+## Weight / engine
 
-Linear по `progressPercent` в `src/constants/heroStages.ts`.
-Engine: `src/utils/heroProgressEngine.ts`.
+Body Stage from weight + measurements (`avatarStageEngine`). Habits do **not** slim the body sprite.
 
-## Death figure
+## Prompts (legacy + new)
 
-Силуэт «200 kg» — чёрная мантия, коса. Не grotesque body.
-Separate PNG: `death.png`.
+- **Canon (Cozy Bible):** `art-source/avatar-generation/prompts/`
+- Legacy: [`../prompts/image-generation/hero-male-stages.md`](../prompts/image-generation/hero-male-stages.md), [`hero-female-stages.md`](../prompts/image-generation/hero-female-stages.md)
+- Legacy full: [`../HERO_STAGE_PROMPTS_V2.md`](../HERO_STAGE_PROMPTS_V2.md)
 
-## Prompts
+## QA
 
-- [`../prompts/image-generation/hero-male-stages.md`](../prompts/image-generation/hero-male-stages.md)
-- [`../prompts/image-generation/hero-female-stages.md`](../prompts/image-generation/hero-female-stages.md)
-- Legacy full prompts: [`../HERO_STAGE_PROMPTS_V2.md`](../HERO_STAGE_PROMPTS_V2.md)
+[`../art/avatar-stage-qa-checklist.md`](../art/avatar-stage-qa-checklist.md)

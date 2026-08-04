@@ -1,0 +1,20 @@
+# Cozy Hero Female — Base Identity Prompt
+# Use once to approve the locked reference sheet (Stage ~1 or dedicated identity plate).
+# After approval, this image becomes the master reference for all female stages.
+# Canvas: 1536x2048, full body, transparent background preferred.
+# Style bible: docs/art/characters/cozy-hero-female-bible.md
+# Must match male set realism/light/canvas language but NOT the same face.
+
+semi-realistic painterly game character portrait, premium narrative idle RPG art style,
+adult woman age 32-38, height about 168-178 cm,
+Stage 1 body: honest adult fullness, rounded face, soft arms, noticeable belly and hips,
+natural feminine figure, not glamorous plus-size model pose, not cruel caricature,
+full body standing, slight three-quarter turn, camera matching male hero set,
+feet flat, arms relaxed at sides, belly and waist visible, no crossed legs,
+calm intelligent warm slightly tired expression, natural brows, minimal makeup,
+chestnut or dark blond hair, medium length, neat low bun with a few soft strands,
+outfit: plain sage green soft t-shirt no logos no text no prints,
+dark brown or graphite matte trousers, beige or olive simple sneakers,
+soft warm daylight, clean silhouette, transparent background,
+adult cozy home mood, not cartoon, not anime, not fashion illustration,
+not sexualized, not photoreal selfie, not weight-loss advertisement look

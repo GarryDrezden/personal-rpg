@@ -2,7 +2,10 @@
 
 Use this checklist for every set of **20 stages** per theme × gender before setting manifest status to `approved`.
 
-Related: Avatar Assets Pipeline v1 · Body Stage vs Hero State.
+Related:
+- Avatar Assets Pipeline v1 · Body Stage vs Hero State
+- **Character Bible v1:** [`characters/avatar-art-direction.md`](characters/avatar-art-direction.md), [`characters/cozy-hero-male-bible.md`](characters/cozy-hero-male-bible.md), [`characters/cozy-hero-female-bible.md`](characters/cozy-hero-female-bible.md)
+- Prompts: `art-source/avatar-generation/prompts/`
 
 ## Identity
 

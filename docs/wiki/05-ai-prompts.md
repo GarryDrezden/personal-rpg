@@ -10,9 +10,13 @@
 
 | Файл | Содержание |
 |------|------------|
-| [`../prompts/image-generation/README.md`](../prompts/image-generation/README.md) | Общие правила, модели, workflow |
-| [`../prompts/image-generation/hero-male-stages.md`](../prompts/image-generation/hero-male-stages.md) | Мужской герой, 20 стадий |
-| [`../prompts/image-generation/hero-female-stages.md`](../prompts/image-generation/hero-female-stages.md) | Женский герой, 20 стадий |
+| [`../art/characters/avatar-art-direction.md`](../art/characters/avatar-art-direction.md) | **Character Bible v1** — общий art direction |
+| [`../art/characters/cozy-hero-male-bible.md`](../art/characters/cozy-hero-male-bible.md) | Cozy Hero Male canon |
+| [`../art/characters/cozy-hero-female-bible.md`](../art/characters/cozy-hero-female-bible.md) | Cozy Hero Female canon |
+| `art-source/avatar-generation/prompts/` | Base + stage templates + negative (Cozy) |
+| [`../prompts/image-generation/README.md`](../prompts/image-generation/README.md) | Общие правила, модели, workflow (legacy index) |
+| [`../prompts/image-generation/hero-male-stages.md`](../prompts/image-generation/hero-male-stages.md) | Мужской герой, 20 стадий (legacy) |
+| [`../prompts/image-generation/hero-female-stages.md`](../prompts/image-generation/hero-female-stages.md) | Женский герой, 20 стадий (legacy) |
 | [`../prompts/image-generation/companions.md`](../prompts/image-generation/companions.md) | Спутники |
 | [`../prompts/image-generation/mobs.md`](../prompts/image-generation/mobs.md) | Daily mobs |
 | [`../prompts/image-generation/bosses.md`](../prompts/image-generation/bosses.md) | Chapter bosses |
