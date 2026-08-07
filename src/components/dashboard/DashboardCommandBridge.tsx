@@ -29,7 +29,11 @@ import { DashboardResourceCompact } from '../rest/DashboardResourceCompact';
 import { MovementCreditDashboardCard } from './MovementCreditDashboardCard';
 import { RecoveryCompactPanel } from './RecoveryCompactPanel';
 
-const HERO_HEIGHT = '22rem';
+/** Tall portrait slot — production canvases (1536×2048) have ~50% side padding. */
+const HERO_HEIGHT = '27rem';
+/** Compensates transparent canvas padding so the body reads like legacy edge-to-edge art. */
+const HERO_STAGE_SCALE =
+  'origin-bottom scale-[1.72] sm:scale-[1.82] lg:scale-[1.88]';
 
 type DashboardCommandBridgeProps = {
   level: number;
@@ -231,10 +235,10 @@ export function DashboardCommandBridge({
           <DailyMobMiniCard mobId={game.dailyMobId} layout="portrait" />
         </div>
 
-        {/* Center — hero scene */}
+        {/* Center — hero scene (large framed portrait like dashboard reference) */}
         <div
           data-testid="command-bridge-hero"
-          className={`relative min-h-[22rem] overflow-hidden border-b border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] lg:min-h-[28rem] lg:border-b-0 lg:border-r ${
+          className={`relative min-h-[24rem] overflow-hidden border-b border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] lg:min-h-[30rem] lg:border-b-0 lg:border-r ${
             isCozy ? 'bg-[#efe4d2]' : 'bg-[#0c0a12]'
           }`}
         >
@@ -250,12 +254,15 @@ export function DashboardCommandBridge({
               className={`absolute inset-0 ${
                 isCozy
                   ? 'bg-gradient-to-b from-[#f1ebe0]/35 via-transparent to-[#efe4d2]/70'
-                  : 'bg-gradient-to-b from-black/40 via-transparent to-black/50'
+                  : 'bg-gradient-to-b from-black/45 via-black/10 to-black/55'
               }`}
             />
+            {!isCozy ? (
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_72%,transparent_18%,rgba(0,0,0,0.5)_100%)]" />
+            ) : null}
             <div
-              className={`absolute bottom-[7%] left-1/2 h-3 w-[42%] max-w-[11rem] -translate-x-1/2 rounded-[100%] blur-md ${
-                isCozy ? 'bg-[#8b7355]/25' : 'bg-black/45'
+              className={`absolute bottom-[6%] left-1/2 h-3 w-[48%] max-w-[14rem] -translate-x-1/2 rounded-[100%] blur-md ${
+                isCozy ? 'bg-[#8b7355]/25' : 'bg-black/50'
               }`}
             />
           </div>
@@ -272,19 +279,19 @@ export function DashboardCommandBridge({
             <CompanionStatusChip companionId={game.profile.activeCompanionId} />
           </div>
 
-          <div className="relative z-10 flex h-full min-h-[22rem] items-end justify-center px-2 pb-3 pt-10 lg:min-h-[28rem]">
+          <div className="relative z-10 flex h-full min-h-[24rem] items-end justify-center overflow-hidden px-1 pb-0 pt-9 lg:min-h-[30rem] lg:px-2">
             <div
               data-testid="hero-scene-character"
               data-hero-state={game.heroState}
               data-body-stage={game.bodyStage}
-              className="relative flex w-full max-w-[16rem] items-end justify-center sm:max-w-[18rem]"
-              style={{ height: HERO_HEIGHT, maxHeight: 'calc(100% - 2rem)' }}
+              className="relative flex w-full max-w-[min(100%,26rem)] items-end justify-center overflow-hidden sm:max-w-[28rem]"
+              style={{ height: HERO_HEIGHT, maxHeight: 'calc(100% - 0.5rem)' }}
             >
               <HeroStateChrome
                 themeId={themeId}
                 heroState={game.heroState}
                 showLabel={false}
-                className="relative z-10 h-full w-full"
+                className="relative z-10 h-full w-full overflow-hidden"
               >
                 <GameAssetImage
                   variant="hero"
@@ -293,8 +300,8 @@ export function DashboardCommandBridge({
                   fallbackCandidates={heroAssets.fallbackCandidates}
                   status="unlocked"
                   fit="hero"
-                  className="h-full w-full items-end bg-transparent"
-                  imageClassName="drop-shadow-[0_8px_18px_rgba(0,0,0,0.55)]"
+                  className="h-full w-full items-end overflow-hidden bg-transparent"
+                  imageClassName={`${HERO_STAGE_SCALE} drop-shadow-[0_10px_24px_rgba(0,0,0,0.6)]`}
                 />
               </HeroStateChrome>
             </div>

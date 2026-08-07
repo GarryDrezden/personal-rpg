@@ -22,8 +22,11 @@ import { Badge } from '../ui/Badge';
 import { HeroMilestoneTrack } from './HeroMilestoneTrack';
 import { DashboardPathEmptyState } from './DashboardPathEmptyState';
 
-/** ≈ 3× GameSceneBannerCard min-h (7.25rem) + 2× gap между карточками справа */
-const DASHBOARD_HERO_HEIGHT = '23rem';
+/** ≈ 3× GameSceneBannerCard min-h + gaps; tall enough for 1536×2048 stage canvases */
+const DASHBOARD_HERO_HEIGHT = '26rem';
+/** Transparent stage padding (~48% body width) → scale up for dominant hero read. */
+const HERO_STAGE_SCALE =
+  'origin-bottom scale-[1.68] sm:scale-[1.78] lg:scale-[1.85]';
 
 type HeroScenePanelProps = {
   level: number;
@@ -161,7 +164,7 @@ export function HeroScenePanel({
       */}
       <div className="grid min-h-0 grid-cols-1 lg:grid-cols-2">
         {/* Hero + compact companion overlay */}
-        <div className={`relative min-h-[24rem] overflow-hidden lg:min-h-[25rem] ${sceneBg}`}>
+        <div className={`relative min-h-[26rem] overflow-hidden lg:min-h-[28rem] ${sceneBg}`}>
           {/* Hopeful cliff sunrise backdrop */}
           <div
             className="pointer-events-none absolute inset-0"
@@ -186,7 +189,7 @@ export function HeroScenePanel({
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_70%,transparent_20%,rgba(0,0,0,0.45)_100%)]" />
             ) : null}
             <div
-              className={`absolute bottom-[7%] left-1/2 h-3 w-[42%] max-w-[11rem] -translate-x-1/2 rounded-[100%] blur-md ${
+              className={`absolute bottom-[7%] left-1/2 h-3 w-[48%] max-w-[14rem] -translate-x-1/2 rounded-[100%] blur-md ${
                 isCozy ? 'bg-[#8b7355]/25' : 'bg-black/45'
               }`}
             />
@@ -200,20 +203,20 @@ export function HeroScenePanel({
             Ур. {level}
           </div>
 
-          <div className="relative z-10 flex h-full min-h-[24rem] items-end justify-center overflow-visible px-2 pb-2 pt-4 lg:min-h-[25rem] lg:px-4 lg:pb-3 lg:pt-5">
+          <div className="relative z-10 flex h-full min-h-[26rem] items-end justify-center overflow-hidden px-2 pb-1 pt-4 lg:min-h-[28rem] lg:px-3 lg:pb-2 lg:pt-5">
             <div
               data-testid="hero-scene-character"
               data-hero-state={game.heroState}
               data-body-stage={game.bodyStage}
-              className="relative z-10 flex w-full max-w-[20rem] items-end justify-center overflow-visible bg-transparent sm:max-w-[22rem] lg:max-w-[24rem]"
-              style={{ height: DASHBOARD_HERO_HEIGHT, maxHeight: 'calc(100% - 1.5rem)' }}
+              className="relative z-10 flex w-full max-w-[22rem] items-end justify-center overflow-hidden bg-transparent sm:max-w-[24rem] lg:max-w-[26rem]"
+              style={{ height: DASHBOARD_HERO_HEIGHT, maxHeight: 'calc(100% - 0.75rem)' }}
             >
-              <div className="relative h-full w-full max-w-[12.5rem] sm:max-w-[13.5rem] lg:max-w-[14.5rem]">
+              <div className="relative h-full w-full max-w-[18rem] sm:max-w-[20rem] lg:max-w-[22rem]">
                 <HeroStateChrome
                   themeId={themeId}
                   heroState={game.heroState}
                   showLabel={false}
-                  className="relative z-10 h-full w-full"
+                  className="relative z-10 h-full w-full overflow-hidden"
                 >
                   <GameAssetImage
                     variant="hero"
@@ -222,8 +225,8 @@ export function HeroScenePanel({
                     fallbackCandidates={heroAssets.fallbackCandidates}
                     status="unlocked"
                     fit="hero"
-                    className="h-full w-full items-end bg-transparent"
-                    imageClassName="drop-shadow-[0_8px_18px_rgba(0,0,0,0.55)]"
+                    className="h-full w-full items-end overflow-hidden bg-transparent"
+                    imageClassName={`${HERO_STAGE_SCALE} drop-shadow-[0_10px_24px_rgba(0,0,0,0.6)]`}
                   />
                 </HeroStateChrome>
                 <HeroCompanionOverlay
