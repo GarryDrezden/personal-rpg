@@ -55,7 +55,7 @@ export function AvatarStagePortrait({
         alt={alt}
         fallbackCandidates={resolved.fallbackCandidates}
         status="unlocked"
-        fit="heroStage"
+        fit="hero"
         className="h-full w-full bg-transparent"
         imageClassName={imageClassName}
       />

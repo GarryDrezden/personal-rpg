@@ -16,19 +16,13 @@ type GameAssetImageProps = {
   className?: string;
   imageClassName?: string;
   imageStyle?: CSSProperties;
-  fit?: 'default' | 'hero' | 'heroStage' | 'companion' | 'mob' | 'boss';
+  fit?: 'default' | 'hero' | 'companion' | 'mob' | 'boss';
   loading?: 'eager' | 'lazy';
 };
 
 const FIT_CLASS: Record<NonNullable<GameAssetImageProps['fit']>, string> = {
   default: 'h-full w-full max-h-full max-w-full object-contain',
   hero: 'h-full w-full max-h-full max-w-full object-contain object-bottom',
-  /**
-   * Padded 1536×2048 stage canvases: enlarge past the slot so the body fills
-   * height without clipping the head (~100/0.81 ≈ 123%; 118% keeps crown margin).
-   */
-  heroStage:
-    'absolute bottom-0 left-1/2 h-[118%] w-auto max-h-none max-w-none -translate-x-1/2 object-contain object-bottom',
   companion: 'h-full w-full max-h-full max-w-full object-contain object-bottom',
   mob: 'h-full w-full max-h-full max-w-full object-contain object-center',
   boss: 'h-full w-full max-h-full max-w-full object-contain object-center',
@@ -83,11 +77,8 @@ export function GameAssetImage({
   const showHighlight = current && resolvedFit === 'default';
   const fitClass = FIT_CLASS[resolvedFit];
   const variantScale = VARIANT_SCALE[variant] ?? '';
-  const alignClass =
-    resolvedFit === 'hero' || resolvedFit === 'heroStage' ? 'items-end' : 'items-center';
-  const overflowClass =
-    resolvedFit === 'heroStage' ? 'overflow-hidden' : resolvedFit === 'hero' ? 'overflow-visible' : 'overflow-hidden';
-  const positionClass = resolvedFit === 'heroStage' ? 'relative' : '';
+  const alignClass = resolvedFit === 'hero' ? 'items-end' : 'items-center';
+  const overflowClass = resolvedFit === 'hero' ? 'overflow-visible' : 'overflow-hidden';
 
   if (candidates.length === 0 || exhausted) {
     return (
@@ -111,7 +102,7 @@ export function GameAssetImage({
 
   return (
     <div
-      className={`relative flex h-full w-full ${alignClass} justify-center ${overflowClass} ${positionClass} bg-transparent ${className} ${
+      className={`relative flex h-full w-full ${alignClass} justify-center ${overflowClass} bg-transparent ${className} ${
         showHighlight ? 'ring-2 ring-[var(--app-primary)] ring-inset' : ''
       }`}
     >

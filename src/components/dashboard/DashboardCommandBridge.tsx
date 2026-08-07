@@ -16,7 +16,6 @@ import type { CompanionId } from '../../types/gameAssets';
 import type { NextBestAction } from '../../types/nextBestAction';
 import type { MomentumSummary } from '../../types/momentum';
 import { GameAssetImage } from '../game/GameAssetImage';
-import { HeroStateChrome } from '../avatar/HeroStateChrome';
 import { ChapterBossMiniCard } from '../game/ChapterBossMiniCard';
 import { DailyMobMiniCard } from '../game/DailyMobMiniCard';
 import { ProgressBar } from '../ui/ProgressBar';
@@ -28,9 +27,7 @@ import { DailyQuestsCompact } from './DailyQuestsCompact';
 import { DashboardResourceCompact } from '../rest/DashboardResourceCompact';
 import { MovementCreditDashboardCard } from './MovementCreditDashboardCard';
 import { RecoveryCompactPanel } from './RecoveryCompactPanel';
-
-/** Portrait slot for command-bridge hero (full body must stay in frame). */
-const HERO_HEIGHT = '28rem';
+import { DashboardHeroAvatar } from './DashboardHeroAvatar';
 
 type DashboardCommandBridgeProps = {
   level: number;
@@ -276,33 +273,14 @@ export function DashboardCommandBridge({
             <CompanionStatusChip companionId={game.profile.activeCompanionId} />
           </div>
 
-          <div className="relative z-10 flex h-full min-h-[24rem] items-end justify-center overflow-hidden px-1 pb-0 pt-9 lg:min-h-[30rem] lg:px-2">
-            <div
-              data-testid="hero-scene-character"
-              data-hero-state={game.heroState}
-              data-body-stage={game.bodyStage}
-              className="relative flex w-full max-w-[min(100%,26rem)] items-end justify-center overflow-hidden sm:max-w-[28rem]"
-              style={{ height: HERO_HEIGHT, maxHeight: 'calc(100% - 0.5rem)' }}
-            >
-              <HeroStateChrome
-                themeId={themeId}
-                heroState={game.heroState}
-                showLabel={false}
-                className="relative z-10 h-full w-full overflow-hidden"
-              >
-                <GameAssetImage
-                  variant="hero"
-                  src={heroAssets.src}
-                  alt={stageMeta.title}
-                  fallbackCandidates={heroAssets.fallbackCandidates}
-                  status="unlocked"
-                  fit="heroStage"
-                  className="h-full w-full bg-transparent"
-                  imageClassName="drop-shadow-[0_10px_24px_rgba(0,0,0,0.6)]"
-                />
-              </HeroStateChrome>
-            </div>
-          </div>
+          <DashboardHeroAvatar
+            themeId={themeId}
+            bodyStage={game.bodyStage}
+            heroState={game.heroState}
+            src={heroAssets.src}
+            fallbackCandidates={heroAssets.fallbackCandidates}
+            alt={stageMeta.title}
+          />
         </div>
 
         {/* Right — day actions */}

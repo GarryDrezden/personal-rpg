@@ -12,18 +12,13 @@ import { getPathSetupState } from '../../utils/dashboardPathSetup';
 import { getDayStatus } from '../../utils/points';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import { getHeroSceneBackdropPath } from '../../game/assetPaths';
-import { GameAssetImage } from '../game/GameAssetImage';
-import { HeroStateChrome } from '../avatar/HeroStateChrome';
-import { HeroCompanionOverlay } from '../game/HeroCompanionOverlay';
 import { DailyMobMiniCard } from '../game/DailyMobMiniCard';
 import { ChapterBossMiniCard } from '../game/ChapterBossMiniCard';
 import { ProgressBar } from '../ui/ProgressBar';
 import { Badge } from '../ui/Badge';
 import { HeroMilestoneTrack } from './HeroMilestoneTrack';
 import { DashboardPathEmptyState } from './DashboardPathEmptyState';
-
-/** ≈ 3× GameSceneBannerCard min-h + gaps; tall enough for 1536×2048 stage canvases */
-const DASHBOARD_HERO_HEIGHT = '27rem';
+import { DashboardHeroAvatar } from './DashboardHeroAvatar';
 
 type HeroScenePanelProps = {
   level: number;
@@ -200,47 +195,23 @@ export function HeroScenePanel({
             Ур. {level}
           </div>
 
-          <div className="relative z-10 flex h-full min-h-[26rem] items-end justify-center overflow-hidden px-2 pb-1 pt-4 lg:min-h-[28rem] lg:px-3 lg:pb-2 lg:pt-5">
-            <div
-              data-testid="hero-scene-character"
-              data-hero-state={game.heroState}
-              data-body-stage={game.bodyStage}
-              className="relative z-10 flex w-full max-w-[22rem] items-end justify-center overflow-hidden bg-transparent sm:max-w-[24rem] lg:max-w-[26rem]"
-              style={{ height: DASHBOARD_HERO_HEIGHT, maxHeight: 'calc(100% - 0.75rem)' }}
-            >
-              <div className="relative h-full w-full max-w-[18rem] sm:max-w-[20rem] lg:max-w-[22rem]">
-                <HeroStateChrome
-                  themeId={themeId}
-                  heroState={game.heroState}
-                  showLabel={false}
-                  className="relative z-10 h-full w-full overflow-hidden"
-                >
-                  <GameAssetImage
-                    variant="hero"
-                    src={heroAssets.src}
-                    alt={stageMeta.title}
-                    fallbackCandidates={heroAssets.fallbackCandidates}
-                    status="unlocked"
-                    fit="heroStage"
-                    className="h-full w-full bg-transparent"
-                    imageClassName="drop-shadow-[0_10px_24px_rgba(0,0,0,0.6)]"
-                  />
-                </HeroStateChrome>
-                <HeroCompanionOverlay
-                  companionId={game.profile.activeCompanionId}
-                  side="left"
-                />
-              </div>
-            </div>
+          <DashboardHeroAvatar
+            themeId={themeId}
+            bodyStage={game.bodyStage}
+            heroState={game.heroState}
+            src={heroAssets.src}
+            fallbackCandidates={heroAssets.fallbackCandidates}
+            alt={stageMeta.title}
+          />
 
-            <div
-              data-testid="hero-scene-companion"
-              className={`absolute bottom-3 right-2 z-30 max-w-[7.5rem] rounded-lg border px-2 py-1.5 backdrop-blur-sm sm:bottom-4 sm:right-3 ${
-                isCozy
-                  ? 'border-[var(--app-border)] bg-[var(--app-card-strong)]/92'
-                  : 'border-amber-400/35 bg-black/50'
-              }`}
-            >
+          <div
+            data-testid="hero-scene-companion"
+            className={`absolute bottom-3 right-2 z-30 max-w-[7.5rem] rounded-lg border px-2 py-1.5 backdrop-blur-sm sm:bottom-4 sm:right-3 ${
+              isCozy
+                ? 'border-[var(--app-border)] bg-[var(--app-card-strong)]/92'
+                : 'border-amber-400/35 bg-black/50'
+            }`}
+          >
               <p
                 className={`text-[10px] font-semibold uppercase tracking-wide ${
                   isCozy ? 'text-[var(--app-garden)]' : 'text-amber-200/90'
@@ -266,7 +237,6 @@ export function HeroScenePanel({
                 {getThemeTerm(themeId, 'quest')} →
               </Link>
             </div>
-          </div>
         </div>
 
         {/* Boss + Mob — правая колонка (≤ половины ширины) */}

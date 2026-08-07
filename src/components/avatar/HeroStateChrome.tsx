@@ -13,6 +13,8 @@ type HeroStateChromeProps = {
   children: ReactNode;
   /** Accessible text besides color. */
   showLabel?: boolean;
+  /** Soft state overlay SVG — off on dashboard scene to avoid a boxed frame. */
+  showOverlay?: boolean;
   className?: string;
 };
 
@@ -38,6 +40,7 @@ export function HeroStateChrome({
   heroState,
   children,
   showLabel = true,
+  showOverlay = true,
   className = '',
 }: HeroStateChromeProps) {
   const label = getHeroStateLabel(heroState);
@@ -60,13 +63,15 @@ export function HeroStateChrome({
       <div className="relative z-10 h-full w-full" style={style}>
         {children}
       </div>
-      <img
-        src={overlaySrc}
-        alt=""
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-20 h-full w-full object-contain opacity-90"
-        data-testid="hero-state-overlay"
-      />
+      {showOverlay ? (
+        <img
+          src={overlaySrc}
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-20 h-full w-full object-contain opacity-90"
+          data-testid="hero-state-overlay"
+        />
+      ) : null}
       {showLabel ? (
         <p
           className="relative z-30 mt-1 text-center text-[11px] font-medium text-[var(--app-text-muted)]"
