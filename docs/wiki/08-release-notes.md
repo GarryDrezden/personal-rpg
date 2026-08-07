@@ -8,6 +8,7 @@
 
 ### Added
 
+- **Sidebar visibility (per theme):** compact default menu; Летопись / Карта навыков / Инерция / Рост героя opt-in via Settings → Боковое меню. Stored in `settings.sidebarVisibility` separately for Cozy and Dark Fantasy. `getSidebarNavigation` shared by desktop/mobile; routes unchanged.
 - **Character Bible v1:** Cozy Hero Male + Female identity canon, shared Avatar Art Direction (canvas, pose, Hero State vs Body Stage, cross-theme identity), generation prompt templates + negative prompt under `art-source/avatar-generation/prompts/`. Final 20 stages not generated yet.
 - **Cozy Botanical Print:** decorative Cozy identity — cream paper tokens (`--cozy-paper` … `--cozy-muted`), reusable `CozyBotanicalFrame` (subtle/medium/hero), light paper texture, sparse handwritten accents. Applied to Home hero, Dashboard home block, Seasons diary, Cozy onboarding intro, empty states, companion cards. Dark Fantasy untouched; small utility cards stay clean.
 - **Avatar Assets Pipeline v1:** theme-scoped avatar folders, 80-slot manifest + unified resolver, same-theme placeholders (no Cozy↔DF fallback), Hero State overlays, DEV `/dev/avatar-pipeline`, `npm run validate:avatars`, approval workflow, future `avatarTrackId`, QA checklist. Final 80 body images not generated yet.

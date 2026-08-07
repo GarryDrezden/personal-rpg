@@ -178,10 +178,18 @@ Cozy never falls back to Dark Fantasy art by default — missing cozy art uses s
 
 **Engines:** `cozyHomeEngine.ts`, `cozyHomeRewardsEngine.ts`  
 **Config:** `constants/cozyHomeConfig.ts`  
-**UI:** `/home` (`CozyHomePage`), Dashboard `CozyHomeDashboardCard`, sidebar «Дом»  
+**UI:** `/home` (`CozyHomePage`), Dashboard `CozyHomeDashboardCard`, sidebar «Дом» (Cozy only)  
 **State:** `AppSettings.cozyHome`, claim flag `DailyEntry.cozyRewardsGranted`
 
 **Persistence note:** `cozyHome` lives on `AppSettings` (same pattern as `plateauState` / `bodyAbilityState`) and is saved via settings / `user_data.customSettingsBackup` JSON. Ideologically it is game progress, not a UI preference — but in this codebase `AppSettings` is the shared root for both preferences and meta-progression. Do not invent a parallel store for v1; a future split is optional.
+
+## Sidebar navigation (opt-in advanced)
+
+**Resolver:** `getSidebarNavigation({ themeId, settings })` in `src/constants/navigation.ts`  
+**Prefs:** `AppSettings.sidebarVisibility` — per theme (`cozy` / `darkFantasy`)  
+**Always on:** daily shell, Путь, Дом (cozy), Кодекс, Свобода тела, Данные, Настройки, Справка  
+**Opt-in (default off):** Летопись `/seasons`, Карта навыков `/map`, Инерция `/momentum`, Рост героя `/growth`  
+**Rule:** hiding a sidebar item never disables routes, deep links, or in-app CTAs. Desktop and mobile «Ещё» share the same resolver.
 
 Деревенский дом как cozy meta progression: забота о теле даёт ресурсы → ресурсы тратятся на зоны дома → дом становится уютнее.
 

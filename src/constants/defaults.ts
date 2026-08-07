@@ -2,6 +2,7 @@ import type { AppSettings, PointSettings } from '../types';
 import { DEFAULT_COIN_SETTINGS } from './coins';
 import { DEFAULT_AVATAR_SETTINGS } from './avatar';
 import { DEFAULT_STEPS_THRESHOLDS } from './steps';
+import { DEFAULT_THEME_SIDEBAR_SETTINGS } from './sidebarVisibility';
 
 export const DEFAULT_POINT_SETTINGS: PointSettings = {
   caloriesOk: 40,
@@ -63,6 +64,10 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
     totalUpgrades: 0,
     lastUpdatedAt: null,
     lastUpgrade: null,
+  },
+  sidebarVisibility: {
+    cozy: { ...DEFAULT_THEME_SIDEBAR_SETTINGS.cozy },
+    darkFantasy: { ...DEFAULT_THEME_SIDEBAR_SETTINGS.darkFantasy },
   },
 };
 

@@ -26,6 +26,7 @@ import { ThemeSelector } from '../components/settings/ThemeSelector';
 import { InstantSettingRow } from '../components/settings/InstantSettingRow';
 import { SettingsToc } from '../components/settings/SettingsToc';
 import { BodyAbilityMapSettingsCard } from '../components/settings/BodyAbilityMapSettingsCard';
+import { SidebarVisibilitySettingsCard } from '../components/settings/SidebarVisibilitySettingsCard';
 import { HabitsEditor } from '../components/settings/HabitsEditor';
 import { useAppTheme } from '../hooks/useAppTheme';
 import { useAutosaveStatus } from '../hooks/useAutosaveStatus';
@@ -211,6 +212,8 @@ export function SettingsPage() {
           data-testid="theme-autosave-status"
         />
       </Card>
+
+      <SidebarVisibilitySettingsCard />
 
       <div id="settings-pwa" className="scroll-mt-28">
         <PwaInstallCard />

@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-08-07 — Sidebar opt-in visibility (per theme)
+
+**Context:**  
+Sidebar listed too many secondary screens at once (chronicle, skill map, momentum, growth), which diluted daily actions and core progression — especially across Cozy and Dark Fantasy.
+
+**Decision:**  
+Keep a compact always-on shell. Make Летопись / Карта навыков / Инерция / Рост героя opt-in via Settings → Боковое меню. Store visibility in `settings.sidebarVisibility` **separately per theme**. Single resolver `getSidebarNavigation({ themeId, settings })` for desktop and mobile. Routes and deep links stay available; hiding a nav item never disables the feature. Missing legacy field normalizes to all-optional-off.
+
+**Consequence:**  
+Shorter default sidebar; users deepen the menu when ready; Cozy and DF menus can diverge intentionally.
+
 ## 2026-08-02 — Avatar Assets Pipeline v1
 
 **Context:**  

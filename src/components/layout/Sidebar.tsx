@@ -1,8 +1,9 @@
-import { getNavGroupsForTheme } from '../../constants/navigation';
+import { getSidebarNavigation } from '../../constants/navigation';
 import { NavItemLink } from './NavItemLink';
 import { useAuth } from '../../auth/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import { useAppStore } from '../../store/appStore';
 
 const SIDEBAR_WIDTH = 'md:w-[356px]';
 const SIDEBAR_MARGIN = 'md:ml-[356px]';
@@ -11,7 +12,8 @@ export function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { themeId } = useAppTheme();
-  const groups = getNavGroupsForTheme(themeId);
+  const settings = useAppStore((s) => s.settings);
+  const groups = getSidebarNavigation({ themeId, settings });
   const systemGroup = groups.find((group) => group.id === 'system');
   const scrollGroups = groups.filter((group) => group.id !== 'system');
 
@@ -32,18 +34,24 @@ export function Sidebar() {
         <p className="mt-0.5 text-[11px] text-[var(--app-text-muted)]">Твой путь героя</p>
       </div>
 
-      <nav className="flex min-h-0 flex-1 flex-col overflow-y-auto px-2.5 py-2">
+      <nav className="flex min-h-0 flex-1 flex-col overflow-y-auto px-2.5 py-2" data-testid="app-sidebar-nav">
         {scrollGroups.map((group, index) => (
           <section
             key={group.id}
             className={index > 0 ? 'mt-2 border-t border-[var(--app-border)] pt-2' : ''}
+            data-testid={`sidebar-group-${group.id}`}
           >
             <p className="mb-0.5 px-2 text-[10px] font-bold uppercase tracking-wider text-[var(--app-primary)]">
               {group.title}
             </p>
             <div className="flex flex-col">
               {group.items.map((item) => (
-                <NavItemLink key={item.to} {...item} />
+                <NavItemLink
+                  key={item.to}
+                  to={item.to}
+                  icon={item.icon}
+                  label={item.label}
+                />
               ))}
             </div>
           </section>
@@ -54,7 +62,12 @@ export function Sidebar() {
         <div className="shrink-0 border-t border-[var(--app-border)] px-2.5 py-2">
           <div className="flex flex-col">
             {systemGroup.items.map((item) => (
-              <NavItemLink key={item.to} {...item} />
+              <NavItemLink
+                key={item.to}
+                to={item.to}
+                icon={item.icon}
+                label={item.label}
+              />
             ))}
           </div>
           {user ? (

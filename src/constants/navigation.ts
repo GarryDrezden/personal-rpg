@@ -18,9 +18,31 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { isGrowthHubPath } from './growthHub';
+import type { AppSettings } from '../types';
+import type { SidebarVisibilityKey } from '../types/sidebar';
 import type { AppThemeId } from '../types/theme';
+import { getSidebarVisibilityForTheme } from '../utils/sidebarVisibility';
+
+export type NavItemId =
+  | 'home'
+  | 'today'
+  | 'week'
+  | 'journey'
+  | 'cozyHome'
+  | 'chronicle'
+  | 'codex'
+  | 'skillMap'
+  | 'momentum'
+  | 'freedom'
+  | 'heroGrowth'
+  | 'measurements'
+  | 'insights'
+  | 'reports'
+  | 'settings'
+  | 'faq';
 
 export type NavItem = {
+  id: NavItemId;
   to: string;
   icon: LucideIcon;
   label: string;
@@ -28,6 +50,9 @@ export type NavItem = {
   shortLabel?: string;
   /** If set, item is shown only for these themes (e.g. Cozy Home) */
   themes?: AppThemeId[];
+  /** Advanced / low-frequency screen — opt-in via settings */
+  optional?: boolean;
+  visibilityKey?: SidebarVisibilityKey;
 };
 
 export type NavGroup = {
@@ -37,16 +62,16 @@ export type NavGroup = {
   items: NavItem[];
 };
 
-/** Сгруппированная навигация — меньше шума, понятные «главы» приложения */
+/** Сгруппированная навигация — базовый shell + optional advanced items */
 export const navGroups: NavGroup[] = [
   {
     id: 'daily',
     title: 'Каждый день',
     hint: 'Ежедневный цикл',
     items: [
-      { to: '/', icon: Home, label: 'Главная', shortLabel: 'Главная' },
-      { to: '/today', icon: Calendar, label: 'Сегодня', shortLabel: 'Сегодня' },
-      { to: '/week', icon: CalendarDays, label: 'Неделя', shortLabel: 'Неделя' },
+      { id: 'home', to: '/', icon: Home, label: 'Главная', shortLabel: 'Главная' },
+      { id: 'today', to: '/today', icon: Calendar, label: 'Сегодня', shortLabel: 'Сегодня' },
+      { id: 'week', to: '/week', icon: CalendarDays, label: 'Неделя', shortLabel: 'Неделя' },
     ],
   },
   {
@@ -54,17 +79,33 @@ export const navGroups: NavGroup[] = [
     title: 'Приключение',
     hint: 'Мир и карта пути',
     items: [
-      { to: '/journey', icon: Route, label: 'Путь', shortLabel: 'Путь' },
+      { id: 'journey', to: '/journey', icon: Route, label: 'Путь', shortLabel: 'Путь' },
       {
+        id: 'cozyHome',
         to: '/home',
         icon: House,
         label: 'Дом',
         shortLabel: 'Дом',
         themes: ['cozy'],
       },
-      { to: '/seasons', icon: Scroll, label: 'Летопись', shortLabel: 'Сезоны' },
-      { to: '/codex', icon: BookOpen, label: 'Кодекс', shortLabel: 'Кодекс' },
-      { to: '/map', icon: Map, label: 'Карта навыков' },
+      {
+        id: 'chronicle',
+        to: '/seasons',
+        icon: Scroll,
+        label: 'Летопись',
+        shortLabel: 'Сезоны',
+        optional: true,
+        visibilityKey: 'chronicle',
+      },
+      { id: 'codex', to: '/codex', icon: BookOpen, label: 'Кодекс', shortLabel: 'Кодекс' },
+      {
+        id: 'skillMap',
+        to: '/map',
+        icon: Map,
+        label: 'Карта навыков',
+        optional: true,
+        visibilityKey: 'skillMap',
+      },
     ],
   },
   {
@@ -72,64 +113,116 @@ export const navGroups: NavGroup[] = [
     title: 'Состояние',
     hint: 'Как чувствует себя герой',
     items: [
-      { to: '/momentum', icon: Gauge, label: 'Инерция' },
-      { to: '/freedom', icon: Feather, label: 'Свобода тела' },
+      {
+        id: 'momentum',
+        to: '/momentum',
+        icon: Gauge,
+        label: 'Инерция',
+        optional: true,
+        visibilityKey: 'momentum',
+      },
+      { id: 'freedom', to: '/freedom', icon: Feather, label: 'Свобода тела' },
     ],
   },
   {
     id: 'growth',
     title: 'Рост героя',
     hint: 'Сила, награды, испытания',
-    items: [{ to: '/growth', icon: TrendingUp, label: 'Рост героя' }],
+    items: [
+      {
+        id: 'heroGrowth',
+        to: '/growth',
+        icon: TrendingUp,
+        label: 'Рост героя',
+        optional: true,
+        visibilityKey: 'heroGrowth',
+      },
+    ],
   },
   {
     id: 'data',
     title: 'Данные',
     hint: 'Замеры и отчёты',
     items: [
-      { to: '/measurements', icon: Ruler, label: 'Замеры' },
-      { to: '/insights', icon: Lightbulb, label: 'Аналитика' },
-      { to: '/reports', icon: FileText, label: 'Отчёты' },
+      { id: 'measurements', to: '/measurements', icon: Ruler, label: 'Замеры' },
+      { id: 'insights', to: '/insights', icon: Lightbulb, label: 'Аналитика' },
+      { id: 'reports', to: '/reports', icon: FileText, label: 'Отчёты' },
     ],
   },
   {
     id: 'system',
     title: 'Система',
     items: [
-      { to: '/settings', icon: Settings, label: 'Настройки' },
-      { to: '/faq', icon: HelpCircle, label: 'Справка' },
+      { id: 'settings', to: '/settings', icon: Settings, label: 'Настройки' },
+      { id: 'faq', to: '/faq', icon: HelpCircle, label: 'Справка' },
     ],
   },
 ];
 
-export function isNavItemVisible(item: NavItem, themeId: AppThemeId): boolean {
+export type SidebarNavigationInput = {
+  themeId: AppThemeId;
+  settings?: Pick<AppSettings, 'sidebarVisibility'> | AppSettings | null;
+};
+
+function isThemeAllowed(item: NavItem, themeId: AppThemeId): boolean {
   return !item.themes || item.themes.includes(themeId);
 }
 
-export function getNavGroupsForTheme(themeId: AppThemeId): NavGroup[] {
+function isOptionalAllowed(
+  item: NavItem,
+  themeId: AppThemeId,
+  settings?: SidebarNavigationInput['settings'],
+): boolean {
+  if (!item.optional || !item.visibilityKey) return true;
+  const visibility = getSidebarVisibilityForTheme(settings, themeId);
+  return visibility[item.visibilityKey] === true;
+}
+
+/** Single resolver for desktop sidebar + mobile drawer. */
+export function getSidebarNavigation({
+  themeId,
+  settings,
+}: SidebarNavigationInput): NavGroup[] {
   return navGroups
     .map((group) => ({
       ...group,
-      items: group.items.filter((item) => isNavItemVisible(item, themeId)),
+      items: group.items.filter(
+        (item) => isThemeAllowed(item, themeId) && isOptionalAllowed(item, themeId, settings),
+      ),
     }))
     .filter((group) => group.items.length > 0);
 }
 
+/** @deprecated Prefer getSidebarNavigation({ themeId, settings }) */
+export function getNavGroupsForTheme(
+  themeId: AppThemeId,
+  settings?: SidebarNavigationInput['settings'],
+): NavGroup[] {
+  return getSidebarNavigation({ themeId, settings });
+}
+
+export function isNavItemVisible(item: NavItem, themeId: AppThemeId): boolean {
+  return isThemeAllowed(item, themeId);
+}
+
 export const allNavItems = navGroups.flatMap((group) => group.items);
 
-/** Нижняя панель на телефоне — самые частые действия */
+/** Нижняя панель на телефоне — самые частые действия (always-core) */
 export const mobileTabNav: NavItem[] = [
-  allNavItems.find((item) => item.to === '/')!,
-  allNavItems.find((item) => item.to === '/today')!,
-  allNavItems.find((item) => item.to === '/week')!,
-  allNavItems.find((item) => item.to === '/codex')!,
+  allNavItems.find((item) => item.id === 'home')!,
+  allNavItems.find((item) => item.id === 'today')!,
+  allNavItems.find((item) => item.id === 'week')!,
+  allNavItems.find((item) => item.id === 'codex')!,
 ];
 
 const mobileTabPaths = new Set(mobileTabNav.map((item) => item.to));
 
 /** Группы для выезжающего меню «Ещё» — без пунктов из нижней панели */
-export function getMobileDrawerGroups(themeId: AppThemeId): NavGroup[] {
-  return getNavGroupsForTheme(themeId)
+export function getMobileDrawerGroups(
+  themeId: AppThemeId,
+  settings?: SidebarNavigationInput['settings'],
+): NavGroup[] {
+  return getSidebarNavigation({ themeId, settings })
     .map((group) => ({
       ...group,
       items: group.items.filter((item) => !mobileTabPaths.has(item.to)),
@@ -137,13 +230,16 @@ export function getMobileDrawerGroups(themeId: AppThemeId): NavGroup[] {
     .filter((group) => group.items.length > 0);
 }
 
-export function getMobileDrawerPaths(themeId: AppThemeId): string[] {
-  return getMobileDrawerGroups(themeId).flatMap((group) =>
+export function getMobileDrawerPaths(
+  themeId: AppThemeId,
+  settings?: SidebarNavigationInput['settings'],
+): string[] {
+  return getMobileDrawerGroups(themeId, settings).flatMap((group) =>
     group.items.map((item) => item.to),
   );
 }
 
-/** @deprecated Prefer getMobileDrawerGroups(themeId) — unfiltered, includes Cozy-only items */
+/** @deprecated Prefer getMobileDrawerGroups(themeId, settings) */
 export const mobileDrawerGroups: NavGroup[] = navGroups
   .map((group) => ({
     ...group,
@@ -151,7 +247,7 @@ export const mobileDrawerGroups: NavGroup[] = navGroups
   }))
   .filter((group) => group.items.length > 0);
 
-/** @deprecated Prefer getMobileDrawerPaths(themeId) */
+/** @deprecated Prefer getMobileDrawerPaths(themeId, settings) */
 export const mobileDrawerPaths = mobileDrawerGroups.flatMap((group) =>
   group.items.map((item) => item.to),
 );
@@ -174,4 +270,8 @@ export function isNavPathActive(pathname: string, to: string): boolean {
   if (to === '/') return pathname === '/';
   if (to === '/growth') return isGrowthHubPath(pathname);
   return pathname === to || pathname.startsWith(`${to}/`);
+}
+
+export function sidebarContainsPath(groups: NavGroup[], path: string): boolean {
+  return groups.some((group) => group.items.some((item) => item.to === path));
 }

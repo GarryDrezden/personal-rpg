@@ -9,14 +9,16 @@ import {
 } from '../../constants/navigation';
 import { getThemeTerm } from '../../constants/themeTerms';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import { useAppStore } from '../../store/appStore';
 import { NavItemLink } from './NavItemLink';
 
 export function BottomNav() {
   const [moreOpen, setMoreOpen] = useState(false);
   const location = useLocation();
   const { themeId } = useAppTheme();
-  const drawerGroups = getMobileDrawerGroups(themeId);
-  const moreActive = getMobileDrawerPaths(themeId).some((path) =>
+  const settings = useAppStore((s) => s.settings);
+  const drawerGroups = getMobileDrawerGroups(themeId, settings);
+  const moreActive = getMobileDrawerPaths(themeId, settings).some((path) =>
     isNavPathActive(location.pathname, path),
   );
 
@@ -57,7 +59,9 @@ export function BottomNav() {
                 {group.items.map((item) => (
                   <NavItemLink
                     key={item.to}
-                    {...item}
+                    to={item.to}
+                    icon={item.icon}
+                    label={item.label}
                     size="drawer"
                     onClick={() => setMoreOpen(false)}
                   />

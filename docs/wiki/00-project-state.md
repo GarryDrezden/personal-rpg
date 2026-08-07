@@ -76,7 +76,8 @@
 - **Freedom** (`/freedom`), **Momentum** (`/momentum`) — метрики устойчивости
 - **Progress map** (`/map`) — пути веса, шагов, трезвости и др.
 - **Reports** (`/reports`), **Insights** (`/insights`)
-- **Settings** (`/settings`), **FAQ** (`/faq`) — в Settings есть установка PWA на домашний экран
+- **Settings** (`/settings`), **FAQ** (`/faq`) — в Settings есть установка PWA на домашний экран; **Боковое меню** — opt-in видимость Летописи / Карты навыков / Инерции / Роста героя (отдельно для Cozy и Dark Fantasy)
+- Sidebar resolver: `getSidebarNavigation({ themeId, settings })` — базовый shell всегда виден; advanced-пункты скрыты по умолчанию; маршруты не отключаются
 
 ### Journey Map (актуальный UI — v3)
 

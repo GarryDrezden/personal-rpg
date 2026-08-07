@@ -4,6 +4,8 @@ import { normalizeBodyAbilityState } from '../game/bodyAbilities/bodyAbilityV1En
 import { normalizePlateauState } from '../game/plateau/plateauEngine';
 import { normalizeNutritionTrackingMode } from './nutritionEngine';
 import { normalizeCozyHomeState } from './cozyHomeEngine';
+import { normalizeThemeSidebarSettings } from './sidebarVisibility';
+import { DEFAULT_THEME_SIDEBAR_SETTINGS } from '../constants/sidebarVisibility';
 
 /** Синхронизирует weightGoal / targetWeight после загрузки или сохранения через API. */
 export function normalizeAppSettings(
@@ -56,5 +58,8 @@ export function normalizeAppSettings(
     ),
     plateauState: normalizePlateauState(settings.plateauState ?? fallback.plateauState),
     cozyHome: normalizeCozyHomeState(settings.cozyHome ?? fallback.cozyHome),
+    sidebarVisibility: normalizeThemeSidebarSettings(
+      settings.sidebarVisibility ?? fallback.sidebarVisibility ?? DEFAULT_THEME_SIDEBAR_SETTINGS,
+    ),
   };
 }

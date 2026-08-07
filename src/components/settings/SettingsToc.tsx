@@ -1,5 +1,6 @@
 const SECTIONS = [
   { id: 'settings-theme', label: 'Внешний вид' },
+  { id: 'settings-sidebar', label: 'Меню' },
   { id: 'settings-pwa', label: 'Приложение' },
   { id: 'settings-body-map', label: 'Карта тела' },
   { id: 'settings-weight', label: 'Персонаж' },

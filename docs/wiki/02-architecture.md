@@ -63,6 +63,7 @@ Legacy redirects: `/skills` → `/growth/skills`, `/bosses` → `/growth/trials`
 | Daily, measurements, rewards, bank | MySQL `user_data` JSON |
 | Full AppSettings backup | `user_data.customSettingsBackup` |
 | Meta-progression on AppSettings | `plateauState`, `bodyAbilityState`, `cozyHome` (game progress stored in settings JSON by convention) |
+| UI prefs on AppSettings | `sidebarVisibility` — per-theme opt-in sidebar sections (`cozy` / `darkFantasy`); normalized on load |
 | Achievements, coins, momentum (MVP) | `user_data` + localStorage sidecar sync ⚠️ |
 | Game assets | Static `public/game-assets/` |
 

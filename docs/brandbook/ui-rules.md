@@ -24,8 +24,14 @@
 ## Navigation
 
 - Desktop: sidebar
-- Mobile: bottom bar (planned: **Today in center**)
+- Mobile: bottom bar + «Ещё» drawer (same visibility resolver as desktop)
 - Growth hub: tabs (`/growth/:tab`)
+- **Sidebar prioritizes daily actions and core progression.** Advanced / low-frequency screens are opt-in.
+- Hiding a navigation item never disables the underlying feature, route, deep link, or in-app CTA.
+- Opt-in by default hidden: Летопись (`/seasons`), Карта навыков (`/map`), Инерция (`/momentum`), Рост героя (`/growth`).
+- Visibility is stored per theme in `settings.sidebarVisibility` (`cozy` / `darkFantasy`).
+- Resolver: `getSidebarNavigation({ themeId, settings })` — empty groups are omitted.
+- Settings UI: Настройки → Интерфейс → Боковое меню (`#settings-sidebar`).
 
 ## Copy tone
 

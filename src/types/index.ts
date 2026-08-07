@@ -220,6 +220,11 @@ export interface AppSettings {
   plateauState?: import('./plateauV1').PlateauState;
   /** Cozy Home v1 — восстановление деревенского дома */
   cozyHome?: import('./cozyHome').CozyHomeState;
+  /**
+   * Opt-in sidebar sections — stored per theme.
+   * Missing → all optional items hidden (normalized).
+   */
+  sidebarVisibility?: import('./sidebar').ThemeSidebarSettings;
 }
 
 export interface AppData {
