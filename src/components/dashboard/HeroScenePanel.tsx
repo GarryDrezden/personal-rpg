@@ -23,10 +23,7 @@ import { HeroMilestoneTrack } from './HeroMilestoneTrack';
 import { DashboardPathEmptyState } from './DashboardPathEmptyState';
 
 /** ≈ 3× GameSceneBannerCard min-h + gaps; tall enough for 1536×2048 stage canvases */
-const DASHBOARD_HERO_HEIGHT = '26rem';
-/** Transparent stage padding (~48% body width) → scale up for dominant hero read. */
-const HERO_STAGE_SCALE =
-  'origin-bottom scale-[1.68] sm:scale-[1.78] lg:scale-[1.85]';
+const DASHBOARD_HERO_HEIGHT = '27rem';
 
 type HeroScenePanelProps = {
   level: number;
@@ -224,9 +221,9 @@ export function HeroScenePanel({
                     alt={stageMeta.title}
                     fallbackCandidates={heroAssets.fallbackCandidates}
                     status="unlocked"
-                    fit="hero"
-                    className="h-full w-full items-end overflow-hidden bg-transparent"
-                    imageClassName={`${HERO_STAGE_SCALE} drop-shadow-[0_10px_24px_rgba(0,0,0,0.6)]`}
+                    fit="heroStage"
+                    className="h-full w-full bg-transparent"
+                    imageClassName="drop-shadow-[0_10px_24px_rgba(0,0,0,0.6)]"
                   />
                 </HeroStateChrome>
                 <HeroCompanionOverlay

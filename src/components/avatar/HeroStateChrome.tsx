@@ -57,7 +57,7 @@ export function HeroStateChrome({
         style={{ background: STATE_GLOW[heroState] }}
         aria-hidden
       />
-      <div className="relative z-10" style={style}>
+      <div className="relative z-10 h-full w-full" style={style}>
         {children}
       </div>
       <img

@@ -29,11 +29,8 @@ import { DashboardResourceCompact } from '../rest/DashboardResourceCompact';
 import { MovementCreditDashboardCard } from './MovementCreditDashboardCard';
 import { RecoveryCompactPanel } from './RecoveryCompactPanel';
 
-/** Tall portrait slot — production canvases (1536×2048) have ~50% side padding. */
-const HERO_HEIGHT = '27rem';
-/** Compensates transparent canvas padding so the body reads like legacy edge-to-edge art. */
-const HERO_STAGE_SCALE =
-  'origin-bottom scale-[1.72] sm:scale-[1.82] lg:scale-[1.88]';
+/** Portrait slot for command-bridge hero (full body must stay in frame). */
+const HERO_HEIGHT = '28rem';
 
 type DashboardCommandBridgeProps = {
   level: number;
@@ -299,9 +296,9 @@ export function DashboardCommandBridge({
                   alt={stageMeta.title}
                   fallbackCandidates={heroAssets.fallbackCandidates}
                   status="unlocked"
-                  fit="hero"
-                  className="h-full w-full items-end overflow-hidden bg-transparent"
-                  imageClassName={`${HERO_STAGE_SCALE} drop-shadow-[0_10px_24px_rgba(0,0,0,0.6)]`}
+                  fit="heroStage"
+                  className="h-full w-full bg-transparent"
+                  imageClassName="drop-shadow-[0_10px_24px_rgba(0,0,0,0.6)]"
                 />
               </HeroStateChrome>
             </div>
