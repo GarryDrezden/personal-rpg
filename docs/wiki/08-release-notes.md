@@ -6,12 +6,18 @@
 
 - Production “Failed to fetch” on register: diagnosed self-signed HTTPS cert (`UntrustedRoot`); API itself was healthy. Documented Let’s Encrypt requirement; PWA no longer NetworkFirst-caches `/api` (was able to mask TLS failures); clearer client network/SSL error text.
 
+### Changed
+
+- **20 Body Stages / 5 Avatar Visual Anchors:** Body Stage engine unchanged (1–20). Production art maps via `getAvatarVisualStage` to anchors `01/05/10/15/20` only. Manifest + `validate:avatars` expect five anchors per theme×gender; intermediate body files are not required. Nearest-stage is no longer the production path.
+- Cozy male avatar anchors **1 / 5 / 10 / 15 / 20** marked `approved` in `avatarAssetManifest` (files under `themes/cozy/avatars/male/`). Only five anchors are tracked; intermediate body files are out of production scope.
+- Dark Fantasy male visual anchors **1 / 5 / 10 / 15 / 20** installed under `themes/dark-fantasy/avatars/male/` (canonical theme path; legacy `heroes/` kept as same-theme fallback only). `GAME_ASSET_VERSION` 58.
+
 ### Added
 
 - **Sidebar visibility (per theme):** compact default menu; Летопись / Карта навыков / Инерция / Рост героя opt-in via Settings → Боковое меню. Stored in `settings.sidebarVisibility` separately for Cozy and Dark Fantasy. `getSidebarNavigation` shared by desktop/mobile; routes unchanged.
-- **Character Bible v1:** Cozy Hero Male + Female identity canon, shared Avatar Art Direction (canvas, pose, Hero State vs Body Stage, cross-theme identity), generation prompt templates + negative prompt under `art-source/avatar-generation/prompts/`. Final 20 stages not generated yet.
+- **Character Bible v1:** Cozy Hero Male + Female identity canon, shared Avatar Art Direction (canvas, pose, Hero State vs Body Stage, cross-theme identity), generation prompt templates + negative prompt under `art-source/avatar-generation/prompts/`. Production art target: five visual anchors (not 20 AI frames).
 - **Cozy Botanical Print:** decorative Cozy identity — cream paper tokens (`--cozy-paper` … `--cozy-muted`), reusable `CozyBotanicalFrame` (subtle/medium/hero), light paper texture, sparse handwritten accents. Applied to Home hero, Dashboard home block, Seasons diary, Cozy onboarding intro, empty states, companion cards. Dark Fantasy untouched; small utility cards stay clean.
-- **Avatar Assets Pipeline v1:** theme-scoped avatar folders, 80-slot manifest + unified resolver, same-theme placeholders (no Cozy↔DF fallback), Hero State overlays, DEV `/dev/avatar-pipeline`, `npm run validate:avatars`, approval workflow, future `avatarTrackId`, QA checklist. Final 80 body images not generated yet.
+- **Avatar Assets Pipeline v1:** theme-scoped avatar folders, unified resolver, same-theme placeholders (no Cozy↔DF fallback), Hero State overlays, DEV `/dev/avatar-pipeline`, `npm run validate:avatars`, approval workflow, future `avatarTrackId`, QA checklist. Superseded for production slot count by **5 Avatar Visual Anchors** (2026-08-07).
 - **Avatar Stages v1 Calibration:** split **Body Stage** (best weight + measurements → silhouette art 1–20) from **Hero State** (`depleted`/`steady`/`energized`/`strong` from abilities, habits, momentum, seasons). Habits no longer slim the body sprite. Dashboard: «Стадия тела» + «Состояние героя»; `/freedom` explains body vs state drivers. Best-weight latch vs day rebound. Calibration QA profiles + docs.
 - **Avatar Stages v1:** composite hero stage from weight, waist, Body Abilities, steps, nutrition, lifestyle and campaign milestones (`avatarProgress` 0–100, 20 stages). Theme-aware stage placeholders (Cozy / Dark Fantasy, shared stage id). Dashboard shows current stage; `/freedom` explains drivers. Safe defaults for legacy users. Not a medical body score.
 - **Freedom Body Map UX polish:** personal map hero summary, status-distinct cards (locked / suggested / unlocked / archived), filter tabs (Все / Можно подтвердить / Открыто / Долгий путь), Cozy vs Dark Fantasy copy, mobile-friendly grid.

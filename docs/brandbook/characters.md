@@ -2,7 +2,7 @@
 
 ## Overview
 
-Два героя: **male** и **female**. По **20 стадий тела** каждый.  
+Два героя: **male** и **female**. **Body Stage 1–20** (игровая прогрессия) + **5 Avatar Visual Anchors** (`1/5/10/15/20`) как production art.  
 Прогресс: снижение жировой массы у **одного и того же человека**, не набор мышц / fitness arc.
 
 ## Character Bible v1 (канон)
@@ -14,7 +14,7 @@
 | [`../art/characters/cozy-hero-female-bible.md`](../art/characters/cozy-hero-female-bible.md) | Cozy Hero Female Base |
 | `art-source/avatar-generation/prompts/` | Base + stage templates + negative |
 
-**Сейчас:** identity / outfit / progression зафиксированы. **Финальные 20×2 стадии не генерировать**, пока не утверждены base + control stages (1, 5, 10, 15, 20).
+**Сейчас:** identity / outfit / progression зафиксированы. Production art = **пять anchors** на gender×theme. Промежуточные AI-кадры (02–04 и т.д.) не генерировать.
 
 ## Anchor stages
 

@@ -1,13 +1,17 @@
 import { useMemo, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import type { AppThemeId } from '../../types/theme';
-import type { HeroGender, HeroStageNumber } from '../../types/gameAssets';
+import type { HeroGender } from '../../types/gameAssets';
 import type { HeroStateLevel } from '../../types/avatarStages';
 import type { AvatarTrackId } from '../../types/avatarAssets';
-import { HERO_STAGE_COUNT } from '../../types/gameAssets';
 import { getResolvedAvatarStageAsset } from '../../game/avatar/avatarAssetResolver';
 import { getAvatarAssetManifestEntry } from '../../constants/avatarAssetManifest';
 import { getHeroStateLabel } from '../../game/avatar/avatarStageEngine';
+import {
+  getAvatarVisualStage,
+  getAvatarVisualStageMappingRows,
+  listAvatarVisualStages,
+} from '../../game/avatar/avatarVisualStage';
 import { AvatarStagePortrait } from '../../components/avatar/AvatarStagePortrait';
 
 const THEMES: AppThemeId[] = ['cozy', 'darkFantasy'];
@@ -34,8 +38,8 @@ function bgClass(mode: BgMode, themeId: AppThemeId): string {
 }
 
 /**
- * Dev-only Avatar Assets Pipeline QA grid.
- * Not registered in production builds.
+ * Dev-only Avatar Assets Pipeline QA.
+ * Production art = 5 visual anchors; Body Stage remains 1–20.
  */
 export function AvatarPipelineDevPage() {
   const [themeId, setThemeId] = useState<AppThemeId>('cozy');
@@ -43,14 +47,11 @@ export function AvatarPipelineDevPage() {
   const [trackId, setTrackId] = useState<AvatarTrackId>('default');
   const [heroState, setHeroState] = useState<HeroStateLevel>('steady');
   const [bgMode, setBgMode] = useState<BgMode>('theme');
-  const [ghost, setGhost] = useState(false);
-  const [allowNearest, setAllowNearest] = useState(false);
+  const [sampleBody, setSampleBody] = useState(7);
 
-  const stages = useMemo(
-    () =>
-      Array.from({ length: HERO_STAGE_COUNT }, (_, i) => (i + 1) as HeroStageNumber),
-    [],
-  );
+  const anchors = useMemo(() => listAvatarVisualStages(), []);
+  const mappingRows = useMemo(() => getAvatarVisualStageMappingRows(), []);
+  const sampleVisual = getAvatarVisualStage(sampleBody);
 
   if (!import.meta.env.DEV) {
     return <Navigate to="/" replace />;
@@ -64,7 +65,7 @@ export function AvatarPipelineDevPage() {
         </p>
         <h1 className="text-2xl font-bold text-[var(--app-text)]">Avatar pipeline QA</h1>
         <p className="text-sm text-[var(--app-text-muted)]">
-          Body Stage art + Hero State overlays. Production users never see this page.
+          Body Stage stays 1–20. Production art uses 5 visual anchors (01 / 05 / 10 / 15 / 20).
         </p>
         <p className="text-sm">
           <Link to="/" className="text-[var(--app-primary)] hover:underline">
@@ -144,86 +145,64 @@ export function AvatarPipelineDevPage() {
             ))}
           </select>
         </label>
-        <div className="flex flex-col justify-end gap-2 text-xs">
-          <label className="inline-flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={ghost}
-              onChange={(e) => setGhost(e.target.checked)}
-            />
-            Ghost previous stage
-          </label>
-          <label className="inline-flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={allowNearest}
-              onChange={(e) => setAllowNearest(e.target.checked)}
-            />
-            Allow nearest-stage fallback (dev)
-          </label>
-        </div>
+        <label className="text-xs">
+          Sample Body Stage
+          <input
+            type="range"
+            min={1}
+            max={20}
+            value={sampleBody}
+            onChange={(e) => setSampleBody(Number(e.target.value))}
+            className="mt-2 w-full"
+          />
+          <span className="mt-1 block text-[var(--app-text)]">
+            Body {sampleBody} → Visual {String(sampleVisual).padStart(2, '0')}
+          </span>
+        </label>
       </div>
 
       <section>
         <h2 className="mb-2 text-sm font-semibold text-[var(--app-text)]">
-          Silhouette grid 1–20
+          Visual anchors (production art)
         </h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-5">
-          {stages.map((stage) => {
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+          {anchors.map((visualStage) => {
             const entry = getAvatarAssetManifestEntry({
               themeId,
               gender,
-              bodyStage: stage,
-              trackId: trackId === 'default' ? 'default' : 'default',
+              bodyStage: visualStage,
+              trackId: 'default',
             });
             const resolved = getResolvedAvatarStageAsset({
               themeId,
               gender,
-              bodyStage: stage,
+              bodyStage: visualStage,
               trackId: 'default',
-              allowNearestStageFallback: allowNearest,
             });
-            const prev = stage > 1 ? ((stage - 1) as HeroStageNumber) : null;
 
             return (
               <div
-                key={stage}
+                key={visualStage}
                 className={`overflow-hidden rounded-lg border border-[var(--app-border)] ${bgClass(bgMode, themeId)}`}
-                data-testid={`avatar-pipeline-cell-${stage}`}
+                data-testid={`avatar-pipeline-anchor-${visualStage}`}
               >
-                <div className="relative mx-auto h-40 w-full max-w-[7.5rem]">
-                  {ghost && prev ? (
-                    <div className="pointer-events-none absolute inset-0 opacity-25">
-                      <AvatarStagePortrait
-                        themeId={themeId}
-                        gender={gender}
-                        bodyStage={prev}
-                        heroState={heroState}
-                        alt=""
-                        showHeroStateLabel={false}
-                        showDevMissingMarker={false}
-                      />
-                    </div>
-                  ) : null}
+                <div className="relative mx-auto h-44 w-full max-w-[8rem]">
                   <AvatarStagePortrait
                     themeId={themeId}
                     gender={gender}
-                    bodyStage={stage}
+                    bodyStage={visualStage}
                     heroState={heroState}
-                    alt={`Stage ${stage}`}
+                    alt={`Visual ${visualStage}`}
                     showHeroStateLabel={false}
                   />
                 </div>
                 <div className="space-y-0.5 border-t border-[var(--app-border)] bg-[var(--app-card)]/90 px-2 py-1.5 text-[10px] text-[var(--app-text-muted)]">
-                  <p className="font-semibold text-[var(--app-text)]">Stage {stage}</p>
+                  <p className="font-semibold text-[var(--app-text)]">
+                    Visual {String(visualStage).padStart(2, '0')}
+                  </p>
                   <p>status: {entry?.status ?? 'missing'}</p>
                   <p>source: {resolved.source}</p>
-                  <p>fallback: {resolved.usedFallback ? 'yes' : 'no'}</p>
-                  {resolved.resolvedStage !== resolved.requestedStage ? (
-                    <p className="text-amber-600">
-                      ⚠ nearest → {resolved.resolvedStage}
-                    </p>
-                  ) : null}
+                  <p>art fallback: {resolved.usedFallback ? 'yes' : 'no'}</p>
                 </div>
               </div>
             );
@@ -231,9 +210,26 @@ export function AvatarPipelineDevPage() {
         </div>
       </section>
 
+      <section className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)] p-4">
+        <h2 className="mb-2 text-sm font-semibold text-[var(--app-text)]">
+          Body Stage → Visual Stage mapping
+        </h2>
+        <ul className="grid gap-1 text-sm text-[var(--app-text-muted)] sm:grid-cols-2">
+          {mappingRows.map((row) => (
+            <li key={row.visualStage} data-testid={`avatar-map-row-${row.visualStage}`}>
+              {row.label}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-xs text-[var(--app-text-muted)]">
+          UI still shows «Стадия тела: N из 20». VisualStage is art-only and not shown as a
+          replacement for Body Stage.
+        </p>
+      </section>
+
       <p className="text-xs text-[var(--app-text-muted)]">
-        Scale jumps: compare baseline/feet and crown across cells. Large jumps mean art needs
-        re-export on shared canvas (1536×2048). Hero State overlay must not change body path.
+        Track filter currently uses default track assets. Hero State overlay must not change body
+        path. Cross-theme fallback is forbidden.
       </p>
     </div>
   );

@@ -106,6 +106,7 @@
 - Chapter bosses (journey map narrative)
 - Nutrition tracking (disabled / simple / precise modes)
 - Hero / Avatar Stages v1 calibrated + Avatar Assets Pipeline v1 (manifest, resolver, overlays, validate:avatars, DEV QA grid)
+- **20 Body Stages / 5 Avatar Visual Anchors** — engine progress 1–20; production art only `stage-01/05/10/15/20` via `getAvatarVisualStage`
 - Companions (4 спутника)
 - Next best action, weekly story reports
 
@@ -119,8 +120,9 @@
 ### Ассеты
 
 - `public/game-assets/` — heroes, companions, mobs, bosses, artifacts, maps
-- Female hero: полный набор 20 стадий + death
-- Male hero: **v2 full set 1–20** (2026-07-23) — unique tee prints (HP rave / Rick & Morty), ponytail arc, tattoo identity; `GAME_ASSET_VERSION` 41
+- Avatar production (male): **5 visual anchors** in `themes/cozy/avatars/male/` and `themes/dark-fantasy/avatars/male/` (`stage-01/05/10/15/20`); `GAME_ASSET_VERSION` 58
+- Female hero: полный набор 20 стадий + death (legacy layout); female visual anchors still placeholder in pipeline
+- Male hero legacy v2 set 1–20 under `heroes/` (DF fallback only for avatar pipeline)
 - 8 legacy codex bosses (PNG), 8 daily mobs, 4 companions
 - Journey chapter vignettes: 9 × `.webp` (P0 in-app)
 - **Asset Registry 2.0** ✅ — `docs/assets/manifest.json` v2, Art Backlog, validation tests

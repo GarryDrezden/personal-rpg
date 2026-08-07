@@ -1,30 +1,32 @@
 # Avatar Art Direction v1
 
-**Status:** Character Bible v1 — identity locked; final 20 stages **not** generated yet.  
+**Status:** Character Bible v1 + **20 Body Stages / 5 Avatar Visual Anchors** (production).  
 **Scope:** Cozy Hero Male + Cozy Hero Female as the visual identity base for all themes.  
 **Related:**
 - [`cozy-hero-male-bible.md`](cozy-hero-male-bible.md)
 - [`cozy-hero-female-bible.md`](cozy-hero-female-bible.md)
 - [`avatar-stage-qa-checklist.md`](../avatar-stage-qa-checklist.md)
 - Prompts: `art-source/avatar-generation/prompts/`
-- Runtime: `themes/{cozy|dark-fantasy}/avatars/{male|female}/stage-XX.webp`
+- Runtime: `themes/{cozy|dark-fantasy}/avatars/{male|female}/stage-{01,05,10,15,20}.webp`
+- Mapping: `getAvatarVisualStage` / `AVATAR_VISUAL_STAGES`
 
 ---
 
 ## 1. Purpose
 
-This document is the **shared art canon** for hero body-stage assets.
+This document is the **shared art canon** for hero body assets.
 
 Goals:
 
-1. One man across all stages and themes.
-2. One woman across all stages and themes.
+1. One man across all visual anchors and themes.
+2. One woman across all visual anchors and themes.
 3. No face / age / height / outfit / proportion drift.
-4. Gradual, realistic body change only.
-5. Male and female feel like one game, not two art styles.
+4. Gradual, realistic body change between the **five** production images.
+5. Male and female feel like one game.
 6. Cozy stays adult, warm, non-cartoon.
 
-Do **not** generate the full 20×2 stage set until base references and control stages pass QA.
+**Production decision (2026-08):** do **not** ship 20 near-identical AI frames.  
+Body Stage stays 1–20 for progress/UI; art uses five anchors for identity stability.
 
 ---
 
@@ -61,16 +63,26 @@ Same canvas and composition for male and female sets so they share one UI slot l
 
 ---
 
-## 4. Body Stage vs Hero State
+## 4. Body Stage vs Avatar Visual Stage vs Hero State
 
-| Layer | What it changes | Asset |
-|-------|-----------------|-------|
-| **Body Stage** (1–20) | Fat mass / silhouette / clothing fit / posture | Dedicated `stage-XX.webp` |
-| **Hero State** | depleted / steady / energized / strong | UI overlay + chrome only (`HeroStateChrome`) |
+| Layer | What it is | Asset |
+|-------|------------|-------|
+| **Body Stage** (1–20) | Engine + UI progression | Not 20 files |
+| **Avatar Visual Stage** (1/5/10/15/20) | Production art key via `getAvatarVisualStage` | `stage-XX.webp` anchors |
+| **Hero State** | depleted / steady / energized / strong | UI overlay / chrome only |
 
-**v1 rule:** Hero State must **not** require a new body sheet. Do not change body volume, outfit, pose, or face for state.
+**v1 rule:** Hero State must **not** require a new body sheet.  
+Body→Visual mapping is canonical — not “nearest missing stage” fallback.
 
-Future (optional, not v1): tiny expression / slightly more open shoulders / livelier eyes — still not a second body asset.
+| Body | Visual |
+|------|--------|
+| 1–4 | 01 |
+| 5–8 | 05 |
+| 9–12 | 10 |
+| 13–16 | 15 |
+| 17–20 | 20 |
+
+UI continues to show «Стадия тела: N из 20».
 
 ---
 
@@ -91,26 +103,24 @@ Do not mix Cozy and Dark Fantasy into one base sheet. Generate Cozy identity fir
 
 ---
 
-## 6. Generation order (after bible approval)
+## 6. Generation order (production = five anchors)
 
-### Phase A — Male control stages
-
-1 → 5 → 10 → 15 → 20
-
-### Phase B — Female control stages
+Generate and approve only:
 
 1 → 5 → 10 → 15 → 20
 
-### Phase C — Fill intermediates
+for each gender (Cozy first, then theme variants).
 
-Only after the ten control images pass pair QA.
+Do **not** generate intermediate body files (02–04, 06–09, …) for production.
 
 Workflow:
 
-1. Approve **base identity** (male + female) from base prompts.
-2. Generate control stages with stage templates + locked reference.
-3. Pair QA (see §8).
-4. Then intermediates 2–4, 6–9, 11–14, 16–19.
+1. Approve **base identity** (male + female).
+2. Generate the five visual anchors with locked reference.
+3. Pair QA (see §7).
+4. Ship via manifest `approved` + `npm run validate:avatars`.
+
+Future denser anchors: extend `AVATAR_VISUAL_STAGES` — do not revive a 20-file AI grid by default.
 
 ---
 
@@ -134,8 +144,8 @@ They must **not**:
 
 ## 8. Hard don’ts (project-wide)
 
-- Do not generate final 20 stages in this bible pass.
-- Do not randomize faces between stages.
+- Do not generate 20 near-identical AI frames for production.
+- Do not randomize faces between anchors.
 - Do not turn the man into a bodybuilder.
 - Do not turn the woman into a fashion model or sexualized figure.
 - Do not hide the body behind oversized coats.

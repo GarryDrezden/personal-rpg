@@ -21,6 +21,9 @@ export type AvatarAssetStatus =
 
 export type AvatarAssetSource = 'approved' | 'draft' | 'placeholder';
 
+/** Production art anchors — Body Stage stays 1–20. */
+export type AvatarVisualStage = 1 | 5 | 10 | 15 | 20;
+
 export type AvatarAssetManifestEntry = {
   themeId: AppThemeId;
   gender: HeroGender;
@@ -48,9 +51,18 @@ export type ResolvedAvatarStageAsset = {
   path: string;
   fallbackCandidates: string[];
   source: AvatarAssetSource;
+  /**
+   * True only when same-theme placeholder SVG is used because the visual anchor
+   * art is missing/unapproved — never true merely because Body Stage mapped to
+   * a Visual Stage (e.g. body 7 → visual 5).
+   */
   usedFallback: boolean;
+  /** Requested Body Stage (1–20). */
   requestedStage: HeroStageNumber;
+  /** Visual stage used for the asset file (alias of visualStage). */
   resolvedStage: HeroStageNumber;
+  /** Production art key: 1 | 5 | 10 | 15 | 20 */
+  visualStage: AvatarVisualStage;
   themeId: AppThemeId;
   gender: AvatarAssetGender;
   trackId: AvatarTrackId;

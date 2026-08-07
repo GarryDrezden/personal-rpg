@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-08-07 — 20 Body Stages / 5 Avatar Visual Anchors
+
+**Context:**  
+Practical generative tests showed models fail to keep one character stable across 20 near-identical body images (face drift, proportion jumps, outfit changes, different people). Shipping 20 production files per theme×gender would burn scope and quality.
+
+**Decision:**  
+Keep **Body Stage 1–20** in `AvatarStageEngine` (progress, UI, motivation, formulas). Production avatar **art** uses exactly **five Avatar Visual Anchors**: `1 / 5 / 10 / 15 / 20`, via `getAvatarVisualStage(bodyStage)` and `AVATAR_VISUAL_STAGES`. Mapping is canonical presentation — not nearest-stage fallback (`usedFallback` stays false when the visual anchor is approved). Manifest stores only those five slots per theme×gender. Intermediate files (`stage-07.webp` etc.) are not required and are not errors. Hero State remains UI chrome only. Cross-theme fallback stays forbidden. Anchor count is config-driven for a future denser set.
+
+**Consequence:**  
+UI still shows «Стадия тела: N из 20». Art steps less often but identity stays stable. Validator expects 5 anchors × 4 theme/gender combos. No engine migration; no user progress rewrite.
+
 ## 2026-08-07 — Sidebar opt-in visibility (per theme)
 
 **Context:**  

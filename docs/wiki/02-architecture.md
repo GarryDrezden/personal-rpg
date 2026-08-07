@@ -64,6 +64,7 @@ Legacy redirects: `/skills` → `/growth/skills`, `/bosses` → `/growth/trials`
 | Full AppSettings backup | `user_data.customSettingsBackup` |
 | Meta-progression on AppSettings | `plateauState`, `bodyAbilityState`, `cozyHome` (game progress stored in settings JSON by convention) |
 | UI prefs on AppSettings | `sidebarVisibility` — per-theme opt-in sidebar sections (`cozy` / `darkFantasy`); normalized on load |
+| Avatar art | Body Stage 1–20 (engine) → `getAvatarVisualStage` → 5 production anchors; Hero State = overlay only |
 | Achievements, coins, momentum (MVP) | `user_data` + localStorage sidecar sync ⚠️ |
 | Game assets | Static `public/game-assets/` |
 

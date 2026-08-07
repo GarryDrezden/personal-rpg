@@ -351,11 +351,11 @@ Vertical **chapter road** — 9 глав в ширине обычного кон
 
 При плато Body Stage может стоять, Hero State продолжает расти. Hero State может временно просесть по ресурсу/инерции — открытые Body Stages не теряются.
 
-`avatarProgress` — мягкий UI-blend; **ассет тела** выбирается только по `bodyStage`.
+`avatarProgress` — мягкий UI-blend; **ассет тела** выбирается по `bodyStage` → `getAvatarVisualStage` (5 visual anchors).
 
 Это **визуальное отражение**, не медицинская оценка. Disclaimer на `/freedom`.
 
-**Theme-aware assets (общий stage id, разные картинки):** см. [Avatar Assets Pipeline v1](#avatar-assets-pipeline-v1).
+**Theme-aware assets (общий Body Stage id, разные картинки):** см. [Avatar Assets Pipeline v1](#avatar-assets-pipeline-v1).
 
 Dashboard: «Стадия тела: N из 20» + «Состояние героя: …».  
 `/freedom`: отдельно «что изменило тело» / «что изменило состояние».
@@ -364,27 +364,36 @@ Dashboard: «Стадия тела: N из 20» + «Состояние геро�
 
 ## Avatar Assets Pipeline v1
 
-**Manifest:** `src/constants/avatarAssetManifest.ts`  
+**Visual mapping:** `src/game/avatar/avatarVisualStage.ts` → `AVATAR_VISUAL_STAGES`, `getAvatarVisualStage`  
+**Manifest:** `src/constants/avatarAssetManifest.ts` (5 anchors × theme × gender)  
 **Resolver:** `src/game/avatar/avatarAssetResolver.ts` → `getResolvedAvatarStageAsset`  
 **Overlays:** `themes/{theme}/avatars/hero-state/*-overlay.svg` + `HeroStateChrome`  
 **QA:** `/dev/avatar-pipeline` (DEV only) · `npm run validate:avatars` · [`docs/art/avatar-stage-qa-checklist.md`](../art/avatar-stage-qa-checklist.md)  
-**Character Bible v1:** [`docs/art/characters/avatar-art-direction.md`](../art/characters/avatar-art-direction.md) · male/female Cozy bibles · prompts in `art-source/avatar-generation/prompts/` (final 20 stages not generated yet)
+**Character Bible v1:** [`docs/art/characters/avatar-art-direction.md`](../art/characters/avatar-art-direction.md)
 
-Матрица v1: **2 темы × 2 пола × 20 стадий = 80** body assets.  
-Hero State **не** имеет отдельного body PNG на каждую стадию — только UI chrome/overlay.
+**Production art model:** **20 Body Stages / 5 Avatar Visual Anchors**.  
+Body Stage engine stays 1–20. Art files exist only as `stage-01 / 05 / 10 / 15 / 20`. Mapping body→visual is canonical presentation (not nearest-stage fallback). Hero State is UI chrome only.
+
+| Body Stage | Visual Stage |
+|------------|--------------|
+| 1–4 | 01 |
+| 5–8 | 05 |
+| 9–12 | 10 |
+| 13–16 | 15 |
+| 17–20 | 20 |
 
 | Правило | Значение |
 |---------|----------|
-| Body art key | `themeId + gender + bodyStage` (+ future `trackId`) |
-| Naming | `stage-01.webp` … `stage-20.webp` |
+| Body art key | `themeId + gender + AvatarVisualStage` (+ future `trackId`) |
+| Naming | `stage-01.webp`, `stage-05.webp`, `stage-10.webp`, `stage-15.webp`, `stage-20.webp` |
 | Canvas | 1536×2048, transparent WebP, shared baseline |
-| Fallback | same-theme gender → neutral placeholder |
-| Forbidden | Cozy↔DF, male↔female, nearest-stage in production |
+| Fallback | same-theme gender → neutral placeholder (only if visual anchor missing) |
+| Forbidden | Cozy↔DF, male↔female, treating body 7→visual 5 as “missing” |
 | Workflow | generated → draft → QA → approved → runtime |
 | Draft in prod | only if `VITE_ENABLE_DRAFT_AVATAR_ASSETS=true` |
-| Future | `avatarTrackId` (`small_goal`…`very_large_goal`) — types ready, runtime `default` |
+| Future | denser `AVATAR_VISUAL_STAGES` config; `avatarTrackId` ready |
 
-Source WIP: `art-source/avatar-generation/` (not served). Runtime only normalized theme paths (+ DF legacy mapping until migration).
+Source WIP: `art-source/avatar-generation/` (not served). Runtime: `themes/{cozy|dark-fantasy}/avatars/{gender}/stage-{01|05|10|15|20}.webp`. DF male anchors live in the theme folder; legacy `heroes/` paths remain same-theme fallback only.
 
 ---
 

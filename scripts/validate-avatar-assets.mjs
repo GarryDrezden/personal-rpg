@@ -1,8 +1,13 @@
 /**
  * Avatar Asset Validation — Avatar Assets Pipeline v1
  *
- * Exit 0: placeholders OK / approved paths resolvable
- * Exit 1: broken approved/draft paths, invalid manifest, cross-theme leak
+ * Production expects **5 visual anchors** per theme×gender:
+ * stage-01 / 05 / 10 / 15 / 20
+ *
+ * Missing intermediate body-stage files (02–04, …) are NOT errors.
+ *
+ * Exit 0: placeholders OK / approved anchors resolvable
+ * Exit 1: broken approved/draft anchors, invalid manifest, cross-theme leak
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -12,7 +17,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const publicAssets = path.join(root, 'public/game-assets');
 
-const STAGE_RE = /^stage-(0[1-9]|1[0-9]|20)\.webp$/i;
+/** Keep in sync with AVATAR_VISUAL_STAGES */
+const AVATAR_VISUAL_STAGES = [1, 5, 10, 15, 20];
+const STAGE_RE = /^stage-(01|05|10|15|20)\.webp$/i;
 
 function existsRel(rel) {
   return fs.existsSync(path.join(publicAssets, rel));
@@ -25,9 +32,12 @@ function firstExisting(paths) {
   return null;
 }
 
+function resolveStatus(themeId, gender) {
+  if (gender === 'male') return 'approved';
+  return 'placeholder';
+}
+
 async function loadManifest() {
-  // Prefer compiling via dynamic import of TS through vite-node isn't available.
-  // Mirror key builders inline to avoid TS runtime — keep in sync with constants.
   const themes = [
     { id: 'cozy', folder: 'cozy' },
     { id: 'darkFantasy', folder: 'dark-fantasy' },
@@ -36,7 +46,7 @@ async function loadManifest() {
   const entries = [];
   for (const theme of themes) {
     for (const gender of genders) {
-      for (let stage = 1; stage <= 20; stage += 1) {
+      for (const stage of AVATAR_VISUAL_STAGES) {
         const n = String(stage).padStart(2, '0');
         const pathRel = `themes/${theme.folder}/avatars/${gender}/stage-${n}.webp`;
         const legacy =
@@ -46,10 +56,6 @@ async function loadManifest() {
                 `heroes/${gender}/stage-${n}.webp`,
               ]
             : [];
-        const status =
-          theme.id === 'darkFantasy' && gender === 'male'
-            ? 'approved'
-            : 'placeholder';
         entries.push({
           themeId: theme.id,
           gender,
@@ -57,7 +63,7 @@ async function loadManifest() {
           trackId: 'default',
           path: pathRel,
           legacyPaths: legacy,
-          status,
+          status: resolveStatus(theme.id, gender),
         });
       }
     }
@@ -78,16 +84,19 @@ function assertNoCrossTheme(entry) {
   return null;
 }
 
-function countBucket() {
-  return { approved: 0, draft: 0, placeholders: 0, missing: 0, broken: 0 };
-}
-
 async function main() {
   const manifest = await loadManifest();
-  console.log('Avatar Asset Validation\n');
+  console.log('Avatar Asset Validation (5 visual anchors)\n');
 
   let errors = 0;
   const keys = new Set();
+
+  if (manifest.length !== themesGendersAnchorsExpected()) {
+    console.error(
+      `Unexpected manifest size: ${manifest.length} (expected ${themesGendersAnchorsExpected()})`,
+    );
+    errors += 1;
+  }
 
   for (const entry of manifest) {
     const key = `${entry.themeId}|${entry.gender}|${entry.trackId}|${entry.bodyStage}`;
@@ -112,10 +121,14 @@ async function main() {
 
   for (const themeId of ['cozy', 'darkFantasy']) {
     for (const gender of ['male', 'female']) {
-      const bucket = countBucket();
       const slice = manifest.filter(
         (e) => e.themeId === themeId && e.gender === gender,
       );
+      let approved = 0;
+      let draft = 0;
+      let placeholders = 0;
+      let broken = 0;
+
       for (const entry of slice) {
         const resolved = firstExisting([
           entry.path,
@@ -123,35 +136,31 @@ async function main() {
         ]);
         if (entry.status === 'approved' || entry.status === 'draft') {
           if (!resolved) {
-            bucket.broken += 1;
+            broken += 1;
             errors += 1;
             console.error(
               `BROKEN ${entry.status}: ${themeId}/${gender}/stage-${String(entry.bodyStage).padStart(2, '0')} — missing ${entry.path}`,
             );
           } else if (entry.status === 'approved') {
-            bucket.approved += 1;
+            approved += 1;
           } else {
-            bucket.draft += 1;
+            draft += 1;
           }
-        } else if (entry.status === 'placeholder') {
-          bucket.placeholders += 1;
         } else {
-          bucket.missing += 1;
+          placeholders += 1;
         }
       }
 
       const label = `${themeId === 'cozy' ? 'Cozy' : 'Dark Fantasy'} ${gender}`;
       console.log(`${label}:`);
-      console.log(`- approved: ${bucket.approved}`);
-      console.log(`- draft: ${bucket.draft}`);
-      console.log(`- placeholders: ${bucket.placeholders}`);
-      console.log(`- missing: ${bucket.missing}`);
-      if (bucket.broken) console.log(`- broken: ${bucket.broken}`);
+      console.log(`- approved anchors: ${approved}/5`);
+      console.log(`- draft anchors: ${draft}/5`);
+      console.log(`- placeholder anchors: ${placeholders}/5`);
+      if (broken) console.log(`- broken: ${broken}`);
       console.log('');
     }
   }
 
-  // Gender placeholders required
   for (const folder of ['cozy', 'dark-fantasy']) {
     for (const g of ['male', 'female', 'neutral']) {
       const p = `themes/${folder}/avatars/placeholders/${g}.svg`;
@@ -173,8 +182,14 @@ async function main() {
     console.error(`Validation failed with ${errors} error(s).`);
     process.exit(1);
   }
-  console.log('Validation OK (placeholders allowed; approved paths resolvable).');
+  console.log(
+    'Validation OK (5 visual anchors per theme×gender; intermediate body files not required).',
+  );
   process.exit(0);
+}
+
+function themesGendersAnchorsExpected() {
+  return 2 * 2 * AVATAR_VISUAL_STAGES.length;
 }
 
 main().catch((err) => {

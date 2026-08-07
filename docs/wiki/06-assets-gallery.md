@@ -149,25 +149,28 @@ Cozy placeholders (SVG) live under `themes/cozy/**/placeholders/`. Missing cozy 
 
 ### Avatar body sets (Pipeline v1)
 
+**20 Body Stages / 5 Avatar Visual Anchors** — see decision log 2026-08-07.
+
 ```
 themes/{cozy|dark-fantasy}/avatars/
-  male/stage-01.webp … stage-20.webp
-  female/stage-01.webp … stage-20.webp
-  neutral/placeholder.svg
+  male/stage-{01,05,10,15,20}.webp
+  female/stage-{01,05,10,15,20}.webp
   placeholders/{male,female,neutral}.svg
   hero-state/{depleted,steady,energized,strong}-overlay.svg
 ```
 
-- Manifest statuses: `missing` | `placeholder` | `draft` | `approved` | `deprecated`
-- Dev QA grid: `/dev/avatar-pipeline`
+- Mapping: `getAvatarVisualStage(bodyStage)` in `src/game/avatar/avatarVisualStage.ts`
+- Manifest: 5 anchors × 2 themes × 2 genders (intermediate body files not required)
+- Statuses: `missing` | `placeholder` | `draft` | `approved` | `deprecated`
+- Dev QA: `/dev/avatar-pipeline` (anchors + mapping table)
 - Checklist: [`docs/art/avatar-stage-qa-checklist.md`](../art/avatar-stage-qa-checklist.md)
-- **Character Bible v1:** [`docs/art/characters/avatar-art-direction.md`](../art/characters/avatar-art-direction.md), [`cozy-hero-male-bible.md`](../art/characters/cozy-hero-male-bible.md), [`cozy-hero-female-bible.md`](../art/characters/cozy-hero-female-bible.md)
-- Generation prompts (WIP): `art-source/avatar-generation/prompts/`
-- Future `avatarTrackId` folders: `…/avatars/{gender}/tracks/{trackId}/stage-XX.webp` (not populated in v1)
+- **Character Bible v1:** [`docs/art/characters/`](../art/characters/)
+- Future denser anchors: change `AVATAR_VISUAL_STAGES` only
 
 **Cozy Content Pack v1 (copy, not new art):** entity IDs stay shared; titles/descriptions for bosses→«главные помехи», mobs→«помехи дня», journey chapters and seasons diary come from `cozyContentPack` / `themeContentRegistry`. Placeholders remain the art fallback until final cozy illustrations exist.
 
-**TODO migration:** current Dark Fantasy art still uses legacy roots (`heroes/`, `bosses/`, `mobs/`, `companions/`, `maps/chapters/`). Reserved `themes/dark-fantasy/` folders are ready for a later move; do not break paths until a dedicated migration pass.
+**Avatar male DF:** production anchors are in `themes/dark-fantasy/avatars/male/stage-{01,05,10,15,20}.webp`.  
+**TODO migration (non-avatar):** other DF art may still use legacy roots (`heroes/`, `bosses/`, `mobs/`, `companions/`, `maps/chapters/`).
 
 ## Dark MVP Asset Generation Batch 1
 

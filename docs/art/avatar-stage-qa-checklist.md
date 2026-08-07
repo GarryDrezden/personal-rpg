@@ -1,72 +1,60 @@
 # Avatar Stage QA Checklist
 
-Use this checklist for every set of **20 stages** per theme × gender before setting manifest status to `approved`.
+Use this checklist for every theme × gender **visual anchor set** before `approved`.
+
+Production art = **5 Avatar Visual Anchors** (`01 / 05 / 10 / 15 / 20`).  
+Body Stage remains **1–20** in the engine/UI — do not QA 20 separate production files unless anchors are deliberately densified later.
 
 Related:
-- Avatar Assets Pipeline v1 · Body Stage vs Hero State
-- **Character Bible v1:** [`characters/avatar-art-direction.md`](characters/avatar-art-direction.md), [`characters/cozy-hero-male-bible.md`](characters/cozy-hero-male-bible.md), [`characters/cozy-hero-female-bible.md`](characters/cozy-hero-female-bible.md)
+- Avatar Assets Pipeline v1 · Body Stage vs Hero State · **20 Body / 5 Visual**
+- **Character Bible v1:** [`characters/avatar-art-direction.md`](characters/avatar-art-direction.md)
 - Prompts: `art-source/avatar-generation/prompts/`
 
-## Identity
+## Identity (across the five anchors)
 
-- [ ] One person across stages 01–20
-- [ ] Face identity stable (eyes / nose / lips / head shape)
-- [ ] Age stable (no ±10–15 year jumps)
-- [ ] Hair / beard stable
-- [ ] Tattoos / watch / signature details preserved
+- [ ] One person across visual 01 → 05 → 10 → 15 → 20
+- [ ] Face identity stable
+- [ ] Age stable
+- [ ] Hair / beard / signature details stable
 - [ ] Height and limb lengths stable
-- [ ] Shoulder frame stable (fat loss ≠ becoming a different build type)
+- [ ] Shoulder frame stable (fat loss ≠ different build type)
 
 ## Composition
 
-- [ ] Single canvas (recommended **1536×2048**)
-- [ ] Transparent background (RGBA WebP)
-- [ ] Same scale / FOV / camera distance
-- [ ] Feet on shared baseline
-- [ ] Crown height stable
-- [ ] Full body in frame (no crop of head / hands / feet)
-- [ ] Enough transparent padding at edges
+- [ ] Canvas **1536×2048**, transparent WebP
+- [ ] Same scale / FOV / camera / baseline / crown
+- [ ] Full body in frame; hands do not cover belly/waist
 - [ ] Silhouette readable at small UI size
-- [ ] Hands do not cover belly / waist
 
-## Body progression
+## Visual progression (anchors only)
 
-- [ ] No sudden jumps between neighbours
-- [ ] Stages 1–5 still heavy / early change only
-- [ ] Mid stages (9–12) still realistic — belly reduced, not gone
-- [ ] Final (17–20) healthier lighter version of the **same** person
-- [ ] Final is **not** bodybuilder / fashion model by default
-- [ ] Fat mass changes gradually; muscle mass not reinvented
+- [ ] 01 still heavy / early path
+- [ ] 05 early change only
+- [ ] 10 clear mid path
+- [ ] 15 clearly lighter, powerful frame remains
+- [ ] 20 healthy same person — not bodybuilder / fashion model
+- [ ] Steps between anchors are readable but not cartoon jumps
+
+## Mapping / runtime
+
+- [ ] `getAvatarVisualStage` used (no ad-hoc nearest in UI)
+- [ ] Body 7 → visual 05 is **not** marked as missing/fallback when 05 is approved
+- [ ] UI still shows «Стадия тела: N из 20»
+- [ ] Theme switch keeps Body Stage; swaps theme folder only
+- [ ] No Cozy↔DF fallback
 
 ## Clothing
 
-- [ ] Same outfit across stages
-- [ ] Fit changes naturally with body
-- [ ] Outfit does not hide waist/belly progression
-- [ ] Theme-correct: Cozy everyday vs Dark Fantasy readable silhouette (no full plate)
+- [ ] Same outfit across the five anchors (fit changes OK)
+- [ ] Theme-correct silhouette
 
 ## Technical
 
-- [ ] `.webp` only in runtime folder
-- [ ] Names: `stage-01.webp` … `stage-20.webp`
-- [ ] Alpha clean (no white fringe)
-- [ ] No text / logos / watermarks
-- [ ] No extra props that change per stage
-- [ ] Manifest entry `status: approved` only after this checklist
-- [ ] `npm run validate:avatars` passes
+- [ ] Only `stage-01/05/10/15/20.webp` in runtime folder
+- [ ] `npm run validate:avatars` passes (5 anchors)
+- [ ] Manifest `approved` only after this checklist
+- [ ] Alpha clean; no text/logos
 
-## Hero State (not body art)
+## Hero State
 
-- [ ] Hero State uses overlay / chrome, not a second body sheet
-- [ ] Switching depleted → strong does not change body asset path
-- [ ] State has a text label (not color-only)
-
-## Theme isolation
-
-- [ ] Cozy set never falls back to Dark Fantasy art
-- [ ] Dark Fantasy set never falls back to Cozy art
-- [ ] No male ↔ female fallback
-
-## Future (optional note)
-
-- [ ] If goal bands diverge visually later, use `avatarTrackId` (`small_goal` …) — do not fork stage IDs per theme
+- [ ] Overlay / chrome only — does not change body path

@@ -15,21 +15,20 @@ import type {
 } from '../../types/avatarAssets';
 import type { AppThemeId } from '../../types/theme';
 import type { HeroGender, HeroStageNumber } from '../../types/gameAssets';
-import { HERO_STAGE_COUNT } from '../../types/gameAssets';
 import { gameAsset } from '../assetBase';
+import {
+  AVATAR_VISUAL_STAGES,
+  clampAvatarBodyStage,
+  getAvatarVisualStage,
+  type AvatarVisualStage,
+} from './avatarVisualStage';
+
+export { clampAvatarBodyStage } from './avatarVisualStage';
 
 function draftAssetsEnabled(): boolean {
   if (typeof import.meta === 'undefined') return false;
   if (import.meta.env?.DEV) return true;
   return import.meta.env?.VITE_ENABLE_DRAFT_AVATAR_ASSETS === 'true';
-}
-
-export function clampAvatarBodyStage(
-  stage: number | null | undefined,
-): HeroStageNumber {
-  if (stage == null || Number.isNaN(Number(stage))) return 1;
-  const n = Math.round(Number(stage));
-  return Math.min(HERO_STAGE_COUNT, Math.max(1, n)) as HeroStageNumber;
 }
 
 export function resolveAvatarAssetGender(
@@ -56,14 +55,12 @@ function unique(paths: string[]): string[] {
 
 function assertSameThemePath(themeId: AppThemeId, relativePath: string): boolean {
   if (themeId === 'cozy') {
-    // Cozy may only use cozy theme folder — never DF legacy heroes/.
     if (relativePath.startsWith('heroes/')) return false;
     if (relativePath.includes('dark-fantasy') || relativePath.includes('darkFantasy')) {
       return false;
     }
     return relativePath.startsWith('themes/cozy/');
   }
-  // Dark Fantasy: theme folder OR legacy heroes/* (same franchise branch)
   if (relativePath.startsWith('themes/cozy/')) return false;
   return (
     relativePath.startsWith('themes/dark-fantasy/') ||
@@ -86,10 +83,7 @@ function statusToSource(status: AvatarAssetStatus): AvatarAssetSource {
   return 'placeholder';
 }
 
-function canUseEntry(
-  status: AvatarAssetStatus,
-  allowDraft: boolean,
-): boolean {
+function canUseEntry(status: AvatarAssetStatus, allowDraft: boolean): boolean {
   if (status === 'approved') return true;
   if (status === 'draft') return allowDraft;
   return false;
@@ -97,7 +91,9 @@ function canUseEntry(
 
 /**
  * Unified avatar body asset resolver.
- * Body path depends on theme + gender + bodyStage (+ track).
+ *
+ * Body Stage (1–20) → Avatar Visual Stage (1|5|10|15|20) → theme/gender/track asset.
+ * Mapping is canonical production presentation — not nearest-stage fallback.
  * Hero State must never change the returned body path.
  */
 export function getResolvedAvatarStageAsset(
@@ -106,8 +102,10 @@ export function getResolvedAvatarStageAsset(
   const themeId = params.themeId;
   const trackId: AvatarTrackId = params.trackId ?? DEFAULT_AVATAR_TRACK_ID;
   const requestedStage = clampAvatarBodyStage(params.bodyStage);
+  const visualStage: AvatarVisualStage = getAvatarVisualStage(requestedStage);
   const gender = resolveAvatarAssetGender(params.gender);
   const allowDraft = params.allowDraft ?? draftAssetsEnabled();
+  // Dev/legacy only — production uses canonical visual mapping, not nearest search.
   const allowNearest = params.allowNearestStageFallback === true;
 
   const genderPlaceholderRel = getAvatarGenderPlaceholderPath(
@@ -116,7 +114,6 @@ export function getResolvedAvatarStageAsset(
   );
   const neutralPlaceholderRel = getAvatarGenderPlaceholderPath(themeId, 'neutral');
 
-  // Neutral / missing gender → placeholders only (no male↔female swap).
   if (gender === 'neutral') {
     const path = toVersioned(genderPlaceholderRel);
     return {
@@ -127,13 +124,14 @@ export function getResolvedAvatarStageAsset(
       source: 'placeholder',
       usedFallback: true,
       requestedStage,
-      resolvedStage: requestedStage,
+      resolvedStage: visualStage as HeroStageNumber,
+      visualStage,
       themeId,
       gender,
       trackId,
       status: 'placeholder',
       debugLabel: import.meta.env?.DEV
-        ? `Missing avatar: ${themeId} / neutral / stage ${padAvatarStage(requestedStage)}`
+        ? `Missing avatar: ${themeId} / neutral / body ${padAvatarStage(requestedStage)} → visual ${padAvatarStage(visualStage)}`
         : null,
       bodyStage: requestedStage,
       heroStateIndependent: true,
@@ -145,15 +143,14 @@ export function getResolvedAvatarStageAsset(
   const entry = getAvatarAssetManifestEntry({
     themeId,
     gender: heroGender,
-    bodyStage: requestedStage,
+    bodyStage: visualStage,
     trackId,
   });
 
   const candidatesRel: string[] = [];
   let source: AvatarAssetSource = 'placeholder';
   let status: AvatarAssetStatus = entry?.status ?? 'missing';
-  let resolvedStage = requestedStage;
-  let usedFallback = true;
+  let usedArtFallback = true;
 
   if (entry && canUseEntry(entry.status, allowDraft)) {
     candidatesRel.push(entry.path);
@@ -164,14 +161,26 @@ export function getResolvedAvatarStageAsset(
     }
     source = statusToSource(entry.status);
     status = entry.status;
-    usedFallback = false;
+    // Canonical Body→Visual mapping is not a fallback.
+    usedArtFallback = false;
+  } else if (entry && entry.status === 'placeholder') {
+    // Visual anchor slot exists but art not approved yet — try canonical path then placeholder.
+    candidatesRel.push(entry.path);
+    for (const legacy of entry.legacyPaths ?? []) {
+      if (assertSameThemePath(themeId, legacy)) {
+        candidatesRel.push(legacy);
+      }
+    }
+    source = 'placeholder';
+    status = 'placeholder';
+    usedArtFallback = true;
   } else if (allowNearest) {
-    // Dev-only nearest same-theme stage (explicit opt-in).
-    const nearest = findNearestUsableStage({
+    // Dev-only: rarely used now that only 5 anchors exist.
+    const nearest = findNearestUsableVisualAnchor({
       themeId,
       gender: heroGender,
       trackId,
-      requestedStage,
+      visualStage,
       allowDraft,
     });
     if (nearest) {
@@ -183,27 +192,17 @@ export function getResolvedAvatarStageAsset(
       }
       source = statusToSource(nearest.status);
       status = nearest.status;
-      resolvedStage = nearest.bodyStage;
-      usedFallback = nearest.bodyStage !== requestedStage;
+      usedArtFallback = nearest.bodyStage !== visualStage;
     }
   }
 
-  // Always append same-theme placeholders (never opposite theme / opposite gender).
-  candidatesRel.push(genderPlaceholderRel, neutralPlaceholderRel);
-
-  // Also keep canonical path as first attempt when status is placeholder so
-  // progressive drops of stage-XX.webp light up without manifest edits.
-  if (source === 'placeholder') {
-    const canonical = getCanonicalAvatarStagePath(
-      themeId,
-      heroGender,
-      requestedStage,
-      trackId,
+  if (candidatesRel.length === 0) {
+    candidatesRel.push(
+      getCanonicalAvatarStagePath(themeId, heroGender, visualStage, trackId),
     );
-    candidatesRel.unshift(canonical);
-    // Cozy: do not inject DF legacy. DF: when placeholder status but legacy exists,
-    // still allow legacy via entry above; if entry was placeholder-only, skip.
   }
+
+  candidatesRel.push(genderPlaceholderRel, neutralPlaceholderRel);
 
   const versioned = unique(
     filterSameTheme(
@@ -212,43 +211,43 @@ export function getResolvedAvatarStageAsset(
     ),
   );
 
-  // If first candidate is a placeholder file, mark usedFallback.
   const primary = versioned[0] ?? toVersioned(neutralPlaceholderRel);
-  const primaryIsPlaceholder =
-    primary.includes('/placeholders/') || source === 'placeholder';
+  const primaryIsPlaceholderSvg = primary.includes('/placeholders/');
 
   return {
     path: primary,
     fallbackCandidates: versioned.slice(1),
-    source: primaryIsPlaceholder && source !== 'approved' && source !== 'draft'
-      ? 'placeholder'
-      : source,
-    usedFallback: usedFallback || primaryIsPlaceholder,
+    source: primaryIsPlaceholderSvg ? 'placeholder' : source,
+    // Body→Visual map itself is never "fallback"; only missing anchor art is.
+    usedFallback: usedArtFallback || primaryIsPlaceholderSvg,
     requestedStage,
-    resolvedStage,
+    resolvedStage: visualStage as HeroStageNumber,
+    visualStage,
     themeId,
     gender,
     trackId,
-    status: primaryIsPlaceholder ? 'placeholder' : status,
+    status: primaryIsPlaceholderSvg ? 'placeholder' : status,
     debugLabel: import.meta.env?.DEV
-      ? `${primaryIsPlaceholder ? 'Missing avatar' : 'Avatar'}: ${themeId} / ${gender} / stage ${padAvatarStage(requestedStage)}`
+      ? `${primaryIsPlaceholderSvg ? 'Missing avatar' : 'Avatar'}: ${themeId} / ${gender} / body ${padAvatarStage(requestedStage)} → visual ${padAvatarStage(visualStage)}`
       : null,
     bodyStage: requestedStage,
     heroStateIndependent: true,
   };
 }
 
-function findNearestUsableStage(params: {
+function findNearestUsableVisualAnchor(params: {
   themeId: AppThemeId;
   gender: HeroGender;
   trackId: AvatarTrackId;
-  requestedStage: HeroStageNumber;
+  visualStage: AvatarVisualStage;
   allowDraft: boolean;
 }) {
-  for (let delta = 1; delta < HERO_STAGE_COUNT; delta += 1) {
+  const idx = AVATAR_VISUAL_STAGES.indexOf(params.visualStage);
+  for (let delta = 1; delta < AVATAR_VISUAL_STAGES.length; delta += 1) {
     for (const sign of [-1, 1] as const) {
-      const stage = params.requestedStage + sign * delta;
-      if (stage < 1 || stage > HERO_STAGE_COUNT) continue;
+      const nextIdx = idx + sign * delta;
+      if (nextIdx < 0 || nextIdx >= AVATAR_VISUAL_STAGES.length) continue;
+      const stage = AVATAR_VISUAL_STAGES[nextIdx]!;
       const entry = getAvatarAssetManifestEntry({
         themeId: params.themeId,
         gender: params.gender,
@@ -285,5 +284,9 @@ export function assertHeroStateDoesNotChangeBodyAsset(
 ): boolean {
   const a = getResolvedAvatarStageAsset({ ...base, heroState: 'depleted' });
   const b = getResolvedAvatarStageAsset({ ...base, heroState: 'strong' });
-  return a.path === b.path && a.resolvedStage === b.resolvedStage;
+  return (
+    a.path === b.path &&
+    a.resolvedStage === b.resolvedStage &&
+    a.visualStage === b.visualStage
+  );
 }
