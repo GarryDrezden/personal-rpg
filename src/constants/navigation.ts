@@ -18,6 +18,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { isGrowthHubPath } from './growthHub';
+import type { AppThemeId } from '../types/theme';
 
 export type NavItem = {
   to: string;
@@ -25,6 +26,8 @@ export type NavItem = {
   label: string;
   /** Короткая подпись для мобильной нижней панели */
   shortLabel?: string;
+  /** If set, item is shown only for these themes (e.g. Cozy Home) */
+  themes?: AppThemeId[];
 };
 
 export type NavGroup = {
@@ -52,7 +55,13 @@ export const navGroups: NavGroup[] = [
     hint: 'Мир и карта пути',
     items: [
       { to: '/journey', icon: Route, label: 'Путь', shortLabel: 'Путь' },
-      { to: '/home', icon: House, label: 'Дом', shortLabel: 'Дом' },
+      {
+        to: '/home',
+        icon: House,
+        label: 'Дом',
+        shortLabel: 'Дом',
+        themes: ['cozy'],
+      },
       { to: '/seasons', icon: Scroll, label: 'Летопись', shortLabel: 'Сезоны' },
       { to: '/codex', icon: BookOpen, label: 'Кодекс', shortLabel: 'Кодекс' },
       { to: '/map', icon: Map, label: 'Карта навыков' },
@@ -93,6 +102,19 @@ export const navGroups: NavGroup[] = [
   },
 ];
 
+export function isNavItemVisible(item: NavItem, themeId: AppThemeId): boolean {
+  return !item.themes || item.themes.includes(themeId);
+}
+
+export function getNavGroupsForTheme(themeId: AppThemeId): NavGroup[] {
+  return navGroups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => isNavItemVisible(item, themeId)),
+    }))
+    .filter((group) => group.items.length > 0);
+}
+
 export const allNavItems = navGroups.flatMap((group) => group.items);
 
 /** Нижняя панель на телефоне — самые частые действия */
@@ -106,6 +128,22 @@ export const mobileTabNav: NavItem[] = [
 const mobileTabPaths = new Set(mobileTabNav.map((item) => item.to));
 
 /** Группы для выезжающего меню «Ещё» — без пунктов из нижней панели */
+export function getMobileDrawerGroups(themeId: AppThemeId): NavGroup[] {
+  return getNavGroupsForTheme(themeId)
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => !mobileTabPaths.has(item.to)),
+    }))
+    .filter((group) => group.items.length > 0);
+}
+
+export function getMobileDrawerPaths(themeId: AppThemeId): string[] {
+  return getMobileDrawerGroups(themeId).flatMap((group) =>
+    group.items.map((item) => item.to),
+  );
+}
+
+/** @deprecated Prefer getMobileDrawerGroups(themeId) — unfiltered, includes Cozy-only items */
 export const mobileDrawerGroups: NavGroup[] = navGroups
   .map((group) => ({
     ...group,
@@ -113,6 +151,7 @@ export const mobileDrawerGroups: NavGroup[] = navGroups
   }))
   .filter((group) => group.items.length > 0);
 
+/** @deprecated Prefer getMobileDrawerPaths(themeId) */
 export const mobileDrawerPaths = mobileDrawerGroups.flatMap((group) =>
   group.items.map((item) => item.to),
 );

@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { LayoutGrid, X } from 'lucide-react';
 import {
+  getMobileDrawerGroups,
+  getMobileDrawerPaths,
   isNavPathActive,
-  mobileDrawerGroups,
-  mobileDrawerPaths,
   mobileTabNav,
 } from '../../constants/navigation';
 import { getThemeTerm } from '../../constants/themeTerms';
@@ -15,7 +15,10 @@ export function BottomNav() {
   const [moreOpen, setMoreOpen] = useState(false);
   const location = useLocation();
   const { themeId } = useAppTheme();
-  const moreActive = mobileDrawerPaths.some((path) => isNavPathActive(location.pathname, path));
+  const drawerGroups = getMobileDrawerGroups(themeId);
+  const moreActive = getMobileDrawerPaths(themeId).some((path) =>
+    isNavPathActive(location.pathname, path),
+  );
 
   return (
     <>
@@ -45,7 +48,7 @@ export function BottomNav() {
             </button>
           </div>
 
-          {mobileDrawerGroups.map((group, index) => (
+          {drawerGroups.map((group, index) => (
             <section key={group.id} className={index > 0 ? 'mt-4 border-t border-[var(--app-border)] pt-4' : ''}>
               <p className="mb-1.5 px-1 text-[11px] font-bold uppercase tracking-wider text-[var(--app-primary)]">
                 {group.title}

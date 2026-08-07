@@ -1,7 +1,8 @@
-import { navGroups } from '../../constants/navigation';
+import { getNavGroupsForTheme } from '../../constants/navigation';
 import { NavItemLink } from './NavItemLink';
 import { useAuth } from '../../auth/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useAppTheme } from '../../hooks/useAppTheme';
 
 const SIDEBAR_WIDTH = 'md:w-[356px]';
 const SIDEBAR_MARGIN = 'md:ml-[356px]';
@@ -9,8 +10,10 @@ const SIDEBAR_MARGIN = 'md:ml-[356px]';
 export function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const systemGroup = navGroups.find((group) => group.id === 'system');
-  const scrollGroups = navGroups.filter((group) => group.id !== 'system');
+  const { themeId } = useAppTheme();
+  const groups = getNavGroupsForTheme(themeId);
+  const systemGroup = groups.find((group) => group.id === 'system');
+  const scrollGroups = groups.filter((group) => group.id !== 'system');
 
   return (
     <aside
