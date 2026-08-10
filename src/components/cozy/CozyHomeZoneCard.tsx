@@ -7,6 +7,8 @@ import {
   formatMissingResources,
   getCozyZoneDisplay,
 } from '../../utils/cozyHomeEngine';
+import { getCozyHomeZoneArtPath } from '../../game/cozyHomeArt';
+import { GameAssetImage } from '../game/GameAssetImage';
 
 type CozyHomeZoneCardProps = {
   home: CozyHomeState;
@@ -36,6 +38,7 @@ export function CozyHomeZoneCard({
   const isMax = check.isMax;
   const canUpgrade = check.canUpgrade;
   const tone = ZONE_TONE[zoneId] ?? '';
+  const zoneArt = getCozyHomeZoneArtPath(zoneId);
 
   return (
     <article
@@ -50,6 +53,22 @@ export function CozyHomeZoneCard({
         .join(' ')}
     >
       <div className="cozy-zone-card__ornament" aria-hidden />
+
+      {zoneArt ? (
+        <div
+          className="relative mb-3 h-28 w-full overflow-hidden rounded-xl border border-[var(--app-border)]"
+          data-testid={`cozy-zone-art-${zoneId}`}
+        >
+          <GameAssetImage
+            src={zoneArt}
+            alt={config.title}
+            variant="artifact"
+            status="unlocked"
+            className="absolute inset-0"
+            imageClassName="h-full w-full object-cover"
+          />
+        </div>
+      ) : null}
 
       <div className="flex items-start gap-3">
         <span className="cozy-zone-card__icon" aria-hidden>

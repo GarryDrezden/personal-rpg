@@ -298,13 +298,15 @@ Runtime folders already exist under `public/game-assets/themes/cozy/` (avatars, 
 
 ### Batch C3 — Cozy Home scenes (P1)
 
-| id | UI | Path |
-|----|-----|------|
-| `cozy-home-hero-exterior` | `/home` hero / Dashboard home card | `themes/cozy/home/exterior/home-hero.webp` |
-| Zone keyframes (8 zones × selected levels) | `/home` zone cards | `themes/cozy/home/zones/{zone}-l{0\|3}.webp` start with L0+L3 only |
-| Garden / yard establishing | Home garden/yard panels | `themes/cozy/home/garden/…`, `yard/…` |
+| id | UI | Path | Status |
+|----|-----|------|--------|
+| `cozy-home-hero-exterior` | `/home` hero | `themes/cozy/home/exterior/home-hero.webp` | **in-app** (2026-08-10) |
+| `cozy-zone-porch` | zone card | `themes/cozy/home/zones/porch.webp` | **in-app** |
+| `cozy-zone-kitchen` | zone card | `themes/cozy/home/zones/kitchen.webp` | **in-app** |
+| `cozy-zone-garden` | zone card | `themes/cozy/home/zones/garden.webp` | **in-app** |
+| Remaining zones / L0–L3 pairs | `/home` | `themes/cozy/home/zones/{zone}.webp` | pending |
 
-Start with **hero exterior + 2–3 hero zones** (porch, kitchen, garden), not 8×4.
+Start done: **hero exterior + porch / kitchen / garden**. Next: hallway, bedroom, yard, workshop, pet_corner + level variants.
 
 ### Batch C4 — Companions cozy set (P2, after opt-in UX)
 
