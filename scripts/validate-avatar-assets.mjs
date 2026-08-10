@@ -34,6 +34,7 @@ function firstExisting(paths) {
 
 function resolveStatus(themeId, gender) {
   if (gender === 'male') return 'approved';
+  if (themeId === 'cozy' && gender === 'female') return 'approved';
   return 'placeholder';
 }
 

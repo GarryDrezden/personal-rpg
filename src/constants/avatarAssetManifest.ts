@@ -83,7 +83,10 @@ function initialStatus(
     if (themeId === 'darkFantasy') return 'approved';
     if (themeId === 'cozy') return 'approved';
   }
-  // Female anchors still awaiting approved art drops.
+  // Cozy female visual anchors from progression sheet (100→90→75→62→50).
+  if (gender === 'female' && themeId === 'cozy' && isAvatarVisualStage(visualStage)) {
+    return 'approved';
+  }
   return 'placeholder';
 }
 
@@ -98,6 +101,9 @@ function buildNotes(
   }
   if (status === 'approved' && themeId === 'darkFantasy' && gender === 'male') {
     return `Dark Fantasy male visual anchor ${padAvatarStage(visualStage)} — approved (themes/dark-fantasy/avatars/male)`;
+  }
+  if (status === 'approved' && themeId === 'cozy' && gender === 'female') {
+    return `Cozy female visual anchor ${padAvatarStage(visualStage)} — approved (progression sheet slice)`;
   }
   if (gender === 'female') {
     return `Awaiting ${themeId} female visual anchor ${padAvatarStage(visualStage)} — same-theme placeholder`;
