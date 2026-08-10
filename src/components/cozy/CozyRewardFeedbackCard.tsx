@@ -31,24 +31,23 @@ export function CozyRewardFeedbackCard({
   homeState,
   themeId,
 }: CozyRewardFeedbackCardProps) {
+  if (themeId !== 'cozy') return null;
+
   const total = sumCozyGrantedResources(rewards.resources);
   if (total <= 0) return null;
 
-  const isCozy = themeId === 'cozy';
   const granted = listGrantedCozyResources(rewards.resources);
   const reasons = pickCozyRewardReasons(rewards.reasons, 3);
   const next = getNextCozyHomeUpgrade(homeState);
   const hint = getCozyUpgradeHintLine(homeState);
   const ctaLabel = next?.canUpgrade ? 'Улучшить дом' : 'Открыть дом';
-  const title = isCozy ? 'Дом стал чуть теплее' : 'Дом получил ресурсы';
-  const lead = isCozy
-    ? 'День сохранён. Забота о теле принесла ресурсы для дома.'
-    : 'День сохранён. Дом получил ресурсы для восстановления.';
+  const title = 'Дом стал чуть теплее';
+  const lead = 'День сохранён. Забота о теле принесла ресурсы для дома.';
 
   return (
     <section
       data-testid="cozy-reward-feedback"
-      className={isCozy ? 'cozy-reward-feedback' : 'cozy-reward-feedback cozy-reward-feedback--neutral'}
+      className="cozy-reward-feedback"
       aria-label={title}
     >
       <div className="flex items-start gap-2.5">
@@ -56,9 +55,7 @@ export function CozyRewardFeedbackCard({
           <Home size={18} strokeWidth={1.75} />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="cozy-reward-feedback__eyebrow">
-            {isCozy ? 'Дом' : 'Награда дня'}
-          </p>
+          <p className="cozy-reward-feedback__eyebrow">Дом</p>
           <h3 className="cozy-reward-feedback__title">{title}</h3>
           <p className="cozy-reward-feedback__lead">{lead}</p>
         </div>

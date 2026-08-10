@@ -42,7 +42,7 @@ export function TodaySaveReactionCard({
         ) : null}
       </div>
 
-      {reaction.cozyFeedback ? (
+      {themeId === 'cozy' && reaction.cozyFeedback ? (
         <CozyRewardFeedbackCard
           rewards={reaction.cozyFeedback}
           homeState={homeState}

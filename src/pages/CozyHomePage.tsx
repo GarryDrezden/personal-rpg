@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import {
   COZY_HOME_ZONE_IDS,
@@ -16,6 +16,7 @@ import { CozyHomeZoneCard, formatResourceBadges } from '../components/cozy/CozyH
 import { CozyBotanicalFrame } from '../components/cozy/CozyBotanicalFrame';
 import type { CozyHomeZoneId, CozyResourceId } from '../types/cozyHome';
 import { getThemedEmptyStateCopy } from '../constants/themeContentRegistry';
+import { useAppTheme } from '../hooks/useAppTheme';
 
 const RESOURCE_META: Record<
   CozyResourceId,
@@ -41,6 +42,7 @@ function homeStatusLine(percent: number, totalResources: number): string {
 }
 
 export function CozyHomePage() {
+  const { isCozy } = useAppTheme();
   const { settings, saveSettings } = useAppStore();
   const [busyZone, setBusyZone] = useState<CozyHomeZoneId | null>(null);
 
@@ -73,6 +75,10 @@ export function CozyHomePage() {
       setBusyZone(null);
     }
   };
+
+  if (!isCozy) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="cozy-home-page space-y-5 pb-6" data-testid="cozy-home-page">

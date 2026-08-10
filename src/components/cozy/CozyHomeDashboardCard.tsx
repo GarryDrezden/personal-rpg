@@ -10,6 +10,7 @@ import {
   getCozyHomeProgress,
   getCozyHomeState,
 } from '../../utils/cozyHomeEngine';
+import { useAppTheme } from '../../hooks/useAppTheme';
 import { CozyBotanicalFrame } from './CozyBotanicalFrame';
 
 type CozyHomeDashboardCardProps = {
@@ -17,6 +18,7 @@ type CozyHomeDashboardCardProps = {
 };
 
 export function CozyHomeDashboardCard({ settings }: CozyHomeDashboardCardProps) {
+  const { isCozy } = useAppTheme();
   const home = useMemo(() => getCozyHomeState(settings), [settings]);
   const progress = useMemo(() => getCozyHomeProgress(home), [home]);
   const affordable = useMemo(() => findAffordableUpgrade(home), [home]);
@@ -29,6 +31,8 @@ export function CozyHomeDashboardCard({ settings }: CozyHomeDashboardCardProps) 
       .map(([id, n]) => `${COZY_RESOURCE_LABELS[id]} ${n}`);
     return parts.length > 0 ? parts.join(' · ') : null;
   }, [home.resources]);
+
+  if (!isCozy) return null;
 
   return (
     <CozyBotanicalFrame

@@ -388,7 +388,7 @@ export function DashboardPage() {
         </>
       )}
 
-      <CozyHomeDashboardCard settings={settings} />
+      {themeId === 'cozy' ? <CozyHomeDashboardCard settings={settings} /> : null}
 
       <CampaignProgressDashboardSection
         season={seasonSnapshot}
