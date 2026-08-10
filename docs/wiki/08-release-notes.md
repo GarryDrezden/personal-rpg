@@ -14,7 +14,8 @@
 - **Companions / pets:** Settings → Дополнительные разделы → «Питомцы / спутники» (default off). Companion overlay/chips/selector hidden until enabled. Onboarding no longer asks for a companion (5 steps).
 - Cozy Home UI hidden outside Cozy theme (Dashboard card + `/home` redirect).
 - **20 Body Stages / 5 Avatar Visual Anchors:** Body Stage engine unchanged (1–20). Production art maps via `getAvatarVisualStage` to anchors `01/05/10/15/20` only. Manifest + `validate:avatars` expect five anchors per theme×gender; intermediate body files are not required. Nearest-stage is no longer the production path.
-- **Cozy Art Fill C1 (Dashboard parity):** season reward lantern, home room-stage-01 as camp/shelter, empty-day armchair obstacle cutout; wired via `CozyArtScene` + `cozyCampaignArt`. `GAME_ASSET_VERSION` 60.
+- **Cozy obstacle S01:** replaced empty armchair with dust-bunny household monster cutout (dirt/chores direction for cozy помехи). `GAME_ASSET_VERSION` 61.
+- **Cozy Art Fill C1 (Dashboard parity):** season reward lantern, home room-stage-01 as camp/shelter, empty-day obstacle; wired via `CozyArtScene` + `cozyCampaignArt`.
 - Cozy female avatar anchors **1 / 5 / 10 / 15 / 20** installed from progression sheet (100→90→75→62→50 кг) under `themes/cozy/avatars/female/`; marked `approved`. `GAME_ASSET_VERSION` 59.
 - Cozy male avatar anchors **1 / 5 / 10 / 15 / 20** marked `approved` in `avatarAssetManifest` (files under `themes/cozy/avatars/male/`). Only five anchors are tracked; intermediate body files are out of production scope.
 - Dark Fantasy male visual anchors **1 / 5 / 10 / 15 / 20** installed under `themes/dark-fantasy/avatars/male/` (canonical theme path; legacy `heroes/` kept as same-theme fallback only).

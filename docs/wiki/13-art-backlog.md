@@ -286,7 +286,7 @@ Runtime folders already exist under `public/game-assets/themes/cozy/` (avatars, 
 |--------------|-----|---------------|--------|--------|
 | `cozy-season-reward-01-hearth-lantern` | `SeasonDashboardSummary` banner | `themes/cozy/artifacts/season-01-hearth-lantern.webp` | reward-banner | **in-app** (2026-08-10) |
 | `cozy-home-room-stage-01` | `BaseDashboardSummary` banner (+ compact thumb) | `themes/cozy/home/interior/room-stage-01.webp` | reward-banner | **in-app** (2026-08-10) — канон укрытия = комната дома |
-| `cozy-obstacle-01-empty-day` | season boss compact («Главная помеха») | `themes/cozy/bosses/season-obstacle-01-empty-day.webp` | boss-compact cutout | **in-app** (2026-08-10) |
+| `cozy-obstacle-01-empty-day` | season boss compact («Главная помеха») | `themes/cozy/bosses/season-obstacle-01-empty-day.webp` | boss-compact cutout | **in-app** (2026-08-10) — пылевой комок / бытовая грязь, не кресло |
 
 **DoD:** обе плашки Кампании показывают webp одного размера; тексты остаются на общем shell. ✅
 
@@ -316,7 +316,11 @@ Only when pets toggle stays useful; otherwise keep SVG placeholder.
 
 ### Batch C5 — Obstacles / weekly threats (P1–P2)
 
-Cozy illustrations for «помехи» (not DF boss clones): season obstacles S01–S05 first, then weekly set. Paths under `themes/cozy/bosses/` and `themes/cozy/mobs/`.
+Cozy «помехи» = **бытовые монстры грязи и дел по дому** (пыль, беспорядок, грязная посуда, незакрытые дела), не DF-боссы и не пустая мебель.
+
+Примеры направления: пылевой комок, лужа на полу, гора белья, липкий перекус-хаос — тёплый cozy-стиль, чуть озорные, не horror.
+
+Paths under `themes/cozy/bosses/` and `themes/cozy/mobs/`. S01 empty-day → dust monster cutout (in-app).
 
 ### Batch C6 — Journey chapter vignettes (P2)
 
