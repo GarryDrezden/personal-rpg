@@ -2,13 +2,14 @@ import { Link } from 'react-router-dom';
 import type { BaseProgressionSnapshot } from '../../types/baseV1';
 import { getThemeTerm } from '../../constants/themeTerms';
 import { getBaseStageManifestAssetId } from '../../game/manifestAssetUi';
+import { getCozyCampRoomPath } from '../../game/cozyCampaignArt';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import {
   CampaignDashboardCardHeader,
   CampaignDashboardCardShell,
 } from '../campaign/CampaignDashboardCardShell';
 import { ManifestArtScene } from '../game/ManifestArtScene';
-import { CozyArtPlaceholder } from '../game/CozyArtPlaceholder';
+import { CozyArtScene } from '../game/CozyArtScene';
 import { ProgressBar } from '../ui/ProgressBar';
 
 type BaseDashboardSummaryProps = {
@@ -23,28 +24,29 @@ export function BaseDashboardSummary({ snapshot, compact = false }: BaseDashboar
   const nextStageArtId = nextStage ? getBaseStageManifestAssetId(nextStage.id) : undefined;
   const focusStage = nextStage ?? currentStage;
   const focusArtId = nextStageArtId ?? stageArtId;
+  const cozyRoomSrc = getCozyCampRoomPath();
 
   const routeLine = compact
     ? `${isCozy ? 'День' : 'Маршрут'}: ${snapshot.recentContributors.slice(0, 2).join(', ')}.`
     : `${isCozy ? 'Ритм укрепился' : 'Маршрут укрепился'}: ${snapshot.recentContributors.join(', ')}.`;
 
-  const art = stageArtId ? (
-    isCozy ? (
-      <CozyArtPlaceholder
-        label={currentStage.title}
-        layout="banner"
-        testId="base-dashboard-art"
-        className="rounded-none border-0"
-      />
-    ) : (
-      <ManifestArtScene
-        assetId={stageArtId}
-        alt={currentStage.title}
-        layout="reward-banner"
-        testId="base-dashboard-art"
-        className="rounded-none border-0 shadow-none"
-      />
-    )
+  const art = isCozy ? (
+    <CozyArtScene
+      src={cozyRoomSrc}
+      alt={isCozy ? 'Комната дома' : currentStage.title}
+      layout="reward-banner"
+      testId="base-dashboard-art"
+      className="rounded-none border-0 shadow-none"
+      objectPosition="center 45%"
+    />
+  ) : stageArtId ? (
+    <ManifestArtScene
+      assetId={stageArtId}
+      alt={currentStage.title}
+      layout="reward-banner"
+      testId="base-dashboard-art"
+      className="rounded-none border-0 shadow-none"
+    />
   ) : (
     <div
       className="flex h-[5.25rem] w-full items-center justify-center bg-[var(--app-bg-soft)] sm:h-[7.5rem] md:h-[10rem]"
@@ -57,14 +59,18 @@ export function BaseDashboardSummary({ snapshot, compact = false }: BaseDashboar
     <CampaignDashboardCardShell
       testId="base-dashboard-summary"
       art={art}
-      artCaption={currentStage.shortTitle || currentStage.title}
+      artCaption={
+        isCozy ? 'Комната дома' : currentStage.shortTitle || currentStage.title
+      }
     >
       <CampaignDashboardCardHeader
         eyebrow={getThemeTerm(themeId, 'camp')}
         title={
           <span className="inline-flex max-w-full items-center gap-2">
             <span aria-hidden>{currentStage.icon}</span>
-            <span className="truncate">{currentStage.title}</span>
+            <span className="truncate">
+              {isCozy ? 'Уголок дома' : currentStage.title}
+            </span>
           </span>
         }
         meta={
@@ -95,10 +101,12 @@ export function BaseDashboardSummary({ snapshot, compact = false }: BaseDashboar
       >
         <div className="flex items-start gap-3">
           {isCozy ? (
-            <CozyArtPlaceholder
-              label={focusStage.title}
-              layout="compact"
+            <CozyArtScene
+              src={cozyRoomSrc}
+              alt={focusStage.title}
+              layout="boss-compact"
               testId="base-next-stage-art"
+              dimmed={Boolean(nextStage)}
             />
           ) : focusArtId ? (
             <ManifestArtScene
@@ -114,9 +122,17 @@ export function BaseDashboardSummary({ snapshot, compact = false }: BaseDashboar
             </span>
           )}
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-medium text-[var(--app-text)]">{focusStage.title}</p>
+            <p className="text-xs font-medium text-[var(--app-text)]">
+              {isCozy ? 'Следующий уют комнаты' : focusStage.title}
+            </p>
             <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">
-              {nextStage ? 'Следующая стадия лагеря' : 'Текущая стадия лагеря'}
+              {isCozy
+                ? nextStage
+                  ? 'Комната будет наполняться дальше'
+                  : 'Первая комната дома'
+                : nextStage
+                  ? 'Следующая стадия лагеря'
+                  : 'Текущая стадия лагеря'}
             </p>
             {nextStage ? (
               <div className="mt-1.5">

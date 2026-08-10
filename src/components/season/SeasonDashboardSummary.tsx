@@ -10,6 +10,10 @@ import {
   getSeasonBossManifestAssetId,
   getSeasonRewardManifestAssetId,
 } from '../../game/manifestAssetUi';
+import {
+  getCozySeasonObstaclePath,
+  getCozySeasonRewardPath,
+} from '../../game/cozyCampaignArt';
 import { getThemeTerm } from '../../constants/themeTerms';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import {
@@ -17,6 +21,7 @@ import {
   CampaignDashboardCardShell,
 } from '../campaign/CampaignDashboardCardShell';
 import { ManifestArtScene } from '../game/ManifestArtScene';
+import { CozyArtScene } from '../game/CozyArtScene';
 import { CozyArtPlaceholder } from '../game/CozyArtPlaceholder';
 import { ProgressBar } from '../ui/ProgressBar';
 
@@ -44,34 +49,46 @@ export function SeasonDashboardSummary({
   const bossPresentation = boss
     ? getThemedSeasonBossPresentation(themeId, boss.currentBoss, boss.bossStatus)
     : null;
+  const cozyRewardSrc = isCozy ? getCozySeasonRewardPath(season.seasonIndex) : null;
+  const cozyObstacleSrc = isCozy ? getCozySeasonObstaclePath(season.seasonIndex) : null;
 
-  const art =
-    isCozy || rewardArtId ? (
-      isCozy ? (
-        <CozyArtPlaceholder
-          label={`Награда сезона: ${rewardName}`}
-          layout="banner"
-          testId="season-reward-art"
-          className={`rounded-none border-0 ${rewardStatus === 'earned' ? '' : 'opacity-80'}`}
-        />
-      ) : (
-        <ManifestArtScene
-          assetId={rewardArtId!}
-          alt={`Награда сезона: ${rewardName}`}
-          layout="reward-banner"
-          testId="season-reward-art"
-          className={`rounded-none border-0 shadow-none ${
-            rewardStatus === 'earned' ? '' : 'opacity-70'
-          }`}
-        />
-      )
-    ) : (
-      <div
-        className="flex h-[5.25rem] w-full items-center justify-center bg-[var(--app-bg-soft)] sm:h-[7.5rem] md:h-[10rem]"
-        data-testid="season-reward-art"
-        aria-hidden
+  const art = isCozy ? (
+    cozyRewardSrc ? (
+      <CozyArtScene
+        src={cozyRewardSrc}
+        alt={`Награда сезона: ${rewardName}`}
+        layout="reward-banner"
+        testId="season-reward-art"
+        className={`rounded-none border-0 shadow-none ${
+          rewardStatus === 'earned' ? '' : 'opacity-80'
+        }`}
+        objectPosition="center 55%"
       />
-    );
+    ) : (
+      <CozyArtPlaceholder
+        label={`Награда сезона: ${rewardName}`}
+        layout="banner"
+        testId="season-reward-art"
+        className={`rounded-none border-0 ${rewardStatus === 'earned' ? '' : 'opacity-80'}`}
+      />
+    )
+  ) : rewardArtId ? (
+    <ManifestArtScene
+      assetId={rewardArtId}
+      alt={`Награда сезона: ${rewardName}`}
+      layout="reward-banner"
+      testId="season-reward-art"
+      className={`rounded-none border-0 shadow-none ${
+        rewardStatus === 'earned' ? '' : 'opacity-70'
+      }`}
+    />
+  ) : (
+    <div
+      className="flex h-[5.25rem] w-full items-center justify-center bg-[var(--app-bg-soft)] sm:h-[7.5rem] md:h-[10rem]"
+      data-testid="season-reward-art"
+      aria-hidden
+    />
+  );
 
   return (
     <CampaignDashboardCardShell
@@ -109,11 +126,20 @@ export function SeasonDashboardSummary({
         >
           <div className="flex items-start gap-3">
             {isCozy ? (
-              <CozyArtPlaceholder
-                label={bossPresentation.shortTitle}
-                layout="compact"
-                testId="season-boss-art"
-              />
+              cozyObstacleSrc ? (
+                <CozyArtScene
+                  src={cozyObstacleSrc}
+                  alt={bossPresentation.shortTitle}
+                  layout="boss-compact"
+                  testId="season-boss-art"
+                />
+              ) : (
+                <CozyArtPlaceholder
+                  label={bossPresentation.shortTitle}
+                  layout="compact"
+                  testId="season-boss-art"
+                />
+              )
             ) : bossArtId ? (
               <ManifestArtScene
                 assetId={bossArtId}

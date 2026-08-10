@@ -282,13 +282,13 @@ Runtime folders already exist under `public/game-assets/themes/cozy/` (avatars, 
 
 Заменяет пустые баннеры на Dashboard в Cozy (сейчас `CozyArtPlaceholder`).
 
-| id (working) | UI | Path (target) | Формат |
-|--------------|-----|---------------|--------|
-| `cozy-season-reward-01-hearth-spark` | `SeasonDashboardSummary` banner | `themes/cozy/artifacts/season-01-hearth-spark.webp` | reward-banner |
-| `cozy-home-stage-shelter` | `BaseDashboardSummary` banner (+ compact thumb) | `themes/cozy/home/exterior/stage-shelter.webp` | reward-banner |
-| `cozy-obstacle-01-empty-day` | season boss compact («Главная помеха») | `themes/cozy/bosses/season-obstacle-01-empty-day.webp` | boss-compact |
+| id (working) | UI | Path (target) | Формат | Status |
+|--------------|-----|---------------|--------|--------|
+| `cozy-season-reward-01-hearth-lantern` | `SeasonDashboardSummary` banner | `themes/cozy/artifacts/season-01-hearth-lantern.webp` | reward-banner | **in-app** (2026-08-10) |
+| `cozy-home-room-stage-01` | `BaseDashboardSummary` banner (+ compact thumb) | `themes/cozy/home/interior/room-stage-01.webp` | reward-banner | **in-app** (2026-08-10) — канон укрытия = комната дома |
+| `cozy-obstacle-01-empty-day` | season boss compact («Главная помеха») | `themes/cozy/bosses/season-obstacle-01-empty-day.webp` | boss-compact cutout | **in-app** (2026-08-10) |
 
-**DoD:** обе плашки Кампании показывают webp одного размера; тексты остаются на общем shell.
+**DoD:** обе плашки Кампании показывают webp одного размера; тексты остаются на общем shell. ✅
 
 ### Batch C2 — Avatar female anchors (P0)
 
