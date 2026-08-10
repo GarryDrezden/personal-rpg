@@ -4,6 +4,31 @@
 
 ---
 
+## 2026-08-10 — Camp art fallback, optional UI gate, companions opt-in
+
+**Context:**  
+Dashboard «Лагерь героя» был пустым на стадии Тропа+ (нет dedicated art). Выключенные optional-пункты (Инерция и др.) всё ещё светились серыми ссылками. Питомцы/спутники показывались без игровых функций.
+
+**Decision:**  
+1. Map later camp stages to shelter art until dedicated plates ship; always show camp banner art in compact Dashboard summary.  
+2. Omit optional nav links everywhere when `sidebarVisibility` is off (strip, links, chronicle chip) — no disabled stubs.  
+3. Add Settings toggle **Питомцы / спутники** (default off); hide companion chrome via `useCompanionsVisible`. Remove companion step from onboarding (5 steps).  
+4. Align Season + Camp Dashboard plates on shared `CampaignDashboardCardShell` (same banner band, caption, header, bottom block).
+
+**Consequence:**  
+Camp no longer empty on trail+; menus stay compact; pets are intentional opt-in until gameplay exists; campaign cards read as one template.
+
+## 2026-08-10 — Cozy Art Fill Plan
+
+**Context:**  
+Cozy theme has male avatar anchors and SVG/CSS placeholders; Dashboard Season/Camp still use `CozyArtPlaceholder`. Need a generation order that matches UI holes, not a vague house-art wishlist.
+
+**Decision:**  
+Adopt phased batches **C1–C7** in [`13-art-backlog.md`](13-art-backlog.md): C1 Dashboard campaign parity → C2 female anchors → C3 Home scenes → C5 obstacles → C4 companions (after pets opt-in) → C6 journey → C7 decor. No Dark Fantasy fallback; no 20-file avatar production.
+
+**Consequence:**  
+Art work has a clear P0 (visible Dashboard) before deep Home zone sets.
+
 ## 2026-08-07 — 20 Body Stages / 5 Avatar Visual Anchors
 
 **Context:**  

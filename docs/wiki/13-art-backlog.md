@@ -235,7 +235,7 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 
 **Не часть Dark MVP P0/P1.** Отдельная тема (не замена Dark Fantasy): дом в деревне, ремонт, сад, двор. Те же core mechanics; другой progress fantasy.
 
-**Reserved Asset Registry path categories (TODO — no assets yet):**
+**Reserved Asset Registry path categories:**
 
 | Path prefix | Назначение |
 |-------------|------------|
@@ -248,15 +248,101 @@ public/game-assets/{folder}/{entity-type}-{index}-{semantic-name}.webp
 | `cozy/icons` | Small home/garden UI icons |
 | `cozy/ui` | Cozy shell backgrounds / textures |
 
-**Будущие ассеты (направление):**
+Runtime folders already exist under `public/game-assets/themes/cozy/` (avatars, companions, bosses, mobs, home, journey, ui) with SVG placeholders. **Never** fall back to Dark Fantasy files.
 
-| Будущие ассеты | Описание |
-|----------------|----------|
-| Home / stage previews | Стадии восстановления дома для Dashboard |
-| Exterior / interior / garden / yard unlocks | Visual rewards from reward conversion |
-| Companion spots in home/yard | Не только battle familiar |
-| Seasonal decor sets | Весна–зима, праздники |
-| Cozy UI shell art | Cream/honey/sage, paper/wood — still game-like |
+---
+
+## Cozy Art Fill Plan (2026-08-10)
+
+> Цель: заменить `CozyArtPlaceholder` / SVG на финальные webp **по слотам UI**, не генерируя «всё подряд».  
+> Канон: village home recovery; cream/honey/sage; soft daylight; no battle-first.  
+> Pipeline: prompt → generate → process webp → theme path → same-theme wire → bump `GAME_ASSET_VERSION`.  
+> Аватары: только **5 visual anchors** (`01/05/10/15/20`), не 20 файлов.
+
+### Уже есть (baseline)
+
+| Слот | Статус |
+|------|--------|
+| Cozy male avatar anchors `01/05/10/15/20` | **in-app / approved** |
+| Hero State overlays (SVG) | in-app |
+| SVG placeholders (avatars/companions/bosses/mobs/home/journey) | in-app fallback |
+| Cozy Botanical Print (CSS/SVG) | in-app decorative identity |
+| Cozy Content Pack v1 (copy) | in-app, без raster |
+| Female anchors / companions / home scenes / cozy campaign banners | **missing** → placeholder |
+
+### Принципы заполнения
+
+1. **Parity first:** закрывать те же UI-дыры, что DF уже закрыл (Dashboard Season/Camp banners, boss compact, empty states).
+2. **No DF recolor:** отдельные композиции под дом/сад/уют; entity IDs могут совпадать, картинки — нет.
+3. **Banner size lock:** Dashboard campaign plates используют общий `CampaignDashboardCardShell` + layout `reward-banner` / cozy `banner` — арт должен быть 16:9-friendly crop.
+4. **Pets later:** спутники — opt-in в Settings; арт питомцев не блокирует C1–C3.
+5. **Manifest:** не раздувать общий Dark `manifest.json` без schema для theme-scoped ids; сначала файлы в `themes/cozy/**`, wire через `themeAssetRegistry` / cozy resolvers.
+
+### Batch C1 — Dashboard campaign parity (P0)
+
+Заменяет пустые баннеры на Dashboard в Cozy (сейчас `CozyArtPlaceholder`).
+
+| id (working) | UI | Path (target) | Формат |
+|--------------|-----|---------------|--------|
+| `cozy-season-reward-01-hearth-spark` | `SeasonDashboardSummary` banner | `themes/cozy/artifacts/season-01-hearth-spark.webp` | reward-banner |
+| `cozy-home-stage-shelter` | `BaseDashboardSummary` banner (+ compact thumb) | `themes/cozy/home/exterior/stage-shelter.webp` | reward-banner |
+| `cozy-obstacle-01-empty-day` | season boss compact («Главная помеха») | `themes/cozy/bosses/season-obstacle-01-empty-day.webp` | boss-compact |
+
+**DoD:** обе плашки Кампании показывают webp одного размера; тексты остаются на общем shell.
+
+### Batch C2 — Avatar female anchors (P0)
+
+| id | Path | Notes |
+|----|------|-------|
+| Cozy female `01/05/10/15/20` | `themes/cozy/avatars/female/stage-{NN}.webp` | Character Bible female; same 5-anchor rule; `validate:avatars` → approved |
+
+### Batch C3 — Cozy Home scenes (P1)
+
+| id | UI | Path |
+|----|-----|------|
+| `cozy-home-hero-exterior` | `/home` hero / Dashboard home card | `themes/cozy/home/exterior/home-hero.webp` |
+| Zone keyframes (8 zones × selected levels) | `/home` zone cards | `themes/cozy/home/zones/{zone}-l{0\|3}.webp` start with L0+L3 only |
+| Garden / yard establishing | Home garden/yard panels | `themes/cozy/home/garden/…`, `yard/…` |
+
+Start with **hero exterior + 2–3 hero zones** (porch, kitchen, garden), not 8×4.
+
+### Batch C4 — Companions cozy set (P2, after opt-in UX)
+
+| id | Path |
+|----|------|
+| 4 companions cozy cutouts | `themes/cozy/companions/{id}.webp` |
+
+Only when pets toggle stays useful; otherwise keep SVG placeholder.
+
+### Batch C5 — Obstacles / weekly threats (P1–P2)
+
+Cozy illustrations for «помехи» (not DF boss clones): season obstacles S01–S05 first, then weekly set. Paths under `themes/cozy/bosses/` and `themes/cozy/mobs/`.
+
+### Batch C6 — Journey chapter vignettes (P2)
+
+`themes/cozy/journey/chapters/chapter-NN.webp` ×9 — warm village-road metaphor; chapter placeholder until then.
+
+### Batch C7 — Seasonal decor & UI polish (P3)
+
+`themes/cozy/ui/textures/`, `decor/seasonal/` — paper/wood accents beyond CSS botanical print.
+
+### Очередь генерации (рекомендуемый порядок)
+
+1. C1 Dashboard banners (максимальный видимый эффект)  
+2. C2 Female anchors  
+3. C3 Home hero + 2–3 zones  
+4. C5 Season obstacles S01–S03  
+5. C4 Companions (если питомцы включены пользователями)  
+6. C6 Journey  
+7. C7 Decor  
+
+### Prompt / QA notes
+
+- Style: summer village home, soft sun, linen/wood/sage; **not** dark fantasy rim light.  
+- Negative: horror, gore, sterile clinic, pure white UI mock, DF throne rooms.  
+- Crop for `reward-banner` fixed heights (`5.25 / 7.5 / 10 rem`).  
+- Checklist: extend [`docs/art/avatar-stage-qa-checklist.md`](../art/avatar-stage-qa-checklist.md) ideas to home/campaign (subject readable at mobile width).  
+- Prompt pack: create `docs/prompts/assets/COZY-BATCH-C1-queue.md` when starting generation (mirror Dark Batch 1/2).
 
 **Правило:** не смешивать с dark bosses, не делать simple recolor. Cat-avatar — optional backlog, не канон. См. [`07-decision-log.md`](07-decision-log.md), [`../brandbook/themes.md`](../brandbook/themes.md).
 

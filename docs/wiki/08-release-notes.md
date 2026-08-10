@@ -4,13 +4,22 @@
 
 ### Fixed
 
+- Dashboard camp summary empty on trail+ stages: later camp stages reuse shelter art; compact summary always shows banner art.
+- Optional menu items (e.g. Инерция) no longer render as grayed stubs when disabled — they are omitted from Dashboard strip/links and related chips.
+- Season + Camp campaign plates on Dashboard share one card shell (aligned banner height, captions, headers, bottom blocks).
 - Production “Failed to fetch” on register: diagnosed self-signed HTTPS cert (`UntrustedRoot`); API itself was healthy. Documented Let’s Encrypt requirement; PWA no longer NetworkFirst-caches `/api` (was able to mask TLS failures); clearer client network/SSL error text.
 
 ### Changed
 
+- **Companions / pets:** Settings → Дополнительные разделы → «Питомцы / спутники» (default off). Companion overlay/chips/selector hidden until enabled. Onboarding no longer asks for a companion (5 steps).
+- Cozy Home UI hidden outside Cozy theme (Dashboard card + `/home` redirect).
 - **20 Body Stages / 5 Avatar Visual Anchors:** Body Stage engine unchanged (1–20). Production art maps via `getAvatarVisualStage` to anchors `01/05/10/15/20` only. Manifest + `validate:avatars` expect five anchors per theme×gender; intermediate body files are not required. Nearest-stage is no longer the production path.
 - Cozy male avatar anchors **1 / 5 / 10 / 15 / 20** marked `approved` in `avatarAssetManifest` (files under `themes/cozy/avatars/male/`). Only five anchors are tracked; intermediate body files are out of production scope.
 - Dark Fantasy male visual anchors **1 / 5 / 10 / 15 / 20** installed under `themes/dark-fantasy/avatars/male/` (canonical theme path; legacy `heroes/` kept as same-theme fallback only). `GAME_ASSET_VERSION` 58.
+
+### Docs
+
+- **Cozy Art Fill Plan (C1–C7)** added to [`13-art-backlog.md`](13-art-backlog.md): Dashboard parity first, then female anchors, Home scenes, obstacles, companions, journey, decor.
 
 ### Added
 

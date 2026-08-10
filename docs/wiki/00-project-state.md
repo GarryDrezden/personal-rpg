@@ -1,6 +1,6 @@
 # Текущее состояние проекта
 
-> **Единый источник правды.** Обновлено: 2026-08-01 (Cozy theme branch layer).
+> **Единый источник правды.** Обновлено: 2026-08-10 (camp/UI gates + Cozy art fill plan).
 
 ## Краткое описание
 
@@ -76,8 +76,9 @@
 - **Freedom** (`/freedom`), **Momentum** (`/momentum`) — метрики устойчивости
 - **Progress map** (`/map`) — пути веса, шагов, трезвости и др.
 - **Reports** (`/reports`), **Insights** (`/insights`)
-- **Settings** (`/settings`), **FAQ** (`/faq`) — в Settings есть установка PWA на домашний экран; **Боковое меню** — opt-in видимость Летописи / Карты навыков / Инерции / Роста героя (отдельно для Cozy и Dark Fantasy)
+- **Settings** (`/settings`), **FAQ** (`/faq`) — в Settings есть установка PWA на домашний экран; **Боковое меню** — opt-in видимость Летописи / Карты навыков / Инерции / Роста героя / **Питомцев** (отдельно для Cozy и Dark Fantasy); выключенные пункты не показываются серыми заглушками
 - Sidebar resolver: `getSidebarNavigation({ themeId, settings })` — базовый shell всегда виден; advanced-пункты скрыты по умолчанию; маршруты не отключаются
+- Dashboard campaign plates (Сезон + Лагерь/Укрытие) — общий `CampaignDashboardCardShell` (одинаковые баннеры/выравнивание)
 
 ### Journey Map (актуальный UI — v3)
 
@@ -261,7 +262,7 @@ Cozy does **not** replace Dark Fantasy and is **not** a post-dark stage. Core fa
 
 ### Onboarding v1 — Пробуждение ядра ✅ (campaign launch)
 
-- Маршрут `/start`: 6 шагов — пробуждение → герой → мир → цель тела → ритм дня → спутник/старт
+- Маршрут `/start`: **5 шагов** — пробуждение → герой → мир → цель тела → ритм дня / старт (выбор спутника убран; питомцы — opt-in в Settings)
 - Доступные темы: Cozy / Dark Fantasy; Forest Myth и Athlete Return — «Скоро» (disabled)
 - Gate `OnboardingGate`: forced только для новых без профиля/progress; legacy + soft migration `onboardingCompleted`
 - Draft: settings backup + localStorage; theme preview применяется сразу
@@ -290,7 +291,7 @@ Asset Registry 2.0 готов: manifest, backlog, naming, placeholders зафи�
 
 ## Следующий приоритет
 
-Cozy Home v1 + reward feedback after Today save + Cozy theme branch layer shipped. Next cozy work: final house/garden illustrations replacing SVG placeholders. Full DF boss art set S01–S13 and season rewards already in-app. Optional: Dashboard declutter or chapter/act boss art (P2). HTTPS — when hosting cert is ready.
+**Cozy Art Fill Plan C1–C7** ([`13-art-backlog.md`](13-art-backlog.md)): сначала **C1** — webp для Dashboard Season/Camp вместо `CozyArtPlaceholder`; затем female avatar anchors; затем Home hero/zones. Питомцы — opt-in, арт спутников не блокирует C1–C3. DF campaign art S01–S13 уже in-app. HTTPS — when hosting cert is ready.
 
 См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
 

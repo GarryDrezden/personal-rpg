@@ -187,6 +187,7 @@
 - [x] **Cozy Home v1** — page `/home`, 8 zones L0–3, resources comfort/materials/garden/clarity, daily claim, Dashboard card, FAQ
 - [x] Cozy UI direction pass v1 — summer-home palette + surfaces (`cozy-theme.css`); `/home`, Dashboard warmth, theme-aware Летопись; not sterile white
 - [x] **Cozy theme branch layer** — theme-aware asset registry, cozy placeholders, terminology («Главная помеха» / «Помеха дня»), no DF art fallback in Cozy
+- [ ] **Cozy Art Fill Plan** — batches C1–C7 in [`13-art-backlog.md`](13-art-backlog.md) (C1 Dashboard banners first)
 - [ ] Cozy UI polish v2 — final house/garden scene art; replace SVG placeholders with finished illustrations
 - [ ] Cozy Dashboard concept deepen (home preview art, companion in home)
 - [ ] Cozy Progression unlock catalog expand (seasonal decor, more rooms)
@@ -195,7 +196,7 @@
 - [ ] Optional later: wire some unlocks also to XP/coins/achievements framing (keep Cozy Home resources)
 - [ ] Cozy house / yard / garden progression scenes (art)
 - [ ] Cozy copy overlay (season flavor, supportive home metaphors)
-- [ ] Align Camp/Base visuals with home restoration
+- [ ] Align Camp/Base visuals with home restoration (C1 camp banner + later home-stage set)
 - [ ] Expand beyond UI shell: Settings `themeId: cozy` already exists; deepen content catalog
 - [ ] Optional later: alternate avatar experiments (see ideas backlog) — **not** required for Cozy canon
 
