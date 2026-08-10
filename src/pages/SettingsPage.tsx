@@ -36,6 +36,7 @@ import { CompanionSelector } from '../components/game/CompanionSelector';
 import { PwaInstallCard } from '../components/pwa/PwaInstallCard';
 import { setActiveCompanionId } from '../game/gameAssetStorage';
 import type { CompanionId, HeroGender, TransformationMode } from '../types/gameAssets';
+import { isSidebarOptionalVisible } from '../utils/sidebarVisibility';
 
 export function SettingsPage() {
   const { settings, measurements, saveSettings } = useAppStore();
@@ -43,6 +44,7 @@ export function SettingsPage() {
   const { status: themeSaveStatus, message: themeSaveMessage, showSaving: showThemeSaving, showSaved: showThemeSaved, showError: showThemeError } =
     useAutosaveStatus();
   const sleepTrackingEnabled = settings.enableSleepTracking ?? false;
+  const companionsEnabled = isSidebarOptionalVisible(settings, themeId, 'companions');
   const [local, setLocal] = useState(settings);
   const [saving, setSaving] = useState(false);
 
@@ -329,14 +331,24 @@ export function SettingsPage() {
 
           <div>
             <p className="mb-2 text-sm font-medium text-[var(--app-text)]">Активный спутник</p>
-            <CompanionSelector
-              value={local.activeCompanionId ?? 'golden_chinchilla_cat'}
-              onChange={(id: CompanionId) => {
-                setActiveCompanionId(id);
-                setLocal({ ...local, activeCompanionId: id });
-              }}
-              compact
-            />
+            {companionsEnabled ? (
+              <CompanionSelector
+                value={local.activeCompanionId ?? 'golden_chinchilla_cat'}
+                onChange={(id: CompanionId) => {
+                  setActiveCompanionId(id);
+                  setLocal({ ...local, activeCompanionId: id });
+                }}
+                compact
+              />
+            ) : (
+              <p className="text-sm text-[var(--app-text-muted)]">
+                Питомцы выключены.{' '}
+                <Link to="/settings#settings-sidebar" className="text-[var(--app-primary)] hover:underline">
+                  Включить в «Дополнительные разделы»
+                </Link>
+                . Игровые функции спутников пока не подключены.
+              </p>
+            )}
           </div>
         </div>
       </Card>

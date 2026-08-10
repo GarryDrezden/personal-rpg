@@ -5,6 +5,7 @@ import { getCompanionMeta, getHeroStageMeta } from '../../game/assetRegistry';
 import { GameAssetImage } from '../game/GameAssetImage';
 import { HeroCompanionOverlay } from '../game/HeroCompanionOverlay';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import { useCompanionsVisible } from '../../hooks/useCompanionsVisible';
 import { useHeroStageAssets } from '../../hooks/useHeroStageAssets';
 
 type HeroVisualAreaProps = {
@@ -26,6 +27,7 @@ export function HeroVisualArea({
   layout = 'wide',
 }: HeroVisualAreaProps) {
   const { isDarkFantasy } = useAppTheme();
+  const companionsVisible = useCompanionsVisible();
   const stageMeta = getHeroStageMeta(gender, stage);
   const heroAssets = useHeroStageAssets(gender, stage);
   const companionMeta = getCompanionMeta(companionId);
@@ -81,7 +83,7 @@ export function HeroVisualArea({
               <HeroCompanionOverlay companionId={companionId} side="left" />
             </div>
           </div>
-          {companionChip}
+          {companionsVisible ? companionChip : null}
         </div>
 
         <div className="pointer-events-none absolute inset-x-3 bottom-2 h-px bg-[color-mix(in_srgb,var(--app-primary)_40%,transparent)]" />
@@ -118,7 +120,7 @@ export function HeroVisualArea({
             />
             <HeroCompanionOverlay companionId={companionId} side="left" />
           </div>
-          {companionChip}
+          {companionsVisible ? companionChip : null}
         </div>
 
         {aside ? (

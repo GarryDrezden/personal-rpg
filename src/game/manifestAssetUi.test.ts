@@ -11,10 +11,11 @@ import {
 } from './manifestAssetUi';
 
 describe('manifestAssetUi', () => {
-  it('maps camp stages to batch 1 asset ids', () => {
+  it('maps camp stages to batch 1 asset ids (later stages fall back to shelter art)', () => {
     expect(getBaseStageManifestAssetId('ember')).toBe('camp-base-stage-01-ember-camp');
     expect(getBaseStageManifestAssetId('shelter')).toBe('camp-base-stage-02-shelter');
-    expect(getBaseStageManifestAssetId('trail')).toBeUndefined();
+    expect(getBaseStageManifestAssetId('trail')).toBe('camp-base-stage-02-shelter');
+    expect(getBaseStageManifestAssetId('workshop')).toBe('camp-base-stage-02-shelter');
   });
 
   it('maps season reward and bosses', () => {

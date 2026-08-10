@@ -20,6 +20,12 @@ export const SEASON_BOSS_OLD_YEAR_SHADOW_ASSET_ID = 'season-boss-13-old-year-sha
 const BASE_STAGE_ASSET_IDS: Record<string, string> = {
   ember: 'camp-base-stage-01-ember-camp',
   shelter: 'camp-base-stage-02-shelter',
+  // Later stages reuse shelter art until dedicated plates ship.
+  trail: 'camp-base-stage-02-shelter',
+  workshop: 'camp-base-stage-02-shelter',
+  clarity: 'camp-base-stage-02-shelter',
+  hearth: 'camp-base-stage-02-shelter',
+  fortress: 'camp-base-stage-02-shelter',
 };
 
 const SEASON_REWARD_ASSET_IDS: Record<number, string> = {
@@ -70,7 +76,7 @@ const LEGACY_CODEX_BOSS_MANIFEST_MAP: Record<string, string> = {
 const OBJECT_POSITION: Record<string, string> = {
   'onboarding-core-awakening': 'center 38%',
   'camp-base-stage-01-ember-camp': 'center 58%',
-  'camp-base-stage-02-trail-shelter': 'center 48%',
+  'camp-base-stage-02-shelter': 'center 48%',
   'season-01-reward-core-spark': 'center',
   'season-02-reward-trail-mark': 'center',
   'season-03-reward-base-stone': 'center',

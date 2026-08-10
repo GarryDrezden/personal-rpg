@@ -19,6 +19,7 @@ import { Badge } from '../ui/Badge';
 import { HeroMilestoneTrack } from './HeroMilestoneTrack';
 import { DashboardPathEmptyState } from './DashboardPathEmptyState';
 import { DashboardHeroAvatar } from './DashboardHeroAvatar';
+import { useCompanionsVisible } from '../../hooks/useCompanionsVisible';
 
 type HeroScenePanelProps = {
   level: number;
@@ -38,6 +39,7 @@ export function HeroScenePanel({
   const { themeId, isDarkFantasy, isCozy } = useAppTheme();
   const game = useGameHeroState();
   const { measurements, settings } = useAppStore();
+  const companionsVisible = useCompanionsVisible();
   const pathSetup = getPathSetupState(measurements, settings, themeId);
   const chapter = getChapterMeta(game.chapter);
   const stageMeta = getHeroStageMeta(game.profile.heroGender, game.stage);
@@ -204,14 +206,15 @@ export function HeroScenePanel({
             alt={stageMeta.title}
           />
 
-          <div
-            data-testid="hero-scene-companion"
-            className={`absolute bottom-3 right-2 z-30 max-w-[7.5rem] rounded-lg border px-2 py-1.5 backdrop-blur-sm sm:bottom-4 sm:right-3 ${
-              isCozy
-                ? 'border-[var(--app-border)] bg-[var(--app-card-strong)]/92'
-                : 'border-amber-400/35 bg-black/50'
-            }`}
-          >
+          {companionsVisible ? (
+            <div
+              data-testid="hero-scene-companion"
+              className={`absolute bottom-3 right-2 z-30 max-w-[7.5rem] rounded-lg border px-2 py-1.5 backdrop-blur-sm sm:bottom-4 sm:right-3 ${
+                isCozy
+                  ? 'border-[var(--app-border)] bg-[var(--app-card-strong)]/92'
+                  : 'border-amber-400/35 bg-black/50'
+              }`}
+            >
               <p
                 className={`text-[10px] font-semibold uppercase tracking-wide ${
                   isCozy ? 'text-[var(--app-garden)]' : 'text-amber-200/90'
@@ -237,6 +240,7 @@ export function HeroScenePanel({
                 {getThemeTerm(themeId, 'quest')} →
               </Link>
             </div>
+          ) : null}
         </div>
 
         {/* Boss + Mob — правая колонка (≤ половины ширины) */}

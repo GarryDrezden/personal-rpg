@@ -6,6 +6,7 @@ import { HeroCompanionOverlay } from '../game/HeroCompanionOverlay';
 import { DailyMobBadge } from '../game/DailyMobBadge';
 import { ChapterBossBadge } from '../game/ChapterBossBadge';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import { useCompanionsVisible } from '../../hooks/useCompanionsVisible';
 import { useHeroStageAssets } from '../../hooks/useHeroStageAssets';
 
 type DashboardSceneProps = {
@@ -30,6 +31,7 @@ export function DashboardScene({
   bossStatus,
 }: DashboardSceneProps) {
   const { isDarkFantasy } = useAppTheme();
+  const companionsVisible = useCompanionsVisible();
   const stageMeta = getHeroStageMeta(gender, stage);
   const heroAssets = useHeroStageAssets(gender, stage);
   const companionMeta = getCompanionMeta(companionId);
@@ -78,17 +80,19 @@ export function DashboardScene({
               />
               <HeroCompanionOverlay companionId={companionId} side="left" />
             </div>
-            <div
-              data-testid="active-companion-label"
-              className="absolute bottom-2 right-2 z-30 rounded-md border border-amber-400/35 bg-black/55 px-1.5 py-1 text-center backdrop-blur-sm"
-            >
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-amber-200/90">
-                Спутник
-              </p>
-              <p className="max-w-[5.5rem] truncate text-[11px] font-semibold leading-snug text-[var(--app-text)]">
-                {companionMeta.title}
-              </p>
-            </div>
+            {companionsVisible ? (
+              <div
+                data-testid="active-companion-label"
+                className="absolute bottom-2 right-2 z-30 rounded-md border border-amber-400/35 bg-black/55 px-1.5 py-1 text-center backdrop-blur-sm"
+              >
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-amber-200/90">
+                  Спутник
+                </p>
+                <p className="max-w-[5.5rem] truncate text-[11px] font-semibold leading-snug text-[var(--app-text)]">
+                  {companionMeta.title}
+                </p>
+              </div>
+            ) : null}
           </div>
         </div>
 

@@ -1,20 +1,40 @@
 import { Link } from 'react-router-dom';
 import { getThemeTerm } from '../../constants/themeTerms';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import { useAppStore } from '../../store/appStore';
+import { isSidebarOptionalVisible } from '../../utils/sidebarVisibility';
+import type { SidebarVisibilityKey } from '../../types/sidebar';
 import { Card } from '../ui/Card';
+
+type DashLink = {
+  to: string;
+  label: string;
+  visibilityKey?: SidebarVisibilityKey;
+};
 
 export function DashboardLinks() {
   const { themeId, isCozy } = useAppTheme();
-  const links = [
+  const settings = useAppStore((s) => s.settings);
+
+  const links: DashLink[] = [
     { to: '/today', label: isCozy ? 'Задачи дня' : 'Квесты дня' },
     { to: '/codex', label: getThemeTerm(themeId, 'codex') },
     { to: '/journey', label: 'Путь' },
-    { to: '/momentum', label: 'Инерция' },
+    { to: '/momentum', label: 'Инерция', visibilityKey: 'momentum' },
     { to: '/freedom', label: 'Свобода' },
     { to: '/week', label: 'Неделя' },
     { to: '/measurements', label: 'Замеры' },
     { to: '/achievements', label: 'Достижения' },
-  ] as const;
+    { to: '/map', label: 'Карта навыков', visibilityKey: 'skillMap' },
+    { to: '/seasons', label: getThemeTerm(themeId, 'chronicle'), visibilityKey: 'chronicle' },
+    { to: '/growth', label: 'Рост героя', visibilityKey: 'heroGrowth' },
+  ];
+
+  const visible = links.filter(
+    (link) =>
+      !link.visibilityKey ||
+      isSidebarOptionalVisible(settings, themeId, link.visibilityKey),
+  );
 
   return (
     <Card className="p-4">
@@ -22,7 +42,7 @@ export function DashboardLinks() {
         Разделы
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
-        {links.map((link) => (
+        {visible.map((link) => (
           <Link
             key={link.to}
             to={link.to}

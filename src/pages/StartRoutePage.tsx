@@ -29,7 +29,6 @@ import { OnboardingStepHero } from '../components/onboarding/OnboardingStepHero'
 import { OnboardingStepTheme } from '../components/onboarding/OnboardingStepTheme';
 import { OnboardingStepBodyGoal } from '../components/onboarding/OnboardingStepBodyGoal';
 import { OnboardingStepDailyRhythm } from '../components/onboarding/OnboardingStepDailyRhythm';
-import { OnboardingStepCompanion } from '../components/onboarding/OnboardingStepCompanion';
 
 function draftFromSettings(
   settings: ReturnType<typeof useAppStore.getState>['settings'],
@@ -279,13 +278,6 @@ export function StartRoutePage() {
       {step === 3 ? <OnboardingStepBodyGoal draft={draft} onChange={updateDraft} /> : null}
       {step === 4 ? (
         <OnboardingStepDailyRhythm draft={draft} onChange={updateDraft} />
-      ) : null}
-      {step === 5 ? (
-        <OnboardingStepCompanion
-          draft={draft}
-          onChange={updateDraft}
-          themeId={themeId}
-        />
       ) : null}
     </OnboardingShell>
   );

@@ -29,8 +29,8 @@ export function SidebarVisibilitySettingsCard() {
       </p>
       <h2 className="mt-1 font-semibold text-[var(--app-text)]">Дополнительные разделы</h2>
       <p className="mt-2 text-sm text-[var(--app-text-muted)]">
-        Выбери разделы, которые хочешь видеть в боковом меню. Скрытые страницы не удаляются — их
-        можно снова включить в любой момент.
+        Выбери разделы и элементы интерфейса, которые хочешь видеть. Скрытые страницы не
+        удаляются — их можно снова включить в любой момент.
       </p>
       <p className="mt-2 text-sm font-medium text-[var(--app-text)]" data-testid="sidebar-theme-label">
         Настройки для темы: {themeLabel}

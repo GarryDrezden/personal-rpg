@@ -3,6 +3,7 @@ import { getCompanionImageCandidates } from '../../game/assetPaths';
 import { getCompanionMeta } from '../../game/assetRegistry';
 import { getCompanionPresentation } from '../../game/themeEntityPresentation';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import { useCompanionsVisible } from '../../hooks/useCompanionsVisible';
 import { GameAssetImage } from './GameAssetImage';
 
 /**
@@ -34,15 +35,17 @@ export function HeroCompanionOverlay({
   className = '',
   showLabel = false,
 }: HeroCompanionOverlayProps) {
+  const companionsVisible = useCompanionsVisible();
   const { themeId, isCozy } = useAppTheme();
   const meta = getCompanionMeta(companionId);
   const presentation = getCompanionPresentation(themeId, companionId, meta);
   const candidates = getCompanionImageCandidates(companionId, themeId);
-  // Push fully outside the legs; slight bottom inset so paws sit on the same ground plane
   const sideClass =
     side === 'left'
       ? 'left-0 -translate-x-[105%] sm:-translate-x-[110%]'
       : 'right-0 translate-x-[105%] sm:translate-x-[110%]';
+
+  if (!companionsVisible) return null;
 
   return (
     <div

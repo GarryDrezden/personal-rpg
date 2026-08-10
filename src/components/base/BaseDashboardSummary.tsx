@@ -22,7 +22,7 @@ export function BaseDashboardSummary({ snapshot, compact = false }: BaseDashboar
       data-testid="base-dashboard-summary"
       className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)]/80 px-4 py-3"
     >
-      {stageArtId && !compact ? (
+      {stageArtId ? (
         isCozy ? (
           <CozyArtPlaceholder
             label={currentStage.title}
@@ -34,7 +34,7 @@ export function BaseDashboardSummary({ snapshot, compact = false }: BaseDashboar
           <ManifestArtScene
             assetId={stageArtId}
             alt={currentStage.title}
-            compact
+            layout={compact ? 'reward-banner' : 'hero'}
             className="mb-3"
             testId="base-dashboard-art"
           />

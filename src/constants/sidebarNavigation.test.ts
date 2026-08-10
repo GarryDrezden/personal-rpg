@@ -54,12 +54,14 @@ describe('sidebar visibility normalize', () => {
         skillMap: false,
         momentum: false,
         heroGrowth: false,
+        companions: false,
       },
       darkFantasy: {
         chronicle: false,
         skillMap: false,
         momentum: false,
         heroGrowth: false,
+        companions: false,
       },
     });
     expect(normalizeThemeSidebarSettings(undefined)).toEqual(normalized.sidebarVisibility);

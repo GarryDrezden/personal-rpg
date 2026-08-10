@@ -3,7 +3,7 @@ import type { AppSettings } from '../types';
 import type { OnboardingDraft, RouteMode } from '../types/onboarding';
 import { DEFAULT_APP_SETTINGS } from '../constants/defaults';
 
-export const ONBOARDING_STEP_COUNT = 6;
+export const ONBOARDING_STEP_COUNT = 5;
 
 export function isOnboardingCompleted(settings: AppSettings): boolean {
   return settings.onboardingCompleted === true;

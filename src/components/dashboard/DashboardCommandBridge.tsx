@@ -28,6 +28,7 @@ import { DashboardResourceCompact } from '../rest/DashboardResourceCompact';
 import { MovementCreditDashboardCard } from './MovementCreditDashboardCard';
 import { RecoveryCompactPanel } from './RecoveryCompactPanel';
 import { DashboardHeroAvatar } from './DashboardHeroAvatar';
+import { useCompanionsVisible } from '../../hooks/useCompanionsVisible';
 
 type DashboardCommandBridgeProps = {
   level: number;
@@ -123,6 +124,7 @@ export function DashboardCommandBridge({
   const { themeId, isDarkFantasy, isCozy } = useAppTheme();
   const game = useGameHeroState();
   const { measurements, settings, dailyEntries } = useAppStore();
+  const companionsVisible = useCompanionsVisible();
   const pathSetup = getPathSetupState(measurements, settings, themeId);
   const chapter = getChapterMeta(game.chapter);
   const stageMeta = getHeroStageMeta(game.profile.heroGender, game.stage);
@@ -270,7 +272,9 @@ export function DashboardCommandBridge({
           </div>
 
           <div className="absolute right-2 top-2 z-20">
-            <CompanionStatusChip companionId={game.profile.activeCompanionId} />
+            {companionsVisible ? (
+              <CompanionStatusChip companionId={game.profile.activeCompanionId} />
+            ) : null}
           </div>
 
           <DashboardHeroAvatar

@@ -7,6 +7,8 @@ import type { BossCampaignSnapshot } from '../../game/bosses/bossTypes';
 import { getThemeTerm } from '../../constants/themeTerms';
 import { shouldShowPlateauDashboardSummary } from '../../utils/campaignIntegration';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import { useAppStore } from '../../store/appStore';
+import { isSidebarOptionalVisible } from '../../utils/sidebarVisibility';
 import { SeasonDashboardSummary } from '../season/SeasonDashboardSummary';
 import { BodyAbilityPersonalDashboardCard } from '../bodyAbilities/BodyAbilityPersonalDashboardCard';
 import { PlateauDashboardSummary } from '../plateau/PlateauDashboardSummary';
@@ -30,7 +32,9 @@ export function CampaignProgressDashboardSection({
   onTogglePlateauManual,
 }: CampaignProgressDashboardSectionProps) {
   const { themeId, isCozy } = useAppTheme();
+  const settings = useAppStore((s) => s.settings);
   const showPlateau = shouldShowPlateauDashboardSummary(plateauSnapshot.mode);
+  const showChronicle = isSidebarOptionalVisible(settings, themeId, 'chronicle');
 
   return (
     <section data-testid="campaign-progress-dashboard" className="space-y-2">
@@ -39,9 +43,11 @@ export function CampaignProgressDashboardSection({
           {getThemeTerm(themeId, 'campaign')}
         </h2>
         <div className="flex flex-wrap gap-3 text-xs">
-          <Link to="/seasons" className="font-medium text-[var(--app-primary)] hover:underline">
-            {getThemeTerm(themeId, 'chronicle')}
-          </Link>
+          {showChronicle ? (
+            <Link to="/seasons" className="font-medium text-[var(--app-primary)] hover:underline">
+              {getThemeTerm(themeId, 'chronicle')}
+            </Link>
+          ) : null}
           <Link to="/freedom" className="font-medium text-[var(--app-primary)] hover:underline">
             Свобода тела
           </Link>

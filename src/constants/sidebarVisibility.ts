@@ -10,6 +10,7 @@ export const SIDEBAR_VISIBILITY_KEYS: SidebarVisibilityKey[] = [
   'skillMap',
   'momentum',
   'heroGrowth',
+  'companions',
 ];
 
 export const DEFAULT_SIDEBAR_VISIBILITY: SidebarVisibilitySettings = {
@@ -17,6 +18,7 @@ export const DEFAULT_SIDEBAR_VISIBILITY: SidebarVisibilitySettings = {
   skillMap: false,
   momentum: false,
   heroGrowth: false,
+  companions: false,
 };
 
 export const DEFAULT_THEME_SIDEBAR_SETTINGS: ThemeSidebarSettings = {
@@ -51,6 +53,12 @@ export const SIDEBAR_OPTIONAL_META: SidebarOptionalMeta[] = [
     key: 'heroGrowth',
     title: 'Рост героя',
     description: 'Дополнительный экран долгосрочного прогресса.',
+  },
+  {
+    key: 'companions',
+    title: 'Питомцы / спутники',
+    description:
+      'Показывать спутника на экранах героя. Игровые функции питомцев пока не подключены — это только визуальная опция.',
   },
 ];
 

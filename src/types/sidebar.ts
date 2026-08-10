@@ -5,7 +5,8 @@ export type SidebarVisibilityKey =
   | 'chronicle'
   | 'skillMap'
   | 'momentum'
-  | 'heroGrowth';
+  | 'heroGrowth'
+  | 'companions';
 
 export type SidebarVisibilitySettings = Record<SidebarVisibilityKey, boolean>;
 

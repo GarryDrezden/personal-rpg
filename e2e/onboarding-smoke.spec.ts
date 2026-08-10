@@ -15,7 +15,7 @@ test.describe('Onboarding v1 smoke', () => {
 
     await page.goto('/');
     await expect(page.getByTestId('start-route-page')).toBeVisible({ timeout: 15_000 });
-    await expect(page.getByText('Шаг 1 из 6')).toBeVisible();
+    await expect(page.getByText('Шаг 1 из 5')).toBeVisible();
 
     await page.getByTestId('onboarding-next').click();
     await expect(page.getByTestId('onboarding-step-hero')).toBeVisible();
@@ -43,10 +43,6 @@ test.describe('Onboarding v1 smoke', () => {
     await expect(page.getByTestId('onboarding-steps-min')).toHaveValue('7000');
     await expect(page.getByTestId('onboarding-steps-normal')).toHaveValue('11500');
     await expect(page.getByTestId('onboarding-steps-excellent')).toHaveValue('14000');
-    await page.getByTestId('onboarding-next').click();
-
-    await expect(page.getByTestId('onboarding-step-companion')).toBeVisible();
-    await page.getByTestId('companion-alabai').click();
     await page.getByTestId('onboarding-finish').click();
 
     await expect(page).toHaveURL(/\/today/, { timeout: 15_000 });
