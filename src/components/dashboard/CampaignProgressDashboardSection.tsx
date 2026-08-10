@@ -59,7 +59,7 @@ export function CampaignProgressDashboardSection({
           </Link>
         </div>
       </div>
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="grid items-stretch gap-2 sm:grid-cols-2">
         <SeasonDashboardSummary season={season} compact boss={bossSnapshot} />
         <BaseDashboardSummary snapshot={baseSnapshot} compact />
         <BodyAbilityPersonalDashboardCard />

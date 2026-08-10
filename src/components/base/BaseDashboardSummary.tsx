@@ -3,6 +3,10 @@ import type { BaseProgressionSnapshot } from '../../types/baseV1';
 import { getThemeTerm } from '../../constants/themeTerms';
 import { getBaseStageManifestAssetId } from '../../game/manifestAssetUi';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import {
+  CampaignDashboardCardHeader,
+  CampaignDashboardCardShell,
+} from '../campaign/CampaignDashboardCardShell';
 import { ManifestArtScene } from '../game/ManifestArtScene';
 import { CozyArtPlaceholder } from '../game/CozyArtPlaceholder';
 import { ProgressBar } from '../ui/ProgressBar';
@@ -16,70 +20,118 @@ export function BaseDashboardSummary({ snapshot, compact = false }: BaseDashboar
   const { themeId, isCozy } = useAppTheme();
   const { currentStage, nextStage, progressPercent, flavorText } = snapshot;
   const stageArtId = getBaseStageManifestAssetId(currentStage.id);
+  const nextStageArtId = nextStage ? getBaseStageManifestAssetId(nextStage.id) : undefined;
+  const focusStage = nextStage ?? currentStage;
+  const focusArtId = nextStageArtId ?? stageArtId;
+
+  const routeLine = compact
+    ? `${isCozy ? 'День' : 'Маршрут'}: ${snapshot.recentContributors.slice(0, 2).join(', ')}.`
+    : `${isCozy ? 'Ритм укрепился' : 'Маршрут укрепился'}: ${snapshot.recentContributors.join(', ')}.`;
+
+  const art = stageArtId ? (
+    isCozy ? (
+      <CozyArtPlaceholder
+        label={currentStage.title}
+        layout="banner"
+        testId="base-dashboard-art"
+        className="rounded-none border-0"
+      />
+    ) : (
+      <ManifestArtScene
+        assetId={stageArtId}
+        alt={currentStage.title}
+        layout="reward-banner"
+        testId="base-dashboard-art"
+        className="rounded-none border-0 shadow-none"
+      />
+    )
+  ) : (
+    <div
+      className="flex h-[5.25rem] w-full items-center justify-center bg-[var(--app-bg-soft)] sm:h-[7.5rem] md:h-[10rem]"
+      data-testid="base-dashboard-art"
+      aria-hidden
+    />
+  );
 
   return (
-    <section
-      data-testid="base-dashboard-summary"
-      className="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)]/80 px-4 py-3"
+    <CampaignDashboardCardShell
+      testId="base-dashboard-summary"
+      art={art}
+      artCaption={currentStage.shortTitle || currentStage.title}
     >
-      {stageArtId ? (
-        isCozy ? (
-          <CozyArtPlaceholder
-            label={currentStage.title}
-            layout="banner"
-            className="mb-3"
-            testId="base-dashboard-art"
-          />
-        ) : (
-          <ManifestArtScene
-            assetId={stageArtId}
-            alt={currentStage.title}
-            layout={compact ? 'reward-banner' : 'hero'}
-            className="mb-3"
-            testId="base-dashboard-art"
-          />
-        )
-      ) : null}
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-gold)]">
-            {getThemeTerm(themeId, 'camp')}
-          </p>
-          <p className="mt-1 flex items-center gap-2 text-sm font-medium text-[var(--app-text)]">
+      <CampaignDashboardCardHeader
+        eyebrow={getThemeTerm(themeId, 'camp')}
+        title={
+          <span className="inline-flex max-w-full items-center gap-2">
             <span aria-hidden>{currentStage.icon}</span>
             <span className="truncate">{currentStage.title}</span>
-          </p>
-        </div>
-        {nextStage ? (
-          <span className="text-xs text-[var(--app-text-muted)]">
-            {progressPercent}% до «{nextStage.shortTitle}»
           </span>
-        ) : (
-          <span className="text-xs text-[var(--app-gold)]">Максимальная стадия</span>
-        )}
+        }
+        meta={
+          nextStage
+            ? `${progressPercent}% до «${nextStage.shortTitle}»`
+            : 'Максимальная стадия'
+        }
+      />
+
+      <p className="mt-1 text-xs text-[var(--app-text-muted)] line-clamp-2">{routeLine}</p>
+
+      <div className="mt-2">
+        <ProgressBar value={nextStage ? progressPercent : 100} max={100} />
+        <p className="mt-1 text-xs text-[var(--app-text-muted)]">
+          {nextStage
+            ? `Стадия ${currentStage.level} → ${nextStage.level}`
+            : `Стадия ${currentStage.level} · максимум`}
+        </p>
       </div>
 
-      {nextStage ? (
-        <div className="mt-2">
-          <ProgressBar value={progressPercent} max={100} />
-        </div>
-      ) : null}
-
-      <p className="mt-2 text-xs text-[var(--app-text-muted)] line-clamp-2">
-        {compact
-          ? `${isCozy ? 'День' : 'Маршрут'}: ${snapshot.recentContributors.slice(0, 2).join(', ')}.`
-          : `${isCozy ? 'Ритм укрепился' : 'Маршрут укрепился'}: ${snapshot.recentContributors.join(', ')}.`}
-      </p>
       {!compact ? (
-        <p className="mt-1 text-xs text-[var(--app-text-muted)] line-clamp-2">{flavorText}</p>
+        <p className="mt-2 text-xs text-[var(--app-text-muted)] line-clamp-2">{flavorText}</p>
       ) : null}
 
-      <Link
-        to="/growth/camp"
-        className="mt-2 inline-block text-xs font-semibold text-[var(--app-primary)] hover:underline"
+      <div
+        className="mt-auto border-t border-[var(--app-border)]/60 pt-2"
+        data-testid="dashboard-camp-stage-summary"
       >
-        {compact ? getThemeTerm(themeId, 'campStages') : `Все ${getThemeTerm(themeId, 'campStages').toLowerCase()}`}
-      </Link>
-    </section>
+        <div className="flex items-start gap-3">
+          {isCozy ? (
+            <CozyArtPlaceholder
+              label={focusStage.title}
+              layout="compact"
+              testId="base-next-stage-art"
+            />
+          ) : focusArtId ? (
+            <ManifestArtScene
+              assetId={focusArtId}
+              alt={focusStage.title}
+              layout="boss-compact"
+              testId="base-next-stage-art"
+              dimmed={Boolean(nextStage)}
+            />
+          ) : (
+            <span aria-hidden className="shrink-0 text-base">
+              {focusStage.icon}
+            </span>
+          )}
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-medium text-[var(--app-text)]">{focusStage.title}</p>
+            <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">
+              {nextStage ? 'Следующая стадия лагеря' : 'Текущая стадия лагеря'}
+            </p>
+            {nextStage ? (
+              <div className="mt-1.5">
+                <ProgressBar value={progressPercent} max={100} />
+              </div>
+            ) : null}
+            <Link
+              to="/growth/camp"
+              className="mt-1 inline-block text-xs font-semibold text-[var(--app-primary)] hover:underline"
+            >
+              {getThemeTerm(themeId, 'campStages')}
+            </Link>
+          </div>
+        </div>
+      </div>
+    </CampaignDashboardCardShell>
   );
 }
