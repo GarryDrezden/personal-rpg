@@ -11,6 +11,8 @@ import {
   getCozyHomeState,
 } from '../../utils/cozyHomeEngine';
 import { useAppTheme } from '../../hooks/useAppTheme';
+import { getCozyHomeHeroPath } from '../../game/cozyHomeArt';
+import { GameAssetImage } from '../game/GameAssetImage';
 import { CozyBotanicalFrame } from './CozyBotanicalFrame';
 
 type CozyHomeDashboardCardProps = {
@@ -22,6 +24,7 @@ export function CozyHomeDashboardCard({ settings }: CozyHomeDashboardCardProps) 
   const home = useMemo(() => getCozyHomeState(settings), [settings]);
   const progress = useMemo(() => getCozyHomeProgress(home), [home]);
   const affordable = useMemo(() => findAffordableUpgrade(home), [home]);
+  const heroSrc = getCozyHomeHeroPath();
 
   const resourceHint = useMemo(() => {
     const parts = (
@@ -41,6 +44,16 @@ export function CozyHomeDashboardCard({ settings }: CozyHomeDashboardCardProps) 
       testId="cozy-dash-home-frame"
     >
       <section data-testid="cozy-home-dashboard-card" className="cozy-dash-home">
+        <div className="relative mb-3 h-24 w-full overflow-hidden rounded-xl border border-[var(--app-border)]">
+          <GameAssetImage
+            src={heroSrc}
+            alt="Дом героя"
+            variant="artifact"
+            status="unlocked"
+            className="absolute inset-0"
+            imageClassName="h-full w-full object-cover object-[center_60%]"
+          />
+        </div>
         <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-garden)]">
           Дом становится теплее
         </p>
