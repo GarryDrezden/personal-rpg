@@ -1,6 +1,6 @@
 import { cozyThemeAsset } from './themeAssetRegistry';
 
-/** Cozy Campaign Batch C1 — Dashboard parity art (theme-scoped, never DF). */
+/** Cozy Campaign art — Dashboard parity + household obstacle cutouts. */
 
 export function getCozySeasonRewardPath(seasonIndex: number): string | null {
   if (seasonIndex === 1) {
@@ -14,9 +14,13 @@ export function getCozyCampRoomPath(): string {
   return cozyThemeAsset('home/interior/room-stage-01.webp');
 }
 
+const SEASON_OBSTACLE: Record<number, string> = {
+  1: 'bosses/season-obstacle-01-empty-day.webp',
+  2: 'bosses/season-obstacle-02-laundry-blob.webp',
+  3: 'bosses/season-obstacle-03-crumb-chaos.webp',
+};
+
 export function getCozySeasonObstaclePath(seasonIndex: number): string | null {
-  if (seasonIndex === 1) {
-    return cozyThemeAsset('bosses/season-obstacle-01-empty-day.webp');
-  }
-  return null;
+  const rel = SEASON_OBSTACLE[seasonIndex];
+  return rel ? cozyThemeAsset(rel) : null;
 }

@@ -304,9 +304,10 @@ Runtime folders already exist under `public/game-assets/themes/cozy/` (avatars, 
 | `cozy-zone-porch` | zone card | `themes/cozy/home/zones/porch.webp` | **in-app** |
 | `cozy-zone-kitchen` | zone card | `themes/cozy/home/zones/kitchen.webp` | **in-app** |
 | `cozy-zone-garden` | zone card | `themes/cozy/home/zones/garden.webp` | **in-app** |
-| Remaining zones / L0–L3 pairs | `/home` | `themes/cozy/home/zones/{zone}.webp` | pending |
+| Remaining zones / L0–L3 pairs | `/home` | level variants | pending (base plates for all 8 zones in-app) |
 
-Start done: **hero exterior + porch / kitchen / garden**. Next: hallway, bedroom, yard, workshop, pet_corner + level variants.
+**All 8 zone establishing plates in-app:** porch, hallway, kitchen, bedroom, yard, garden, workshop, pet_corner.
+
 
 ### Batch C4 — Companions cozy set (P2, after opt-in UX)
 
@@ -320,9 +321,10 @@ Only when pets toggle stays useful; otherwise keep SVG placeholder.
 
 Cozy «помехи» = **бытовые монстры грязи и дел по дому** (пыль, беспорядок, грязная посуда, незакрытые дела), не DF-боссы и не пустая мебель.
 
-Примеры направления: пылевой комок, лужа на полу, гора белья, липкий перекус-хаос — тёплый cozy-стиль, чуть озорные, не horror.
+Примеры направления: пылевой комок, гора белья, крошечный хаос перекусов, лужа на полу, грязная посуда — тёплый cozy-стиль, чуть озорные, не horror.
 
-Paths under `themes/cozy/bosses/` and `themes/cozy/mobs/`. S01 empty-day → dust monster cutout (in-app).
+Paths under `themes/cozy/bosses/` and `themes/cozy/mobs/`.  
+**In-app cutouts:** S01 dust monster, S02 laundry blob, S03 crumb chaos.
 
 ### Batch C6 — Journey chapter vignettes (P2)
 

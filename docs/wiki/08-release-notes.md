@@ -14,6 +14,7 @@
 - **Companions / pets:** Settings → Дополнительные разделы → «Питомцы / спутники» (default off). Companion overlay/chips/selector hidden until enabled. Onboarding no longer asks for a companion (5 steps).
 - Cozy Home UI hidden outside Cozy theme (Dashboard card + `/home` redirect).
 - **20 Body Stages / 5 Avatar Visual Anchors:** Body Stage engine unchanged (1–20). Production art maps via `getAvatarVisualStage` to anchors `01/05/10/15/20` only. Manifest + `validate:avatars` expect five anchors per theme×gender; intermediate body files are not required. Nearest-stage is no longer the production path.
+- **Cozy Art Fill C3b + C5 start:** remaining home zones (hallway, bedroom, yard, workshop, pet_corner) + season obstacles S02 laundry-blob / S03 crumb-chaos cutouts. `GAME_ASSET_VERSION` 63.
 - **Cozy Art Fill C3:** home exterior hero + porch/kitchen/garden zone plates on `/home`; `GAME_ASSET_VERSION` 62.
 - **Cozy obstacle S01:** replaced empty armchair with dust-bunny household monster cutout (dirt/chores direction for cozy помехи). `GAME_ASSET_VERSION` 61.
 - **Cozy Art Fill C1 (Dashboard parity):** season reward lantern, home room-stage-01 as camp/shelter, empty-day obstacle; wired via `CozyArtScene` + `cozyCampaignArt`.
