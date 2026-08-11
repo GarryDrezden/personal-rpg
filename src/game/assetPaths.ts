@@ -10,10 +10,10 @@ import type {
 import { GAME_ASSET_BASE_PATH, GAME_ASSET_VERSION, gameAsset } from './assetBase';
 import { getManifestAssetUrl } from './assetManifest';
 import { getLegacyCodexBossManifestAssetId } from './manifestAssetUi';
+import { getCozyCampRoomPath } from './cozyCampaignArt';
 import {
   getCozyHeroPlaceholderPath,
   getCozyHeroStagePath,
-  getCozyHomeScenePlaceholderPath,
   getThemeAsset,
   getThemeAssetCandidates,
 } from './themeAssetRegistry';
@@ -26,7 +26,7 @@ export type HeroAssetVariantFolder = 'dark-fantasy' | 'light';
 /** Dashboard hero scene backdrop — theme-aware */
 export function getHeroSceneBackdropPath(themeId: AppThemeId = 'darkFantasy'): string {
   if (themeId === 'cozy') {
-    return getCozyHomeScenePlaceholderPath();
+    return getCozyCampRoomPath();
   }
   return gameAsset('scenes/hero-cliff-sunrise.webp');
 }

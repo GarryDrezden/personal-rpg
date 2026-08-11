@@ -62,7 +62,7 @@ describe('theme-aware companions and backdrop', () => {
 
   it('uses cozy home scene for cozy dashboard backdrop', () => {
     expect(getHeroSceneBackdropPath('cozy')).toContain(
-      '/themes/cozy/home/placeholders/home-scene-placeholder',
+      '/themes/cozy/home/interior/room-stage-01.webp',
     );
     expect(getHeroSceneBackdropPath('darkFantasy')).toContain('hero-cliff-sunrise');
   });

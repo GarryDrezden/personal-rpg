@@ -324,7 +324,7 @@ Cozy «помехи» = **бытовые монстры грязи и дел п�
 Примеры направления: пылевой комок, гора белья, крошечный хаос перекусов, лужа на полу, грязная посуда — тёплый cozy-стиль, чуть озорные, не horror.
 
 Paths under `themes/cozy/bosses/` and `themes/cozy/mobs/`.  
-**In-app cutouts:** S01 dust monster, S02 laundry blob, S03 crumb chaos.
+**In-app cutouts:** S01 dust monster, S02 laundry blob, S03 crumb chaos; chapter boss `lord_of_empty_day.webp`; daily mob `night_call.webp` (command-bridge threat cards).
 
 ### Batch C6 — Journey chapter vignettes (P2)
 
