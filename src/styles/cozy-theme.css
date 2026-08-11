@@ -484,7 +484,11 @@
 }
 
 [data-theme='cozy'] .cozy-dash-home__body {
-  padding: 0.9rem 1rem 1rem;
+  padding: 0.95rem 1.15rem 1.15rem;
+}
+
+[data-theme='cozy'] .cozy-botanical-frame .cozy-dash-home--with-art .cozy-dash-home__art {
+  border-radius: 0;
 }
 
 [data-theme='cozy'] .cozy-dash-home::after {

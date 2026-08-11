@@ -40,15 +40,14 @@ export function CozyHomeDashboardCard({ settings }: CozyHomeDashboardCardProps) 
   return (
     <CozyBotanicalFrame
       intensity="medium"
-      note="дом собирает тепло"
       testId="cozy-dash-home-frame"
-      contentClassName="!p-0"
+      contentClassName="!p-0 overflow-hidden"
     >
-      <section data-testid="cozy-home-dashboard-card" className="cozy-dash-home cozy-dash-home--with-art">
-        <div
-          className="cozy-dash-home__art"
-          data-testid="cozy-dash-home-art"
-        >
+      <section
+        data-testid="cozy-home-dashboard-card"
+        className="cozy-dash-home cozy-dash-home--with-art"
+      >
+        <div className="cozy-dash-home__art" data-testid="cozy-dash-home-art">
           <GameAssetImage
             src={bannerSrc}
             alt="Дом героя"
@@ -63,24 +62,26 @@ export function CozyHomeDashboardCard({ settings }: CozyHomeDashboardCardProps) 
           />
         </div>
 
-        <div className="cozy-dash-home__body">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-garden)]">
-            Дом становится теплее
-          </p>
-          <p className="mt-1 text-sm font-medium text-[var(--app-text)]">
-            Восстановлено {progress.done} / {progress.total} улучшений.
-          </p>
+        <div className="space-y-2.5 px-4 pb-4 pt-3.5 sm:px-5 sm:pb-5 sm:pt-4">
+          <div className="space-y-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-garden)]">
+              Дом становится теплее
+            </p>
+            <p className="text-sm font-medium leading-snug text-[var(--app-text)]">
+              Восстановлено {progress.done} / {progress.total} улучшений.
+            </p>
+          </div>
 
-          <div className="cozy-progress-track mt-2">
+          <div className="cozy-progress-track">
             <div className="cozy-progress-fill" style={{ width: `${progress.percent}%` }} />
           </div>
 
           {resourceHint ? (
-            <p className="mt-2 text-xs text-[var(--app-text-muted)]">{resourceHint}</p>
+            <p className="text-xs leading-relaxed text-[var(--app-text-muted)]">{resourceHint}</p>
           ) : null}
 
           {affordable ? (
-            <p className="mt-2 text-sm text-[var(--app-text)]">
+            <p className="text-sm leading-relaxed text-[var(--app-text)]">
               Можно улучшить:{' '}
               <span className="font-medium">
                 {getCozyZoneConfig(affordable.zoneId).title}
@@ -88,17 +89,22 @@ export function CozyHomeDashboardCard({ settings }: CozyHomeDashboardCardProps) 
               — {affordable.nextLevel.description.toLowerCase()}
             </p>
           ) : (
-            <p className="mt-2 text-sm text-[var(--app-text-muted)]">
+            <p className="text-sm leading-relaxed text-[var(--app-text-muted)]">
               Задачи дня принесут материалы, уют и ясность для дома.
             </p>
           )}
 
-          <Link
-            to="/home"
-            className="mt-3 inline-block text-xs font-semibold text-[var(--app-garden)] hover:underline"
-          >
-            Открыть дом
-          </Link>
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+            <Link
+              to="/home"
+              className="text-sm font-semibold text-[var(--app-garden)] hover:underline"
+            >
+              Открыть дом
+            </Link>
+            <p className="cozy-hand-accent text-xs text-[var(--app-text-muted)]">
+              дом собирает тепло
+            </p>
+          </div>
         </div>
       </section>
     </CozyBotanicalFrame>
