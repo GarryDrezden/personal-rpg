@@ -1576,7 +1576,7 @@
   color: var(--app-primary);
 }
 
-/* ——— Cozy Botanical Print ——— */
+/* ï¿½ï¿½ï¿½ Cozy Botanical Print ï¿½ï¿½ï¿½ */
 .cozy-botanical-frame {
   position: relative;
   overflow: hidden;
@@ -1672,7 +1672,7 @@
   margin: 0 1.2rem 1rem;
 }
 
-/* Handwritten accent — flavor only; never for buttons/nav/metrics */
+/* Handwritten accent ï¿½ flavor only; never for buttons/nav/metrics */
 [data-theme='cozy'] .cozy-hand-accent {
   font-family: Georgia, 'Times New Roman', ui-serif, serif;
   font-style: italic;

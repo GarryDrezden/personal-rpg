@@ -7,6 +7,11 @@ export function getCozyHomeHeroPath(): string {
   return cozyThemeAsset('home/exterior/home-hero.webp');
 }
 
+/** Wider crop for Dashboard «Дом становится теплее» card. */
+export function getCozyDashboardHomeBannerPath(): string {
+  return cozyThemeAsset('home/exterior/dashboard-home-banner.webp');
+}
+
 const ZONE_ART: Partial<Record<CozyHomeZoneId, string>> = {
   porch: 'home/zones/porch.webp',
   hallway: 'home/zones/hallway.webp',
