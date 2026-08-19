@@ -1,5 +1,6 @@
 import { Card } from '../ui/Card';
 import { InstantSettingRow } from './InstantSettingRow';
+import { SETTINGS_SECTION_IDS } from './settingsTocSections';
 import { useAppStore } from '../../store/appStore';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import {
@@ -23,7 +24,7 @@ export function SidebarVisibilitySettingsCard() {
   };
 
   return (
-    <Card id="settings-sidebar" className="scroll-mt-28" data-testid="settings-sidebar-visibility">
+    <Card id={SETTINGS_SECTION_IDS.sidebar} className="scroll-mt-28" data-testid="settings-sidebar-visibility">
       <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">
         Интерфейс → Боковое меню
       </p>

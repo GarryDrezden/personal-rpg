@@ -1,19 +1,4 @@
-const SECTIONS = [
-  { id: 'settings-theme', label: 'Внешний вид' },
-  { id: 'settings-sidebar', label: 'Меню' },
-  { id: 'settings-pwa', label: 'Приложение' },
-  { id: 'settings-body-map', label: 'Карта тела' },
-  { id: 'settings-weight', label: 'Персонаж' },
-  { id: 'settings-game-hero', label: 'Герой RPG' },
-  { id: 'settings-avatar', label: 'Аватар' },
-  { id: 'settings-nutrition', label: 'Питание' },
-  { id: 'settings-defaults', label: 'Цели' },
-  { id: 'settings-weeks', label: 'Недели' },
-  { id: 'settings-coins', label: 'Монеты' },
-  { id: 'settings-xp', label: 'Баллы' },
-  { id: 'settings-habits', label: 'Второст. цели' },
-  { id: 'settings-backup', label: 'Бэкап' },
-] as const;
+import { SETTINGS_TOC_SECTIONS } from './settingsTocSections';
 
 function scrollToSection(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -29,7 +14,7 @@ export function SettingsToc() {
         Оглавление
       </p>
       <div className="flex flex-wrap gap-2">
-        {SECTIONS.map(({ id, label }) => (
+        {SETTINGS_TOC_SECTIONS.map(({ id, label }) => (
           <button
             key={id}
             type="button"

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card } from '../ui/Card';
+import { SETTINGS_SECTION_IDS } from './settingsTocSections';
 import { BODY_ABILITY_BANK_VERSION } from '../../constants/bodyAbilityBank';
 import { useAppStore } from '../../store/appStore';
 import {
@@ -34,7 +35,7 @@ export function BodyAbilityMapSettingsCard() {
   };
 
   return (
-    <Card id="settings-body-map" className="scroll-mt-28" data-testid="setting-row-body-map">
+    <Card id={SETTINGS_SECTION_IDS.bodyMap} className="scroll-mt-28" data-testid="setting-row-body-map">
       <h2 className="mb-2 font-semibold text-[var(--app-text)]">Карта тела</h2>
       <p className="mb-3 text-sm text-[var(--app-text-muted)]">
         Настрой карту тела: цель, интересы и то, что уже даётся нормально. Игра пересоберёт сетку
