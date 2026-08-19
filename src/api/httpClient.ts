@@ -6,6 +6,7 @@ export class ApiError extends Error {
   constructor(
     message: string,
     public status: number,
+    public body: unknown = undefined,
   ) {
     super(message);
     this.name = 'ApiError';
@@ -46,10 +47,8 @@ export async function httpClient<T>(
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: res.statusText }));
-    throw new ApiError(
-      (err as { error?: string }).error ?? `HTTP ${res.status}`,
-      res.status,
-    );
+    const payload = err as { error?: string };
+    throw new ApiError(payload.error ?? `HTTP ${res.status}`, res.status, err);
   }
 
   if (res.status === 204) {

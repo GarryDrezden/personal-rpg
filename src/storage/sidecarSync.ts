@@ -23,6 +23,7 @@ const STORAGE_KEY_BY_TYPE: Record<SidecarRemoteType, string> = {
 
 let sidecarHydrating = false;
 let sidecarSaveTimer: ReturnType<typeof setTimeout> | null = null;
+let sidecarRevisions: Partial<Record<SidecarRemoteType, number>> = {};
 
 export function isSidecarHydrating(): boolean {
   return sidecarHydrating;
@@ -31,6 +32,7 @@ export function isSidecarHydrating(): boolean {
 /** @internal test helper */
 export function resetSidecarSyncForTests(): void {
   sidecarHydrating = false;
+  sidecarRevisions = {};
   if (sidecarSaveTimer) {
     clearTimeout(sidecarSaveTimer);
     sidecarSaveTimer = null;
@@ -89,6 +91,11 @@ export async function hydrateLocalSidecarsFromRemote(): Promise<void> {
   try {
     const res = await dataApi.getAll();
     const { data } = res;
+    sidecarRevisions = {
+      achievements: res.revisions?.achievements,
+      coinTransactions: res.revisions?.coinTransactions,
+      momentumHistory: res.revisions?.momentumHistory,
+    };
 
     if (data.achievements != null) {
       if (shouldApplyRemoteSidecar('achievements', data.achievements)) {
@@ -148,7 +155,12 @@ export async function saveLocalSidecarsToRemote(): Promise<void> {
   if (entries.length === 0) return;
 
   await Promise.all(
-    entries.map(([type, value]) => dataApi.putType(type, value)),
+    entries.map(async ([type, value]) => {
+      const res = await dataApi.putType(type, value, sidecarRevisions[type]);
+      if (typeof res.revision === 'number') {
+        sidecarRevisions[type] = res.revision;
+      }
+    }),
   );
 }
 

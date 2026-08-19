@@ -82,20 +82,35 @@ function LoadingScreen() {
   );
 }
 
-function ErrorScreen({ message }: { message: string }) {
+function ErrorScreen({
+  message,
+  onRetry,
+}: {
+  message: string;
+  onRetry: () => void;
+}) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[var(--app-bg)] p-6 text-center text-[var(--app-text)]">
-      <p className="font-medium text-[var(--app-danger)]">Не удалось получить данные аккаунта</p>
+      <p className="font-medium text-[var(--app-danger)]">Не удалось загрузить данные</p>
       <p className="text-sm text-[var(--app-text-muted)]">{message}</p>
       <p className="max-w-md text-sm text-[var(--app-text-muted)]">
-        API недоступен или сессия истекла. Попробуйте обновить страницу или войти снова.
+        Прогресс на сервере не удаляется. Можно повторить загрузку или войти снова.
       </p>
-      <Link
-        to="/login"
-        className="btn-primary rounded-lg px-4 py-2 text-sm font-semibold"
-      >
-        Войти снова
-      </Link>
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <button
+          type="button"
+          onClick={onRetry}
+          className="btn-primary rounded-lg px-4 py-2 text-sm font-semibold"
+        >
+          Повторить
+        </button>
+        <Link
+          to="/login"
+          className="rounded-lg border border-[var(--app-border)] px-4 py-2 text-sm font-semibold"
+        >
+          Войти снова
+        </Link>
+      </div>
     </div>
   );
 }
@@ -135,7 +150,7 @@ function AuthenticatedApp() {
 
   if (!sessionReady || loading) return <LoadingScreen />;
 
-  if (error) return <ErrorScreen message={error} />;
+  if (error) return <ErrorScreen message={error} onRetry={() => void init()} />;
 
   return (
     <Suspense fallback={<PageLoader />}>

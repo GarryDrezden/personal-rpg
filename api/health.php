@@ -25,13 +25,21 @@ if ($checks['mysqlConfigExists']) {
         $checks['authSessionsTable'] = (bool) $authTable;
         $dataTable = $pdo->query("SHOW TABLES LIKE 'user_data'")->fetch();
         $checks['userDataTable'] = (bool) $dataTable;
+        if ($checks['userDataTable']) {
+            $revCol = $pdo->query("SHOW COLUMNS FROM user_data LIKE 'revision'")->fetch();
+            $checks['userDataRevision'] = (bool) $revCol;
+        } else {
+            $checks['userDataRevision'] = false;
+        }
+        $backupTable = $pdo->query("SHOW TABLES LIKE 'user_data_backups'")->fetch();
+        $checks['userDataBackupsTable'] = (bool) $backupTable;
     } catch (Throwable $e) {
         $checks['mysqlConnect'] = false;
         $checks['mysqlError'] = 'database unavailable';
     }
 }
 
-$required = ['index.php', 'bootstrap.php', 'router-accounts.php', 'migrations/001_create_accounts_tables.sql'];
+$required = ['index.php', 'bootstrap.php', 'router-accounts.php', 'migrations/001_create_accounts_tables.sql', 'migrations/002_user_data_revision_and_backups.sql'];
 $checks['apiFiles'] = [];
 foreach ($required as $file) {
     $checks['apiFiles'][$file] = is_file(__DIR__ . '/' . $file);
@@ -63,6 +71,8 @@ $checks['ok'] = ($checks['pdo_mysql'] ?? false)
     && ($checks['usersTable'] ?? false)
     && ($checks['authSessionsTable'] ?? false)
     && ($checks['userDataTable'] ?? false)
+    && ($checks['userDataRevision'] ?? false)
+    && ($checks['userDataBackupsTable'] ?? false)
     && !in_array(false, $checks['apiFiles'], true);
 
 if (!$checks['ok']) {

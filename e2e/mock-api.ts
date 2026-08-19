@@ -230,7 +230,49 @@ export function createMockApiHandler(initial?: MockApiOptions) {
         initial?.settings?.onboardingCompleted ?? (!fresh ? true : false),
     },
   };
+  let revisions: Record<string, number> = {
+    dailyEntries: 1,
+    measurements: 1,
+    rewards: 1,
+    bankDeposits: 1,
+    customSettingsBackup: 1,
+  };
   let userSettings = createUserSettings(appData.settings);
+
+  const bumpRevision = (type: string) => {
+    revisions[type] = (revisions[type] ?? 0) + 1;
+    return revisions[type];
+  };
+
+  const applyDataMap = (items: Record<string, unknown>) => {
+    if (Array.isArray(items.dailyEntries)) {
+      appData = { ...appData, dailyEntries: items.dailyEntries };
+      bumpRevision('dailyEntries');
+    }
+    if (Array.isArray(items.measurements)) {
+      appData = { ...appData, measurements: items.measurements };
+      bumpRevision('measurements');
+    }
+    if (Array.isArray(items.rewards)) {
+      appData = { ...appData, rewards: items.rewards };
+      bumpRevision('rewards');
+    }
+    if (Array.isArray(items.bankDeposits)) {
+      appData = { ...appData, bankDeposits: items.bankDeposits };
+      bumpRevision('bankDeposits');
+    }
+    if (items.customSettingsBackup && typeof items.customSettingsBackup === 'object') {
+      appData = {
+        ...appData,
+        settings: {
+          ...appData.settings,
+          ...(items.customSettingsBackup as MockSettings),
+        },
+      };
+      userSettings = createUserSettings(appData.settings);
+      bumpRevision('customSettingsBackup');
+    }
+  };
 
   const authPayload = () => ({
     user: {
@@ -280,15 +322,42 @@ export function createMockApiHandler(initial?: MockApiOptions) {
             bankDeposits: appData.bankDeposits,
             customSettingsBackup: appData.settings,
           },
+          revisions,
         }),
       );
       return;
     }
 
+    if (path === '/data' && method === 'PUT') {
+      const body = (request.postDataJSON() ?? {}) as { data?: Record<string, unknown> };
+      if (body.data) applyDataMap(body.data);
+      await route.fulfill(json({ ok: true }));
+      return;
+    }
+
+    if (path === '/data/restore' && method === 'POST') {
+      const body = (request.postDataJSON() ?? {}) as {
+        data?: Record<string, unknown>;
+        profile?: Partial<MockProfile>;
+      };
+      if (body.data) applyDataMap(body.data);
+      if (body.profile) {
+        profile = { ...profile, ...body.profile, updatedAt: new Date().toISOString() };
+      }
+      await route.fulfill(json({ ok: true }));
+      return;
+    }
+
     if (path.startsWith('/data/') && method === 'PUT') {
       const type = path.replace('/data/', '');
-      const body = (request.postDataJSON() ?? {}) as { payload?: unknown };
+      const body = (request.postDataJSON() ?? {}) as { payload?: unknown; revision?: number };
       const payload = body.payload;
+      if (body.revision !== undefined && revisions[type] !== undefined && body.revision !== revisions[type]) {
+        await route.fulfill(
+          json({ error: 'Data conflict', currentRevision: revisions[type] }, 409),
+        );
+        return;
+      }
       if (type === 'customSettingsBackup' && payload && typeof payload === 'object') {
         appData = {
           ...appData,
@@ -303,11 +372,13 @@ export function createMockApiHandler(initial?: MockApiOptions) {
       } else if (type === 'measurements' && Array.isArray(payload)) {
         appData = { ...appData, measurements: payload };
       }
+      const revision = bumpRevision(type);
       await route.fulfill(
         json({
           type,
           payload,
           updatedAt: new Date().toISOString(),
+          revision,
         }),
       );
       return;

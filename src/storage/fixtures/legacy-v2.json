@@ -1,0 +1,17 @@
+{
+  "dailyEntries": [],
+  "measurements": [],
+  "rewards": [],
+  "bankDeposits": [],
+  "customSettingsBackup": {
+    "defaultCaloriesLimit": 2500,
+    "defaultStepsGoal": 11500,
+    "defaultGymTarget": 2,
+    "defaultWeeklyPointsGoal": 500,
+    "weightGoal": 90,
+    "gender": "male",
+    "nutritionTrackingMode": "simple",
+    "dailyCalorieLimit": 2500,
+    "themeId": "cozy"
+  }
+}

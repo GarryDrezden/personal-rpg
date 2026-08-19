@@ -225,6 +225,8 @@ export interface AppSettings {
    * Missing → all optional items hidden (normalized).
    */
   sidebarVisibility?: import('./sidebar').ThemeSidebarSettings;
+  /** Explicit user-data schema version. Missing = v0 (legacy). */
+  dataSchemaVersion?: number;
 }
 
 export interface AppData {

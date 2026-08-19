@@ -1,0 +1,33 @@
+{
+  "dailyEntries": [
+    {
+      "id": "keep-me",
+      "date": "2026-03-01",
+      "calories": 1900,
+      "steps": 7000,
+      "alcohol": "none",
+      "morningExercise": false,
+      "gym": false,
+      "journal": false,
+      "cooking": false,
+      "repair": false,
+      "plants": false,
+      "hobby": false,
+      "comment": "good"
+    },
+    "not-an-entry"
+  ],
+  "measurements": "broken",
+  "rewards": [],
+  "bankDeposits": [],
+  "customSettingsBackup": {
+    "weightGoal": 85,
+    "gender": "male",
+    "defaultCaloriesLimit": 2650,
+    "defaultStepsGoal": 11500,
+    "defaultGymTarget": 2,
+    "defaultWeeklyPointsGoal": 500,
+    "themeId": "unknown-theme",
+    "cozyHome": "nope"
+  }
+}

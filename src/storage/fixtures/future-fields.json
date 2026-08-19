@@ -1,0 +1,36 @@
+{
+  "dataSchemaVersion": 9,
+  "dailyEntries": [
+    {
+      "id": "d-future",
+      "date": "2026-08-19",
+      "calories": 2000,
+      "steps": 9000,
+      "alcohol": "none",
+      "morningExercise": false,
+      "gym": false,
+      "journal": false,
+      "cooking": false,
+      "repair": false,
+      "plants": false,
+      "hobby": false,
+      "comment": "",
+      "futureDailyFlag": true
+    }
+  ],
+  "measurements": [],
+  "rewards": [],
+  "bankDeposits": [],
+  "customSettingsBackup": {
+    "dataSchemaVersion": 9,
+    "defaultCaloriesLimit": 2650,
+    "defaultStepsGoal": 11500,
+    "defaultGymTarget": 2,
+    "defaultWeeklyPointsGoal": 500,
+    "weightGoal": 80,
+    "gender": "male",
+    "themeId": "cozy",
+    "weeklySettings": [],
+    "futureSettingsKey": "keep-me"
+  }
+}

@@ -37,13 +37,21 @@ class AuthController
         }
 
         $hash = password_hash($password, PASSWORD_DEFAULT);
-        $user = $users->create($login, $hash);
-        $userId = (int) $user['id'];
-
         $profiles = new UserProfileRepository($this->pdo);
         $settings = new UserSettingsRepository($this->pdo);
-        $profile = $profiles->createDefaults($userId);
-        $userSettings = $settings->createDefaults($userId);
+
+        $this->pdo->beginTransaction();
+        try {
+            $user = $users->create($login, $hash);
+            $userId = (int) $user['id'];
+            $profile = $profiles->createDefaults($userId);
+            $userSettings = $settings->createDefaults($userId);
+            $this->pdo->commit();
+        } catch (Throwable $e) {
+            $this->pdo->rollBack();
+            logApiEvent('db_failure', ['op' => 'register']);
+            jsonError('Database unavailable', 503);
+        }
 
         $token = createAuthSession($this->pdo, $userId);
         $payload = serializeAuthPayload($user, $profile, $userSettings);

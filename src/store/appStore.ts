@@ -7,8 +7,10 @@ import type {
   Reward,
   BankDeposit,
 } from '../types';
-import { getRepository } from '../storage/storageClient';
+import { getRepository, getStorageMode } from '../storage/storageClient';
 import { hydrateLocalSidecarsFromRemote } from '../storage/sidecarSync';
+import { getLastHydrationMeta } from '../storage/remoteStorageClient';
+import { assertHydrationReady, type HydrationStatus } from '../storage/hydrationGuard';
 import { syncAchievementsFromData } from '../utils/achievementSync';
 import {
   rebuildAndSaveMomentumHistory,
@@ -18,9 +20,6 @@ import { resolveMomentumRebuildOnSettingsChange } from '../utils/momentumSetting
 import { useAchievementStore } from './achievementStore';
 import { useCoinStore } from './coinStore';
 import { buildCoinWalletSummary } from '../utils/coinEngine';
-import { resolveThemeId } from '../constants/themes';
-import { getStoredThemeId } from '../utils/themeApply';
-import { migrateNutritionSettings } from '../utils/nutritionEngine';
 import { normalizeAppSettings } from '../utils/settingsNormalize';
 import { applyCozyRewardsOnSave } from '../utils/cozyHomeEngine';
 
@@ -54,6 +53,8 @@ function emptyDaily(date: string): DailyEntry {
 interface AppState extends AppData {
   loading: boolean;
   error: string | null;
+  hydrationStatus: HydrationStatus;
+  hydrationGeneration: number;
   init: () => Promise<void>;
   updateDaily: (entry: DailyEntry) => Promise<DailyEntry>;
   deleteDaily: (date: string) => Promise<void>;
@@ -103,27 +104,30 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
   loading: true,
   error: null,
+  hydrationStatus: 'pending',
+  hydrationGeneration: 0,
 
   init: async () => {
     try {
-      set({ loading: true, error: null });
+      set({ loading: true, error: null, hydrationStatus: 'pending' });
       const data = await getRepository().loadAll();
       await hydrateLocalSidecarsFromRemote();
-      const migratedSettings = migrateNutritionSettings(data.settings, data.dailyEntries);
       set({
         ...data,
         bankDeposits: data.bankDeposits ?? [],
-        settings: normalizeAppSettings({
-          ...migratedSettings,
-          coinSettings: migratedSettings.coinSettings,
-          avatarSettings: migratedSettings.avatarSettings,
-          themeId: resolveThemeId(
-            migratedSettings.themeId ?? getStoredThemeId(),
-          ),
-          habitConfig: migratedSettings.habitConfig,
-        }),
+        settings: normalizeAppSettings(data.settings),
         loading: false,
+        error: null,
+        hydrationStatus: 'ready',
+        hydrationGeneration: get().hydrationGeneration + 1,
       });
+      if (getStorageMode() === 'remote' && getLastHydrationMeta().needsWriteback) {
+        try {
+          await get().saveSettings(get().settings);
+        } catch {
+          // In-memory data is already migrated; writeback can retry on next save.
+        }
+      }
       useAchievementStore.getState().hydrate();
       useCoinStore.getState().hydrate();
       useCoinStore.getState().syncFromRewards(get().rewards);
@@ -140,11 +144,13 @@ export const useAppStore = create<AppState>((set, get) => ({
       set({
         loading: false,
         error: e instanceof Error ? e.message : 'Ошибка загрузки',
+        hydrationStatus: 'failed',
       });
     }
   },
 
   updateDaily: async (entry) => {
+    assertHydrationReady(get().hydrationStatus);
     const previousEntry =
       get().dailyEntries.find((e) => e.date === entry.date) ?? null;
     const applied = applyCozyRewardsOnSave({
@@ -174,6 +180,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   deleteDaily: async (date) => {
+    assertHydrationReady(get().hydrationStatus);
     await getRepository().deleteDaily(date);
     const dailyEntries = get().dailyEntries.filter((e) => e.date !== date);
     set({ dailyEntries });
@@ -186,6 +193,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   addMeasurement: async (entry) => {
+    assertHydrationReady(get().hydrationStatus);
     const saved = await getRepository().addMeasurement(entry);
     const measurements = [...get().measurements, saved].sort((a, b) => a.date.localeCompare(b.date));
     set({ measurements });
@@ -193,6 +201,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   updateMeasurement: async (id, entry) => {
+    assertHydrationReady(get().hydrationStatus);
     const saved = await getRepository().updateMeasurement(id, entry);
     const measurements = get()
       .measurements.filter((m) => m.id !== id)
@@ -203,11 +212,13 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   addReward: async (reward) => {
+    assertHydrationReady(get().hydrationStatus);
     const saved = await getRepository().addReward(reward);
     set({ rewards: [...get().rewards, saved] });
   },
 
   updateReward: async (id, patch) => {
+    assertHydrationReady(get().hydrationStatus);
     const saved = await getRepository().updateReward(id, patch);
     set({
       rewards: get().rewards.map((r) => (r.id === id ? saved : r)),
@@ -215,6 +226,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   deleteReward: async (id) => {
+    assertHydrationReady(get().hydrationStatus);
     await getRepository().deleteReward(id);
     set({
       rewards: get().rewards.filter((r) => r.id !== id),
@@ -222,6 +234,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   purchaseReward: async (id) => {
+    assertHydrationReady(get().hydrationStatus);
     const reward = get().rewards.find((r) => r.id === id);
     if (!reward || reward.purchasedAt) return;
 
@@ -245,6 +258,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   addBankDeposit: async (entry) => {
+    assertHydrationReady(get().hydrationStatus);
     const saved = await getRepository().addBankDeposit(entry);
     set({
       bankDeposits: [saved, ...get().bankDeposits].sort((a, b) =>
@@ -254,6 +268,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   deleteBankDeposit: async (id) => {
+    assertHydrationReady(get().hydrationStatus);
     await getRepository().deleteBankDeposit(id);
     set({
       bankDeposits: get().bankDeposits.filter((d) => d.id !== id),
@@ -261,6 +276,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   saveSettings: async (settings) => {
+    assertHydrationReady(get().hydrationStatus);
     const prev = get().settings;
     const payload = normalizeAppSettings(settings, prev);
     const saved = await getRepository().saveSettings({

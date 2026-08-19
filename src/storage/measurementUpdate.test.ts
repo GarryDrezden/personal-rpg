@@ -64,6 +64,7 @@ describe('remoteRepository.updateMeasurement', () => {
     expect(putTypeMock).toHaveBeenCalledWith(
       'measurements',
       expect.arrayContaining([expect.objectContaining({ id: 'm1', date: '2026-06-05' })]),
+      undefined,
     );
   });
 

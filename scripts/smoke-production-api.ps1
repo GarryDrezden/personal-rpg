@@ -61,6 +61,40 @@ $data = Invoke-ApiCurl -CurlArgs @("-i", "-b", $cookieJar, "$BaseUrl/api/data", 
 if ($data -notmatch "200 OK") { throw "data GET failed`n$data" }
 Write-Host "OK"
 
+Write-Host "== data PUT fixture =="
+[System.IO.File]::WriteAllText($bodyFile, (@{
+  payload = @(@{
+    id = "smoke-day"
+    date = "2026-08-19"
+    calories = 2000
+    steps = 8000
+    alcohol = "none"
+    morningExercise = $false
+    gym = $false
+    journal = $false
+    cooking = $false
+    repair = $false
+    plants = $false
+    hobby = $false
+    comment = "smoke"
+  })
+} | ConvertTo-Json -Compress -Depth 6))
+$put = Invoke-ApiCurl -CurlArgs @(
+  "-i", "-b", $cookieJar, "-c", $cookieJar,
+  "-X", "PUT", "$BaseUrl/api/data/dailyEntries",
+  "-H", "Content-Type: application/json",
+  "-H", "Origin: $BaseUrl",
+  "--data-binary", "@$bodyFile"
+)
+if ($put -notmatch "200 OK") { throw "data PUT failed`n$put" }
+Write-Host "OK"
+
+Write-Host "== data GET verify =="
+$data2 = Invoke-ApiCurl -CurlArgs @("-i", "-b", $cookieJar, "$BaseUrl/api/data", "-H", "Origin: $BaseUrl")
+if ($data2 -notmatch "200 OK") { throw "data GET verify failed`n$data2" }
+if ($data2 -notmatch "smoke-day") { throw "PUT payload missing on GET`n$data2" }
+Write-Host "OK"
+
 Write-Host "== logout =="
 $out = Invoke-ApiCurl -CurlArgs @(
   "-i", "-b", $cookieJar, "-c", $cookieJar,
@@ -77,3 +111,4 @@ Write-Host "OK"
 
 Remove-Item $cookieJar, $bodyFile -ErrorAction SilentlyContinue
 Write-Host "`nProduction API smoke PASSED for $BaseUrl"
+Write-Host "Temporary user $login was left on the server — delete it manually in phpMyAdmin if needed."

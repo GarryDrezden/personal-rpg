@@ -18,15 +18,25 @@ export function useSettingsDraft() {
   const settings = useAppStore((s) => s.settings);
   const measurements = useAppStore((s) => s.measurements);
   const saveSettings = useAppStore((s) => s.saveSettings);
+  const hydrationGeneration = useAppStore((s) => s.hydrationGeneration);
   const [local, setLocal] = useState(settings);
   const [dirtyKeys, setDirtyKeys] = useState<Set<string>>(() => new Set());
   const [saving, setSaving] = useState(false);
   const dirtyKeysRef = useRef(dirtyKeys);
   const localRef = useRef(local);
+  const hydrationGenerationRef = useRef(hydrationGeneration);
   dirtyKeysRef.current = dirtyKeys;
   localRef.current = local;
 
   useEffect(() => {
+    const restored = hydrationGenerationRef.current !== hydrationGeneration;
+    hydrationGenerationRef.current = hydrationGeneration;
+    if (restored) {
+      dirtyKeysRef.current = new Set();
+      setDirtyKeys(new Set());
+      setLocal(settings);
+      return;
+    }
     setLocal((draft) =>
       mergePersistedIntoDraft({
         persisted: settings,
@@ -34,7 +44,7 @@ export function useSettingsDraft() {
         dirtyKeys: dirtyKeysRef.current,
       }),
     );
-  }, [settings]);
+  }, [settings, hydrationGeneration]);
 
   const markDirty = useCallback((keys: readonly SettingsDraftOwnedKey[]) => {
     if (keys.length === 0) return;

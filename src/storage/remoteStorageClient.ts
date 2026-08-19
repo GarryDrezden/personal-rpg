@@ -7,10 +7,10 @@ import type {
   Reward,
 } from '../types';
 import { dataApi } from '../api/dataApi';
+import { remapPersistenceError } from './persistenceErrors';
 import type { DataRepository } from '../store/repository';
 import { normalizeAppSettings } from '../utils/settingsNormalize';
 import {
-  migrateNutritionSettings,
   normalizeNutritionTrackingMode,
   toServerNutritionTrackingMode,
 } from '../utils/nutritionEngine';
@@ -18,6 +18,10 @@ import { resolveThemeId } from '../constants/themes';
 import { debouncedRemoteSave, immediateRemoteSave } from './saveStatusStore';
 import { getActiveCompanionId } from '../game/gameAssetStorage';
 import { generateId } from '../utils/generateId';
+import { envelopeFromRawData, prepareUserData } from './migrateUserData';
+import { normalizeUserDataWithReport } from './normalizeUserData';
+import { CURRENT_DATA_SCHEMA_VERSION } from './userDataConstants';
+import type { BackupProfileSnapshot } from '../types/userData';
 
 function defaultSettings(): AppSettings {
   return normalizeAppSettings({
@@ -50,13 +54,23 @@ function defaultSettings(): AppSettings {
   });
 }
 
+let cache: AppData | null = null;
+let revisions: Record<string, number> = {};
+let lastHydrationMeta: { migratedFrom: number; needsWriteback: boolean } = {
+  migratedFrom: CURRENT_DATA_SCHEMA_VERSION,
+  needsWriteback: false,
+};
+
+export function getLastHydrationMeta(): { migratedFrom: number; needsWriteback: boolean } {
+  return lastHydrationMeta;
+}
+
 function mergeRemoteSettings(
   serverSettings: { themeId: string; dailyCalorieLimit: number | null; nutritionTrackingMode: string; activeCompanionId: string },
   backup: AppSettings | null,
 ): AppSettings {
   const base = backup ?? defaultSettings();
   const serverMode = normalizeNutritionTrackingMode(serverSettings.nutritionTrackingMode);
-  // Backup keeps client-only modes (disabled) and precise; prefer it when present.
   const nutritionTrackingMode = backup?.nutritionTrackingMode
     ? normalizeNutritionTrackingMode(backup.nutritionTrackingMode)
     : serverMode;
@@ -81,8 +95,6 @@ function mergeRemoteSettings(
   });
 }
 
-let cache: AppData | null = null;
-
 async function ensureCache(): Promise<AppData> {
   if (!cache) {
     await remoteRepository.loadAll();
@@ -91,7 +103,16 @@ async function ensureCache(): Promise<AppData> {
 }
 
 function persistType(type: string, payload: unknown, debounce = false) {
-  const save = () => dataApi.putType(type, payload).then(() => undefined);
+  const save = async () => {
+    try {
+      const res = await dataApi.putType(type, payload, revisions[type]);
+      if (typeof res.revision === 'number') {
+        revisions[type] = res.revision;
+      }
+    } catch (error) {
+      remapPersistenceError(error);
+    }
+  };
   if (debounce) {
     debouncedRemoteSave(type, save);
     return Promise.resolve();
@@ -102,24 +123,35 @@ function persistType(type: string, payload: unknown, debounce = false) {
 export const remoteRepository: DataRepository & { resetCache: () => void } = {
   resetCache() {
     cache = null;
+    revisions = {};
   },
 
   async loadAll(): Promise<AppData> {
     const res = await dataApi.getAll();
+    revisions = res.revisions ?? {};
     const backup = (res.data.customSettingsBackup as AppSettings | undefined) ?? null;
-    const dailyEntries = (res.data.dailyEntries as DailyEntry[] | undefined) ?? [];
-    const measurements = (res.data.measurements as MeasurementEntry[] | undefined) ?? [];
-    const rewards = (res.data.rewards as Reward[] | undefined) ?? [];
-    const bankDeposits = (res.data.bankDeposits as BankDeposit[] | undefined) ?? [];
-    let settings = mergeRemoteSettings(res.settings, backup);
-    settings = migrateNutritionSettings(settings, dailyEntries);
+    const mergedSettings = mergeRemoteSettings(res.settings, backup);
+    const loose = envelopeFromRawData(
+      {
+        ...res.data,
+        customSettingsBackup: mergedSettings,
+        settings: mergedSettings,
+      },
+      mergedSettings,
+    );
+    const { data: migrated, migratedFrom } = prepareUserData(loose);
+    const { data } = normalizeUserDataWithReport(migrated);
+    lastHydrationMeta = {
+      migratedFrom,
+      needsWriteback: migratedFrom < CURRENT_DATA_SCHEMA_VERSION,
+    };
 
     cache = {
-      dailyEntries,
-      measurements,
-      rewards,
-      bankDeposits,
-      settings,
+      dailyEntries: data.dailyEntries,
+      measurements: data.measurements,
+      rewards: data.rewards,
+      bankDeposits: data.bankDeposits,
+      settings: data.settings,
     };
     return cache;
   },
@@ -263,6 +295,10 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
       nutritionTrackingMode: normalizedMode,
       dailyCalorieLimit: calorieLimit,
       defaultCaloriesLimit: saved.defaultCaloriesLimit ?? calorieLimit ?? 2500,
+      dataSchemaVersion: Math.max(
+        saved.dataSchemaVersion ?? 0,
+        CURRENT_DATA_SCHEMA_VERSION,
+      ),
     };
     state.settings = withNutrition;
     await persistType('customSettingsBackup', withNutrition, false);
@@ -275,3 +311,15 @@ export const remoteRepository: DataRepository & { resetCache: () => void } = {
     return withNutrition;
   },
 };
+
+export async function restoreRemoteUserData(params: {
+  data: Record<string, unknown>;
+  profile?: BackupProfileSnapshot;
+}): Promise<void> {
+  await dataApi.restore({
+    data: params.data,
+    profile: params.profile,
+  });
+  cache = null;
+  revisions = {};
+}

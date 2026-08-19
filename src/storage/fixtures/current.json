@@ -1,0 +1,49 @@
+{
+  "dataSchemaVersion": 1,
+  "dailyEntries": [
+    {
+      "id": "d1",
+      "date": "2026-08-01",
+      "calories": 1800,
+      "steps": 10000,
+      "alcohol": "none",
+      "morningExercise": true,
+      "gym": false,
+      "journal": false,
+      "cooking": false,
+      "repair": false,
+      "plants": false,
+      "hobby": false,
+      "comment": "ok"
+    }
+  ],
+  "measurements": [
+    {
+      "id": "m1",
+      "date": "2026-08-01",
+      "weight": 92,
+      "chest": null,
+      "waist": null,
+      "belly": null,
+      "hips": null,
+      "thigh": null,
+      "biceps": null,
+      "comment": ""
+    }
+  ],
+  "rewards": [],
+  "bankDeposits": [],
+  "customSettingsBackup": {
+    "dataSchemaVersion": 1,
+    "defaultCaloriesLimit": 2650,
+    "defaultStepsGoal": 11500,
+    "defaultGymTarget": 2,
+    "defaultWeeklyPointsGoal": 500,
+    "weightGoal": 80,
+    "targetWeight": 80,
+    "gender": "male",
+    "themeId": "darkFantasy",
+    "nutritionTrackingMode": "simple",
+    "weeklySettings": []
+  }
+}

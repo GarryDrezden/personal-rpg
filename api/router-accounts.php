@@ -31,6 +31,7 @@ function dispatchAccountsApi(string $method, string $route): bool
             $debug = !empty($cfg['app']['debug']);
         } catch (Throwable) {
         }
+        logApiEvent('db_failure', ['op' => 'connect']);
         jsonError($debug ? $e->getMessage() : 'API configuration error', 503);
     }
 
@@ -63,6 +64,9 @@ function dispatchAccountsApi(string $method, string $route): bool
     }
     if ($route === '/data' && $method === 'PUT') {
         $data->putBulk($body);
+    }
+    if ($route === '/data/restore' && $method === 'POST') {
+        $data->restore($body);
     }
     if (preg_match('#^/data/([a-zA-Z0-9_]+)$#', $route, $m)) {
         $type = $m[1];

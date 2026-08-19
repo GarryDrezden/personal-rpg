@@ -1,0 +1,31 @@
+{
+  "dailyEntries": [
+    {
+      "id": "d1",
+      "date": "2026-01-02",
+      "calories": 2100,
+      "steps": 8000,
+      "alcohol": "none",
+      "morningExercise": false,
+      "gym": false,
+      "journal": false,
+      "cooking": false,
+      "repair": false,
+      "plants": false,
+      "hobby": false,
+      "comment": ""
+    }
+  ],
+  "measurements": [],
+  "rewards": [],
+  "bankDeposits": [],
+  "customSettingsBackup": {
+    "defaultCaloriesLimit": 2650,
+    "defaultStepsGoal": 11500,
+    "defaultGymTarget": 2,
+    "defaultWeeklyPointsGoal": 500,
+    "weightGoal": 100,
+    "gender": "male",
+    "weeklySettings": []
+  }
+}

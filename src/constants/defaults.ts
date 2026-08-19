@@ -69,6 +69,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
     cozy: { ...DEFAULT_THEME_SIDEBAR_SETTINGS.cozy },
     darkFantasy: { ...DEFAULT_THEME_SIDEBAR_SETTINGS.darkFantasy },
   },
+  dataSchemaVersion: 1,
 };
 
 export const DAY_STATUS_THRESHOLDS = [
