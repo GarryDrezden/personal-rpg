@@ -209,7 +209,7 @@ export function HeroScenePanel({
           {companionsVisible ? (
             <div
               data-testid="hero-scene-companion"
-              className={`absolute bottom-3 right-2 z-30 max-w-[7.5rem] rounded-lg border px-2 py-1.5 backdrop-blur-sm sm:bottom-4 sm:right-3 ${
+              className={`absolute right-2 top-2 z-30 max-w-[7.5rem] rounded-lg border px-2 py-1.5 backdrop-blur-sm sm:right-3 sm:top-3 ${
                 isCozy
                   ? 'border-[var(--app-border)] bg-[var(--app-card-strong)]/92'
                   : 'border-amber-400/35 bg-black/50'

@@ -10,8 +10,8 @@
 
 @media (min-width: 768px) {
   .journey-page {
-    width: 75%;
-    max-width: 75%;
+    width: 100%;
+    max-width: 100%;
   }
 }
 
@@ -913,4 +913,88 @@
 .journey-boss-mini--locked {
   opacity: 0.55;
   filter: grayscale(0.45);
+}
+
+/* Cozy Journey — paper/wood surfaces instead of dark-fantasy chrome */
+[data-theme='cozy'] .journey-v3-summary,
+[data-theme='cozy'] .journey-chapter-panel {
+  border-color: color-mix(in srgb, var(--app-border) 85%, var(--cozy-wood, #8a7052));
+  background: color-mix(in srgb, var(--cozy-paper, #f6efe3) 92%, white);
+  box-shadow: var(--app-shadow);
+  backdrop-filter: none;
+}
+
+[data-theme='cozy'] .journey-v3-summary__label,
+[data-theme='cozy'] .journey-v3-summary__hint,
+[data-theme='cozy'] .journey-chapter-panel__eyebrow,
+[data-theme='cozy'] .journey-chapter-panel__progress-meta,
+[data-theme='cozy'] .journey-chapter-panel__boss-label,
+[data-theme='cozy'] .journey-chapter-panel__hint-title {
+  color: var(--app-text-muted);
+}
+
+[data-theme='cozy'] .journey-v3-summary__value,
+[data-theme='cozy'] .journey-chapter-panel__title,
+[data-theme='cozy'] .journey-chapter-panel__boss-name,
+[data-theme='cozy'] .journey-chapter-panel__hint-text,
+[data-theme='cozy'] .journey-v3-chapter__title {
+  color: var(--app-text);
+}
+
+[data-theme='cozy'] .journey-v3-summary__value--gold {
+  color: var(--app-primary);
+}
+
+[data-theme='cozy'] .journey-v3-chapter__body {
+  border-color: color-mix(in srgb, var(--app-border) 80%, var(--cozy-wood, #8a7052));
+  background: color-mix(in srgb, var(--cozy-paper, #f6efe3) 88%, white);
+}
+
+[data-theme='cozy'] .journey-v3-chapter__main {
+  background: transparent;
+}
+
+@media (min-width: 640px) {
+  [data-theme='cozy'] .journey-v3-chapter__main {
+    background: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--cozy-paper, #f6efe3) 96%, white) 0%,
+      color-mix(in srgb, var(--cozy-paper, #f6efe3) 72%, transparent) 78%,
+      transparent 100%
+    );
+  }
+}
+
+[data-theme='cozy'] .journey-v3-chapter__desc,
+[data-theme='cozy'] .journey-v3-chapter__desc--single,
+[data-theme='cozy'] .journey-chapter-panel__description {
+  color: var(--app-text-muted);
+}
+
+[data-theme='cozy'] .journey-v3-node {
+  background: var(--cozy-paper-warm, #f3e6d2);
+  border-color: color-mix(in srgb, var(--cozy-wood, #8a7052) 45%, transparent);
+  color: var(--app-text-muted);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cozy-paper, #f6efe3) 90%, white);
+}
+
+[data-theme='cozy'] .journey-v3-node--current,
+[data-theme='cozy'] .journey-v3-node--completed {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cozy-paper, #f6efe3) 90%, white);
+}
+
+[data-theme='cozy'] .journey-chapter-panel__progress-track,
+[data-theme='cozy'] .journey-chapter-panel__boss-row,
+[data-theme='cozy'] .journey-chapter-panel__hint {
+  background: color-mix(in srgb, var(--cozy-paper-warm, #f3e6d2) 70%, white);
+  border-color: var(--app-border);
+}
+
+[data-theme='cozy'] .journey-v3-vignette__blend {
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--cozy-paper, #f6efe3) 78%, transparent) 0%,
+    color-mix(in srgb, var(--cozy-paper, #f6efe3) 22%, transparent) 48%,
+    transparent 100%
+  );
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { LayoutGrid, X } from 'lucide-react';
 import {
@@ -22,19 +22,34 @@ export function BottomNav() {
     isNavPathActive(location.pathname, path),
   );
 
+  useEffect(() => {
+    if (!moreOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [moreOpen]);
+
   return (
     <>
       {moreOpen ? (
         <button
           type="button"
           aria-label="Закрыть меню"
-          className="fixed inset-0 z-40 bg-black/45 md:hidden"
+          className="fixed inset-0 z-40 bg-black/45 lg:hidden"
           onClick={() => setMoreOpen(false)}
         />
       ) : null}
 
       {moreOpen ? (
-        <div className="fixed bottom-[calc(4.25rem+env(safe-area-inset-bottom))] left-3 right-3 z-50 max-h-[min(72vh,32rem)] overflow-y-auto rounded-2xl border border-[var(--app-border)] bg-[var(--app-card-strong)] p-3 shadow-2xl md:hidden">
+        <div
+          id="mobile-more-drawer"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Разделы"
+          className="fixed bottom-[calc(4.25rem+env(safe-area-inset-bottom))] left-3 right-3 z-50 max-h-[min(72vh,32rem)] overflow-y-auto rounded-2xl border border-[var(--app-border)] bg-[var(--app-card-strong)] p-3 shadow-2xl lg:hidden"
+        >
           <div className="mb-3 flex items-center justify-between px-1">
             <div>
               <p className="text-base font-bold text-[var(--app-text)]">Разделы</p>
@@ -43,7 +58,7 @@ export function BottomNav() {
             <button
               type="button"
               onClick={() => setMoreOpen(false)}
-              className="rounded-xl p-2 text-[var(--app-text-muted)] hover:bg-[var(--app-bg-soft)]"
+              className="rounded-xl p-2 text-[var(--app-text-muted)] hover:bg-[var(--app-bg-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)]"
               aria-label="Закрыть"
             >
               <X size={20} />
@@ -72,7 +87,7 @@ export function BottomNav() {
         </div>
       ) : null}
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-[var(--app-border)] bg-[var(--app-card-strong)] backdrop-blur-md md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-[var(--app-border)] bg-[var(--app-card-strong)] backdrop-blur-md lg:hidden">
         <div className="flex justify-around px-1 pt-1.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]">
           {mobileTabNav.map(({ to, icon: Icon, label, shortLabel }) => (
             <NavLink
@@ -108,6 +123,8 @@ export function BottomNav() {
 
           <button
             type="button"
+            aria-expanded={moreOpen}
+            aria-controls="mobile-more-drawer"
             onClick={() => setMoreOpen((value) => !value)}
             className={`flex min-w-[3.25rem] flex-1 flex-col items-center gap-1 rounded-xl px-1 py-2 transition-colors ${
               moreActive || moreOpen

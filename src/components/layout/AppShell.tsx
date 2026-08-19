@@ -23,17 +23,17 @@ export function AppShell() {
     <ThemeShell>
       <Sidebar />
       <main
-        className={`${SIDEBAR_MARGIN} overflow-x-hidden pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-8${
+        className={`${SIDEBAR_MARGIN} min-w-0 overflow-x-hidden pb-[calc(4.75rem+env(safe-area-inset-bottom))] lg:pb-8${
           isCozy ? ' cozy-main' : ''
         }`}
       >
         <div
           className={
             journeyPage
-              ? 'w-full px-4 py-6 md:px-6'
+              ? 'w-full min-w-0 px-4 py-6 md:px-6'
               : dashboardPage
-                ? 'mx-auto max-w-7xl px-4 py-6'
-                : 'mx-auto max-w-6xl px-4 py-6'
+                ? 'mx-auto min-w-0 max-w-7xl px-4 py-6'
+                : 'mx-auto min-w-0 max-w-6xl px-4 py-6'
           }
         >
           <LegacyImportBanner />

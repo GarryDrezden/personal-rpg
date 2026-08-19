@@ -118,12 +118,12 @@ export function MomentumPage() {
       : undefined);
 
   const cardGlow = isDarkFantasy
-    ? 'border-violet-500/30 bg-[color-mix(in_srgb,var(--app-glow)_8%,var(--app-card))] shadow-[0_0_20px_rgba(167,139,250,0.1)]'
+    ? 'border-[var(--app-border)] bg-[color-mix(in_srgb,var(--app-glow)_8%,var(--app-card))]'
     : 'bg-[color-mix(in_srgb,var(--app-primary)_5%,var(--app-card))]';
 
   if (!hasData) {
     return (
-      <div className="space-y-6 pb-8">
+      <div className="space-y-6 pb-8" data-testid="momentum-page">
         <header>
           <h1 className="text-2xl font-bold text-[var(--app-text)]">Инерция режима</h1>
           <p className="mt-2 max-w-2xl text-sm text-[var(--app-text-muted)]">
@@ -146,7 +146,7 @@ export function MomentumPage() {
   }
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-6 pb-8" data-testid="momentum-page">
       <header>
         <h1 className="text-2xl font-bold text-[var(--app-text)]">Инерция режима</h1>
         <p className="mt-2 max-w-2xl text-sm text-[var(--app-text-muted)]">

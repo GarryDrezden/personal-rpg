@@ -66,7 +66,7 @@ export function JourneyMapPage() {
   }, [summary.currentStage, stages]);
 
   return (
-    <div className="journey-page pb-6">
+    <div className="journey-page pb-6" data-testid="journey-page">
       <header className="journey-page__header mb-5">
         <h1 className="text-2xl font-bold text-[var(--app-text)]">Карта возвращения тела</h1>
         <p className="mt-2 text-sm text-[var(--app-text-muted)]">

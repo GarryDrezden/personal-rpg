@@ -40,35 +40,40 @@ export function ThemeSelector({ value, onChange }: ThemeSelectorProps) {
       {APP_THEMES.map((theme) => {
         const active = value === theme.id;
         return (
-          <div
-            key={theme.id}
-            data-testid={`theme-option-${theme.id}`}
-            className={`rounded-3xl border p-4 transition-shadow ${              active
-                ? 'border-[var(--app-primary)] bg-[var(--app-primary-soft)] shadow-[var(--app-shadow)]'
-                : 'border-[var(--app-border)] bg-[var(--app-card)]'
-            }`}
-          >
-            <div className="flex items-start gap-2">
-              <span className="text-2xl">{theme.previewEmoji}</span>
-              <div>
-                <h3 className="font-semibold text-[var(--app-text)]">{theme.title}</h3>
-                <p className="mt-1 text-sm text-[var(--app-text-muted)]">
-                  {theme.description}
-                </p>
-              </div>
-            </div>
-
-            <ThemePreview themeId={theme.id} />
-
             <button
+              key={theme.id}
               type="button"
+              data-testid={`theme-option-${theme.id}`}
               onClick={() => onChange(theme.id)}
               disabled={active}
-              className="mt-4 w-full rounded-xl bg-[var(--app-primary)] px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:brightness-105 disabled:cursor-default disabled:opacity-50"
+              aria-pressed={active}
+              aria-label={`Тема: ${theme.title}`}
+              className={`rounded-3xl border p-4 text-left transition-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)] ${
+                active
+                  ? 'border-[var(--app-primary)] bg-[var(--app-primary-soft)] shadow-[var(--app-shadow)]'
+                  : 'border-[var(--app-border)] bg-[var(--app-card)] hover:border-[var(--app-primary)]/50'
+              }`}
             >
-              {active ? 'Выбрана' : 'Выбрать'}
+              <div className="flex items-start gap-2">
+                <span className="text-2xl" aria-hidden>
+                  {theme.previewEmoji}
+                </span>
+                <div>
+                  <span className="block font-semibold text-[var(--app-text)]">{theme.title}</span>
+                  <p className="mt-1 text-sm text-[var(--app-text-muted)]">{theme.description}</p>
+                </div>
+              </div>
+
+              <ThemePreview themeId={theme.id} />
+
+              <span
+                className={`mt-4 block w-full rounded-xl bg-[var(--app-primary)] px-4 py-2.5 text-center text-sm font-semibold text-slate-950 ${
+                  active ? 'opacity-50' : ''
+                }`}
+              >
+                {active ? 'Выбрана' : 'Выбрать'}
+              </span>
             </button>
-          </div>
         );
       })}
     </div>

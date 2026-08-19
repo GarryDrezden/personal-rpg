@@ -34,7 +34,7 @@ export function OnboardingStepTheme({ draft, onChange }: OnboardingStepThemeProp
               !opt.available
                 ? 'cursor-not-allowed border-[var(--app-border)]/70 bg-[var(--app-bg)]/50 opacity-65'
                 : isSelected
-                  ? 'border-[var(--app-primary)] bg-[var(--app-primary-soft)] shadow-[0_0_16px_rgba(167,139,250,0.12)]'
+                  ? 'border-[var(--app-primary)] bg-[var(--app-primary-soft)] shadow-[var(--app-shadow)]'
                   : 'border-[var(--app-border)] bg-[var(--app-bg)] hover:border-[var(--app-primary)]/40'
             }`}
           >

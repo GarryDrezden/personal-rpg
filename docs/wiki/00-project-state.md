@@ -1,6 +1,6 @@
 # Текущее состояние проекта
 
-> **Единый источник правды.** Обновлено: 2026-08-19 (project hardening v1).
+> **Единый источник правды.** Обновлено: 2026-08-19 (visual UX pass v1).
 
 ## Краткое описание
 
@@ -54,6 +54,7 @@
 - **Quality gate:** `npm run verify` (typecheck + tests + validate:avatars + vite build)
 - **Known issues:** [`14-known-issues.md`](14-known-issues.md)
 - **Hardening audit:** [`../audits/project-hardening-v1.md`](../audits/project-hardening-v1.md)
+- **Visual UX audit:** [`../audits/visual-ux-pass-v1.md`](../audits/visual-ux-pass-v1.md)
 
 ## Sprint 1 — Accounts & Storage ✅ (production: PHP + MySQL)
 
@@ -80,7 +81,7 @@
 - **Progress map** (`/map`) — пути веса, шагов, трезвости и др.
 - **Reports** (`/reports`), **Insights** (`/insights`)
 - **Settings** (`/settings`), **FAQ** (`/faq`) — в Settings есть установка PWA на домашний экран; **Боковое меню** — opt-in видимость Летописи / Карты навыков / Инерции / Роста героя / **Питомцев** (отдельно для Cozy и Dark Fantasy); выключенные пункты не показываются серыми заглушками
-- Sidebar resolver: `getSidebarNavigation({ themeId, settings })` — базовый shell всегда виден; advanced-пункты скрыты по умолчанию; маршруты не отключаются
+- Sidebar resolver: `getSidebarNavigation({ themeId, settings })` — базовый shell всегда виден; advanced-пункты скрыты по умолчанию; маршруты не отключаются. Desktop sidebar с **1024px**; уже — bottom nav + «Ещё».
 - Dashboard campaign plates (Сезон + Лагерь/Укрытие) — общий `CampaignDashboardCardShell` (одинаковые баннеры/выравнивание)
 
 ### Journey Map (актуальный UI — v3)

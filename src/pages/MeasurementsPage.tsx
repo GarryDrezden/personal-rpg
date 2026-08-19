@@ -176,7 +176,7 @@ export function MeasurementsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="measurements-page">
       <header>
         <h1 className="text-2xl font-bold">Замеры</h1>
         {isMonday(today) && (

@@ -13,4 +13,4 @@ Not a backlog of ideas — only issues that still exist in runtime or production
 | KI-06 | Low | UI | TodayPage / SettingsPage remain large orchestrators. | Open the files. | Deferred until a bug requires a split |
 | KI-07 | Low | Performance | Main SPA chunk is ~954 kB / ~254 kB gzip. Route-level lazy loading exists for secondary pages; Dashboard/Today stay in the main bundle. | `npm run build` warning. | Open — not micro-optimized this pass |
 
-Closed in hardening v1: unauthenticated SQLite API, public `data/*.sqlite`, Cozy free comfort when nutrition is off, Cozy grant/settings split, season window overlap, raw body-stage avatar paths, broken `/dashboard` link, missing error boundary, stale `?v=42` asset tests, male hero manifest PNG vs on-disk WebP.
+Closed in hardening v1 + visual UX v1: unauthenticated SQLite API, public `data/*.sqlite`, Cozy free comfort when nutrition is off, Cozy grant/settings split, season window overlap, raw body-stage avatar paths, broken `/dashboard` link, missing error boundary, stale `?v=42` asset tests, male hero manifest PNG vs on-disk WebP, Cozy Journey DF chrome, 768px cramped sidebar, avatar glued to hero floor.

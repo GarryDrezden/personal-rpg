@@ -18,8 +18,8 @@ type DashboardHeroAvatarProps = {
  *
  * Stage canvases are 1536×2048 with large transparent padding (~48% body width,
  * ~81% body height). The image box fills the scene minus safe margins so the
- * visible figure reads ~60–70% of scene height — via height + object-fit:contain,
- * not transform:scale.
+ * visible figure reads ~60–70% of scene height with breathing room above the
+ * floor — via height + object-fit:contain and inset padding, not transform:scale.
  */
 export function DashboardHeroAvatar({
   themeId,
@@ -32,13 +32,13 @@ export function DashboardHeroAvatar({
   return (
     <div
       data-testid="dashboard-hero-avatar-layer"
-      className="pointer-events-none absolute inset-0 z-10 flex items-end justify-center px-3 pb-[5%] pt-[15%] sm:px-4 sm:pb-[6%] sm:pt-[12%] lg:px-5 lg:pb-[7%] lg:pt-[10%]"
+      className="pointer-events-none absolute inset-0 z-10 flex items-end justify-center px-4 pb-[14%] pt-[18%] sm:px-5 sm:pb-[15%] sm:pt-[14%] lg:px-6 lg:pb-[16%] lg:pt-[12%]"
     >
       <div
         data-testid="hero-scene-character"
         data-hero-state={heroState}
         data-body-stage={bodyStage}
-        className="relative flex h-full w-full max-w-[min(100%,19rem)] items-end justify-center sm:max-w-[min(100%,25rem)] lg:max-w-[min(100%,32rem)] xl:max-w-[min(100%,36rem)]"
+        className="relative flex h-full w-full max-w-[min(100%,21rem)] items-end justify-center sm:max-w-[min(100%,27rem)] lg:max-w-[min(100%,34rem)] xl:max-w-[min(100%,38rem)]"
       >
         <HeroStateChrome
           themeId={themeId}

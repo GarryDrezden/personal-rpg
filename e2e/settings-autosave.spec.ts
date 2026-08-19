@@ -32,7 +32,7 @@ test.describe('Settings autosave feedback', () => {
 
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'cozy');
 
-    await page.getByTestId('theme-option-darkFantasy').getByRole('button', { name: 'Выбрать' }).click();
+    await page.getByTestId('theme-option-darkFantasy').click();
 
     await expect(page.getByTestId('theme-autosave-status')).toContainText('Тема сохранена');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'darkFantasy');

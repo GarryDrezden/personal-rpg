@@ -1774,6 +1774,17 @@
 }
 
 @media (max-width: 640px) {
+  [data-theme='cozy'] .cozy-home-page::before,
+  [data-theme='cozy'] .cozy-home-page::after {
+    display: none;
+  }
+
+  .cozy-atmosphere__botanical {
+    opacity: 0.05;
+    width: min(38vw, 11rem);
+    height: min(38vw, 11rem);
+  }
+
   .cozy-botanical-frame__foliage--bl,
   .cozy-botanical-frame__foliage--br {
     display: none;

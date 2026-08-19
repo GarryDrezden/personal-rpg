@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-08-19 — Visual / UX pass v1
+
+**Context:**  
+Journey Map on Cozy still used Dark Fantasy navy cards. Sidebar at 768px ate half the screen. Dashboard hero sat on the floor; botanical print stacked on Home.
+
+**Decision:**  
+Desktop nav from `lg` (1024) at 304px. Cozy Journey paper override. Avatar inset padding (files unchanged). One botanical surface on Home. Overflow + theme smoke in Playwright, no pixel baselines.
+
+**Consequence:**  
+See [`../audits/visual-ux-pass-v1.md`](../audits/visual-ux-pass-v1.md).
+
 ## 2026-08-19 — Project hardening v1
 
 **Context:**  

@@ -20,11 +20,13 @@
 5. **Cozy Theme:** center on home + daily care, not battle scene — see [`themes.md`](themes.md) → Cozy Dashboard Concept
 6. **Avatar layers:** show «Стадия тела» and «Состояние героя» separately — never one misleading slim-%; body art from `bodyStage` only; Hero State via overlay/chrome (`HeroStateChrome`)
 7. Avatar paths only via `getResolvedAvatarStageAsset` / `useHeroStageAssets` — no hardcoded theme paths in panels
+8. **Hero scene:** figure centered horizontally, lifted off the floor (inset padding). Do not crop approved avatar files to remove transparent margins. Companion chip sits top-right, not on the feet.
+9. On viewports `< lg`, command-bridge shows **hero first**, then threats, then day actions.
 
 ## Navigation
 
-- Desktop: sidebar
-- Mobile: bottom bar + «Ещё» drawer (same visibility resolver as desktop)
+- Desktop (≥1024px / `lg`): sidebar, 304px.
+- Below 1024px: bottom bar + «Ещё» drawer (same visibility resolver as desktop). Tablet 768 uses mobile chrome.
 - Growth hub: tabs (`/growth/:tab`)
 - **Sidebar prioritizes daily actions and core progression.** Advanced / low-frequency screens are opt-in.
 - Hiding a navigation item never disables the underlying feature, route, deep link, or in-app CTA.
@@ -251,16 +253,17 @@ Decorative style for large narrative Cozy surfaces — warm illustrated home chr
 
 **Rules:**
 - botanical decoration is contextual, not universal;
+- **at most 1–2 large botanical surfaces per screen** (Home: scene hero only);
 - large narrative surfaces may use illustrated frames;
 - small utility cards stay clean;
 - warm paper, green foliage and light handwritten accents form the cozy visual identity;
 - never reduce readability for decoration.
 
-**Where to use:** Cozy Home hero, Dashboard home block, Seasons / «Сезонный дневник», Cozy onboarding intro, empty states, avatar placeholder scenes, companion cards (non-compact), large illustrative panels.
+**Where to use:** Cozy Home **scene** hero, Dashboard home block, Seasons / «Сезонный дневник», Cozy onboarding intro, empty states, avatar placeholder scenes, companion cards (non-compact), large illustrative panels.
 
-**Where not to use:** every small card, buttons, tables, long body copy, metrics, navigation.
+**Where not to use:** every small card, buttons, tables, long body copy, metrics, navigation, Home page title/status.
 
-**Typography:** `.cozy-hand-accent` — Georgia italic for short flavor only (notes, seasonal asides, home status). Do not load random web fonts for handwriting.
+**Typography:** `.cozy-hand-accent` — Georgia italic for short flavor only (notes, seasonal asides). Never on buttons, nav, metrics, or Home status lines. Do not load random web fonts for handwriting.
 
 **Mobile:** keep 1–2 corners; hide large lower branches; do not shrink useful content width; no horizontal scroll.
 

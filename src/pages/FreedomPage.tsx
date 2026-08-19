@@ -52,7 +52,7 @@ export function FreedomPage() {
   );
 
   return (
-    <div className="space-y-8 pb-4" data-testid="freedom-page">
+    <div className="space-y-5 pb-4" data-testid="freedom-page">
       <header className="space-y-2">
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--app-gold)]">
           {mapCopy.eyebrow}
@@ -65,7 +65,7 @@ export function FreedomPage() {
 
       <BodyAbilityPersonalGrid hidePageHeader />
 
-      <div className="space-y-6 border-t border-[var(--app-border)] pt-8">
+      <div className="space-y-5 border-t border-[var(--app-border)] pt-6">
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--app-text-muted)]">
           {themeId === 'cozy' ? 'Индекс и следы пути' : 'Индекс и следы кампании'}
         </p>

@@ -33,7 +33,7 @@ export function InsightsPage() {
   const daysCount = countDaysWithData(dailyEntries);
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-6 pb-8" data-testid="insights-page">
       <header>
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--app-card-strong)] text-[var(--app-success)]">

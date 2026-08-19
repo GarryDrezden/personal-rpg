@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import { useAppStore } from '../../store/appStore';
 
-const SIDEBAR_WIDTH = 'md:w-[356px]';
-const SIDEBAR_MARGIN = 'md:ml-[356px]';
+const SIDEBAR_WIDTH = 'lg:w-[304px]';
+const SIDEBAR_MARGIN = 'lg:ml-[304px]';
 
 export function Sidebar() {
   const { user, logout } = useAuth();
@@ -19,7 +19,7 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`hidden md:flex ${SIDEBAR_WIDTH} md:flex-col md:fixed md:inset-y-0 border-r border-[var(--app-border)] bg-[var(--app-card-strong)] backdrop-blur-md`}
+      className={`hidden lg:flex ${SIDEBAR_WIDTH} lg:flex-col lg:fixed lg:inset-y-0 border-r border-[var(--app-border)] bg-[var(--app-card-strong)] backdrop-blur-md`}
     >
       <div className="flex shrink-0 flex-col items-center border-b border-[var(--app-border)] px-4 py-4 text-center">
         <img

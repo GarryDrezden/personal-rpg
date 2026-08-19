@@ -87,21 +87,15 @@ export function CozyHomePage() {
 
   return (
     <div className="cozy-home-page space-y-5 pb-6" data-testid="cozy-home-page">
-      <CozyBotanicalFrame
-        intensity="medium"
-        note="страница домашнего дневника"
-        testId="cozy-home-header-frame"
-      >
-        <header className="cozy-home-page__header">
+      <header className="cozy-home-page__header">
           <div className="cozy-home-page__header-mark" aria-hidden />
           <p className="cozy-home-page__eyebrow">Деревенский дом</p>
           <h1 className="cozy-home-page__title">Дом</h1>
           <p className="cozy-home-page__lead">
             Тело возвращает силы — дом возвращает тепло.
           </p>
-          <p className="cozy-home-page__status cozy-hand-accent">{statusLine}</p>
-        </header>
-      </CozyBotanicalFrame>
+          <p className="cozy-home-page__status">{statusLine}</p>
+      </header>
 
       <CozyBotanicalFrame
         intensity="hero"
@@ -157,7 +151,6 @@ export function CozyHomePage() {
       </CozyBotanicalFrame>
 
       {totalResources === 0 ? (
-        <CozyBotanicalFrame intensity="subtle" paper testId="cozy-home-empty-frame">
         <section className="cozy-home-empty" data-testid="cozy-home-empty-resources">
           <p className="cozy-home-empty__title">
             {getThemedEmptyStateCopy('cozy', 'noResources').title}
@@ -169,7 +162,6 @@ export function CozyHomePage() {
             Открыть день
           </Link>
         </section>
-        </CozyBotanicalFrame>
       ) : null}
 
       <section className="cozy-home-changed">

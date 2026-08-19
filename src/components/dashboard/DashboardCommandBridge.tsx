@@ -217,10 +217,10 @@ export function DashboardCommandBridge({
 
       {/* Command bridge: threats | hero | day */}
       <div className="grid grid-cols-1 gap-0 lg:grid-cols-[minmax(11rem,0.95fr)_minmax(0,1.35fr)_minmax(14rem,1.05fr)]">
-        {/* Left — threats */}
+        {/* Left — threats (after hero on mobile so the portrait stays the visual center) */}
         <div
           data-testid="command-bridge-threats"
-          className="flex flex-col gap-2.5 border-b border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] p-2.5 sm:p-3 lg:border-b-0 lg:border-r"
+          className="order-2 flex flex-col gap-2.5 border-b border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] p-2.5 sm:p-3 lg:order-1 lg:border-b-0 lg:border-r"
         >
           <ChapterBossMiniCard
             bossId={game.bossId}
@@ -234,7 +234,7 @@ export function DashboardCommandBridge({
         {/* Center — hero scene (large framed portrait like dashboard reference) */}
         <div
           data-testid="command-bridge-hero"
-          className={`relative min-h-[24rem] overflow-hidden border-b border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] lg:min-h-[30rem] lg:border-b-0 lg:border-r ${
+          className={`relative order-1 min-h-[22rem] overflow-hidden border-b border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] sm:min-h-[24rem] lg:order-2 lg:min-h-[30rem] lg:border-b-0 lg:border-r ${
             isCozy ? 'bg-[#efe4d2]' : 'bg-[#0c0a12]'
           }`}
         >
@@ -290,7 +290,7 @@ export function DashboardCommandBridge({
         {/* Right — day actions */}
         <div
           data-testid="command-bridge-day"
-          className="flex flex-col gap-2.5 p-2.5 sm:p-3"
+          className="order-3 flex flex-col gap-2.5 p-2.5 sm:p-3 lg:order-3"
         >
           <DashboardPrimaryCta action={primaryAction} />
           <DashboardResourceCompact entry={todayEntry} />

@@ -16,7 +16,7 @@ export function ProgressMapPage() {
   const hasData = hasAnyMapData(paths);
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-6 pb-8" data-testid="progress-map-page">
       <header className="space-y-1">
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--app-gold)]/75">
           Кампания

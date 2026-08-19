@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Visual / UX pass v1
+
+- Tablet/desktop chrome from 1024px (`lg`); sidebar 304px. 768 uses bottom nav.
+- Dashboard hero lifted off the scene floor; companion chip top-right; mobile command-bridge shows hero first.
+- Cozy Journey Map uses paper/wood surfaces (no DF navy chrome). Journey page no longer 75% width gutters.
+- Cozy Home: one botanical hero; functional status is not handwritten. DF glow is gold, not purple.
+- Visual QA: `e2e/visual-master-smoke.spec.ts`, `e2e/responsive-smoke.spec.ts`. Theme cards are the control (not nested «Выбрать»). Optional screenshots: `VISUAL_QA=1`.
+
 ### Security / hardening
 
 - Legacy unauthenticated SQLite API (`/daily`, `/backup`, full dump) is off when MySQL `config.php` is present.

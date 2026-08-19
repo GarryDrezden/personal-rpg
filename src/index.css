@@ -83,7 +83,7 @@
   --app-danger: #fb7185;
   --app-warning: #fb923c;
 
-  --app-glow: rgba(167, 139, 250, 0.28);
+  --app-glow: rgba(250, 204, 21, 0.16);
   --app-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
   --app-nav-active-bg: rgba(124, 58, 237, 0.22);
   --app-nav-active-text: #fde68a;
@@ -126,6 +126,11 @@ body {
   font-family: system-ui, -apple-system, sans-serif;
 }
 
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--app-primary) 75%, white);
+  outline-offset: 2px;
+}
+
 #root {
   @apply min-h-screen;
 }
@@ -154,7 +159,11 @@ body {
 }
 
 .hero-glow {
-  box-shadow: 0 0 40px var(--app-glow);
+  box-shadow: 0 0 28px var(--app-glow);
+}
+
+[data-theme='darkFantasy'] .hero-glow {
+  box-shadow: 0 0 22px rgba(250, 204, 21, 0.12);
 }
 
 .journey-page__below {

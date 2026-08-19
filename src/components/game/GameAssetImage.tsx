@@ -78,7 +78,7 @@ export function GameAssetImage({
   const fitClass = FIT_CLASS[resolvedFit];
   const variantScale = VARIANT_SCALE[variant] ?? '';
   const alignClass = resolvedFit === 'hero' ? 'items-end' : 'items-center';
-  const overflowClass = resolvedFit === 'hero' ? 'overflow-visible' : 'overflow-hidden';
+  const overflowClass = 'overflow-hidden';
 
   if (candidates.length === 0 || exhausted) {
     return (

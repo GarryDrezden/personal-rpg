@@ -6,7 +6,7 @@ import { FAQ_QUICK_START, FAQ_SECTIONS } from '../constants/faqContent';
 
 export function FaqPage() {
   return (
-    <div className="space-y-8 pb-6">
+    <div className="space-y-8 pb-6" data-testid="faq-page">
       <header>
         <div className="flex items-center gap-3">
           <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--app-primary)_14%,var(--app-card))] text-[var(--app-primary)]">

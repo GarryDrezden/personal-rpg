@@ -22,7 +22,7 @@ export function TodaySaveReactionCard({
       className="space-y-3"
       role="status"
     >
-      <div className="rounded-2xl border border-[var(--app-gold)]/35 bg-[var(--app-primary-soft)]/55 px-4 py-4 shadow-[0_0_20px_rgba(250,204,21,0.08)]">
+      <div className="rounded-2xl border border-[var(--app-gold)]/35 bg-[var(--app-primary-soft)]/55 px-4 py-3 shadow-[0_0_20px_rgba(250,204,21,0.08)]">
         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--app-gold)]">
           Реакция дня
         </p>

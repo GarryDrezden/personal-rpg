@@ -4,6 +4,7 @@ deploy-bundle/
 .deploy-staging/
 release/
 test-results/
+artifacts/visual-qa/
 installer/staging/
 tsconfig.tsbuildinfo
 data/*.sqlite
