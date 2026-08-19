@@ -11,7 +11,7 @@ import {
 } from '../../utils/bodyAbilityPersonalEngine';
 
 export function BodyAbilityMapSettingsCard() {
-  const { settings, saveSettings } = useAppStore();
+  const { settings } = useAppStore();
   const [regenBusy, setRegenBusy] = useState(false);
   const configured = isBodyAbilityProfileConfigured(settings);
   const personal = getPersonalBodyAbilitiesState(settings);
@@ -28,7 +28,8 @@ export function BodyAbilityMapSettingsCard() {
     if (!ok) return;
     setRegenBusy(true);
     try {
-      await saveSettings(regenerateBodyAbilityMap(settings, personal.profile));
+      const latest = useAppStore.getState();
+      await latest.saveSettings(regenerateBodyAbilityMap(latest.settings, personal.profile));
     } finally {
       setRegenBusy(false);
     }

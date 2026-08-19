@@ -14,13 +14,16 @@ import {
 import type { SidebarVisibilityKey } from '../../types/sidebar';
 
 export function SidebarVisibilitySettingsCard() {
-  const { settings, saveSettings } = useAppStore();
+  const settings = useAppStore((s) => s.settings);
   const { themeId } = useAppTheme();
   const visibility = getSidebarVisibilityForTheme(settings, themeId);
   const themeLabel = themeLabelForSidebar(themeId);
 
   const handleToggle = async (key: SidebarVisibilityKey, next: boolean) => {
-    await saveSettings(withSidebarVisibilityToggle(settings, themeId, key, next));
+    const latest = useAppStore.getState();
+    await latest.saveSettings(
+      withSidebarVisibilityToggle(latest.settings, themeId, key, next),
+    );
   };
 
   return (

@@ -41,5 +41,26 @@ test.describe('Settings autosave feedback', () => {
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'darkFantasy');
     await expect(page.getByTestId('theme-option-darkFantasy')).toContainText('Выбрана');
   });
+
+  test('dirty draft weight survives theme autosave and explicit Save keeps both', async ({
+    page,
+  }) => {
+    await page.goto('/settings');
+    await expect(page.getByRole('heading', { name: 'Настройки' })).toBeVisible();
+
+    const weightInput = page.locator('#settings-weight input[type="number"]');
+    await weightInput.fill('88');
+    await expect(weightInput).toHaveValue('88');
+
+    await page.getByTestId('theme-option-darkFantasy').click();
+    await expect(page.getByTestId('theme-autosave-status')).toContainText('Тема сохранена');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'darkFantasy');
+    await expect(weightInput).toHaveValue('88');
+
+    await page.getByRole('button', { name: 'Сохранить' }).click();
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'darkFantasy');
+    await expect(page.locator('#settings-weight input[type="number"]')).toHaveValue('88');
+  });
 });
 

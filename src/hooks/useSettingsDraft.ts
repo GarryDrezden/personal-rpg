@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppStore } from '../store/appStore';
 import { DEFAULT_POINT_SETTINGS } from '../constants/defaults';
 import { DEFAULT_COIN_SETTINGS } from '../constants/coins';
@@ -7,21 +7,50 @@ import type { AppSettings, CoinSettings, PointSettings, WeeklySettings } from '.
 import type { AvatarStage } from '../types/avatar';
 import { generateId } from '../utils/generateId';
 import { calcAutoAvatarStage, getWeightLossFromMeasurements } from '../utils/avatarEngine';
+import {
+  addDirtyKeys,
+  dirtyKeysFromPatch,
+  mergePersistedIntoDraft,
+  type SettingsDraftOwnedKey,
+} from '../utils/settingsDraftMerge';
 
 export function useSettingsDraft() {
-  const { settings, measurements, saveSettings } = useAppStore();
+  const settings = useAppStore((s) => s.settings);
+  const measurements = useAppStore((s) => s.measurements);
+  const saveSettings = useAppStore((s) => s.saveSettings);
   const [local, setLocal] = useState(settings);
+  const [dirtyKeys, setDirtyKeys] = useState<Set<string>>(() => new Set());
   const [saving, setSaving] = useState(false);
+  const dirtyKeysRef = useRef(dirtyKeys);
+  const localRef = useRef(local);
+  dirtyKeysRef.current = dirtyKeys;
+  localRef.current = local;
 
   useEffect(() => {
-    setLocal(settings);
+    setLocal((draft) =>
+      mergePersistedIntoDraft({
+        persisted: settings,
+        draft,
+        dirtyKeys: dirtyKeysRef.current,
+      }),
+    );
   }, [settings]);
 
-  const patchLocal = useCallback((patch: Partial<AppSettings>) => {
-    setLocal((prev) => ({ ...prev, ...patch }));
+  const markDirty = useCallback((keys: readonly SettingsDraftOwnedKey[]) => {
+    if (keys.length === 0) return;
+    setDirtyKeys((prev) => addDirtyKeys(prev, keys));
   }, []);
 
+  const patchLocal = useCallback(
+    (patch: Partial<AppSettings>) => {
+      markDirty(dirtyKeysFromPatch(patch));
+      setLocal((prev) => ({ ...prev, ...patch }));
+    },
+    [markDirty],
+  );
+
   const updatePoints = (key: keyof PointSettings, value: number) => {
+    markDirty(['pointSettings']);
     setLocal((prev) => ({
       ...prev,
       pointSettings: { ...prev.pointSettings, [key]: value },
@@ -34,6 +63,7 @@ export function useSettingsDraft() {
   };
 
   const updateCoins = (key: keyof CoinSettings, value: number) => {
+    markDirty(['coinSettings']);
     setLocal((prev) => ({
       ...prev,
       coinSettings: {
@@ -56,10 +86,12 @@ export function useSettingsDraft() {
       gymTarget: local.defaultGymTarget,
       weeklyPointsGoal: local.defaultWeeklyPointsGoal,
     };
+    markDirty(['weeklySettings']);
     setLocal((prev) => ({ ...prev, weeklySettings: [...prev.weeklySettings, week] }));
   };
 
   const updateWeek = (id: string, partial: Partial<WeeklySettings>) => {
+    markDirty(['weeklySettings']);
     setLocal((prev) => ({
       ...prev,
       weeklySettings: prev.weeklySettings.map((week) =>
@@ -69,6 +101,7 @@ export function useSettingsDraft() {
   };
 
   const removeWeek = (id: string) => {
+    markDirty(['weeklySettings']);
     setLocal((prev) => ({
       ...prev,
       weeklySettings: prev.weeklySettings.filter((week) => week.id !== id),
@@ -78,10 +111,15 @@ export function useSettingsDraft() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await saveSettings({
-        ...local,
-        enableSleepTracking: settings.enableSleepTracking ?? false,
+      const persisted = useAppStore.getState().settings;
+      const next = mergePersistedIntoDraft({
+        persisted,
+        draft: localRef.current,
+        dirtyKeys: dirtyKeysRef.current,
       });
+      await saveSettings(next);
+      setLocal(next);
+      setDirtyKeys(new Set());
     } finally {
       setSaving(false);
     }
@@ -89,11 +127,13 @@ export function useSettingsDraft() {
 
   const handleReset = () => {
     if (!confirm('Сбросить баллы к значениям по умолчанию?')) return;
+    markDirty(['pointSettings']);
     setLocal((prev) => ({ ...prev, pointSettings: { ...DEFAULT_POINT_SETTINGS } }));
   };
 
   const handleResetCoins = () => {
     if (!confirm('Сбросить монеты к значениям по умолчанию?')) return;
+    markDirty(['coinSettings']);
     setLocal((prev) => ({ ...prev, coinSettings: { ...DEFAULT_COIN_SETTINGS } }));
   };
 
@@ -105,6 +145,7 @@ export function useSettingsDraft() {
       : calcAutoAvatarStage(weightLossKg, avatarSettings.stageThresholdsKg);
 
   const updateAvatar = (patch: Partial<typeof avatarSettings>) => {
+    markDirty(['avatarSettings', 'gender']);
     setLocal((prev) => {
       const current = resolveAvatarSettings(prev);
       const next = {
@@ -135,6 +176,7 @@ export function useSettingsDraft() {
 
   const handleResetAvatar = () => {
     if (!confirm('Сбросить настройки аватара к значениям по умолчанию?')) return;
+    markDirty(['avatarSettings', 'gender']);
     setLocal((prev) => ({
       ...prev,
       gender: DEFAULT_AVATAR_SETTINGS.gender,
@@ -145,6 +187,7 @@ export function useSettingsDraft() {
   return {
     local,
     saving,
+    hasUnsavedChanges: dirtyKeys.size > 0,
     patchLocal,
     handleSave,
     handleReset,

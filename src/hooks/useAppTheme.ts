@@ -12,7 +12,6 @@ import {
 
 export function useAppTheme() {
   const settings = useAppStore((s) => s.settings);
-  const saveSettings = useAppStore((s) => s.saveSettings);
   const themeId = resolveThemeId(settings.themeId);
   const theme = getThemeById(themeId);
 
@@ -21,14 +20,12 @@ export function useAppTheme() {
     setStoredThemeId(themeId);
   }, [themeId]);
 
-  const setThemeId = useCallback(
-    async (nextId: AppThemeId) => {
-      applyThemeToDocument(nextId);
-      setStoredThemeId(nextId);
-      await saveSettings({ ...settings, themeId: nextId });
-    },
-    [settings, saveSettings],
-  );
+  const setThemeId = useCallback(async (nextId: AppThemeId) => {
+    applyThemeToDocument(nextId);
+    setStoredThemeId(nextId);
+    const { settings: latest, saveSettings: persist } = useAppStore.getState();
+    await persist({ ...latest, themeId: nextId });
+  }, []);
 
   return {
     themeId,

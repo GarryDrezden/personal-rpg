@@ -4,8 +4,7 @@ import { SETTINGS_SECTION_IDS } from './settingsTocSections';
 import { useAppStore } from '../../store/appStore';
 
 export function ExperimentalSettingsSection() {
-  const { settings, saveSettings } = useAppStore();
-  const sleepTrackingEnabled = settings.enableSleepTracking ?? false;
+  const sleepTrackingEnabled = useAppStore((s) => s.settings.enableSleepTracking) ?? false;
 
   return (
     <SettingsSection id={SETTINGS_SECTION_IDS.experimental}>
@@ -21,7 +20,11 @@ export function ExperimentalSettingsSection() {
           }
           checked={sleepTrackingEnabled}
           onChange={async (next) => {
-            await saveSettings({ ...settings, enableSleepTracking: next });
+            const latest = useAppStore.getState();
+            await latest.saveSettings({
+              ...latest.settings,
+              enableSleepTracking: next,
+            });
           }}
           testId="setting-row-sleep-tracking"
           toggleTestId="sleep-tracking-toggle"
