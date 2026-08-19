@@ -14,11 +14,11 @@ import {
   WeeklyGoalsSettingsSection,
 } from '../components/settings/GoalsSettingsSections';
 import {
-  BackupSettingsSection,
   CoinSettingsSection,
   HabitsSettingsSection,
   XpSettingsSection,
 } from '../components/settings/AdvancedSettingsSections';
+import { DataBackupSection } from '../components/settings/DataBackupSection';
 import { SETTINGS_SECTION_IDS } from '../components/settings/settingsTocSections';
 import { useSettingsDraft } from '../hooks/useSettingsDraft';
 
@@ -45,7 +45,7 @@ export function SettingsPage() {
       <CoinSettingsSection draft={draft} />
       <XpSettingsSection draft={draft} />
       <HabitsSettingsSection draft={draft} />
-      <BackupSettingsSection />
+      <DataBackupSection />
     </div>
   );
 }

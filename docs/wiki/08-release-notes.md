@@ -6,6 +6,7 @@
 
 - Refactored Today and Settings page architecture without changing user-facing behavior. Pages are orchestrators; domain logic stays in engines. See [`../audits/page-decomposition-v1.md`](../audits/page-decomposition-v1.md).
 - Settings draft merge: autosave no longer overwrites unsaved draft fields; explicit Save overlays dirty keys onto the latest store settings. See [`../audits/settings-draft-safety-v1.md`](../audits/settings-draft-safety-v1.md).
+- User data integrity: schema version, migrate-then-normalize, JSON backup/restore in Settings, hydration save guard. See [`../audits/data-integrity-v1.md`](../audits/data-integrity-v1.md).
 - Route-level lazy load for Dashboard, Today, and Start (other heavy pages were already lazy). Journey map CSS loads with the Journey route. `npm run check:bundle` after production build. See [`../audits/bundle-optimization-v1.md`](../audits/bundle-optimization-v1.md).
 
 ### Visual / UX pass v1
@@ -25,6 +26,7 @@
 ### Fixed
 
 - Unsaved Settings draft fields (goals, hero, avatar, nutrition, weeks, coins, XP, habits) are no longer replaced when theme, sidebar, or sleep autosave writes to the store.
+- Settings backup is a versioned JSON export/import (no SQLite download). Concurrent tab saves return 409 when `revision` mismatches.
 - Cozy Home no longer grants “nutrition logged” comfort when nutrition tracking is disabled.
 - Cozy daily grant writes settings before stamping the day; `lastDailyGrantDate` blocks double-grant if the stamp is missing.
 - Incomplete Season 1 still stays active; late completion no longer shares days with Season 2.

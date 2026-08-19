@@ -77,18 +77,3 @@ export function HabitsSettingsSection({ draft }: DraftSectionProps) {
     </SettingsSection>
   );
 }
-
-export function BackupSettingsSection() {
-  return (
-    <SettingsSection id={SETTINGS_SECTION_IDS.backup}>
-      <h2 className="mb-2 font-semibold">Бэкап</h2>
-      <a
-        href="/api/backup"
-        download
-        className="inline-block rounded-xl border border-[var(--app-border)] bg-[var(--app-card-strong)] px-4 py-3 text-sm font-medium text-[var(--app-text)] hover:brightness-[1.04]"
-      >
-        Скачать .sqlite
-      </a>
-    </SettingsSection>
-  );
-}

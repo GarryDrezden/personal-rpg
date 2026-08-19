@@ -89,11 +89,15 @@ legacyImport, bankDeposits
 
 | Маршрут | Описание |
 |---------|----------|
-| `GET /api/data` | profile + settings + все `user_data` |
-| `GET /api/data/:type` | один тип |
-| `PUT /api/data/:type` | `{ payload }` — только для текущего userId |
+| `GET /api/data` | profile + settings + все `user_data` + `revisions` |
+| `GET /api/data/:type` | `{ type, payload, revision }` |
+| `PUT /api/data/:type` | `{ payload, revision? }` — replace blob. If `revision` sent and mismatches → **409** `{ error, currentRevision }` |
+| `PUT /api/data` | `{ data: { type: payload } }` — transactional bulk replace of listed types |
+| `POST /api/data/restore` | snapshot current blobs, then transactional replace listed types + optional profile/settings columns |
 | `PATCH /api/profile` | displayName, heroGender, weights, height |
 | `PATCH /api/settings` | themeId, nutritionTrackingMode, dailyCalorieLimit, activeCompanionId |
+
+`PUT` replaces the type blob (not a deep merge). Body cap 2 MiB. Auth identity is never part of the data blob. See [`15-backup-and-recovery.md`](15-backup-and-recovery.md).
 
 ---
 

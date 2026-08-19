@@ -1,6 +1,6 @@
 # Текущее состояние проекта
 
-> **Единый источник правды.** Обновлено: 2026-08-19 (settings draft safety + bundle split).
+> **Единый источник правды.** Обновлено: 2026-08-19 (data integrity / backup).
 
 ## Краткое описание
 
@@ -53,6 +53,7 @@
 - **GAME_ASSET_VERSION:** 66
 - **Quality gate:** `npm run verify` (typecheck + tests + validate:avatars + vite build + `check:bundle`)
 - **Known issues:** [`14-known-issues.md`](14-known-issues.md)
+- **Data integrity / backup:** [`15-backup-and-recovery.md`](15-backup-and-recovery.md), [`../audits/data-integrity-v1.md`](../audits/data-integrity-v1.md)
 - **Hardening audit:** [`../audits/project-hardening-v1.md`](../audits/project-hardening-v1.md)
 - **Visual UX audit:** [`../audits/visual-ux-pass-v1.md`](../audits/visual-ux-pass-v1.md)
 - **Page decomposition:** [`../audits/page-decomposition-v1.md`](../audits/page-decomposition-v1.md)
@@ -326,6 +327,7 @@ Settings autosave no longer clobbers unsaved draft fields ([`../audits/settings-
 - Codex = коллекции; Dashboard = кто я + что делать сегодня
 - Settings: autosave islands vs field-level dirty draft merge (not a single global Save)
 - Authenticated pages are route-lazy; Dashboard/Today prefetch after auth
+- User data: explicit `dataSchemaVersion`, migrate-then-normalize, JSON backup/restore, optional `revision` 409
 
 См. [`07-decision-log.md`](07-decision-log.md).
 

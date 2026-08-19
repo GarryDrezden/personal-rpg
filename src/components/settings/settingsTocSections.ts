@@ -33,5 +33,5 @@ export const SETTINGS_TOC_SECTIONS = [
   { id: SETTINGS_SECTION_IDS.coins, label: 'Монеты' },
   { id: SETTINGS_SECTION_IDS.xp, label: 'Баллы' },
   { id: SETTINGS_SECTION_IDS.habits, label: 'Второст. цели' },
-  { id: SETTINGS_SECTION_IDS.backup, label: 'Бэкап' },
+  { id: SETTINGS_SECTION_IDS.backup, label: 'Данные' },
 ] as const;

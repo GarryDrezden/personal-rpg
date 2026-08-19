@@ -66,6 +66,7 @@ After installing LE:
 3. [ ] На FTP **нет** `api/config/config.php` из Git (создаётся вручную)
 4. [ ] В ispmanager создана БД (+ пользователь)
 5. [ ] В phpMyAdmin выполнен SQL из `api/migrations/001_create_accounts_tables.sql`
+5b. [ ] Для существующих БД: dump, затем `002_user_data_revision_and_backups.sql` (см. [`15-backup-and-recovery.md`](15-backup-and-recovery.md))
 6. [ ] Создан `api/config/config.php` по шаблону
 7. [ ] **Доверенный** HTTPS (не self-signed)
 8. [ ] Открыть `https://fit-rpg.ru/api/health.php` — `"ok": true`
@@ -112,10 +113,15 @@ powershell -File scripts/smoke-production-api.ps1
 
 1. ispmanager → **phpMyAdmin**
 2. Выбрать базу
-3. Вкладка **SQL**
-4. Выполнить `api/migrations/001_create_accounts_tables.sql`
+3. **Сначала Export dump** (перед любой schema change)
+4. Вкладка **SQL**
+5. Fresh install: `001_create_accounts_tables.sql`, затем `002_user_data_revision_and_backups.sql`
+6. Existing DB: только `002` (001 уже применена; не переигрывать 001)
 
-Таблицы: `users`, `user_profiles`, `user_settings`, `user_data`, `auth_sessions`.
+Таблицы после 001: `users`, `user_profiles`, `user_settings`, `user_data`, `auth_sessions`.  
+После 002: `user_data.revision`, `user_data_backups`.
+
+Порядок production deploy: dump → 002 → `api/` → `dist/` → health → smoke. Rollback: см. [`15-backup-and-recovery.md`](15-backup-and-recovery.md).
 
 ---
 
@@ -233,7 +239,17 @@ GitHub Actions builds `deploy-bundle/`:
 
 ---
 
-## 10. Node backend (`backend/`)
+## 10. Rollback
+
+- **Frontend:** redeploy previous `dist/`. Old SPA omits `revision` (last-write-wins) and still loads current data.
+- **PHP:** redeploy previous `api/`. Leave `revision` and `user_data_backups` in place (additive).
+- **DB:** restore from the phpMyAdmin dump taken before `002`. Do not drop columns in the same release.
+
+See [`15-backup-and-recovery.md`](15-backup-and-recovery.md).
+
+---
+
+## 11. Node backend (`backend/`)
 
 Оставлен для будущего VPS. **Не требуется** для shared hosting.
 

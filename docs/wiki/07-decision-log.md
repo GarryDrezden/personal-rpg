@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-08-19 — Production data integrity / backup v1
+
+**Context:**  
+User data lived as unversioned JSON blobs. Autosave + load-error defaults could theoretically overwrite a healthy account. Settings still linked to legacy SQLite download.
+
+**Decision:**  
+Keep hybrid JSON `user_data`. Add `dataSchemaVersion`, stepwise migrate vs normalize, hydrationStatus save guard, versioned JSON export/import with preview, `revision` + 409 for current SPA, additive `user_data_backups` (last 10, restore only). No ORM, no blob-to-tables split.
+
+**Consequence:**  
+KI-01 closed for the current client (omit-revision old PWA still LWW). See [`../audits/data-integrity-v1.md`](../audits/data-integrity-v1.md), [`15-backup-and-recovery.md`](15-backup-and-recovery.md).
+
 ## 2026-08-19 — Bundle / runtime split v1 (KI-07 reduced)
 
 **Context:**  
