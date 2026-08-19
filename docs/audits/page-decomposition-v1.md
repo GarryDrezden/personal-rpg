@@ -125,6 +125,6 @@ TodayPage: `useState`/`useEffect` moved into the hook (still 9 / 2). SettingsPag
 
 ## Remaining issues
 
-- Settings draft is still overwritten when any autosave (sleep/theme/sidebar) updates `settings` — pre-existing.
-- Today/Settings still in the main JS chunk (KI-07). Main bundle ~958 kB / ~255 kB gzip after this pass (was ~955 / 254). Not a new architecture problem.
+- Settings autosave clobbering dirty draft — **closed** in settings draft safety v1 (`docs/audits/settings-draft-safety-v1.md`).
+- Today/Settings in the main JS chunk (KI-07) — **reduced** in bundle optimization v1 (`docs/audits/bundle-optimization-v1.md`).
 - KI-05 DF female placeholders unchanged.

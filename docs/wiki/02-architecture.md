@@ -1,6 +1,6 @@
 # Architecture
 
-> **Единый источник правды.** Обновлено: 2026-06-06.
+> **Единый источник правды.** Обновлено: 2026-08-19.
 
 ## Current production architecture
 
@@ -52,9 +52,11 @@ Node/Express/Prisma в `backend/` — прототип Sprint 1 для VPS. Prod
 
 **Page pattern (Today / Settings):** `Page` → page model hook → domain engines (pure) → presentational sections. Game rules stay in `src/utils/*Engine.ts` / `src/game/`. Sections do not compute Cozy rewards, seasons, or Body Ability selection.
 
-**Routing:** `src/App.tsx` — React Router v7, protected routes via `ProtectedRoute`.
+**Settings persistence:** two layers, not one global form. Autosave islands (theme, sidebar visibility, sleep, body-map regenerate) write via `useAppStore.getState()`. Draft-owned fields (goals, hero, avatar, nutrition, weeks, coins, XP, habits) stay local until Save. Incoming store updates merge with `mergePersistedIntoDraft` so dirty keys are kept and pristine keys follow persisted settings. Explicit Save overlays dirty keys onto the latest store snapshot. See [`../audits/settings-draft-safety-v1.md`](../audits/settings-draft-safety-v1.md).
 
-**PWA:** `vite-plugin-pwa` — web manifest, service worker (`autoUpdate`), precached SPA shell, network-first `/api/*`, cache-first `game-assets`. Install hint: Settings → «Установить на телефон». Legacy PHP SQLite API is not cached for offline writes.
+**Routing:** `src/App.tsx` — React Router v7, protected routes via `ProtectedRoute`. Authenticated pages are `lazy()` with `PageLoader` (`Загрузка раздела...`). Login/register stay eager. After auth, Dashboard and Today are prefetched in parallel with `init()`. `/dev/avatar-pipeline` is `import.meta.env.DEV` only.
+
+**PWA:** `vite-plugin-pwa` — web manifest, service worker (`autoUpdate`), precached hashed SPA shell, NetworkOnly `/api/*`, cache-first `game-assets`. Install hint: Settings → «Установить на телефон». After a deploy, hashed lazy chunks replace the old precache on the next SW activation; missing-chunk-after-HTML-update is not a custom reload loop. Chunk-load / render failures surface in `AppErrorBoundary` (reload / home). Bundle budget: `npm run check:bundle` after `vite build`. See [`../audits/bundle-optimization-v1.md`](../audits/bundle-optimization-v1.md).
 
 Legacy redirects: `/skills` → `/growth/skills`, `/bosses` → `/growth/trials`.
 

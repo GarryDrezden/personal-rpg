@@ -10,6 +10,7 @@ import {
 import { nextJourneyChapterSelection } from '../utils/journeyChapterSelection';
 import { JourneyDevelopmentMap } from '../components/journey/JourneyDevelopmentMap';
 import { JourneyMapV3SummaryBar } from '../components/journey/map/v3/JourneyMapV3SummaryBar';
+import '../styles/journey-map-v3.css';
 
 export function JourneyMapPage() {
   const { dailyEntries, measurements, settings } = useAppStore();

@@ -4,6 +4,28 @@
 
 ---
 
+## 2026-08-19 — Bundle / runtime split v1 (KI-07 reduced)
+
+**Context:**  
+Main SPA chunk ~958 kB / ~255 kB gzip because Dashboard, Today, and Start were eager.
+
+**Decision:**  
+Keep React Router. Lazy all authenticated pages; prefetch Dashboard + Today after auth; move Journey v3 CSS onto the Journey page; add `check:bundle` (fail >850 kB main raw). Do not split the personal ability bank out of avatar/hero state.
+
+**Consequence:**  
+Main ~631 kB / ~173 kB gzip (−34% / −32%). KI-07 Reduced, not Closed. See [`../audits/bundle-optimization-v1.md`](../audits/bundle-optimization-v1.md).
+
+## 2026-08-19 — Settings draft safety v1
+
+**Context:**  
+Autosave (theme / sidebar / sleep) replaced the Settings local snapshot and dropped unsaved draft fields. Save could also roll back later autosave by spreading a stale snapshot.
+
+**Decision:**  
+Keep dual persistence. Field-level dirty keys for draft-owned settings. Merge persisted → draft without clobbering dirty values. Save overlays dirty keys onto `getState().settings`. Autosave call sites use `getState()`.
+
+**Consequence:**  
+See [`../audits/settings-draft-safety-v1.md`](../audits/settings-draft-safety-v1.md). No new form library. Save button UX unchanged.
+
 ## 2026-08-19 — Today / Settings page decomposition v1
 
 **Context:**  

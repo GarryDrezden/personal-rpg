@@ -1,6 +1,6 @@
 # Текущее состояние проекта
 
-> **Единый источник правды.** Обновлено: 2026-08-19 (page decomposition v1).
+> **Единый источник правды.** Обновлено: 2026-08-19 (settings draft safety + bundle split).
 
 ## Краткое описание
 
@@ -51,11 +51,13 @@
 - **README:** пользовательская документация (wiki = source of truth)
 - **package.json:** 1.0.0
 - **GAME_ASSET_VERSION:** 66
-- **Quality gate:** `npm run verify` (typecheck + tests + validate:avatars + vite build)
+- **Quality gate:** `npm run verify` (typecheck + tests + validate:avatars + vite build + `check:bundle`)
 - **Known issues:** [`14-known-issues.md`](14-known-issues.md)
 - **Hardening audit:** [`../audits/project-hardening-v1.md`](../audits/project-hardening-v1.md)
 - **Visual UX audit:** [`../audits/visual-ux-pass-v1.md`](../audits/visual-ux-pass-v1.md)
 - **Page decomposition:** [`../audits/page-decomposition-v1.md`](../audits/page-decomposition-v1.md)
+- **Settings draft safety:** [`../audits/settings-draft-safety-v1.md`](../audits/settings-draft-safety-v1.md)
+- **Bundle optimization:** [`../audits/bundle-optimization-v1.md`](../audits/bundle-optimization-v1.md)
 
 ## Sprint 1 — Accounts & Storage ✅ (production: PHP + MySQL)
 
@@ -300,6 +302,8 @@ Asset Registry 2.0 готов: manifest, backlog, naming, placeholders зафи�
 
 HTTPS — when hosting cert is ready.
 
+Settings autosave no longer clobbers unsaved draft fields ([`../audits/settings-draft-safety-v1.md`](../audits/settings-draft-safety-v1.md)). Main SPA chunk reduced via route-level lazy Dashboard/Today ([`../audits/bundle-optimization-v1.md`](../audits/bundle-optimization-v1.md)); KI-07 remaining shell weight is still listed.
+
 См. [`01-roadmap.md`](01-roadmap.md), [`14-known-issues.md`](14-known-issues.md).
 
 ## Технические риски
@@ -320,6 +324,8 @@ HTTPS — when hosting cert is ready.
 - Year campaign structure documented (seasons, weekly/season quests, boss layers)
 - `docs/` — единый источник правды для Cursor и ChatGPT
 - Codex = коллекции; Dashboard = кто я + что делать сегодня
+- Settings: autosave islands vs field-level dirty draft merge (not a single global Save)
+- Authenticated pages are route-lazy; Dashboard/Today prefetch after auth
 
 См. [`07-decision-log.md`](07-decision-log.md).
 

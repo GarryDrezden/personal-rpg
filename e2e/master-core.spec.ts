@@ -14,6 +14,7 @@ async function finishCozyOnboarding(page: import('@playwright/test').Page) {
   await page.getByTestId('onboarding-start-weight').fill('92');
   await page.getByTestId('onboarding-target-weight').fill('80');
   await page.getByTestId('onboarding-next').click();
+  await expect(page.getByTestId('onboarding-finish')).toBeVisible({ timeout: 15_000 });
   await page.getByTestId('onboarding-finish').click();
   await expect(page).toHaveURL(/\/today/, { timeout: 15_000 });
 }
@@ -24,6 +25,7 @@ test.describe('Master core loop', () => {
   test('new user: onboarding → Today save → Home → Freedom → Dashboard → reload', async ({
     page,
   }) => {
+    test.setTimeout(60_000);
     await installMockApi(page, { freshOnboarding: true });
     await page.addInitScript(() => {
       localStorage.clear();
