@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-08-19 — Today / Settings page decomposition v1
+
+**Context:**  
+KI-06: TodayPage (~883 lines) and SettingsPage (~638 lines) mixed orchestration, engines, and JSX.
+
+**Decision:**  
+Page → page model hook → pure derived helpers / engines → presentational sections. No gameplay or visual redesign. Dual Settings persistence (autosave islands vs local draft + Save) kept.
+
+**Consequence:**  
+See [`../audits/page-decomposition-v1.md`](../audits/page-decomposition-v1.md). KI-06 closed.
+
 ## 2026-08-19 — Visual / UX pass v1
 
 **Context:**  

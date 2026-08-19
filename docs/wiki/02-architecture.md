@@ -38,7 +38,8 @@ Node/Express/Prisma в `backend/` — прототип Sprint 1 для VPS. Prod
 
 | Область | Путь | Описание |
 |---------|------|----------|
-| Pages | `src/pages/` | Экраны приложения |
+| Pages | `src/pages/` | Экраны-оркестраторы |
+| Page models | `src/hooks/useTodayPageModel.ts`, `src/hooks/useSettingsDraft.ts` | Draft + actions; derived Today state is pure `src/utils/todayPageModel.ts` |
 | Auth | `src/auth/`, `src/api/` | AuthProvider, HTTP client |
 | Storage | `src/storage/` | remote + legacy repositories |
 | Components | `src/components/` | UI, game, journey, dashboard |
@@ -48,6 +49,8 @@ Node/Express/Prisma в `backend/` — прототип Sprint 1 для VPS. Prod
 | Game assets | `src/game/assetPaths.ts` | Пути к PNG, версия кэша |
 | Store | `src/store/` | Zustand state |
 | Types | `src/types/` | TypeScript models |
+
+**Page pattern (Today / Settings):** `Page` → page model hook → domain engines (pure) → presentational sections. Game rules stay in `src/utils/*Engine.ts` / `src/game/`. Sections do not compute Cozy rewards, seasons, or Body Ability selection.
 
 **Routing:** `src/App.tsx` — React Router v7, protected routes via `ProtectedRoute`.
 
@@ -119,7 +122,7 @@ docs/assets/manifest.json
 ## Testing
 
 - Unit: Vitest (`src/**/*.test.ts`)
-- E2E: Playwright (`npm run test:e2e`) — master core, onboarding, theme switch, measurements
+- E2E: Playwright (`npm run test:e2e`) — master core, visual/responsive smoke, Today/Settings architecture smoke, onboarding, theme switch, measurements
 - Local gate: `npm run verify` (typecheck + unit tests + `validate:avatars` + production build)
 
 ## Key files for AI
@@ -129,6 +132,7 @@ docs/assets/manifest.json
 | Новая игровая механика | `src/utils/*Engine.ts`, `src/constants/` |
 | Journey map | `src/components/journey/map/v3/*`, `journeyMapConfig.ts`, `journey-map-v3.css` |
 | Новый экран | `src/pages/`, `src/App.tsx` |
+| Today / Settings pages | `useTodayPageModel`, `todayPageModel.ts`, `useSettingsDraft`, `src/components/today/`, `src/components/settings/` |
 | Ассеты | `src/game/assetPaths.ts`, `docs/assets/manifest.json` |
 | API (production) | `api/`, `api/config/config.example.php`, `api/migrations/` |
 | API (VPS-only) | `backend/` |

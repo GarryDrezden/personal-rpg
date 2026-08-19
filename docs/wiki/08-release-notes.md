@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Architecture
+
+- Refactored Today and Settings page architecture without changing user-facing behavior. Pages are orchestrators; domain logic stays in engines. See [`../audits/page-decomposition-v1.md`](../audits/page-decomposition-v1.md).
+
 ### Visual / UX pass v1
 
 - Tablet/desktop chrome from 1024px (`lg`); sidebar 304px. 768 uses bottom nav.

@@ -1,6 +1,6 @@
 # Текущее состояние проекта
 
-> **Единый источник правды.** Обновлено: 2026-08-19 (visual UX pass v1).
+> **Единый источник правды.** Обновлено: 2026-08-19 (page decomposition v1).
 
 ## Краткое описание
 
@@ -55,6 +55,7 @@
 - **Known issues:** [`14-known-issues.md`](14-known-issues.md)
 - **Hardening audit:** [`../audits/project-hardening-v1.md`](../audits/project-hardening-v1.md)
 - **Visual UX audit:** [`../audits/visual-ux-pass-v1.md`](../audits/visual-ux-pass-v1.md)
+- **Page decomposition:** [`../audits/page-decomposition-v1.md`](../audits/page-decomposition-v1.md)
 
 ## Sprint 1 — Accounts & Storage ✅ (production: PHP + MySQL)
 
