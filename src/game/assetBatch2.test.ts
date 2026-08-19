@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import type { AssetManifestV2 } from './assetManifestTypes';
 import { validateAssetManifest } from './assetManifestValidation';
 import { getManifestAssetUrl } from './assetManifest';
+import { GAME_ASSET_VERSION } from './assetBase';
 
 const BATCH_2_IDS = [
   'empty-state-no-entries',
@@ -73,7 +74,7 @@ describe('Dark MVP Asset Generation Batch 2', () => {
       const promptPath = join(process.cwd(), 'docs/prompts/assets', PROMPT_FILES[id]);
       expect(existsSync(promptPath)).toBe(true);
       const url = getManifestAssetUrl(id);
-      expect(url).toContain('?v=42');
+      expect(url).toContain(`?v=${GAME_ASSET_VERSION}`);
       expect(url).toContain(asset?.path?.replace(/^\//, '') ?? '');
     });
   }

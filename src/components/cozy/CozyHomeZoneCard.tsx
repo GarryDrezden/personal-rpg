@@ -125,7 +125,7 @@ export function CozyHomeZoneCard({
             type="button"
             disabled={busy}
             onClick={() => onUpgrade(zoneId)}
-            className="btn-primary cozy-zone-btn cozy-zone-btn--ready w-full disabled:opacity-60"
+            data-testid={`cozy-zone-upgrade-${zoneId}`}
           >
             Улучшить
           </button>

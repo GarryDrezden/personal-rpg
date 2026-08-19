@@ -7,6 +7,8 @@ import type {
   MobId,
 } from '../types/gameAssets';
 import { gameAsset, GAME_ASSET_BASE_PATH, GAME_ASSET_VERSION } from './assetBase';
+import { getAvatarVisualStage } from './avatar/avatarVisualStage';
+import { getAvatarGenderPlaceholderPath } from '../constants/avatarAssetManifest';
 
 /** Future themes reserved in docs; runtime uses AppThemeId today. */
 export type ThemeBranchId = AppThemeId | 'forest_myth' | 'athlete_return';
@@ -41,7 +43,7 @@ export function cozyThemeAsset(relativePath: string): string {
 }
 
 export function getCozyHeroPlaceholderPath(gender: HeroGender): string {
-  return cozyThemeAsset(`avatars/placeholders/${gender}-placeholder.svg`);
+  return gameAsset(getAvatarGenderPlaceholderPath('cozy', gender));
 }
 
 export function getCozyCompanionPlaceholderPath(): string {
@@ -69,7 +71,8 @@ export function getCozyHeroStagePath(
   stage: HeroStageNumber,
   ext: 'webp' | 'png' = 'webp',
 ): string {
-  const n = String(stage).padStart(2, '0');
+  const visual = getAvatarVisualStage(stage);
+  const n = String(visual).padStart(2, '0');
   return cozyThemeAsset(`avatars/${gender}/stage-${n}.${ext}`);
 }
 
@@ -127,7 +130,7 @@ function resolveCozyAsset(
         entityId,
         stage: st,
         path: getCozyHeroStagePath(g, st),
-        fallbackPath: cozyThemeAsset(`avatars/placeholders/${g}.svg`),
+        fallbackPath: getCozyHeroPlaceholderPath(g),
         placeholder: true,
       };
     }

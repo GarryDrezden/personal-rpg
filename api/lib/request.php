@@ -17,12 +17,23 @@ function getApiRoute(): string
 
 function getJsonBody(): array
 {
+    if (!function_exists('jsonError')) {
+        require_once __DIR__ . '/response.php';
+    }
+
     $raw = file_get_contents('php://input');
     if ($raw === false || $raw === '') {
         return [];
     }
+    $maxBytes = 2 * 1024 * 1024;
+    if (strlen($raw) > $maxBytes) {
+        jsonError('Request too large', 413);
+    }
     $data = json_decode($raw, true);
-    return is_array($data) ? $data : [];
+    if (!is_array($data)) {
+        jsonError('Invalid JSON', 400);
+    }
+    return $data;
 }
 
 function routeSegment(string $route, int $index): ?string

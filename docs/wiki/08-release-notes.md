@@ -2,7 +2,23 @@
 
 ## Unreleased
 
+### Security / hardening
+
+- Legacy unauthenticated SQLite API (`/daily`, `/backup`, full dump) is off when MySQL `config.php` is present.
+- `data/` is forbidden from HTTP. Invalid JSON → 400. Body cap 2 MiB. Login/register IP throttle. `health.php` no longer leaks SQL errors. `secure_cookie: true` forces Secure.
+- Sidecar remote save failures surface in the save status indicator.
+
 ### Fixed
+
+- Cozy Home no longer grants “nutrition logged” comfort when nutrition tracking is disabled.
+- Cozy daily grant writes settings before stamping the day; `lastDailyGrantDate` blocks double-grant if the stamp is missing.
+- Incomplete Season 1 still stays active; late completion no longer shares days with Season 2.
+- Avatar path builders map Body Stage → 5 visual anchors; Cozy never reads `heroes/.../light`.
+- Freedom “hero on dashboard” link no longer points at missing `/dashboard`.
+- App error boundary prevents a white screen on unexpected render errors.
+- Quality gate: `npm run verify` (typecheck, vitest, `validate:avatars`, production build).
+- Asset URL tests follow `GAME_ASSET_VERSION` instead of a frozen `?v=42`.
+- Male hero manifest paths use on-disk `.webp`; validation accepts a `.webp` sibling when a listed `.png` is missing.
 
 - Dashboard camp summary empty on trail+ stages: later camp stages reuse shelter art; compact summary always shows banner art.
 - Optional menu items (e.g. Инерция) no longer render as grayed stubs when disabled — they are omitted from Dashboard strip/links and related chips.

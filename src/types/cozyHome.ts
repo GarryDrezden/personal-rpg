@@ -41,6 +41,8 @@ export interface CozyHomeState {
   zones: Record<CozyHomeZoneId, CozyHomeZoneState>;
   totalUpgrades: number;
   lastUpdatedAt?: string | null;
+  /** Last daily grant date (YYYY-MM-DD) — extra idempotency if entry stamp is missing. */
+  lastDailyGrantDate?: string | null;
   lastUpgrade?: {
     zoneId: CozyHomeZoneId;
     level: number;

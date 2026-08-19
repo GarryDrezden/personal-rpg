@@ -52,7 +52,7 @@ function DriverList({
 }
 
 export function AvatarStageDriversCard({ snapshot }: AvatarStageDriversCardProps) {
-  const { themeId, isCozy } = useAppTheme();
+  const { isCozy } = useAppTheme();
   const { settings } = useAppStore();
   const profile = resolveGameProfile(settings);
   const stageMeta = getHeroStageMeta(profile.heroGender, snapshot.bodyStage);
@@ -157,7 +157,7 @@ export function AvatarStageDriversCard({ snapshot }: AvatarStageDriversCardProps
 
       <p className="mt-3 text-sm">
         <Link
-          to={themeId === 'cozy' ? '/home' : '/dashboard'}
+          to="/"
           className="font-medium text-[var(--app-primary)] hover:underline"
         >
           Смотреть героя на главной →

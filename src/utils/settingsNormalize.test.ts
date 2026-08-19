@@ -40,4 +40,28 @@ describe('normalizeAppSettings', () => {
     expect(normalized.nutritionTrackingMode).toBe('precise');
     expect(normalized.dailyCalorieLimit).toBe(2800);
   });
+
+  it('maps unknown theme ids to cozy', () => {
+    const normalized = normalizeAppSettings({
+      ...DEFAULT_APP_SETTINGS,
+      themeId: 'light' as never,
+    });
+    expect(normalized.themeId).toBe('cozy');
+  });
+
+  it('fills cozyHome lastDailyGrantDate safely for corrupt saves', () => {
+    const normalized = normalizeAppSettings({
+      ...DEFAULT_APP_SETTINGS,
+      cozyHome: {
+        resources: { comfort: 1, materials: 0, garden: 0, clarity: 0 },
+        zones: {} as never,
+        totalUpgrades: 0,
+        lastDailyGrantDate: 'not-a-date',
+        lastUpgrade: { zoneId: 'spaceship' as never, level: 9, title: 'x', at: '' },
+      },
+    });
+    expect(normalized.cozyHome?.lastDailyGrantDate).toBeNull();
+    expect(normalized.cozyHome?.lastUpgrade).toBeNull();
+    expect(normalized.cozyHome?.zones.porch.level).toBe(0);
+  });
 });

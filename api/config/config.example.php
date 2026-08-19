@@ -22,5 +22,7 @@ return [
         // Must match the browser Origin exactly (scheme + host). No trailing slash.
         'allowed_origin' => 'https://fit-rpg.ru',
         'debug' => false,
+        // Unauthenticated SQLite routes in index.php. Keep false on production MySQL.
+        'legacy_sqlite_api' => false,
     ],
 ];

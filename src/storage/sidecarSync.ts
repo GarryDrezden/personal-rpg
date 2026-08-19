@@ -3,6 +3,7 @@ import { MOMENTUM_STORAGE_KEY } from '../constants/momentum';
 import { ACHIEVEMENTS_STORAGE_KEY } from '../store/achievementStorage';
 import { COINS_STORAGE_KEY } from '../store/coinStorage';
 import { getStorageMode } from './storageClient';
+import { useSaveStatusStore } from './saveStatusStore';
 
 export const SIDECAR_REMOTE_TYPES = [
   'achievements',
@@ -166,6 +167,8 @@ export function scheduleSidecarRemoteSave(): void {
 }
 
 function logSidecarSaveError(error: unknown): void {
+  const message = error instanceof Error ? error.message : 'Ошибка сохранения прогресса';
+  useSaveStatusStore.getState().setError(message);
   if (import.meta.env.DEV) {
     console.warn('[sidecarSync] remote save failed', error);
   }

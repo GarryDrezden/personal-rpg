@@ -1,9 +1,15 @@
 # Личная RPG
 
-**Локальный трекер здоровья и привычек в формате персональной RPG.**  
-Отмечайте квесты дня, копите XP и монеты, прокачивайте навыки, побеждайте недельных боссов и получайте достижения — всё хранится на вашем компьютере.
+**Геймифицированный трекер здоровья и привычек** — личная RPG о возвращении тела, ритма и устойчивости.
 
-> **Версия:** v1.4 · **Репозиторий:** [github.com/GarryDrezden/personal-rpg](https://github.com/GarryDrezden/personal-rpg)
+Production: **fit-rpg.ru** · React + PHP + MySQL на shared hosting.  
+Актуальное состояние проекта: [`docs/wiki/00-project-state.md`](docs/wiki/00-project-state.md). Этот README — пользовательский обзор; wiki — source of truth для разработки.
+
+> **Версия:** 1.0.0 (package) · **Репозиторий:** [github.com/GarryDrezden/personal-rpg](https://github.com/GarryDrezden/personal-rpg)
+
+Данные авторизованного пользователя хранятся в MySQL (`user_data` JSON), не в локальном SQLite как единственном production-хранилище.
+
+Аватар: **20 Body Stages** в движке, **5 visual anchors** (01 / 05 / 10 / 15 / 20) в production-арте. Темы: Cozy и Dark Fantasy.
 
 ---
 
@@ -61,7 +67,7 @@
 - долгосрочный прогресс виден на **карте**, в **отчётах** и **достижениях**;
 - монеты тратятся в **магазине наград** на то, что мотивирует лично вас.
 
-Приложение **полностью локальное**: данные лежат в SQLite на вашем ПК, интернет не нужен.
+Приложение **не требует Node в production**. Фронт — статическая SPA; API — PHP + MySQL. Локальный SQLite в `api/index.php` — только dev fallback, в production выключен.
 
 ---
 
@@ -77,7 +83,7 @@
 | **Босс недели** | Случайный недельный вызов с условиями и наградой за победу |
 | **Достижение** | Разблокируется за вехи: сброс веса, серии дней, комбо-привычки и др. |
 | **Карта** | Визуальный путь по весу, шагам, трезвости, залу и замерам |
-| **Аватар** | Персонаж из 7 стадий, меняется по сброшенному весу |
+| **Аватар** | Персонаж: 20 стадий тела в движке, 5 production visual anchors |
 
 ---
 
@@ -417,6 +423,9 @@ php -S 127.0.0.1:8080 router-dev.php
 | Команда | Описание |
 |---------|----------|
 | `npm run dev` | Dev-сервер Vite |
+| `npm run verify` | Локальный quality gate: typecheck + tests + `validate:avatars` + production build |
+| `npm test` | Vitest |
+| `npm run validate:avatars` | Проверка 5 visual anchors (theme × gender) |
 | `npm run build` | TypeScript + сборка в `dist/` |
 | `npm run preview` | Просмотр production-сборки |
 

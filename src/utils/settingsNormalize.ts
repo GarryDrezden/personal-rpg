@@ -1,5 +1,6 @@
 import { DEFAULT_APP_SETTINGS, DEFAULT_WEIGHT_GOAL_KG } from '../constants/defaults';
 import type { AppSettings } from '../types';
+import { resolveThemeId } from '../constants/themes';
 import { normalizeBodyAbilityState } from '../game/bodyAbilities/bodyAbilityV1Engine';
 import { normalizePlateauState } from '../game/plateau/plateauEngine';
 import { normalizeNutritionTrackingMode } from './nutritionEngine';
@@ -28,6 +29,7 @@ export function normalizeAppSettings(
     weightGoal,
     targetWeight,
     gender: settings.gender ?? fallback.gender ?? 'male',
+    themeId: resolveThemeId(settings.themeId ?? fallback.themeId),
     heroGender: settings.heroGender ?? fallback.heroGender,
     transformationMode: settings.transformationMode ?? fallback.transformationMode,
     activeCompanionId: settings.activeCompanionId ?? fallback.activeCompanionId,

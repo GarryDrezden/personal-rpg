@@ -153,14 +153,16 @@ export const useAppStore = create<AppState>((set, get) => ({
       previousEntry,
     });
 
+    // Persist resources before stamping the day. lastDailyGrantDate still
+    // blocks a second grant if the entry write later fails.
+    if (applied.granted) {
+      await get().saveSettings(applied.settings);
+    }
+
     const saved = await getRepository().upsertDaily(applied.entry);
     const entries = get().dailyEntries.filter((e) => e.date !== saved.date);
     const dailyEntries = [...entries, saved].sort((a, b) => a.date.localeCompare(b.date));
     set({ dailyEntries });
-
-    if (applied.granted) {
-      await get().saveSettings(applied.settings);
-    }
 
     syncAchievementsFromData(dailyEntries, get().measurements, get().settings);
     rebuildMomentumHistoryFromDate({

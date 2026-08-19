@@ -20,6 +20,15 @@ function cookieName(): string
 
 function isSecureConnection(): bool
 {
+    $cfg = authConfig();
+    if (array_key_exists('secure_cookie', $cfg)) {
+        if ($cfg['secure_cookie'] === true) {
+            return true;
+        }
+        if ($cfg['secure_cookie'] === false) {
+            return false;
+        }
+    }
     if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
         return true;
     }
@@ -28,12 +37,6 @@ function isSecureConnection(): bool
     }
     if (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') {
         return true;
-    }
-    if (is_file(__DIR__ . '/../config/config.php')) {
-        $cfg = authConfig();
-        if (array_key_exists('secure_cookie', $cfg) && $cfg['secure_cookie'] === false) {
-            return false;
-        }
     }
     return false;
 }

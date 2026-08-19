@@ -1,7 +1,7 @@
 import type { AppSettings, DailyEntry } from '../types';
 import type { CozyResourceId } from '../types/cozyHome';
 import { getPhysicalActivityLevel } from './movementCreditEngine';
-import { isNutritionLogged } from './nutritionEngine';
+import { getNutritionQuestCompleted } from './nutritionEngine';
 import { normalizeSleepQuality } from './resourceEngine';
 import { getDayMode, isStepsMinimumDone, isStepsNormalDone } from './stepsEngine';
 import { hasJournalEntry } from './journalEntry';
@@ -24,7 +24,8 @@ export function getCozyRewardsForEntry(
 
   const mode = getDayMode(entry.dayMode);
 
-  if (isNutritionLogged({ entry, settings })) {
+  // Freedom treats disabled nutrition as "not a gap". Cozy rewards require a real log.
+  if (getNutritionQuestCompleted({ entry, settings })) {
     add('comfort', 1, 'Питание отмечено — в доме стало чуть больше порядка.');
   }
 

@@ -6,6 +6,7 @@ import { BODY_ABILITY_SKILL_BOARD_DISPLAY_ORDER } from './bodyAbilityAssetUi';
 import type { AssetManifestV2 } from './assetManifestTypes';
 import { validateAssetManifest } from './assetManifestValidation';
 import { getManifestAssetUrl } from './assetManifest';
+import { GAME_ASSET_VERSION } from './assetBase';
 
 const manifest = JSON.parse(
   readFileSync(join(process.cwd(), 'docs/assets/manifest.json'), 'utf-8'),
@@ -109,7 +110,7 @@ describe('Body Ability Icons mini-batch', () => {
       const url = getManifestAssetUrl(assetId);
       expect(url).not.toBeNull();
       expect(url).toContain('/game-assets/abilities/');
-      expect(url).toContain('?v=42');
+      expect(url).toContain(`?v=${GAME_ASSET_VERSION}`);
     });
   }
 

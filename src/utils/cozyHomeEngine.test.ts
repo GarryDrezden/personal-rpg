@@ -134,6 +134,34 @@ describe('applyCozyRewardsOnSave (idempotent)', () => {
     );
     expect(recovery.resources.comfort).toBeGreaterThanOrEqual(2);
   });
+
+  it('does not grant nutrition comfort when tracking is disabled', () => {
+    const off = {
+      ...DEFAULT_APP_SETTINGS,
+      nutritionTrackingMode: 'disabled' as const,
+    };
+    const reward = getCozyRewardsForEntry(
+      baseEntry({ nutritionLevel: 'light', calories: 1800 }),
+      off,
+    );
+    expect(reward.reasons.some((r) => r.includes('Питание'))).toBe(false);
+  });
+
+  it('blocks a second grant via lastDailyGrantDate even without entry stamp', () => {
+    const settings = {
+      ...DEFAULT_APP_SETTINGS,
+      cozyHome: {
+        ...DEFAULT_COZY_HOME_STATE,
+        lastDailyGrantDate: '2026-08-01',
+      },
+    };
+    const result = applyCozyRewardsOnSave({
+      entry: baseEntry({ nutritionLevel: 'light', alcohol: 'none' }),
+      settings,
+      previousEntry: null,
+    });
+    expect(result.granted).toBeNull();
+  });
 });
 
 describe('upgradeCozyZone', () => {

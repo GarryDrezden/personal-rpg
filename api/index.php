@@ -24,6 +24,10 @@ if (isAccountsApiRoute($uri)) {
     exit;
 }
 
+if (!isLegacySqliteApiEnabled()) {
+    jsonError('Not found', 404);
+}
+
 $db = new Database();
 $pdo = $db->getPdo();
 

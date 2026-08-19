@@ -32,6 +32,7 @@ export const DEFAULT_COZY_HOME_STATE: CozyHomeState = {
   zones: defaultZones(),
   totalUpgrades: 0,
   lastUpdatedAt: null,
+  lastDailyGrantDate: null,
   lastUpgrade: null,
 };
 
@@ -67,12 +68,30 @@ export function normalizeCozyHomeState(
     0,
   );
 
+  const lastUpgrade =
+    raw.lastUpgrade &&
+    COZY_HOME_ZONE_IDS.includes(raw.lastUpgrade.zoneId) &&
+    typeof raw.lastUpgrade.level === 'number'
+      ? {
+          zoneId: raw.lastUpgrade.zoneId,
+          level: Math.max(0, Math.min(COZY_HOME_MAX_LEVEL, Math.floor(raw.lastUpgrade.level))),
+          title: String(raw.lastUpgrade.title ?? ''),
+          at: String(raw.lastUpgrade.at ?? ''),
+        }
+      : null;
+
+  const lastDailyGrantDate =
+    typeof raw.lastDailyGrantDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.lastDailyGrantDate)
+      ? raw.lastDailyGrantDate
+      : null;
+
   return {
     resources,
     zones,
     totalUpgrades,
     lastUpdatedAt: raw.lastUpdatedAt ?? null,
-    lastUpgrade: raw.lastUpgrade ?? null,
+    lastDailyGrantDate,
+    lastUpgrade,
   };
 }
 
@@ -320,7 +339,12 @@ export function applyCozyRewardsOnSave(params: {
   granted: CozyRewardsGranted | null;
 } {
   const { entry, settings, previousEntry } = params;
-  if (entry.cozyRewardsGranted || previousEntry?.cozyRewardsGranted) {
+  const homeState = getCozyHomeState(settings);
+  if (
+    entry.cozyRewardsGranted ||
+    previousEntry?.cozyRewardsGranted ||
+    homeState.lastDailyGrantDate === entry.date
+  ) {
     return {
       entry: {
         ...entry,
@@ -345,7 +369,10 @@ export function applyCozyRewardsOnSave(params: {
     reasons: reward.reasons,
   };
 
-  const home = addCozyResources(getCozyHomeState(settings), reward.resources, grantedAt);
+  const home = {
+    ...addCozyResources(homeState, reward.resources, grantedAt),
+    lastDailyGrantDate: entry.date,
+  };
 
   return {
     entry: { ...entry, cozyRewardsGranted: granted },

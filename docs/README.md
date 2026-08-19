@@ -9,6 +9,7 @@
 | Файл | Содержание |
 |------|------------|
 | [`wiki/00-project-state.md`](wiki/00-project-state.md) | **Текущее состояние** — стек, production, долги, приоритеты |
+| [`wiki/14-known-issues.md`](wiki/14-known-issues.md) | Известные проблемы (короткий живой список) |
 | [`wiki/01-roadmap.md`](wiki/01-roadmap.md) | Дорожная карта: сейчас / следующий спринт / позже |
 | [`wiki/02-architecture.md`](wiki/02-architecture.md) | Production architecture: React + PHP + MySQL |
 | [`wiki/03-game-systems.md`](wiki/03-game-systems.md) | Игровые системы (Journey, XP, bosses, …) |

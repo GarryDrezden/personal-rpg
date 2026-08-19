@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../lib/response.php';
 require_once __DIR__ . '/../lib/validation.php';
 require_once __DIR__ . '/../lib/session.php';
+require_once __DIR__ . '/../lib/rateLimit.php';
 require_once __DIR__ . '/../lib/serializers.php';
 require_once __DIR__ . '/../repositories/UserRepository.php';
 require_once __DIR__ . '/../repositories/UserProfileRepository.php';
@@ -18,6 +19,7 @@ class AuthController
 
     public function register(array $body): never
     {
+        assertAuthRateLimit('register');
         $login = trim((string) ($body['login'] ?? ''));
         $password = (string) ($body['password'] ?? '');
 
@@ -30,6 +32,7 @@ class AuthController
 
         $users = new UserRepository($this->pdo);
         if ($users->findByLogin($login) !== null) {
+            recordAuthRateLimitFailure('register');
             jsonError('Этот логин уже занят', 409);
         }
 
@@ -50,16 +53,19 @@ class AuthController
 
     public function login(array $body): never
     {
+        assertAuthRateLimit('login');
         $login = trim((string) ($body['login'] ?? ''));
         $password = (string) ($body['password'] ?? '');
 
-        if ($login === '' || $password === '') {
+        if ($login === '' || $password === '' || strlen($password) > 128) {
+            recordAuthRateLimitFailure('login');
             jsonError('Неверный логин или пароль', 401);
         }
 
         $users = new UserRepository($this->pdo);
         $user = $users->findByLogin($login);
         if ($user === null || !password_verify($password, $user['password_hash'])) {
+            recordAuthRateLimitFailure('login');
             jsonError('Неверный логин или пароль', 401);
         }
 

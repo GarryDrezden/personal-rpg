@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
+import { AppErrorBoundary } from './components/ui/AppErrorBoundary';
 import { DEFAULT_APP_THEME_ID } from './constants/themes';
 import { applyThemeToDocument, getStoredThemeId } from './utils/themeApply';
 import { registerPwa } from './pwa/registerPwa';
@@ -11,6 +12,8 @@ registerPwa();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <AppErrorBoundary>
+      <App />
+    </AppErrorBoundary>
   </StrictMode>,
 );

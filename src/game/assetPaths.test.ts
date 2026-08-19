@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
   getCompanionImageCandidates,
-  getGameHeroStageLegacyPath,
   getGameHeroStageVariantPath,
   getHeroSceneBackdropPath,
   getHeroStageImageCandidates,
@@ -22,32 +21,37 @@ describe('getHeroStageImageCandidates', () => {
     expect(first).toContain('/themes/cozy/avatars/male/stage-05.webp');
   });
 
+  it('maps intermediate body stages to visual anchors', () => {
+    const [cozy7] = getHeroStageImageCandidates('male', 7, 'cozy');
+    expect(cozy7).toContain('/themes/cozy/avatars/male/stage-05.webp');
+    expect(cozy7).not.toContain('stage-07');
+  });
+
   it('never falls back to dark-fantasy hero art in cozy', () => {
     const candidates = getHeroStageImageCandidates('male', 5, 'cozy');
     expect(candidates.some((p) => p.includes('dark-fantasy'))).toBe(false);
     expect(candidates.some((p) => p.includes('/heroes/male/stage-'))).toBe(false);
-    expect(candidates.some((p) => p.includes('cozy/avatars/placeholders/male-placeholder'))).toBe(
+    expect(candidates.every((p) => p.includes('/themes/cozy/'))).toBe(true);
+  });
+
+  it('uses canonical dark-fantasy theme path first', () => {
+    const [first] = getHeroStageImageCandidates('male', 5, 'darkFantasy');
+    expect(first).toContain('/themes/dark-fantasy/avatars/male/stage-05.webp');
+  });
+
+  it('falls back to legacy same-theme paths for dark fantasy', () => {
+    const candidates = getHeroStageImageCandidates('male', 1, 'darkFantasy');
+    expect(candidates.some((p) => p.includes('/themes/dark-fantasy/avatars/male/stage-01.webp'))).toBe(
       true,
     );
   });
 
-  it('uses dark-fantasy variant webp first for dark theme', () => {
-    const [first] = getHeroStageImageCandidates('male', 5, 'darkFantasy');
-    expect(first).toContain('/variants/dark-fantasy/stage-05.webp');
-  });
-
-  it('falls back to legacy root path for same stage', () => {
-    const candidates = getHeroStageImageCandidates('male', 1, 'darkFantasy');
-    expect(candidates).toContain(getGameHeroStageLegacyPath('male', 1, 'webp'));
-    expect(candidates).toContain(getGameHeroStageLegacyPath('male', 1, 'png'));
-  });
-
-  it('includes variant paths for anchor stages', () => {
+  it('does not use obsolete nearest-stage anchors 02/19', () => {
     const candidates = getHeroStageImageCandidates('male', 10, 'darkFantasy');
     expect(candidates.some((p) => p.includes('stage-10.webp'))).toBe(true);
-    expect(
-      candidates.some((p) => p.includes('stage-19.webp') || p.includes('stage-02.webp')),
-    ).toBe(true);
+    expect(candidates.some((p) => p.includes('stage-19.webp') || p.includes('stage-02.webp'))).toBe(
+      false,
+    );
   });
 });
 

@@ -1,6 +1,16 @@
 # Roadmap
 
-> **Единый источник правды.** Обновлено: 2026-07-21 (Stabilize closeout).
+> **Единый источник правды.** Обновлено: 2026-08-19 (Project Hardening v1).
+
+## Статус слоёв
+
+| Слой | Состояние |
+|------|-----------|
+| **DONE** | Stabilize closeout, Onboarding v1, Today core loop, Seasons v1/v2, Body Abilities v1, Plateau, Camp/Base, Boss Campaign v1/v2 (derived), Cozy Home v1, sidebar visibility, **Project Hardening v1** |
+| **CURRENT** | Cozy Art Fill Plan C1–C7 (visual); keep core loop healthy |
+| **NEXT** | HTTPS public cert on host; Dashboard declutter; DF female visual anchors |
+| **LATER** | Chapter/act boss art; weekly season quests; Freedom Score × Body Abilities v2 |
+| **DEFERRED** | VPS/Node production, OAuth, combat, 20 physical avatar files, Cyberpunk, New Game+ |
 
 ## Главный приоритет
 
@@ -24,7 +34,7 @@
 - [x] Production smoke tests на `http://fit-rpg.ru` (API: 2026-07-02 — OK)
 - [x] Journey Map v3 — mobile polish (full-width road, accordion toggle/scroll, vignette band, safe-area)
 - [x] Mobile layout polish (AppShell bottom safe-area under BottomNav)
-- [ ] HTTPS / SSL certificate + redirect (future hardening — hosting cert, not a code blocker)
+- [ ] HTTPS / SSL certificate + redirect (hosting cert — not a code blocker; see KI-03)
 
 **Критерий готовности:** production стабилен на HTTP; Today + Dashboard + Journey работают на телефоне без критичных багов. HTTPS — отдельный infra-шаг.
 
@@ -221,9 +231,9 @@ Themes are not just colors. Each theme can have its own visual metaphor, progres
 
 ## Позже — графика (параллельно, не блокирует core)
 
-- [ ] Массовая генерация и approval hero stages
-- [ ] Мужчина — dark / light (все 20 стадий + death)
-- [ ] Женщина — dark / light (консистентность линейки)
+- [x] Journey Map v3 unused v2 canvas cluster removed (hardening 2026-08-19)
+- [ ] Массовая генерация и approval hero stages — **not 20 files**; production art is 5 visual anchors
+- [ ] Dark Fantasy female visual anchors
 - [ ] Мобы / боссы dark + **cozy parallel catalogs** (home/yard blockers, not light reskin of dark bosses)
 - [ ] Codex cinematic showcase polish
 - [ ] VPS / Node backend — когда будет бюджет
@@ -262,5 +272,15 @@ Themes are not just colors. Each theme can have its own visual metaphor, progres
 - GitHub Actions FTP deploy
 - PHP 8.2 hosting + `health.php`
 - Year campaign structure documented in wiki
+
+### Project Hardening v1 ✅ (2026-08-19)
+
+- Audit: `docs/audits/project-hardening-v1.md`; known issues: `14-known-issues.md`
+- PHP: gated SQLite leftover API, `data/` deny, JSON 400, 2 MiB body, login throttle, health no SQL leak
+- Cozy grant idempotency + nutrition-off no longer mints comfort
+- Seasons: incomplete stays current; late complete does not overlap Season 2
+- Avatars: 5 visual anchors only; no Cozy↔DF fallback
+- Quality gate: `npm run verify` (typecheck + tests + validate:avatars + vite build)
+- Journey Map v2 unused UI removed
 
 См. [`08-release-notes.md`](08-release-notes.md), [`07-decision-log.md`](07-decision-log.md), [`03-game-systems.md`](03-game-systems.md).

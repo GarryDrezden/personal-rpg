@@ -1,4 +1,6 @@
 RewriteEngine On
+# Never serve local DB / user files from the web root.
+RewriteRule ^data/ - [F,L]
 # /api/* must never fall through to SPA index.html.
 # Note: production front may be nginx — panel must map /api to PHP the same way.
 # Pass Authorization header to PHP (Apache / LSAPI)

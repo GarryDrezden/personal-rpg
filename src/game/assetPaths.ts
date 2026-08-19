@@ -13,10 +13,10 @@ import { getLegacyCodexBossManifestAssetId } from './manifestAssetUi';
 import { getCozyCampRoomPath } from './cozyCampaignArt';
 import {
   getCozyHeroPlaceholderPath,
-  getCozyHeroStagePath,
   getThemeAsset,
   getThemeAssetCandidates,
 } from './themeAssetRegistry';
+import { getAvatarStageImageCandidates } from './avatar/avatarStageAssets';
 
 export { GAME_ASSET_BASE_PATH, GAME_ASSET_VERSION, gameAsset };
 
@@ -166,8 +166,6 @@ export function getArtifactPublicPath(id: ArtifactId): string {
   return gameAsset(`artifacts/${fileMap[id]}`);
 }
 
-const HERO_STAGE_ANCHORS: HeroStageNumber[] = [1, 2, 19, 20];
-
 function uniquePaths(paths: string[]): string[] {
   const seen = new Set<string>();
   return paths.filter((path) => {
@@ -177,63 +175,12 @@ function uniquePaths(paths: string[]): string[] {
   });
 }
 
-function buildHeroStagePathsForStage(
-  gender: HeroGender,
-  stage: HeroStageNumber,
-  themeId: AppThemeId,
-): string[] {
-  if (themeId === 'cozy') {
-    // Cozy branch: theme-scoped art → optional light variant → cozy placeholder.
-    // Never fall back to dark-fantasy / legacy dark hero stages.
-    return uniquePaths([
-      getCozyHeroStagePath(gender, stage, 'webp'),
-      getCozyHeroStagePath(gender, stage, 'png'),
-      getGameHeroStageVariantPath(gender, stage, 'light', 'webp'),
-      getGameHeroStageVariantPath(gender, stage, 'light', 'png'),
-      getCozyHeroPlaceholderPath(gender),
-    ]);
-  }
-
-  const variant = resolveHeroAssetVariant(themeId);
-  const paths: string[] = [
-    getGameHeroStageVariantPath(gender, stage, variant, 'webp'),
-    getGameHeroStageLegacyPath(gender, stage, 'webp'),
-    getGameHeroStageVariantPath(gender, stage, variant, 'png'),
-    getGameHeroStageLegacyPath(gender, stage, 'png'),
-  ];
-
-  return uniquePaths(paths);
-}
-
 export function getHeroStageImageCandidates(
   gender: HeroGender,
   stage: HeroStageNumber,
   themeId: AppThemeId = 'darkFantasy',
 ): string[] {
-  const primaryPaths = buildHeroStagePathsForStage(gender, stage, themeId);
-
-  if (themeId === 'cozy') {
-    // Anchors stay within cozy/light only — then same-theme placeholder.
-    const anchorPaths = HERO_STAGE_ANCHORS.filter((s) => s !== stage)
-      .sort((a, b) => Math.abs(a - stage) - Math.abs(b - stage))
-      .flatMap((anchor) =>
-        uniquePaths([
-          getCozyHeroStagePath(gender, anchor, 'webp'),
-          getGameHeroStageVariantPath(gender, anchor, 'light', 'webp'),
-        ]),
-      );
-    return uniquePaths([
-      ...primaryPaths,
-      ...anchorPaths,
-      getCozyHeroPlaceholderPath(gender),
-    ]);
-  }
-
-  const anchorPaths = HERO_STAGE_ANCHORS.filter((s) => s !== stage)
-    .sort((a, b) => Math.abs(a - stage) - Math.abs(b - stage))
-    .flatMap((anchor) => buildHeroStagePathsForStage(gender, anchor, themeId));
-
-  return uniquePaths([...primaryPaths, ...anchorPaths]);
+  return getAvatarStageImageCandidates(gender, stage, themeId);
 }
 
 export function getHeroStageImageSrc(
@@ -246,11 +193,7 @@ export function getHeroStageImageSrc(
 
 function buildHeroDeathPaths(gender: HeroGender, themeId: AppThemeId): string[] {
   if (themeId === 'cozy') {
-    return uniquePaths([
-      gameAsset(`heroes/${gender}/variants/light/death.webp`),
-      gameAsset(`heroes/${gender}/variants/light/death.png`),
-      getCozyHeroPlaceholderPath(gender),
-    ]);
+    return uniquePaths([getCozyHeroPlaceholderPath(gender)]);
   }
 
   const variant = resolveHeroAssetVariant(themeId);

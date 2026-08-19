@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-08-19 — Project hardening v1
+
+**Context:**  
+Full-repo audit: unauthenticated SQLite leftover on production `/api`, Cozy comfort from disabled nutrition, season window overlap after late completion, avatar builders still requesting `stage-07.webp`, missing error boundary.
+
+**Decision:**  
+Gate legacy SQLite API when MySQL config exists; deny `data/`; JSON 400 + 2 MiB + login throttle; Cozy rewards require real nutrition logs; sequential season freeze; all avatar paths through visual anchors / resolver; `AppErrorBoundary`; `npm run verify`. No new game systems.
+
+**Consequence:**  
+Old accounts still load via normalize. Production API surface is accounts-only. See [`../audits/project-hardening-v1.md`](../audits/project-hardening-v1.md), [`14-known-issues.md`](14-known-issues.md).
+
 ## 2026-08-10 — Camp art fallback, optional UI gate, companions opt-in
 
 **Context:**  

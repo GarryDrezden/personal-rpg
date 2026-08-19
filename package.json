@@ -7,6 +7,8 @@
     "dev": "vite",
     "dev:server": "npm run dev --prefix backend",
     "build": "tsc -p tsconfig.app.json --noEmit && vite build",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit",
+    "verify": "npm run typecheck && npm test && npm run validate:avatars && vite build",
     "build:server": "npm run build --prefix backend",
     "build:all": "npm run build && npm run build:server",
     "preview": "vite preview",

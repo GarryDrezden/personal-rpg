@@ -27,7 +27,7 @@ if ($checks['mysqlConfigExists']) {
         $checks['userDataTable'] = (bool) $dataTable;
     } catch (Throwable $e) {
         $checks['mysqlConnect'] = false;
-        $checks['mysqlError'] = $e->getMessage();
+        $checks['mysqlError'] = 'database unavailable';
     }
 }
 

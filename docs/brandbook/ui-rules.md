@@ -41,7 +41,7 @@
 
 ## Onboarding (`/start`)
 
-- One main question per step; progress «шаг X из 6»
+- One main question per step; progress «шаг X из 5»
 - Tone: campaign launch («Пробуждение ядра»), not a medical questionnaire
 - Theme-aware surfaces; future themes visible as disabled «Скоро»
 - Sticky Back / Next on mobile; soft validation; skippable target weight

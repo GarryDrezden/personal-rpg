@@ -8,6 +8,7 @@ import {
 import {
   getCozyHomeProgress,
   getCozyHomeState,
+  canUpgradeCozyZone,
   upgradeCozyZone,
   withCozyHomeState,
 } from '../utils/cozyHomeEngine';
@@ -43,7 +44,7 @@ function homeStatusLine(percent: number, totalResources: number): string {
 
 export function CozyHomePage() {
   const { isCozy } = useAppTheme();
-  const { settings, saveSettings } = useAppStore();
+  const { settings } = useAppStore();
   const [busyZone, setBusyZone] = useState<CozyHomeZoneId | null>(null);
 
   const home = useMemo(() => getCozyHomeState(settings), [settings]);
@@ -69,8 +70,12 @@ export function CozyHomePage() {
   const handleUpgrade = async (zoneId: CozyHomeZoneId) => {
     setBusyZone(zoneId);
     try {
-      const next = upgradeCozyZone(home, zoneId);
-      await saveSettings(withCozyHomeState(settings, next));
+      const latest = useAppStore.getState();
+      const latestHome = getCozyHomeState(latest.settings);
+      const check = canUpgradeCozyZone(latestHome, zoneId);
+      if (!check.canUpgrade) return;
+      const next = upgradeCozyZone(latestHome, zoneId);
+      await latest.saveSettings(withCozyHomeState(latest.settings, next));
     } finally {
       setBusyZone(null);
     }

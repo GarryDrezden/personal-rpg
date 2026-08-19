@@ -24,9 +24,9 @@ import {
   getWaistLossCm,
 } from './bodyAbilityEngine';
 import { getDayMode, isStepsMinimumDone, isStepsNormalDone } from './stepsEngine';
+import { isCaloriesInLimit } from './achievementEngine';
 import {
   getNutritionQuestCompleted,
-  getTrackingMode,
   isNutritionTrackingEnabled,
 } from './nutritionEngine';
 
@@ -282,18 +282,7 @@ function evaluateAuto(
       );
     case 'calorie_limit_days': {
       if (!isNutritionTrackingEnabled(settings)) return false;
-      if (getTrackingMode(settings) !== 'precise') {
-        return (
-          countDays(dailyEntries, (e) =>
-            getNutritionQuestCompleted({ entry: e, settings }),
-          ) >= target
-        );
-      }
-      return (
-        countDays(dailyEntries, (e) =>
-          getNutritionQuestCompleted({ entry: e, settings }),
-        ) >= target
-      );
+      return countDays(dailyEntries, (e) => isCaloriesInLimit(e, settings)) >= target;
     }
     case 'recovery_days':
       return (

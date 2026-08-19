@@ -203,7 +203,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 1",
       "priority": "P0",
-      "path": "/game-assets/heroes/male/stage-01.png",
+      "path": "/game-assets/heroes/male/stage-01.webp",
       "usedIn": [
         "Dashboard",
         "Codex",
@@ -229,7 +229,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 2",
       "priority": "P0",
-      "path": "/game-assets/heroes/male/stage-02.png",
+      "path": "/game-assets/heroes/male/stage-02.webp",
       "usedIn": [
         "Dashboard",
         "Codex",
@@ -255,7 +255,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 3",
       "priority": "P0",
-      "path": "/game-assets/heroes/male/stage-03.png",
+      "path": "/game-assets/heroes/male/stage-03.webp",
       "usedIn": [
         "Dashboard",
         "Codex",
@@ -281,7 +281,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 19",
       "priority": "P0",
-      "path": "/game-assets/heroes/male/stage-19.png",
+      "path": "/game-assets/heroes/male/stage-19.webp",
       "usedIn": [
         "Dashboard",
         "Codex",
@@ -307,7 +307,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 20",
       "priority": "P0",
-      "path": "/game-assets/heroes/male/stage-20.png",
+      "path": "/game-assets/heroes/male/stage-20.webp",
       "usedIn": [
         "Dashboard",
         "Codex",
@@ -333,7 +333,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 4 (variant)",
       "priority": "P0",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-04.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-04.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -358,7 +358,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 5 (variant)",
       "priority": "P0",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-05.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-05.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -383,7 +383,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 6 (variant)",
       "priority": "P0",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-06.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-06.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -408,7 +408,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 7 (variant)",
       "priority": "P0",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-07.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-07.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -433,7 +433,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 8 (variant)",
       "priority": "P0",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-08.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-08.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -458,7 +458,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 9 (variant)",
       "priority": "P0",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-09.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-09.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -483,7 +483,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 10 (variant)",
       "priority": "P0",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-10.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-10.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -508,7 +508,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 11 (variant)",
       "priority": "P1",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-11.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-11.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -533,7 +533,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 12 (variant)",
       "priority": "P1",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-12.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-12.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -558,7 +558,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 13 (variant)",
       "priority": "P1",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-13.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-13.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -583,7 +583,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 14 (variant)",
       "priority": "P1",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-14.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-14.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -608,7 +608,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 15 (variant)",
       "priority": "P1",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-15.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-15.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -633,7 +633,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 16 (variant)",
       "priority": "P1",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-16.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-16.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -658,7 +658,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 17 (variant)",
       "priority": "P1",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-17.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-17.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -683,7 +683,7 @@
       "category": "hero",
       "title": "Мужской герой — стадия 18 (variant)",
       "priority": "P1",
-      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-18.png",
+      "path": "/game-assets/heroes/male/variants/dark-fantasy/stage-18.webp",
       "usedIn": [
         "assetPaths fallback chain",
         "Codex",
@@ -708,7 +708,7 @@
       "category": "hero",
       "title": "Мужской герой — Death (200 kg)",
       "priority": "P1",
-      "path": "/game-assets/heroes/male/death.png",
+      "path": "/game-assets/heroes/male/death.webp",
       "usedIn": [
         "Measurements",
         "Hero progression"

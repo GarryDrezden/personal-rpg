@@ -447,6 +447,8 @@ export function TodayPage() {
       applySaveReaction(saved, {
         cozyJustGranted: !hadCozyClaim && Boolean(saved.cozyRewardsGranted),
       });
+    } catch {
+      setDirty(true);
     } finally {
       setSaving(false);
     }

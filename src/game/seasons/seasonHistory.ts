@@ -1,10 +1,10 @@
 import type { AppSettings, DailyEntry } from '../../types';
 import type { SeasonHistoryArchive, SeasonHistoryEntry } from './seasonTypes';
-import { SEASON_COUNT, getSeasonConfigByIndex } from './seasonConfig';
+import { getSeasonConfigByIndex } from './seasonConfig';
 import {
-  evaluateSeasonProgress,
   resolveActiveSeasonIndex,
   resolveCampaignStartDate,
+  walkSeasonCampaignArcs,
 } from './seasonEngine';
 import {
   getSeasonHistoryRecapText,
@@ -31,28 +31,23 @@ export function getSeasonHistoryArchive(params: {
     today,
     campaignStartDate: campaignStart,
   });
+  const arcs = walkSeasonCampaignArcs({
+    settings: params.settings,
+    dailyEntries: params.dailyEntries,
+    campaignStartDate: campaignStart,
+    today,
+  });
 
   const entries: SeasonHistoryEntry[] = [];
 
-  for (let index = 1; index <= SEASON_COUNT; index += 1) {
-    const config = getSeasonConfigByIndex(index);
-    const isLocked = index > currentSeasonIndex;
-    const isCurrent = index === currentSeasonIndex;
-
-    if (isLocked) {
-      const { seasonStartDate, calendarEndDate } = evaluateSeasonProgress({
-        settings: params.settings,
-        dailyEntries: params.dailyEntries,
-        campaignStartDate: campaignStart,
-        seasonIndex: index,
-        today,
-        extendOpenEnd: false,
-      });
+  for (const arc of arcs) {
+    const config = getSeasonConfigByIndex(arc.seasonIndex);
+    if (arc.isLocked) {
       entries.push({
-        seasonIndex: index,
+        seasonIndex: arc.seasonIndex,
         config,
-        seasonStartDate,
-        seasonEndDate: calendarEndDate,
+        seasonStartDate: arc.windowStart,
+        seasonEndDate: arc.calendarEndDate,
         completedQuestCount: 0,
         questTotal: config.quests.length,
         partialStatus: 'started',
@@ -67,21 +62,13 @@ export function getSeasonHistoryArchive(params: {
       continue;
     }
 
-    const progress = evaluateSeasonProgress({
-      settings: params.settings,
-      dailyEntries: params.dailyEntries,
-      campaignStartDate: campaignStart,
-      seasonIndex: index,
-      today,
-      extendOpenEnd: true,
-    });
-
+    const progress = arc.progress;
     const rewardStatus = getSeasonRewardStatus(progress.partialStatus, false);
     entries.push({
-      seasonIndex: index,
+      seasonIndex: arc.seasonIndex,
       config,
       seasonStartDate: progress.seasonStartDate,
-      seasonEndDate: progress.seasonEndDate,
+      seasonEndDate: arc.windowEnd,
       completedQuestCount: progress.completedQuestCount,
       questTotal: progress.quests.length,
       partialStatus: progress.partialStatus,
@@ -89,11 +76,11 @@ export function getSeasonHistoryArchive(params: {
       recapText: getSeasonHistoryRecapText(
         progress.partialStatus,
         config,
-        !isCurrent && progress.isCompleted,
+        !arc.isCurrent && progress.isCompleted,
       ),
       rewardStatus,
       rewardLabel: getSeasonRewardLabel(rewardStatus, config.rewardName),
-      isCurrent,
+      isCurrent: arc.isCurrent,
       isLocked: false,
       isCompleted: progress.isCompleted,
     });

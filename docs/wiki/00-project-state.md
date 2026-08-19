@@ -1,6 +1,6 @@
 # Текущее состояние проекта
 
-> **Единый источник правды.** Обновлено: 2026-08-10 (camp/UI gates + Cozy art fill plan).
+> **Единый источник правды.** Обновлено: 2026-08-19 (project hardening v1).
 
 ## Краткое описание
 
@@ -44,13 +44,16 @@
 | Frontend | React 19, TypeScript, Vite 6, Tailwind CSS 4, Zustand, React Router |
 | Backend (production) | PHP 8.2 + PDO + MySQL в `api/` |
 | Backend (experimental) | Node/Express/Prisma в `backend/` — VPS-only |
-| Game assets | `public/game-assets/`, `GAME_ASSET_VERSION=24` |
+| Game assets | `public/game-assets/`, `GAME_ASSET_VERSION=66` |
 
 ## Текущая версия
 
-- **README:** v1.4 (пользовательская документация)
+- **README:** пользовательская документация (wiki = source of truth)
 - **package.json:** 1.0.0
-- **GAME_ASSET_VERSION:** 49
+- **GAME_ASSET_VERSION:** 66
+- **Quality gate:** `npm run verify` (typecheck + tests + validate:avatars + vite build)
+- **Known issues:** [`14-known-issues.md`](14-known-issues.md)
+- **Hardening audit:** [`../audits/project-hardening-v1.md`](../audits/project-hardening-v1.md)
 
 ## Sprint 1 — Accounts & Storage ✅ (production: PHP + MySQL)
 
@@ -92,7 +95,7 @@
 - **Per-chapter vignettes:** `public/game-assets/maps/chapters/chapter-NN-*.webp` (fallback — CSS gradient).
 - **Chapter card:** текст главы слева (статус, title, progress, цели); vignette справа — только art, biome label, symbol, optional current badge «Сейчас».
 - **Summary:** `JourneyMapV3SummaryBar` вверху страницы.
-- **Legacy v2** (Banana bg, horizontal canvas, `JourneyMapDesktop`, `JourneyMapMobile`, `JourneyChapterSummaryDock`) — **не используется** в UI.
+- **Legacy v2 map UI removed** (2026-08-19): Desktop/Mobile canvas cluster deleted. Live UI is Journey Map v3 only.
 
 См. [`03-game-systems.md`](03-game-systems.md), [`../brandbook/ui-rules.md`](../brandbook/ui-rules.md).
 
@@ -114,16 +117,16 @@
 ### Backend и деплой
 
 - PHP REST API: auth, profile, settings, user_data
-- Legacy SQLite routes в `api/index.php` — dev fallback
+- Legacy SQLite routes в `api/index.php` — **gated off** when MySQL `config.php` exists (opt-in `app.legacy_sqlite_api`)
 - `api/health.php` для диагностики на хостинге
 - GitHub Actions: build + FTP deploy (`dist/`, `api/`, `.htaccess`)
 
 ### Ассеты
 
 - `public/game-assets/` — heroes, companions, mobs, bosses, artifacts, maps
-- Avatar production (male): **5 visual anchors** in `themes/cozy/avatars/male/` and `themes/dark-fantasy/avatars/male/` (`stage-01/05/10/15/20`); `GAME_ASSET_VERSION` 58
-- Female hero: полный набор 20 стадий + death (legacy layout); female visual anchors still placeholder in pipeline
-- Male hero legacy v2 set 1–20 under `heroes/` (DF fallback only for avatar pipeline)
+- Cozy female: **5 visual anchors approved** in `themes/cozy/avatars/female/`
+- Dark Fantasy female: **placeholders** for the same five anchors (art backlog)
+- Male hero legacy files 1–20 under `heroes/` (same-theme DF fallback only; not the production 5-anchor map)
 - 8 legacy codex bosses (PNG), 8 daily mobs, 4 companions
 - Journey chapter vignettes: 9 × `.webp` (P0 in-app)
 - **Asset Registry 2.0** ✅ — `docs/assets/manifest.json` v2, Art Backlog, validation tests
@@ -291,9 +294,11 @@ Asset Registry 2.0 готов: manifest, backlog, naming, placeholders зафи�
 
 ## Следующий приоритет
 
-**Cozy Art Fill Plan C1–C7** ([`13-art-backlog.md`](13-art-backlog.md)): сначала **C1** — webp для Dashboard Season/Camp вместо `CozyArtPlaceholder`; затем female avatar anchors; затем Home hero/zones. Питомцы — opt-in, арт спутников не блокирует C1–C3. DF campaign art S01–S13 уже in-app. HTTPS — when hosting cert is ready.
+**Cozy Art Fill Plan C1–C7** остаётся visual backlog. После hardening v1 безопаснее добавлять новые системы: state normalize, PHP legacy API gated, theme-isolated avatars, season windows, Cozy grant idempotency, `npm run verify`.
 
-См. [`01-roadmap.md`](01-roadmap.md) — полный порядок внедрения годовой кампании.
+HTTPS — when hosting cert is ready.
+
+См. [`01-roadmap.md`](01-roadmap.md), [`14-known-issues.md`](14-known-issues.md).
 
 ## Технические риски
 

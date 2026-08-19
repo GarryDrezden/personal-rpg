@@ -28,6 +28,17 @@ const REQUIRED_ENTRY_FIELDS: (keyof AssetManifestEntry)[] = [
 
 const PATH_REQUIRED_STATUSES = new Set(['in-app', 'done']);
 
+function fileExistsWithWebpFallback(
+  diskPath: string,
+  fileExists: (absolutePath: string) => boolean,
+): boolean {
+  if (fileExists(diskPath)) return true;
+  if (diskPath.toLowerCase().endsWith('.png')) {
+    return fileExists(`${diskPath.slice(0, -4)}.webp`);
+  }
+  return false;
+}
+
 export type ValidateAssetManifestOptions = {
   /** When provided, verifies paths for in-app/done assets */
   fileExists?: (absolutePath: string) => boolean;
@@ -106,7 +117,7 @@ export function validateAssetManifest(
         });
       } else if (fileExists && publicRoot) {
         const diskPath = `${publicRoot}/${asset.path.replace(/^\//, '')}`;
-        if (!fileExists(diskPath)) {
+        if (!fileExistsWithWebpFallback(diskPath, fileExists)) {
           issues.push({
             assetId: asset.id,
             field: 'path',

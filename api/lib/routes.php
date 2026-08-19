@@ -15,3 +15,20 @@ function isAccountsApiRoute(string $route): bool
     }
     return false;
 }
+
+/**
+ * Legacy unauthenticated SQLite routes (dev-only).
+ * Production with MySQL config.php is off unless app.legacy_sqlite_api = true.
+ */
+function isLegacySqliteApiEnabled(): bool
+{
+    $configPath = dirname(__DIR__) . '/config/config.php';
+    if (!is_file($configPath)) {
+        return true;
+    }
+    $cfg = require $configPath;
+    if (is_array($cfg) && array_key_exists('legacy_sqlite_api', $cfg['app'] ?? [])) {
+        return (bool) $cfg['app']['legacy_sqlite_api'];
+    }
+    return false;
+}

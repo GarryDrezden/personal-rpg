@@ -4,7 +4,6 @@ import type { AvatarStageAssetRef } from '../../types/avatarStages';
 import type { AvatarTrackId } from '../../types/avatarAssets';
 import {
   getAvatarGenderPlaceholderPath,
-  getCanonicalAvatarStagePath,
   padAvatarStage,
 } from '../../constants/avatarAssetManifest';
 import { gameAsset } from '../assetBase';
@@ -51,7 +50,7 @@ export function getAvatarStageAssetRef(
     stage,
     themeId,
     gender,
-    path: gameAsset(getCanonicalAvatarStagePath(themeId, gender, stage)),
+    path: resolved.path,
     placeholderPath: resolved.usedFallback
       ? resolved.path
       : gameAsset(getAvatarGenderPlaceholderPath(themeId, gender)),

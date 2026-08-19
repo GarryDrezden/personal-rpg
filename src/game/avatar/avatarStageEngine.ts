@@ -17,6 +17,7 @@ import {
 } from '../../utils/bodyAbilityPersonalEngine';
 import { getAllBodyAbilityProgress } from '../../utils/bodyAbilityEngine';
 import { todayISO } from '../../utils/dates';
+import { format, parseISO, subDays } from 'date-fns';
 import { sortMeasurementsByDate } from '../../utils/measurements';
 import { getMomentumSummary } from '../../utils/momentumEngine';
 import {
@@ -149,11 +150,9 @@ function countRecentDays(
   const byDate = new Map(dailyEntries.map((e) => [e.date, e]));
   let hit = 0;
   let span = 0;
-  const end = new Date(`${today}T12:00:00`);
+  const end = parseISO(today);
   for (let i = 0; i < windowDays; i += 1) {
-    const d = new Date(end);
-    d.setDate(end.getDate() - i);
-    const iso = d.toISOString().slice(0, 10);
+    const iso = format(subDays(end, i), 'yyyy-MM-dd');
     const entry = byDate.get(iso);
     if (!entry) continue;
     span += 1;

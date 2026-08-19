@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { getAssetById, getAssetPlaceholder, getEntityAsset, getManifestAssetUrl } from './assetManifest';
 import type { AssetManifestV2 } from './assetManifestTypes';
 import { validateAssetManifest } from './assetManifestValidation';
+import { GAME_ASSET_VERSION } from './assetBase';
 
 const manifestPath = join(process.cwd(), 'docs/assets/manifest.json');
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8')) as AssetManifestV2;
@@ -52,18 +53,22 @@ describe('asset manifest helpers', () => {
 
   it('getManifestAssetUrl returns versioned path for in-app batch 1 assets', () => {
     const url = getManifestAssetUrl('onboarding-core-awakening');
-    expect(url).toMatch(/\/game-assets\/onboarding\/core-awakening\.webp\?v=42$/);
+    expect(url).toMatch(
+      new RegExp(`/game-assets/onboarding/core-awakening\\.webp\\?v=${GAME_ASSET_VERSION}$`),
+    );
   });
 
   it('getManifestAssetUrl returns versioned path for in-app batch 2 assets', () => {
     expect(getManifestAssetUrl('empty-state-no-entries')).toMatch(
-      /\/game-assets\/empty-states\/no-entries\.webp\?v=42$/,
+      new RegExp(`/game-assets/empty-states/no-entries\\.webp\\?v=${GAME_ASSET_VERSION}$`),
     );
     expect(getManifestAssetUrl('plateau-artifact-pass-stone')).toMatch(
-      /\/game-assets\/artifacts\/plateau-pass-stone\.webp\?v=42$/,
+      new RegExp(`/game-assets/artifacts/plateau-pass-stone\\.webp\\?v=${GAME_ASSET_VERSION}$`),
     );
     expect(getManifestAssetUrl('season-boss-01-empty-day-lord')).toMatch(
-      /\/game-assets\/bosses\/seasons\/season-boss-01-empty-day-lord\.webp\?v=42$/,
+      new RegExp(
+        `/game-assets/bosses/seasons/season-boss-01-empty-day-lord\\.webp\\?v=${GAME_ASSET_VERSION}$`,
+      ),
     );
   });
 

@@ -119,14 +119,15 @@ docs/assets/manifest.json
 ## Testing
 
 - Unit: Vitest (`src/**/*.test.ts`)
-- E2E: Playwright (`npm run test:e2e`)
+- E2E: Playwright (`npm run test:e2e`) — master core, onboarding, theme switch, measurements
+- Local gate: `npm run verify` (typecheck + unit tests + `validate:avatars` + production build)
 
 ## Key files for AI
 
 | Задача | Файлы |
 |--------|-------|
 | Новая игровая механика | `src/utils/*Engine.ts`, `src/constants/` |
-| Journey map | `src/components/journey/map/*`, `journeyMapConfig.ts`, `journey-map-v2.css` |
+| Journey map | `src/components/journey/map/v3/*`, `journeyMapConfig.ts`, `journey-map-v3.css` |
 | Новый экран | `src/pages/`, `src/App.tsx` |
 | Ассеты | `src/game/assetPaths.ts`, `docs/assets/manifest.json` |
 | API (production) | `api/`, `api/config/config.example.php`, `api/migrations/` |

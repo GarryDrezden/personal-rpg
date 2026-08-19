@@ -27,7 +27,7 @@
 
 **Route:** `/start` · **Gate:** `OnboardingGate` · **Helpers:** `onboardingState.ts`, `onboardingComplete.ts`
 
-Короткий ритуал «Пробуждение ядра» (6 шагов): идея игры → герой → мир → цель тела → ритм дня → спутник → `/today`.
+Короткий ритуал «Пробуждение ядра» (5 шагов) — идея игры → герой → мир → цель тела → ритм дня / старт → `/today`. Выбор спутника убран (питомцы — opt-in в Settings).
 
 - Forced только для новых аккаунтов без базового профиля и без progress data.
 - Тема: Cozy / Dark Fantasy selectable; Forest Myth / Athlete Return — coming soon.
@@ -307,7 +307,7 @@ Vertical **chapter road** — 9 глав в ширине обычного кон
 
 **Assets глав:** `public/game-assets/maps/chapters/chapter-NN-*.webp` — 9 фонов этапов; подписи, медальоны и статусы рендерятся UI (`JourneyChapterVignette`). Fallback — CSS gradient из `journeyChapterVisuals.ts`.
 
-Стили: `src/styles/journey-map-v3.css`. Legacy v2: `journey-map-v2.css` (не импортируется).
+Стили: `src/styles/journey-map-v3.css`. Legacy v2 canvas UI удалён (hardening 2026-08-19).
 
 ---
 

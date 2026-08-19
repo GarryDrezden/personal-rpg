@@ -156,6 +156,33 @@ describe('campaign arc season gating', () => {
     expect(archive.entries[0]?.completedQuestCount).toBeGreaterThan(0);
   });
 
+  it('late Season 1 completion does not share days with Season 2', () => {
+    const start = '2026-06-01';
+    const settings = { ...DEFAULT_APP_SETTINGS, startDate: start };
+    const late = [
+      ...partialSeason1Entries(),
+      ...Array.from({ length: 18 }, (_, i) =>
+        entry(`2026-07-${String(i + 1).padStart(2, '0')}`, {
+          steps: 9000,
+          alcohol: 'none',
+          nutritionLevel: 'light',
+          energyLevel: 3,
+          dayMode: i < 3 ? 'minimal' : 'normal',
+        }),
+      ),
+    ];
+    const today = '2026-07-18';
+    expect(resolveActiveSeasonIndex({ settings, dailyEntries: late, today })).toBe(2);
+
+    const archive = getSeasonHistoryArchive({ settings, dailyEntries: late, today });
+    const season1 = archive.entries[0]!;
+    const season2 = archive.entries[1]!;
+    expect(season1.isCompleted).toBe(true);
+    expect(season2.isCurrent).toBe(true);
+    expect(season2.isLocked).toBe(false);
+    expect(season2.seasonStartDate > season1.seasonEndDate).toBe(true);
+  });
+
   it('completing Season 1 allows Season 2 to become current', () => {
     const dailyEntries = clearedSeason1Entries();
     const settings = { ...DEFAULT_APP_SETTINGS, startDate: '2026-06-01' };
