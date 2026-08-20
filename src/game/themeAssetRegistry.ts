@@ -93,6 +93,15 @@ export function getCozyChapterPath(chapterNumber: number): string {
   return cozyThemeAsset(`journey/chapters/chapter-${n}.webp`);
 }
 
+export const COZY_SEASON_VIGNETTE_COUNT = 8;
+
+/** Reusable Cozy chronicle vignettes (8 plates, mapped onto 13 seasons). */
+export function getCozySeasonVignettePath(seasonIndex: number): string {
+  const safe = Number.isFinite(seasonIndex) ? Math.max(1, Math.floor(seasonIndex)) : 1;
+  const n = ((safe - 1) % COZY_SEASON_VIGNETTE_COUNT) + 1;
+  return cozyThemeAsset(`ui/seasons/vignette-${String(n).padStart(2, '0')}.webp`);
+}
+
 /**
  * Resolve a theme-scoped asset. For cozy, never returns a darkFantasy path.
  * Missing final art → same-theme placeholder.
@@ -141,7 +150,7 @@ function resolveCozyAsset(
         entityId,
         path: getCozyCompanionPath(entityId as CompanionId),
         fallbackPath: getCozyCompanionPlaceholderPath(),
-        placeholder: true,
+        placeholder: false,
       };
     case 'mob':
       return {
@@ -150,7 +159,7 @@ function resolveCozyAsset(
         entityId,
         path: getCozyMobPath(entityId as MobId),
         fallbackPath: getCozyMobPlaceholderPath(),
-        placeholder: true,
+        placeholder: false,
       };
     case 'boss':
       return {
@@ -159,7 +168,7 @@ function resolveCozyAsset(
         entityId,
         path: getCozyBossPath(entityId as BossId),
         fallbackPath: getCozyBossPlaceholderPath(),
-        placeholder: true,
+        placeholder: false,
       };
     case 'chapter_background':
       return {
@@ -168,19 +177,23 @@ function resolveCozyAsset(
         entityId,
         path: getCozyChapterPath(Number(entityId) || 1),
         fallbackPath: getCozyChapterPlaceholderPath(),
-        placeholder: true,
+        placeholder: false,
       };
     case 'home_zone':
     case 'home_exterior':
-    case 'scene_backdrop':
+    case 'scene_backdrop': {
+      const seasonVignette = kind === 'scene_backdrop' && /^\d+$/.test(entityId);
       return {
         themeId: 'cozy',
         kind,
         entityId,
-        path: getCozyHomeScenePlaceholderPath(),
+        path: seasonVignette
+          ? getCozySeasonVignettePath(Number(entityId))
+          : getCozyHomeScenePlaceholderPath(),
         fallbackPath: getCozyHomeScenePlaceholderPath(),
-        placeholder: true,
+        placeholder: !seasonVignette,
       };
+    }
     default:
       return {
         themeId: 'cozy',

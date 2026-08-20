@@ -16,7 +16,7 @@ type GameAssetImageProps = {
   className?: string;
   imageClassName?: string;
   imageStyle?: CSSProperties;
-  fit?: 'default' | 'hero' | 'companion' | 'mob' | 'boss';
+  fit?: 'default' | 'hero' | 'companion' | 'mob' | 'boss' | 'scene';
   loading?: 'eager' | 'lazy';
 };
 
@@ -26,6 +26,7 @@ const FIT_CLASS: Record<NonNullable<GameAssetImageProps['fit']>, string> = {
   companion: 'h-full w-full max-h-full max-w-full object-contain object-bottom',
   mob: 'h-full w-full max-h-full max-w-full object-contain object-center',
   boss: 'h-full w-full max-h-full max-w-full object-contain object-center',
+  scene: 'h-full w-full object-cover object-center',
 };
 
 const VARIANT_SCALE: Partial<Record<GameAssetVariant, string>> = {
@@ -76,7 +77,7 @@ export function GameAssetImage({
   const resolvedFit = resolveFit(fit, variant);
   const showHighlight = current && resolvedFit === 'default';
   const fitClass = FIT_CLASS[resolvedFit];
-  const variantScale = VARIANT_SCALE[variant] ?? '';
+  const variantScale = resolvedFit === 'scene' ? '' : (VARIANT_SCALE[variant] ?? '');
   const alignClass = resolvedFit === 'hero' ? 'items-end' : 'items-center';
   const overflowClass = 'overflow-hidden';
 

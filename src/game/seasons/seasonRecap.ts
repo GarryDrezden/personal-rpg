@@ -1,4 +1,11 @@
 import type { SeasonConfig, SeasonPartialStatus, SeasonRewardStatus } from './seasonTypes';
+import type { AppThemeId } from '../../types/theme';
+import {
+  pickSeasonFlavorLine,
+  pickSeasonHistoryRecap,
+  pickSeasonCurrentOpenLine,
+  seasonCopyPhase,
+} from '../../content/seasonsFlavor';
 
 const STATUS_RECAP: Record<SeasonPartialStatus, string> = {
   started: 'Сезон начат. Костёр уже виден — теперь важно возвращаться к нему.',
@@ -62,7 +69,31 @@ export function getSeasonRewardLabel(
 export function getSeasonRecapText(
   status: SeasonPartialStatus,
   config: SeasonConfig,
+  opts?: {
+    themeId?: AppThemeId;
+    date?: string;
+    dayNumber?: number;
+    seasonLength?: number;
+  },
 ): string {
+  if (opts?.themeId && opts.date) {
+    const phase = seasonCopyPhase({
+      partialStatus: status,
+      dayNumber: opts.dayNumber ?? 1,
+      seasonLength: opts.seasonLength ?? 28,
+      isArcCompleted: isSeasonArcCompleted(status),
+    });
+    const flavor = pickSeasonFlavorLine({
+      themeId: opts.themeId,
+      phase,
+      date: opts.date,
+      extra: config.id,
+    });
+    if (status === 'cleared' || status === 'empowered') {
+      return config.description ? `${flavor} ${config.description}` : flavor;
+    }
+    return flavor;
+  }
   const base = STATUS_RECAP[status];
   if (status === 'cleared' || status === 'empowered') {
     return `${base} ${config.description}`;
@@ -75,23 +106,25 @@ export function getSeasonHistoryRecapText(
   status: SeasonPartialStatus,
   config: SeasonConfig,
   isPast: boolean,
+  opts?: { themeId?: AppThemeId; date?: string },
 ): string {
+  const themeId = opts?.themeId ?? 'darkFantasy';
+  const date = opts?.date ?? '2000-01-01';
   if (!isPast) {
     if (!isSeasonArcCompleted(status)) {
-      return 'Арка ещё не завершена. Путь сезона продолжается — новая арка откроется после этой.';
+      return pickSeasonCurrentOpenLine({ themeId, date });
     }
-    return getSeasonRecapText(status, config);
+    return getSeasonRecapText(status, config, { themeId, date });
   }
-  if (!isSeasonArcCompleted(status)) {
-    return 'Прогресс сезона не завершён. Арка продолжается — не считаем её пройденной.';
-  }
-  if (status === 'started') {
-    return 'Сезон прошёл тихо. След всё равно остался — следующий круг будет яснее.';
-  }
-  if (status === 'marked') {
-    return 'Сезон оставил метки маршрута. Не идеально — и этого достаточно.';
-  }
-  return getSeasonRecapText(status, config);
+  const flavored = pickSeasonHistoryRecap({
+    themeId,
+    date,
+    isPast: true,
+    isArcCompleted: isSeasonArcCompleted(status),
+    partialStatus: status,
+  });
+  if (flavored) return flavored;
+  return getSeasonRecapText(status, config, { themeId, date });
 }
 
 export function getSeasonContinuingArcLabel(themeId?: 'cozy' | 'darkFantasy'): string {

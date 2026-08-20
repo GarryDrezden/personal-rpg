@@ -238,7 +238,7 @@ export interface AppData {
 }
 
 export type DayStatusLabel =
-  | 'День выживания'
+  | 'Тихий день'
   | 'Нормально'
   | 'Хороший день'
   | 'Отличный день';

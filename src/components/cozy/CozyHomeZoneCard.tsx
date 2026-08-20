@@ -2,12 +2,15 @@ import type { CozyHomeState, CozyHomeZoneId, CozyResourceId } from '../../types/
 import {
   COZY_RESOURCE_LABELS,
   formatCozyCost,
+  isCozyLongProject,
 } from '../../constants/cozyHomeConfig';
 import {
   formatMissingResources,
   getCozyZoneDisplay,
 } from '../../utils/cozyHomeEngine';
-import { getCozyHomeZoneArtPath } from '../../game/cozyHomeArt';
+import { pickLongProjectLine } from '../../content/homeStatus';
+import { todayISO } from '../../utils/dates';
+import { getCozyHomeZoneArtCandidates } from '../../game/cozyHomeArt';
 import { GameAssetImage } from '../game/GameAssetImage';
 
 type CozyHomeZoneCardProps = {
@@ -38,7 +41,7 @@ export function CozyHomeZoneCard({
   const isMax = check.isMax;
   const canUpgrade = check.canUpgrade;
   const tone = ZONE_TONE[zoneId] ?? '';
-  const zoneArt = getCozyHomeZoneArtPath(zoneId);
+  const zoneArtCandidates = getCozyHomeZoneArtCandidates(zoneId, level);
 
   return (
     <article
@@ -54,22 +57,24 @@ export function CozyHomeZoneCard({
     >
       <div className="cozy-zone-card__ornament" aria-hidden />
 
-      {zoneArt ? (
+      {zoneArtCandidates.length > 0 ? (
         <div
-          className="relative mb-3 h-28 w-full overflow-hidden rounded-xl border border-[var(--app-border)]"
+          className="cozy-zone-card__art"
           data-testid={`cozy-zone-art-${zoneId}`}
         >
           <GameAssetImage
-            src={zoneArt}
+            src={zoneArtCandidates[0]}
+            fallbackCandidates={zoneArtCandidates.slice(1)}
             alt={config.title}
             variant="artifact"
             status="unlocked"
             className="absolute inset-0"
-            imageClassName="h-full w-full object-cover"
+            imageClassName="h-full w-full object-cover object-center"
           />
         </div>
       ) : null}
 
+      <div className="cozy-zone-card__body">
       <div className="flex items-start gap-3">
         <span className="cozy-zone-card__icon" aria-hidden>
           {config.icon}
@@ -103,9 +108,17 @@ export function CozyHomeZoneCard({
             <p className="cozy-zone-card__label">Следующее улучшение</p>
             <p className="text-sm font-medium text-[var(--app-text)]">{next.description}</p>
             {next.cost ? (
-              <p className="mt-1.5 text-xs text-[var(--app-wood)]">
-                Стоимость: {formatCozyCost(next.cost)}
-              </p>
+              <>
+                <p className="mt-1.5 text-xs text-[var(--app-wood)]">
+                  Стоимость: {formatCozyCost(next.cost)}
+                  {isCozyLongProject(next.cost) ? ' · долгий проект' : ''}
+                </p>
+                {isCozyLongProject(next.cost) ? (
+                  <p className="mt-1 text-xs leading-relaxed text-[var(--app-text-muted)]">
+                    {pickLongProjectLine(todayISO(), zoneId)}
+                  </p>
+                ) : null}
+              </>
             ) : null}
           </div>
         ) : null}
@@ -140,6 +153,7 @@ export function CozyHomeZoneCard({
             </button>
           </div>
         )}
+      </div>
       </div>
     </article>
   );

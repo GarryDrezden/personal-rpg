@@ -13,5 +13,14 @@ Not a backlog of ideas — only issues that still exist in runtime or production
 | KI-06 | Low | UI | TodayPage / SettingsPage were large orchestrators. | Open the files. | **Closed** — page decomposition v1 (`docs/audits/page-decomposition-v1.md`) |
 | KI-07 | Low | Performance | Main SPA chunk was ~958 kB gzip ~255 kB with Dashboard/Today eager. | `npm run build` | **Reduced** — lazy Dashboard/Today/Start; main ~631 kB / ~173 kB gzip. Remaining is shell + hosts + store. See [`../audits/bundle-optimization-v1.md`](../audits/bundle-optimization-v1.md) |
 | KI-08 | Low | Account | No self-serve delete-account / wipe-data API. | Product decision, not implemented. | Open — future |
+| KI-09 | Medium | Game design | Coins have no required sink (~900–2700 / year in sim). Amounts are stable; presentation is secondary. | `simulateUserJourney` in [`../audits/progression-economy-calibration-v1.md`](../audits/progression-economy-calibration-v1.md) | Open — future sink design pass; **do not add a shop in this loop** |
+| KI-10 | Low | Game design | Dashboard / Today can present too many co-equal progressions (XP, coins, Home, season, momentum). Hierarchy is documented, not yet a UI pass. | Play Today → Save → Dashboard | **Closed** — NOW / NEXT / LONG on Dashboard (`docs/audits/progression-economy-calibration-v1.md`) |
+| KI-11 | Low | Content | Eight daily obstacle IDs are art-bound; flavor rotates but the same mob art can return often. Codex/achievements are not daily-variety systems. | Play 30+ days on Today. | Open — content depth v1 expanded flavor/eligibility; more MobIds need art. See [`../audits/content-depth-v1.md`](../audits/content-depth-v1.md) |
 
 Closed in hardening v1 + visual UX v1 + page decomposition v1 + draft safety + bundle v1 + data integrity v1: unauthenticated SQLite API, public `data/*.sqlite`, Cozy free comfort when nutrition is off, Cozy grant/settings split, season window overlap, raw body-stage avatar paths, broken `/dashboard` link, missing error boundary, stale `?v=42` asset tests, male hero manifest PNG vs on-disk WebP, Cozy Journey DF chrome, 768px cramped sidebar, avatar glued to hero floor, giant TodayPage/SettingsPage orchestrators, Settings autosave clobbering dirty draft, last-write-wins concurrent tabs for current SPA.
+
+Closed in game design consistency v1: Journey absolute-kg campaign hard-gate for small goals; NBA ignoring `after_absence`; «День выживания» copy; 200 kg death/game-over on the legacy weight path.
+
+Closed in progression economy calibration v1: Cozy Home 24/24 in ~2–4 weeks for balanced/active (costs retuned, first L1s still cheap); Dashboard co-equal progress signals (NOW / NEXT / LONG). Coins remain a sink-less receipt (KI-09).
+
+Closed in content depth v1: single-line Today reactions, tracking-blind food/sofa obstacles, one return line, thin Home status. Remaining: eight art-bound MobIds (KI-11).

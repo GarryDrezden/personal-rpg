@@ -34,16 +34,12 @@ import { getNextBestAction } from '../utils/nextBestActionEngine';
 
 import { getJourneyMapSummary } from '../utils/journeyMapEngine';
 
-import { getSeasonSnapshotWithRecap } from '../game/seasons/seasonEngine';
-
 import { getPlateauSnapshot, setManualPlateauActive } from '../game/plateau/plateauEngine';
-import { getBaseProgressionSnapshot } from '../game/base/baseProgressionEngine';
-import { getBossCampaignSnapshot } from '../game/bosses/bossCampaignEngine';
 import { CampaignProgressDashboardSection } from '../components/dashboard/CampaignProgressDashboardSection';
 import { CozyHomeDashboardCard } from '../components/cozy/CozyHomeDashboardCard';
+import { DashboardNextCard } from '../components/dashboard/DashboardNextCard';
+import { DashboardLongPathCard } from '../components/dashboard/DashboardLongPathCard';
 import { getNextBodyAbilities } from '../utils/bodyAbilityEngine';
-import { getBodyAbilityV1Summary } from '../game/bodyAbilities/bodyAbilityV1Engine';
-import { useAchievementStore } from '../store/achievementStore';
 
 import { useAppTheme } from '../hooks/useAppTheme';
 
@@ -61,7 +57,6 @@ export function DashboardPage() {
   const { dailyEntries, measurements, settings, updateDaily, saveSettings } = useAppStore();
 
   const { profile } = useAuth();
-  const unlockedAchievements = useAchievementStore((s) => s.unlockedAchievements);
   const showStartRouteBanner = needsOnboarding(settings, profile);
 
   const { themeId } = useAppTheme();
@@ -206,16 +201,6 @@ export function DashboardPage() {
 
   const journeySummary = useMemo(() => getJourneyMapSummary(engineParams), [engineParams]);
 
-  const seasonSnapshot = useMemo(
-    () => getSeasonSnapshotWithRecap({ settings, dailyEntries, today }),
-    [settings, dailyEntries, today],
-  );
-
-  const bodyAbilitySummary = useMemo(
-    () => getBodyAbilityV1Summary({ settings, dailyEntries, measurements }),
-    [settings, dailyEntries, measurements],
-  );
-
   const plateauSnapshot = useMemo(
     () => getPlateauSnapshot({ dailyEntries, measurements, settings, today }),
     [dailyEntries, measurements, settings, today],
@@ -224,30 +209,6 @@ export function DashboardPage() {
   const handleTogglePlateauManual = useCallback(async () => {
     await saveSettings(setManualPlateauActive(settings, !plateauSnapshot.manualActive));
   }, [saveSettings, settings, plateauSnapshot.manualActive]);
-
-  const baseSnapshot = useMemo(
-    () =>
-      getBaseProgressionSnapshot({
-        dailyEntries,
-        measurements,
-        settings,
-        today,
-        unlockedAchievementIds: unlockedAchievements.map((a) => a.achievementId),
-      }),
-    [dailyEntries, measurements, settings, today, unlockedAchievements],
-  );
-
-  const bossSnapshot = useMemo(
-    () =>
-      getBossCampaignSnapshot({
-        dailyEntries,
-        measurements,
-        settings,
-        today,
-        baseScore: baseSnapshot.baseScore,
-      }),
-    [dailyEntries, measurements, settings, today, baseSnapshot.baseScore],
-  );
 
   const nextAbilities = useMemo(
 
@@ -388,14 +349,13 @@ export function DashboardPage() {
         </>
       )}
 
+      <DashboardNextCard />
+      <DashboardLongPathCard />
+
       {themeId === 'cozy' ? <CozyHomeDashboardCard settings={settings} /> : null}
 
       <CampaignProgressDashboardSection
-        season={seasonSnapshot}
-        bodyAbilitySummary={bodyAbilitySummary}
         plateauSnapshot={plateauSnapshot}
-        baseSnapshot={baseSnapshot}
-        bossSnapshot={bossSnapshot}
         onTogglePlateauManual={() => void handleTogglePlateauManual()}
       />
 

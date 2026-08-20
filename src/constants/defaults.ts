@@ -76,7 +76,7 @@ export const DAY_STATUS_THRESHOLDS = [
   { min: 100, label: 'Отличный день' as const },
   { min: 70, label: 'Хороший день' as const },
   { min: 40, label: 'Нормально' as const },
-  { min: 0, label: 'День выживания' as const },
+  { min: 0, label: 'Тихий день' as const },
 ];
 
 export const WEEK_STATUS_THRESHOLDS = [

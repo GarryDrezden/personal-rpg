@@ -6,8 +6,10 @@ import {
 } from '../../types/recovery';
 import {
   getRecoveryState,
+  getDaysSinceLastEntry,
   isMinimalDayCompleted,
 } from '../../utils/recoveryEngine';
+import { pickReturnAfterAbsenceCopy } from '../../content/returnAfterAbsence';
 import type { MomentumSummary } from '../../types/momentum';
 import { getMomentumLevelThemeText } from '../../utils/momentumEngine';
 import { useAppTheme } from '../../hooks/useAppTheme';
@@ -109,7 +111,15 @@ export function RecoveryCompactPanel(props: RecoveryCompactPanelProps) {
     state === 'recovered' && minimalDone
       ? RECOVERY_STATE_TITLES.recovered
       : RECOVERY_STATE_TITLES[state] || 'Поддержка режима';
-  const message = RECOVERY_STATE_MESSAGES[state === 'recovered' ? 'recovered' : state];
+  const daysAway = getDaysSinceLastEntry(props.today, props.dailyEntries);
+  const returnCopy =
+    state === 'after_absence'
+      ? pickReturnAfterAbsenceCopy({ themeId, daysAway, date: props.today })
+      : null;
+  const message =
+    state === 'recovered'
+      ? RECOVERY_STATE_MESSAGES.recovered
+      : returnCopy?.text ?? RECOVERY_STATE_MESSAGES[state];
 
   return (
     <div

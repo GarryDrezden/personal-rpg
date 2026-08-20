@@ -5,6 +5,8 @@ import { partitionSeasonHistory } from '../../game/seasons/seasonHistory';
 import { SeasonHistoryCard } from './SeasonHistoryCard';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import { CozyBotanicalFrame } from '../cozy/CozyBotanicalFrame';
+import { GameAssetImage } from '../game/GameAssetImage';
+import { getCozySeasonVignettePath } from '../../game/themeAssetRegistry';
 
 type SeasonHistorySectionProps = {
   archive: SeasonHistoryArchive;
@@ -18,7 +20,25 @@ export function SeasonHistorySection({ archive }: SeasonHistorySectionProps) {
   );
 
   const chronicle = (
-    <div className="season-chronicle-hero">
+    <div className={`season-chronicle-hero${isCozy ? ' season-chronicle-hero--scene' : ''}`}>
+      {isCozy ? (
+        <div className="season-chronicle-hero__art">
+          <GameAssetImage
+            src={getCozySeasonVignettePath(archive.currentSeasonIndex)}
+            alt=""
+            variant="artifact"
+            status="unlocked"
+            loading="eager"
+            className="absolute inset-0"
+            imageClassName="h-full w-full object-cover object-center"
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#f1ebe0]/90 via-[#f1ebe0]/20 to-transparent"
+            aria-hidden
+          />
+        </div>
+      ) : null}
+      <div className={isCozy ? 'season-chronicle-hero__body' : undefined}>
       <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-gold)]/70">
         Сезонный альбом
       </p>
@@ -72,6 +92,7 @@ export function SeasonHistorySection({ archive }: SeasonHistorySectionProps) {
             : 'Арка ещё не завершена. Путь сезона продолжается.'}
         </p>
       ) : null}
+      </div>
     </div>
   );
 
@@ -90,13 +111,7 @@ export function SeasonHistorySection({ archive }: SeasonHistorySectionProps) {
           <h3 className="season-section-label text-xs font-semibold uppercase tracking-widest text-[var(--app-gold)]/70">
             Текущий сезон
           </h3>
-          {isCozy ? (
-            <CozyBotanicalFrame intensity="medium" paper testId="season-current-frame">
-              <SeasonHistoryCard entry={current} />
-            </CozyBotanicalFrame>
-          ) : (
-            <SeasonHistoryCard entry={current} />
-          )}
+          <SeasonHistoryCard entry={current} />
         </div>
       ) : null}
 
@@ -105,7 +120,7 @@ export function SeasonHistorySection({ archive }: SeasonHistorySectionProps) {
           <h3 className="season-section-label text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
             Пройденные арки
           </h3>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div className={isCozy ? 'season-memory-list' : 'grid grid-cols-1 gap-3 md:grid-cols-2'}>
             {[...completed].reverse().map((entry) => (
               <SeasonHistoryCard key={entry.seasonIndex} entry={entry} />
             ))}
@@ -118,7 +133,7 @@ export function SeasonHistorySection({ archive }: SeasonHistorySectionProps) {
           <h3 className="text-xs font-semibold uppercase tracking-widest text-[var(--app-text-muted)]">
             Впереди в тумане
           </h3>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div className={isCozy ? 'season-memory-list' : 'grid grid-cols-1 gap-3 md:grid-cols-2'}>
             {upcoming.map((entry) => (
               <SeasonHistoryCard key={entry.seasonIndex} entry={entry} />
             ))}

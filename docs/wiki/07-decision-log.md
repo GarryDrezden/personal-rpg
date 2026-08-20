@@ -1,5 +1,92 @@
 # Decision Log
 
+## 2026-08-20 — Cozy Visual Integration & Art Direction Pass v1
+
+Context:
+Cozy rasters from the production pack were in the registry but still read as postage-stamp thumbnails inside a web-dashboard card stack (contain-fit on environmental plates, equal Journey cards, Home header-before-house, Today 112px stamps, season product thumbs).
+
+Decision:
+- Three art levels: A scene / B event / C detail. Reuse existing approved assets. No mass generation. No Home L2, avatars, extra Journey chapters, or empty-state rasters.
+- Cozy environmental art uses cover/full-bleed; Dark Fantasy keeps sprite contain. Shared components fork by `surfaceTone` / theme, not by copying Cozy into DF.
+- Companion in Cozy is a circular scene presence; DF keeps the top-right chip.
+- Empty states stay typography + botanical unless a screen is compositionally empty; P6 raster still not generated.
+
+Consequences:
+Home opens on the house. Journey current chapter dominates. Dashboard NOW/NEXT/LONG unchanged. Today has one day illustration. Gameplay/economy unchanged. See [`../audits/cozy-visual-integration-v1.md`](../audits/cozy-visual-integration-v1.md).
+
+---
+
+## 2026-08-20 — Cozy Visual Asset Production Pack v1
+
+Context:
+Cozy still used one L3 plate per Home zone, DF-style creature cutouts for some obstacles, and SVG/CSS placeholders for Journey, companions, and chronicle. A previous generation pass was lost with the Cursor chat; disk had templates + refs only.
+
+Decision:
+- Keep approved L3 Home plates. Generate L0/L1 from those cameras. Skip L2 when geometry drifts; runtime falls back to L1.
+- Obstacles (boss/mob IDs unchanged) are environmental metaphors, not mascots.
+- Sources in `art-source/cozy/`, runtime WebP under `themes/cozy/` only. Same-theme fallback. No Cozy→DF.
+- Approved Cozy avatar anchors are out of scope.
+- Empty-state raster pack is P6 and was not generated in this pass.
+
+Consequences:
+Home cards show restoration. Journey Cozy chapters use dedicated 16:9 scenes. Codex/Today/Week Cozy obstacles show household scenes. Companion portraits and 8 season vignettes are in-app. Gameplay and economy unchanged. See [`../audits/cozy-asset-production-v1.md`](../audits/cozy-asset-production-v1.md).
+
+---
+
+## 2026-08-20 — Content depth / anti-repetition
+
+Context:
+After economy and Dashboard hierarchy, high-frequency copy (Today reactions, 8 daily obstacles, Home status, companion chip) would feel mechanical within weeks.
+
+Decision:
+- Expand **contextual** pools in `src/content/` (not a CMS, not random soup).
+- Reusable `selectForDate`: date + family + theme hash, reconstruct last 3 days, no persisted content history.
+- Keep 8 MobIds (art-bound). Filter by tracking; do not show sofa on an active good-resource day.
+- Journey: 9 chapter IDs unchanged; add intro/current/near/complete/memory flavor.
+- Return copy: bands 3–6 / 7–13 / 14–29 / 30+; recovery thresholds unchanged.
+- DEV `/dev/content-lab` only.
+
+Consequences:
+Same-day text is stable. Consecutive duplicates drop when pools allow. Economy/XP/Home costs/Journey/Seasons logic unchanged. See [`../audits/content-depth-v1.md`](../audits/content-depth-v1.md).
+
+---
+
+## 2026-08-20 — Progression economy calibration + Dashboard hierarchy
+
+Context:
+Game-design audit showed Home completing in 28 balanced days, Clarity as a dead pile, coins as a hero number, and Dashboard showing too many co-equal progress bars. XP year pacing was already acceptable.
+
+Decision:
+- Retune **Home costs only** (`COZY_HOME_ECONOMY_VERSION = 2`). Daily income stays integer and useful. Spend prefers unfinished L1 before L2.
+- Clarity is spent on order/light/workshop/kitchen/bedroom — never all four currencies on every upgrade.
+- Coins: **role documented, amounts unchanged**, Dashboard display demoted. No shop.
+- XP unchanged.
+- Dashboard presentation: NOW / NEXT / LONG. `getDashboardNextProgress` is the single NEXT resolver; NBA stays the Today CTA.
+- Existing zone levels and resource balances are never rolled back.
+
+Consequences:
+Balanced Home is no longer 24/24 at day 28. First upgrades still arrive in week 1. KI-09 is now coins-only. KI-10 closed. See [`../audits/progression-economy-calibration-v1.md`](../audits/progression-economy-calibration-v1.md).
+
+---
+
+## 2026-08-20 — Game design consistency v1 (no new giant systems)
+
+Context:
+After technical hardening, Personal RPG still risked feeling like adjacent mechanics rather than one game about returning to yourself. Home could finish in weeks; coins had no required sink; Journey weight gates were absolute kilograms; return-from-absence NBA fell through to “log calories”; day status used «День выживания»; leftover weight path still computed a 200 kg game-over.
+
+Decision:
+- Audit all loops first (`docs/audits/game-design-consistency-v1.md`). Canonical principles: `docs/design/progression-principles.md`.
+- Do **not** retune XP / coins / Home costs in this pass (needs a dedicated before/after economy sim).
+- Scale Journey `weight_loss_kg` to the personal goal; never harder than campaign absolutes.
+- Next Best Action handles `after_absence` before calorie prompts.
+- Replace «День выживания» with «Тихий день». Neutralize death/game-over in `calcWeightJourney` / unused WeightHero.
+- Add `simulateUserJourney` (dev/test only) and invariant tests. No gacha, no new currencies, no companion XP.
+
+Consequences:
+Small-goal users can complete Journey weight gates. Return copy matches recovery philosophy. Economy pacing (Home too fast, coins as counter) is documented, not silently retuned.
+
+---
+
 Хронология архитектурных и продуктовых решений.
 
 ---

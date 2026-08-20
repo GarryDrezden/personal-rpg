@@ -22,6 +22,10 @@ type MockSettings = {
   pointSettings: Record<string, number>;
   weeklySettings: unknown[];
   cozyHome?: Record<string, unknown>;
+  sidebarVisibility?: {
+    cozy: Record<string, boolean>;
+    darkFantasy: Record<string, boolean>;
+  };
 };
 
 type MockProfile = {

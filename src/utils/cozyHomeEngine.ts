@@ -14,6 +14,7 @@ import {
   COZY_RESOURCE_LABELS,
   getCozyZoneConfig,
   getCozyZoneLevelDef,
+  isCozyLongProject,
 } from '../constants/cozyHomeConfig';
 import { getCozyRewardsForEntry } from './cozyHomeRewardsEngine';
 
@@ -225,13 +226,15 @@ export function findAffordableUpgrade(
   homeState: CozyHomeState,
 ): { zoneId: CozyHomeZoneId; nextLevel: CozyHomeUpgradeLevel } | null {
   const home = normalizeCozyHomeState(homeState);
+  let best: { zoneId: CozyHomeZoneId; nextLevel: CozyHomeUpgradeLevel } | null = null;
   for (const id of COZY_HOME_ZONE_IDS) {
     const check = canUpgradeCozyZone(home, id);
-    if (check.canUpgrade && check.nextLevel) {
-      return { zoneId: id, nextLevel: check.nextLevel };
+    if (!check.canUpgrade || !check.nextLevel) continue;
+    if (!best || check.nextLevel.level < best.nextLevel.level) {
+      best = { zoneId: id, nextLevel: check.nextLevel };
     }
   }
-  return null;
+  return best;
 }
 
 export type NextCozyHomeUpgrade = {
@@ -239,11 +242,13 @@ export type NextCozyHomeUpgrade = {
   zoneTitle: string;
   nextLevelTitle: string;
   nextDescription: string;
+  nextLevel: number;
   canUpgrade: boolean;
+  isLongProject: boolean;
   missingResources?: Partial<Record<CozyResourceId, number>>;
 };
 
-/** Affordable upgrade first; otherwise the closest unfinished zone by missing resource total. */
+/** Prefer the lowest unfinished level (L1 before L2), then the closest missing total. */
 export function getNextCozyHomeUpgrade(
   homeState: CozyHomeState,
 ): NextCozyHomeUpgrade | null {
@@ -259,7 +264,9 @@ export function getNextCozyHomeUpgrade(
       zoneTitle: config.title,
       nextLevelTitle: affordable.nextLevel.title,
       nextDescription: affordable.nextLevel.description,
+      nextLevel: affordable.nextLevel.level,
       canUpgrade: true,
+      isLongProject: isCozyLongProject(affordable.nextLevel.cost),
     };
   }
 
@@ -278,7 +285,12 @@ export function getNextCozyHomeUpgrade(
       (sum, n) => sum + (n ?? 0),
       0,
     );
-    if (!best || missingTotal < best.missingTotal) {
+    if (
+      !best ||
+      check.nextLevel.level < best.nextLevel.level ||
+      (check.nextLevel.level === best.nextLevel.level &&
+        missingTotal < best.missingTotal)
+    ) {
       best = {
         zoneId: id,
         nextLevel: check.nextLevel,
@@ -295,7 +307,9 @@ export function getNextCozyHomeUpgrade(
     zoneTitle: config.title,
     nextLevelTitle: best.nextLevel.title,
     nextDescription: best.nextLevel.description,
+    nextLevel: best.nextLevel.level,
     canUpgrade: false,
+    isLongProject: isCozyLongProject(best.nextLevel.cost),
     missingResources: best.missing,
   };
 }
@@ -306,14 +320,16 @@ export function getCozyUpgradeHintLine(
   const home = normalizeCozyHomeState(homeState);
   const progress = getCozyHomeProgress(home);
   if (progress.done >= progress.total) {
-    return 'Дом полностью восстановлен. Сегодняшний день поддержал уют.';
+    return 'Дом восстановлен.';
   }
   const next = getNextCozyHomeUpgrade(home);
   if (!next) return 'Дом ждёт следующего отмеченного дня.';
   if (next.canUpgrade) {
-    return `Можно улучшить: ${next.zoneTitle} — ${next.nextDescription.toLowerCase()}`;
+    const long = next.isLongProject ? ' Это долгий проект.' : '';
+    return `Можно улучшить: ${next.zoneTitle} — ${next.nextDescription.toLowerCase()}.${long}`;
   }
-  return `Следующее улучшение стало ближе: ${next.zoneTitle} — ${next.nextDescription.toLowerCase()}`;
+  const missing = formatMissingResources(next.missingResources);
+  return `До восстановления «${next.zoneTitle}» не хватает ${missing}.`;
 }
 
 export function formatMissingResources(

@@ -992,9 +992,69 @@
 
 [data-theme='cozy'] .journey-v3-vignette__blend {
   background: linear-gradient(
-    to top,
-    color-mix(in srgb, var(--cozy-paper, #f6efe3) 78%, transparent) 0%,
-    color-mix(in srgb, var(--cozy-paper, #f6efe3) 22%, transparent) 48%,
+    to right,
+    color-mix(in srgb, var(--cozy-paper, #f6efe3) 72%, transparent) 0%,
+    color-mix(in srgb, var(--cozy-paper, #f6efe3) 18%, transparent) 42%,
     transparent 100%
   );
+}
+
+[data-theme='cozy'] .journey-v3-vignette__art {
+  filter: saturate(1.03) brightness(1.02);
+}
+
+[data-theme='cozy'] .journey-v3-vignette--current .journey-v3-vignette__art {
+  filter: saturate(1.08) brightness(1.04);
+  transform: scale(1.06);
+}
+
+[data-theme='cozy'] .journey-v3-vignette--completed .journey-v3-vignette__art {
+  filter: saturate(0.78) brightness(0.98);
+}
+
+[data-theme='cozy'] .journey-v3-vignette--locked .journey-v3-vignette__art {
+  filter: saturate(0.48) brightness(1.04);
+  opacity: 0.72;
+}
+
+@media (min-width: 640px) {
+  [data-theme='cozy'] .journey-v3-vignette {
+    left: 52%;
+  }
+
+  [data-theme='cozy'] .journey-v3-chapter--current .journey-v3-vignette {
+    left: 36%;
+  }
+
+  [data-theme='cozy'] .journey-v3-chapter--completed .journey-v3-vignette {
+    left: 58%;
+  }
+
+  [data-theme='cozy'] .journey-v3-chapter--locked .journey-v3-vignette {
+    left: 64%;
+  }
+
+  [data-theme='cozy'] .journey-v3-chapter--current .journey-v3-chapter__body {
+    min-height: 198px;
+  }
+}
+
+@media (max-width: 639px) {
+  [data-theme='cozy'] .journey-v3-chapter--current .journey-v3-vignette {
+    aspect-ratio: 16 / 10;
+  }
+
+  [data-theme='cozy'] .journey-v3-chapter--completed .journey-v3-vignette,
+  [data-theme='cozy'] .journey-v3-chapter--locked .journey-v3-vignette {
+    aspect-ratio: 2.45 / 1;
+  }
+
+  [data-theme='cozy'] .journey-v3-vignette__blend {
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--cozy-paper, #f6efe3) 82%, transparent) 0%,
+      color-mix(in srgb, var(--cozy-paper, #f6efe3) 22%, transparent) 48%,
+      transparent 100%
+    );
+  }
 }

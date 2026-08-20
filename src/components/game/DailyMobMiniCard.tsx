@@ -33,7 +33,8 @@ export function DailyMobMiniCard({ mobId, layout = 'banner' }: DailyMobMiniCardP
           ? 'from-[#efe4d2] via-[#f7f0e4] to-[#e4efe0]'
           : 'from-rose-950/90 via-[#160f14] to-[#090812]'
       }
-      imageScaleClassName={layout === 'portrait' ? 'scale-[1.05]' : 'scale-[1.14] sm:scale-[1.18]'}
+      imageScaleClassName={layout === 'portrait' ? 'scale-[1.05]' : isCozy ? undefined : 'scale-[1.14] sm:scale-[1.18]'}
+      className={isCozy ? 'min-h-[6.25rem] max-h-[8.75rem]' : undefined}
       badge={
         <span
           className={`inline-block rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide shadow-sm ${

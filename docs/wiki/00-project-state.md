@@ -1,6 +1,6 @@
 # Текущее состояние проекта
 
-> **Единый источник правды.** Обновлено: 2026-08-19 (data integrity / backup).
+> **Единый источник правды.** Обновлено: 2026-08-20 (Cozy Visual Integration & Art Direction Pass v1).
 
 ## Краткое описание
 
@@ -44,16 +44,19 @@
 | Frontend | React 19, TypeScript, Vite 6, Tailwind CSS 4, Zustand, React Router |
 | Backend (production) | PHP 8.2 + PDO + MySQL в `api/` |
 | Backend (experimental) | Node/Express/Prisma в `backend/` — VPS-only |
-| Game assets | `public/game-assets/`, `GAME_ASSET_VERSION=66` |
+| Game assets | `public/game-assets/`, `GAME_ASSET_VERSION=67` |
 
 ## Текущая версия
 
 - **README:** пользовательская документация (wiki = source of truth)
 - **package.json:** 1.0.0
-- **GAME_ASSET_VERSION:** 66
+- **GAME_ASSET_VERSION:** 67
 - **Quality gate:** `npm run verify` (typecheck + tests + validate:avatars + vite build + `check:bundle`)
 - **Known issues:** [`14-known-issues.md`](14-known-issues.md)
 - **Data integrity / backup:** [`15-backup-and-recovery.md`](15-backup-and-recovery.md), [`../audits/data-integrity-v1.md`](../audits/data-integrity-v1.md)
+- **Game design consistency:** [`../audits/game-design-consistency-v1.md`](../audits/game-design-consistency-v1.md), [`../design/progression-principles.md`](../design/progression-principles.md)
+- **Progression economy calibration:** [`../audits/progression-economy-calibration-v1.md`](../audits/progression-economy-calibration-v1.md)
+- **Content depth / anti-repetition:** [`../audits/content-depth-v1.md`](../audits/content-depth-v1.md), [`../design/content-principles.md`](../design/content-principles.md)
 - **Hardening audit:** [`../audits/project-hardening-v1.md`](../audits/project-hardening-v1.md)
 - **Visual UX audit:** [`../audits/visual-ux-pass-v1.md`](../audits/visual-ux-pass-v1.md)
 - **Page decomposition:** [`../audits/page-decomposition-v1.md`](../audits/page-decomposition-v1.md)
@@ -73,8 +76,8 @@
 
 ### Экраны и навигация
 
-- **Today** (`/today`) — ввод дня, квесты, nutrition modes, **физическая активность**; переключение прошлой недели для дополнения записей; начисление cozy-ресурсов дома при первом сохранении дня
-- **Dashboard** (`/`) — компактная панель: герой, CTA, ресурс дня, зачёт движения (если PA отмечена), квесты, recovery, блок **Cozy Home**
+- **Today** (`/today`) — ввод дня, квесты, nutrition modes, **физическая активность**; контекстные реакции дня (пулы `src/content/todayReactions.ts`); переключение прошлой недели для дополнения записей; начисление cozy-ресурсов дома при первом сохранении дня
+- **Dashboard** (`/`) — NOW / NEXT / LONG: герой, сегодняшний CTA, одно ближайшее изменение, Journey + стадия тела; Cozy Home compact; монеты secondary в шапке
 - **Week** (`/week`) — недельный босс, календарь, бонусы; навигация по прошлым неделям
 - **Дом** (`/home`) — **Cozy Home v1**: ресурсы Уют/Материалы/Сад/Ясность, 8 зон дома L0–3, улучшения; после сохранения дня — compact Cozy Reward Feedback
 - **Growth hub** (`/growth/:tab`) — skills, abilities, camp, rewards, achievements, trials; **Growth Hub integration QA (2026-06)** — unified hero panels, tab chrome, trials/achievements copy aligned across tabs
@@ -86,7 +89,6 @@
 - **Reports** (`/reports`), **Insights** (`/insights`)
 - **Settings** (`/settings`), **FAQ** (`/faq`) — в Settings есть установка PWA на домашний экран; **Боковое меню** — opt-in видимость Летописи / Карты навыков / Инерции / Роста героя / **Питомцев** (отдельно для Cozy и Dark Fantasy); выключенные пункты не показываются серыми заглушками
 - Sidebar resolver: `getSidebarNavigation({ themeId, settings })` — базовый shell всегда виден; advanced-пункты скрыты по умолчанию; маршруты не отключаются. Desktop sidebar с **1024px**; уже — bottom nav + «Ещё».
-- Dashboard campaign plates (Сезон + Лагерь/Укрытие) — общий `CampaignDashboardCardShell` (одинаковые баннеры/выравнивание)
 
 ### Journey Map (актуальный UI — v3)
 
@@ -128,7 +130,8 @@
 
 ### Ассеты
 
-- `public/game-assets/` — heroes, companions, mobs, bosses, artifacts, maps
+- **Cozy Visual Integration & Art Direction Pass v1** ✅ — existing Cozy rasters now drive composition (scene / event / detail), not a thumbnail grid. Audit: [`../audits/cozy-visual-integration-v1.md`](../audits/cozy-visual-integration-v1.md)
+- **Cozy Visual Asset Production Pack v1** ✅ — Home L0/L1 + existing L3 plates, 9 Journey scenes, 8 environmental main obstacles, 8 daily obstacles, 4 companion portraits, 8 season vignettes. Sources in `art-source/cozy/`, runtime WebP in `themes/cozy/`. No Cozy→DF fallback. Avatars unchanged. Audit: [`../audits/cozy-asset-production-v1.md`](../audits/cozy-asset-production-v1.md)
 - Cozy female: **5 visual anchors approved** in `themes/cozy/avatars/female/`
 - Dark Fantasy female: **placeholders** for the same five anchors (art backlog)
 - Male hero legacy files 1–20 under `heroes/` (same-theme DF fallback only; not the production 5-anchor map)
@@ -299,7 +302,7 @@ Asset Registry 2.0 готов: manifest, backlog, naming, placeholders зафи�
 
 ## Следующий приоритет
 
-**Cozy Art Fill Plan C1–C7** остаётся visual backlog. После hardening v1 безопаснее добавлять новые системы: state normalize, PHP legacy API gated, theme-isolated avatars, season windows, Cozy grant idempotency, `npm run verify`.
+**Cozy Visual Asset Production Pack v1** закрывает visual core для Home / Journey / obstacles / companions / seasons. Empty states (P6) remain light placeholders. HTTPS — when hosting cert is ready.
 
 HTTPS — when hosting cert is ready.
 

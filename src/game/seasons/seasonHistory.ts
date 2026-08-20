@@ -76,7 +76,11 @@ export function getSeasonHistoryArchive(params: {
       recapText: getSeasonHistoryRecapText(
         progress.partialStatus,
         config,
-        !arc.isCurrent && progress.isCompleted,
+        !arc.isCurrent,
+        {
+          themeId: params.settings.themeId ?? 'darkFantasy',
+          date: today,
+        },
       ),
       rewardStatus,
       rewardLabel: getSeasonRewardLabel(rewardStatus, config.rewardName),

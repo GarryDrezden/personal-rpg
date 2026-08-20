@@ -158,7 +158,7 @@ export function getDayStatus(points: number): string {
   if (display >= 100) return 'Отличный день';
   if (display >= 70) return 'Хороший день';
   if (display >= 40) return 'Нормально';
-  return 'День выживания';
+  return 'Тихий день';
 }
 
 export function getWeekStatus(percent: number): string {

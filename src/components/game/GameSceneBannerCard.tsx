@@ -18,10 +18,13 @@ type GameSceneBannerCardProps = {
   backdropClassName?: string;
   imagePositionClassName?: string;
   imageScaleClassName?: string;
+  /** cover = environmental scene; contain = cutout sprite (Dark Fantasy default). */
+  imageFit?: 'contain' | 'cover';
   /** banner = wide strip; portrait = tall threat card for command-bridge */
   layout?: 'banner' | 'portrait';
   /** warm = cozy light surfaces (readable brown text); dark = fantasy overlays */
   surfaceTone?: 'dark' | 'warm';
+  className?: string;
 };
 
 function CardInner({
@@ -38,14 +41,21 @@ function CardInner({
   imageScaleClassName,
   layout = 'banner',
   surfaceTone = 'dark',
+  imageFit,
 }: GameSceneBannerCardProps) {
   const isPortrait = layout === 'portrait';
   const warm = surfaceTone === 'warm';
+  const cover = imageFit === 'cover' || (warm && imageFit !== 'contain');
   const resolvedImagePosition =
     imagePositionClassName ??
-    (isPortrait ? 'inset-x-0 top-0 h-[72%]' : 'right-0 w-[58%] sm:w-[52%]');
-  const resolvedImageScale =
-    imageScaleClassName ?? (isPortrait ? 'scale-[1.05]' : 'scale-[1.18] sm:scale-[1.22]');
+    (cover
+      ? 'inset-0'
+      : isPortrait
+        ? 'inset-x-0 top-0 h-[72%]'
+        : 'right-0 w-[58%] sm:w-[52%]');
+  const resolvedImageScale = cover
+    ? 'scale-100'
+    : (imageScaleClassName ?? (isPortrait ? 'scale-[1.05]' : 'scale-[1.18] sm:scale-[1.22]'));
 
   const titleClass = warm
     ? 'text-base font-bold leading-tight text-[var(--app-text)] sm:text-lg'
@@ -67,13 +77,29 @@ function CardInner({
           src={imageSrc}
           alt={imageAlt}
           fallbackCandidates={fallbackCandidates}
-          fit={variant === 'boss' ? 'boss' : variant === 'mob' ? 'mob' : 'default'}
+          fit={cover ? 'scene' : variant === 'boss' ? 'boss' : variant === 'mob' ? 'mob' : 'default'}
           className="h-full w-full bg-transparent"
-          imageClassName={`object-contain ${isPortrait ? 'object-bottom' : 'object-right'} ${resolvedImageScale}`}
+          imageClassName={`${cover ? 'object-cover object-center' : `object-contain ${isPortrait ? 'object-bottom' : 'object-right'}`} ${resolvedImageScale}`}
         />
       </div>
 
-      {isPortrait ? (
+      {cover ? (
+        <>
+          <div
+            className={`pointer-events-none absolute inset-0 ${
+              warm
+                ? 'bg-gradient-to-t from-[#f1ebe0]/88 via-[#f1ebe0]/28 to-transparent'
+                : 'bg-gradient-to-t from-black/80 via-black/20 to-transparent'
+            }`}
+          />
+          <div className="absolute left-3 top-3 z-10">{badge}</div>
+          <div className="absolute bottom-0 left-0 z-10 w-full max-w-[92%] p-3">
+            <h3 className={titleClass}>{title}</h3>
+            {subtitle ? <p className={subClass}>{subtitle}</p> : null}
+            {accent ? <p className={`${accentClass} line-clamp-2`}>{accent}</p> : null}
+          </div>
+        </>
+      ) : isPortrait ? (
         <>
           <div
             className={`pointer-events-none absolute inset-0 ${
@@ -127,6 +153,7 @@ export function GameSceneBannerCard(props: GameSceneBannerCardProps) {
     layout = 'banner',
     surfaceTone = 'dark',
     testId,
+    className: extraClassName = '',
   } = props;
 
   const shell =
@@ -142,7 +169,7 @@ export function GameSceneBannerCard(props: GameSceneBannerCardProps) {
             : 'shadow-[0_4px_24px_rgba(0,0,0,0.35)]'
         }`;
 
-  const className = `${shell} ${borderClassName} ${href ? 'transition hover:brightness-105' : ''}`;
+  const className = `${shell} ${borderClassName} ${href ? 'transition hover:brightness-105' : ''} ${extraClassName}`.trim();
 
   if (href) {
     return (

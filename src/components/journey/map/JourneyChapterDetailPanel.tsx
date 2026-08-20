@@ -8,6 +8,9 @@ import { getJourneyMapStageConfig } from '../../../constants/journeyMapConfig';
 import { getChapterBossByChapterId } from '../../../game/bosses/bossConfig';
 import { getBossMeta } from '../../../game/assetRegistry';
 import { getBossPresentation } from '../../../game/themeEntityPresentation';
+import { pickJourneyFlavorLine } from '../../../content/journeyFlavor';
+import { getBossContentLines } from '../../../content/bosses';
+import { todayISO } from '../../../utils/dates';
 
 type JourneyChapterDetailPanelProps = {
   progress: JourneyStageProgress;
@@ -30,6 +33,18 @@ export function JourneyChapterDetailPanel({
   const config = getJourneyMapStageConfig(progress.stage.id);
   const chapterBoss = getChapterBossByChapterId(progress.stage.order);
   const { status, progressPercent } = progress;
+  const flavorLine = pickJourneyFlavorLine({
+    stageId: progress.stage.id,
+    themeId,
+    status,
+    progressPercent,
+    date: todayISO(),
+    memory: status === 'completed' && !isCurrentChapter,
+  });
+  const bossVictory =
+    status === 'completed' && config.bossId
+      ? getBossContentLines(themeId, config.bossId).victory
+      : null;
   const isCurrent = status === 'current';
   const chapterBadge =
     isCurrent || isCurrentChapter ? 'Текущая глава' : 'Выбранная глава';
@@ -57,8 +72,15 @@ export function JourneyChapterDetailPanel({
             </span>
             <h4 className="journey-chapter-panel__title">{text.title}</h4>
             <p className="journey-chapter-panel__description">{text.description}</p>
+            {flavorLine ? (
+              <p className="mt-2 text-sm leading-relaxed text-[var(--app-text-muted)]">
+                {flavorLine}
+              </p>
+            ) : null}
             {status === 'completed' ? (
-              <p className="journey-chapter-panel__completed">{text.completedText}</p>
+              <p className="journey-chapter-panel__completed">
+                {bossVictory ?? text.completedText}
+              </p>
             ) : null}
           </div>
         </div>
@@ -87,7 +109,9 @@ export function JourneyChapterDetailPanel({
                 {cozyBossPresentation?.title ?? chapterBoss.title}
               </p>
               <p className="mt-1 text-xs text-[var(--app-text-muted)]">
-                {cozyBossPresentation?.description ?? chapterBoss.weaknessText}
+                {status === 'current' && config.bossId
+                  ? getBossContentLines(themeId, config.bossId).setback
+                  : (cozyBossPresentation?.description ?? chapterBoss.weaknessText)}
               </p>
             </div>
             {config.bossId ? (

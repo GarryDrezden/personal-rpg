@@ -31,6 +31,8 @@ import {
   didCozyGrantOnSave,
   withSelectedDayMode,
 } from '../utils/todayPageModel';
+import { getDaysSinceLastEntry } from '../utils/recoveryEngine';
+import { hasAnyDailyData } from '../utils/achievementHelpers';
 
 const MODE_TOAST: Record<'minimal' | 'recovery', string> = {
   minimal: 'Минимальный день включён',
@@ -169,6 +171,7 @@ export function useTodayPageModel() {
 
   const applySaveReaction = (savedEntry: DailyEntry, opts?: { cozyJustGranted?: boolean }) => {
     const latestSettings = useAppStore.getState().settings;
+    const latestEntries = useAppStore.getState().dailyEntries;
     const reaction = getTodaySaveReaction({
       entry: savedEntry,
       settings: latestSettings,
@@ -176,6 +179,10 @@ export function useTodayPageModel() {
       questTotal: derived.stats.total,
       points: derived.points,
       themeId: latestSettings.themeId ?? themeId,
+      meta: {
+        daysAway: getDaysSinceLastEntry(selectedDate, latestEntries),
+        loggedDayCount: latestEntries.filter((item) => hasAnyDailyData(item)).length,
+      },
     });
     const baseLine = getBaseSaveSparkLine(savedEntry, latestSettings);
     const withBase = baseLine ? { ...reaction, baseLine } : reaction;

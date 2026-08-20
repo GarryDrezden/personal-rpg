@@ -5,11 +5,16 @@ import {
   applyCozyRewardsOnSave,
   canUpgradeCozyZone,
   DEFAULT_COZY_HOME_STATE,
+  findAffordableUpgrade,
   getCozyUpgradeHintLine,
   getNextCozyHomeUpgrade,
   normalizeCozyHomeState,
   upgradeCozyZone,
 } from './cozyHomeEngine';
+import {
+  COZY_HOME_ZONES,
+  getCozyEconomyTotals,
+} from '../constants/cozyHomeConfig';
 import {
   getCozyRewardsForEntry,
   pickCozyRewardReasons,
@@ -212,7 +217,87 @@ describe('getNextCozyHomeUpgrade', () => {
     const next = getNextCozyHomeUpgrade(home);
     expect(next?.canUpgrade).toBe(false);
     expect(next?.zoneTitle).toBeTruthy();
-    expect(getCozyUpgradeHintLine(home)).toMatch(/стало ближе/i);
+    expect(getCozyUpgradeHintLine(home)).toMatch(/не хватает/i);
+  });
+
+  it('prefers an unfinished L1 over a more expensive L2', () => {
+    const home = normalizeCozyHomeState({
+      ...DEFAULT_COZY_HOME_STATE,
+      resources: { comfort: 40, materials: 20, garden: 0, clarity: 0 },
+      zones: {
+        porch: { zoneId: 'porch', level: 1 },
+      },
+    });
+    const affordable = findAffordableUpgrade(home);
+    expect(affordable?.nextLevel.level).toBe(1);
+    expect(affordable?.zoneId).not.toBe('porch');
+  });
+
+  it('keeps already purchased levels when later costs change', () => {
+    const home = normalizeCozyHomeState({
+      ...DEFAULT_COZY_HOME_STATE,
+      resources: { comfort: 10, materials: 10, garden: 10, clarity: 10 },
+      zones: {
+        porch: { zoneId: 'porch', level: 3 },
+      },
+    });
+    expect(home.zones.porch.level).toBe(3);
+    expect(home.totalUpgrades).toBe(3);
+    const next = getNextCozyHomeUpgrade(home);
+    expect(next?.zoneId).not.toBe('porch');
+    expect(next?.nextLevel).toBe(1);
+    const upgraded = upgradeCozyZone(home, next!.zoneId);
+    expect(upgraded.zones.porch.level).toBe(3);
+    expect(Object.values(upgraded.resources).every((n) => n >= 0)).toBe(true);
+  });
+
+  it('clamps negative resource leftovers instead of carrying them forward', () => {
+    const home = normalizeCozyHomeState({
+      ...DEFAULT_COZY_HOME_STATE,
+      resources: { comfort: -4, materials: 2, garden: 0, clarity: 0 },
+    });
+    expect(home.resources.comfort).toBe(0);
+    expect(home.resources.materials).toBe(2);
+  });
+
+  it('says the house is restored at max, not that a next upgrade waits', () => {
+    const zones = Object.fromEntries(
+      ['porch', 'hallway', 'kitchen', 'bedroom', 'yard', 'garden', 'workshop', 'pet_corner'].map(
+        (id) => [id, { zoneId: id, level: 3 }],
+      ),
+    );
+    const home = normalizeCozyHomeState({
+      ...DEFAULT_COZY_HOME_STATE,
+      zones: zones as never,
+    });
+    expect(getCozyUpgradeHintLine(home)).toBe('Дом восстановлен.');
+    expect(getNextCozyHomeUpgrade(home)).toBeNull();
+  });
+});
+
+describe('cozy home economy v2 costs', () => {
+  it('uses all four resources and never asks for four at once', () => {
+    const totals = getCozyEconomyTotals();
+    expect(totals.comfort).toBeGreaterThan(0);
+    expect(totals.materials).toBeGreaterThan(0);
+    expect(totals.garden).toBeGreaterThan(0);
+    expect(totals.clarity).toBeGreaterThan(0);
+
+    const clarityZones = COZY_HOME_ZONES.filter((zone) =>
+      zone.levels.some((level) => (level.cost?.clarity ?? 0) > 0),
+    );
+    expect(clarityZones.map((z) => z.id)).toEqual(
+      expect.arrayContaining(['hallway', 'kitchen', 'bedroom', 'workshop']),
+    );
+
+    for (const zone of COZY_HOME_ZONES) {
+      for (const level of zone.levels) {
+        if (!level.cost) continue;
+        const used = Object.values(level.cost).filter((n) => (n ?? 0) > 0).length;
+        expect(used).toBeGreaterThanOrEqual(1);
+        expect(used).toBeLessThanOrEqual(3);
+      }
+    }
   });
 });
 

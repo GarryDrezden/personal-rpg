@@ -7,6 +7,13 @@ import type {
 
 export type { CozyHomeUpgradeLevel, CozyHomeZoneConfig };
 
+/**
+ * Economy v2 (2026-08-20): late upgrades cost more; early L1 stays cheap.
+ * Already purchased zone levels are never recalculated. Only the next
+ * unpaid upgrade uses these costs.
+ */
+export const COZY_HOME_ECONOMY_VERSION = 2;
+
 export const COZY_RESOURCE_LABELS: Record<CozyResourceId, string> = {
   comfort: 'Уют',
   materials: 'Материалы',
@@ -29,6 +36,23 @@ export const COZY_HOME_MAX_LEVEL = 3;
 export const COZY_HOME_MAX_UPGRADES =
   COZY_HOME_ZONE_IDS.length * COZY_HOME_MAX_LEVEL;
 
+/** Sum of resource units in a cost. Used for “долгий проект” copy, not rarity. */
+export function sumCozyCost(
+  cost: Partial<Record<CozyResourceId, number>> | undefined,
+): number {
+  if (!cost) return 0;
+  return (Object.values(cost) as (number | undefined)[]).reduce<number>(
+    (sum, n) => sum + (n ?? 0),
+    0,
+  );
+}
+
+export function isCozyLongProject(
+  cost: Partial<Record<CozyResourceId, number>> | undefined,
+): boolean {
+  return sumCozyCost(cost) >= 40;
+}
+
 export const COZY_HOME_ZONES: CozyHomeZoneConfig[] = [
   {
     id: 'porch',
@@ -49,13 +73,13 @@ export const COZY_HOME_ZONES: CozyHomeZoneConfig[] = [
         level: 2,
         title: 'Ступени',
         description: 'Починены ступени.',
-        cost: { materials: 4, comfort: 1 },
+        cost: { materials: 20, comfort: 32 },
       },
       {
         level: 3,
         title: 'Фонарь',
         description: 'Тёплый фонарь у двери.',
-        cost: { materials: 5, comfort: 3 },
+        cost: { materials: 18, comfort: 80, clarity: 12 },
       },
     ],
   },
@@ -82,13 +106,13 @@ export const COZY_HOME_ZONES: CozyHomeZoneConfig[] = [
         level: 2,
         title: 'Скамья',
         description: 'Появилась скамья и крючки для вещей.',
-        cost: { materials: 3, comfort: 2 },
+        cost: { comfort: 40, clarity: 28 },
       },
       {
         level: 3,
         title: 'Мягкий свет',
         description: 'У двери горит мягкий свет.',
-        cost: { comfort: 4, clarity: 2 },
+        cost: { comfort: 80, clarity: 48 },
       },
     ],
   },
@@ -105,19 +129,19 @@ export const COZY_HOME_ZONES: CozyHomeZoneConfig[] = [
         level: 1,
         title: 'Стол',
         description: 'Стол очищен.',
-        cost: { comfort: 2, clarity: 1 },
+        cost: { comfort: 24, clarity: 8 },
       },
       {
         level: 2,
         title: 'Готовка',
         description: 'Появилась рабочая зона для готовки.',
-        cost: { materials: 4, comfort: 3 },
+        cost: { materials: 12, comfort: 48, clarity: 16 },
       },
       {
         level: 3,
         title: 'Очаг дома',
         description: 'Кухня стала тёплым центром дома.',
-        cost: { comfort: 5, clarity: 3 },
+        cost: { comfort: 130, materials: 12, clarity: 24 },
       },
     ],
   },
@@ -144,13 +168,13 @@ export const COZY_HOME_ZONES: CozyHomeZoneConfig[] = [
         level: 2,
         title: 'Занавески',
         description: 'Появились занавески и мягкий свет.',
-        cost: { comfort: 4, clarity: 1 },
+        cost: { comfort: 56, clarity: 24 },
       },
       {
         level: 3,
         title: 'Восстановление',
         description: 'Комната стала местом восстановления.',
-        cost: { comfort: 6, clarity: 3 },
+        cost: { comfort: 160, clarity: 28 },
       },
     ],
   },
@@ -167,19 +191,19 @@ export const COZY_HOME_ZONES: CozyHomeZoneConfig[] = [
         level: 1,
         title: 'Тропинка',
         description: 'Расчищена тропинка.',
-        cost: { materials: 2, garden: 1 },
+        cost: { materials: 16, garden: 12 },
       },
       {
         level: 2,
         title: 'Дорожки',
         description: 'Появились дорожки и порядок.',
-        cost: { materials: 4, garden: 3 },
+        cost: { materials: 14, garden: 20 },
       },
       {
         level: 3,
         title: 'Уютный двор',
         description: 'Двор стал уютным местом для движения.',
-        cost: { materials: 5, garden: 5 },
+        cost: { materials: 16, garden: 42, comfort: 14 },
       },
     ],
   },
@@ -196,19 +220,19 @@ export const COZY_HOME_ZONES: CozyHomeZoneConfig[] = [
         level: 1,
         title: 'Грядки',
         description: 'Первые грядки.',
-        cost: { garden: 2 },
+        cost: { garden: 22 },
       },
       {
         level: 2,
         title: 'Цветы',
         description: 'Появились цветы и травы.',
-        cost: { garden: 4, comfort: 2 },
+        cost: { garden: 22, comfort: 28 },
       },
       {
         level: 3,
         title: 'Ожил',
         description: 'Сад ожил и стал частью дома.',
-        cost: { garden: 6, comfort: 3 },
+        cost: { garden: 48, comfort: 28 },
       },
     ],
   },
@@ -229,19 +253,19 @@ export const COZY_HOME_ZONES: CozyHomeZoneConfig[] = [
         level: 1,
         title: 'Порядок',
         description: 'Инструменты разобраны.',
-        cost: { materials: 3 },
+        cost: { materials: 40, clarity: 20 },
       },
       {
         level: 2,
         title: 'Верстак',
         description: 'Появился рабочий стол.',
-        cost: { materials: 5, clarity: 1 },
+        cost: { materials: 22, clarity: 28 },
       },
       {
         level: 3,
         title: 'Готово',
         description: 'Мастерская готова к большим улучшениям.',
-        cost: { materials: 7, clarity: 3 },
+        cost: { materials: 28, clarity: 54 },
       },
     ],
   },
@@ -262,19 +286,19 @@ export const COZY_HOME_ZONES: CozyHomeZoneConfig[] = [
         level: 1,
         title: 'Миска',
         description: 'Появилась миска.',
-        cost: { comfort: 2 },
+        cost: { comfort: 24 },
       },
       {
         level: 2,
         title: 'Лежанка',
         description: 'Появилась лежанка.',
-        cost: { comfort: 4, materials: 2 },
+        cost: { comfort: 44, materials: 8 },
       },
       {
         level: 3,
         title: 'Уголок',
         description: 'У спутника есть своё уютное место.',
-        cost: { comfort: 5, garden: 2 },
+        cost: { comfort: 52, garden: 12, clarity: 12 },
       },
     ],
   },
@@ -303,4 +327,22 @@ export function formatCozyCost(
     .filter(([, n]) => n > 0)
     .map(([id, n]) => `${COZY_RESOURCE_LABELS[id]} ${n}`)
     .join(' · ');
+}
+
+export function getCozyEconomyTotals(): Record<CozyResourceId, number> {
+  const totals: Record<CozyResourceId, number> = {
+    comfort: 0,
+    materials: 0,
+    garden: 0,
+    clarity: 0,
+  };
+  for (const zone of COZY_HOME_ZONES) {
+    for (const level of zone.levels) {
+      if (!level.cost) continue;
+      for (const [id, n] of Object.entries(level.cost) as [CozyResourceId, number][]) {
+        totals[id] += n ?? 0;
+      }
+    }
+  }
+  return totals;
 }

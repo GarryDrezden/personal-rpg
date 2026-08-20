@@ -82,7 +82,7 @@ export function getMobPresentation(
     description: cozy.description,
     imagePath: asset.path,
     imageCandidates: getThemeAssetCandidates(asset),
-    placeholder: true,
+    placeholder: asset.placeholder,
     tone: 'cozy_challenge',
     asset,
   };
@@ -118,7 +118,7 @@ export function getBossPresentation(
     description: cozy.description,
     imagePath: asset.path,
     imageCandidates: getThemeAssetCandidates(asset),
-    placeholder: true,
+    placeholder: asset.placeholder,
     tone: 'cozy_challenge',
     asset,
   };
@@ -158,7 +158,7 @@ export function getCompanionPresentation(
     description: cozy.description,
     imagePath: asset.path,
     imageCandidates: getThemeAssetCandidates(asset),
-    placeholder: true,
+    placeholder: asset.placeholder,
     tone: 'cozy_challenge',
     asset,
   };

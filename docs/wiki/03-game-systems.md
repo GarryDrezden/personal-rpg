@@ -21,6 +21,10 @@
 2. Пользователь видит прогресс даже без снижения веса.
 3. Пользователь чувствует, что его путь — это история, а не таблица.
 
+Канон иерархии наград и инвариантов: [`../design/progression-principles.md`](../design/progression-principles.md).  
+Системный аудит (2026-08-20): [`../audits/game-design-consistency-v1.md`](../audits/game-design-consistency-v1.md).  
+Контент / антиповтор (2026-08-20): [`../design/content-principles.md`](../design/content-principles.md), [`../audits/content-depth-v1.md`](../audits/content-depth-v1.md). Реестры: `src/content/*`. Выбор: контекст → пул → `date|family|theme` hash, без `Math.random()` на рендере.
+
 ---
 
 ## Onboarding v1 — запуск кампании
@@ -69,7 +73,9 @@ XP за квесты, недельные бонусы, победу над бо�
 
 **Engine:** `coinEngine.ts`, `momentumCoinEngine.ts`
 
-Валюта для магазина наград. Начисление за хорошие дни, недели, recovery minimal day.
+Meta receipt / accumulated game currency **awaiting a meaningful sink**. Granted for good days, weeks, recovery, and minimal days. **Not** the primary Dashboard feedback. No shop, loot, gacha, cosmetics, or boosts in this pass.
+
+See [`../audits/progression-economy-calibration-v1.md`](../audits/progression-economy-calibration-v1.md).
 
 ---
 
@@ -177,7 +183,7 @@ Cozy never falls back to Dark Fantasy art by default — missing cozy art uses s
 ## Cozy Home v1
 
 **Engines:** `cozyHomeEngine.ts`, `cozyHomeRewardsEngine.ts`  
-**Config:** `constants/cozyHomeConfig.ts`  
+**Config:** `constants/cozyHomeConfig.ts` (`COZY_HOME_ECONOMY_VERSION = 2`)  
 **UI:** `/home` (`CozyHomePage`), Dashboard `CozyHomeDashboardCard`, sidebar «Дом» (Cozy only)  
 **State:** `AppSettings.cozyHome`, claim flag `DailyEntry.cozyRewardsGranted`
 
@@ -193,7 +199,7 @@ Cozy never falls back to Dark Fantasy art by default — missing cozy art uses s
 
 Деревенский дом как cozy meta progression: забота о теле даёт ресурсы → ресурсы тратятся на зоны дома → дом становится уютнее.
 
-**Presentation note:** Cozy Home is not a resource table; it is a visual meta-progression for restoring the home (hero scene, warm resource chips, zone cards as rooms/yard/garden).
+**Presentation note:** Cozy Home is not a resource table; it is a visual meta-progression for restoring the home. Full resource chips live on `/home`. Dashboard shows next upgrade or «Дом восстановлен».
 
 ## Cozy Reward Feedback
 
@@ -211,7 +217,13 @@ Rules:
 - feedback is supportive and short;
 - CTA leads to `/home`; upgrades are not automatic.
 
-**Ресурсы:** Уют (`comfort`), Материалы (`materials`), Сад (`garden`), Ясность (`clarity`).
+**Ресурсы (роли):**  
+- **Уют / Comfort** — спальня, гостиная/кухня, тепло, текстиль, бытовой уют.  
+- **Материалы / Materials** — ремонт, крыльцо, пол, стены, мастерская, конструктив.  
+- **Сад / Garden** — двор, сад, внешние зоны.  
+- **Ясность / Clarity** — порядок, хранение, рабочее место, свет, планирование, завершение сложных зон. Не четвёртая обязательная валюта в каждом upgrade.
+
+Каждый upgrade требует 1–3 типа ресурсов. Ранние L1 дешёвые (крыльцо / прихожая / спальня); поздние L2/L3 — долгие проекты. Full Home для balanced — месяцы (ориентир 4–6), не 28 дней. Уже купленные уровни не пересчитываются.
 
 **Зоны (0–3):** крыльцо, прихожая, кухня, спальня, двор, сад, мастерская, уголок спутника (всего 24 улучшения).
 
@@ -308,6 +320,10 @@ Vertical **chapter road** — 9 глав в ширине обычного кон
 **Assets глав:** `public/game-assets/maps/chapters/chapter-NN-*.webp` — 9 фонов этапов; подписи, медальоны и статусы рендерятся UI (`JourneyChapterVignette`). Fallback — CSS gradient из `journeyChapterVisuals.ts`.
 
 Стили: `src/styles/journey-map-v3.css`. Legacy v2 canvas UI удалён (hardening 2026-08-19).
+
+**Weight gates (2026-08-20):** `weight_loss_kg` targets scale to the personal goal (start − target). Campaign 1/5/10/20/50 kg maps to 10%/25%/50%/80%/100% of that goal and is never harder than the original absolute. A −10 kg path can finish Journey; a −80 kg path is not asked for more than 50 kg on chapter 9. Achievements stay absolute on purpose. Engine: `journeyWeightGates.ts`.
+
+**Vs Seasons:** Journey is the life-path (months–years). Season is the current 28-day rhythm. Same daily actions feed both; they must not copy the same “how am I doing?” sentence.
 
 ---
 

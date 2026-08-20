@@ -16,6 +16,8 @@ import { CozyHomeScenePlaceholder } from '../components/cozy/CozyHomeScenePlaceh
 import { CozyHomeZoneCard, formatResourceBadges } from '../components/cozy/CozyHomeZoneCard';
 import { CozyBotanicalFrame } from '../components/cozy/CozyBotanicalFrame';
 import type { CozyHomeZoneId, CozyResourceId } from '../types/cozyHome';
+import { pickHomeStatusLine } from '../content/homeStatus';
+import { todayISO } from '../utils/dates';
 import { getThemedEmptyStateCopy } from '../constants/themeContentRegistry';
 import { useAppTheme } from '../hooks/useAppTheme';
 
@@ -29,19 +31,6 @@ const RESOURCE_META: Record<
   clarity: { icon: '✨', chipClass: 'cozy-resource-chip cozy-resource-chip--clarity' },
 };
 
-function homeStatusLine(percent: number, totalResources: number): string {
-  if (totalResources === 0 && percent === 0) {
-    return 'Сегодня дом ждёт маленького шага.';
-  }
-  if (percent >= 70) {
-    return 'Дом уже отвечает теплом — осталось бережно довести зоны до порядка.';
-  }
-  if (percent >= 30) {
-    return 'Каждая отметка дня приносит немного света, порядка и уюта.';
-  }
-  return 'Забота о теле превращается в материалы, сад, уют и ясность.';
-}
-
 export function CozyHomePage() {
   const { isCozy } = useAppTheme();
   const { settings } = useAppStore();
@@ -54,7 +43,14 @@ export function CozyHomePage() {
     () => badges.reduce((sum, b) => sum + b.value, 0),
     [badges],
   );
-  const statusLine = homeStatusLine(progress.percent, totalResources);
+  const today = todayISO();
+  const statusLine = pickHomeStatusLine({
+    percent: progress.percent,
+    totalResources,
+    date: today,
+    lastZoneId: home.lastUpgrade?.zoneId,
+    lastUpgradeAt: home.lastUpgrade?.at ?? null,
+  });
 
   const lastUpgrade = useMemo(() => {
     if (!home.lastUpgrade) return null;
@@ -87,68 +83,61 @@ export function CozyHomePage() {
 
   return (
     <div className="cozy-home-page space-y-5 pb-6" data-testid="cozy-home-page">
-      <header className="cozy-home-page__header">
-          <div className="cozy-home-page__header-mark" aria-hidden />
-          <p className="cozy-home-page__eyebrow">Деревенский дом</p>
-          <h1 className="cozy-home-page__title">Дом</h1>
-          <p className="cozy-home-page__lead">
-            Тело возвращает силы — дом возвращает тепло.
-          </p>
-          <p className="cozy-home-page__status">{statusLine}</p>
-      </header>
-
       <CozyBotanicalFrame
         intensity="hero"
         className="cozy-home-hero-frame"
         contentClassName="!p-0"
         testId="cozy-home-scene-frame"
       >
-      <section
-        className="cozy-home-hero-block"
-        aria-label="Дом становится теплее"
-        data-testid="cozy-home-scene"
-      >
-        <CozyHomeScenePlaceholder />
-
-        <div className="cozy-home-hero-block__body">
-          <p className="cozy-home-hero-block__eyebrow">Восстановление</p>
-          <h2 className="cozy-home-hero-block__title">Дом становится теплее</h2>
-
-          <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
-            <p className="text-sm font-semibold text-[var(--app-text)]">
-              Восстановлено {progress.done} / {progress.total} улучшений
-            </p>
-            <p className="text-xs font-medium text-[var(--app-garden)]">{progress.percent}%</p>
-          </div>
-          <div className="cozy-progress-track mt-2">
-            <div
-              className="cozy-progress-fill transition-all"
-              style={{ width: `${progress.percent}%` }}
-            />
-          </div>
-
-          <p className="mt-3 text-sm leading-relaxed text-[var(--app-text-muted)]">
-            {progress.done === 0
-              ? getThemedEmptyStateCopy('cozy', 'noUpgrades').description
-              : 'Двор, сад и комнаты оживают по мере заботы о теле.'}
-          </p>
-
-          <div className="cozy-resource-grid mt-4" aria-label="Ресурсы дома">
-            {badges.map((b) => (
-              <div key={b.id} className={RESOURCE_META[b.id].chipClass}>
-                <span className="cozy-resource-chip__icon" aria-hidden>
-                  {RESOURCE_META[b.id].icon}
-                </span>
-                <div className="min-w-0">
-                  <p className="cozy-resource-chip__label">{b.label}</p>
-                  <p className="cozy-resource-chip__value">{b.value}</p>
-                </div>
+        <section
+          className="cozy-home-hero-block"
+          aria-label="Дом становится теплее"
+          data-testid="cozy-home-scene"
+        >
+          <div className="cozy-home-hero-stage">
+            <CozyHomeScenePlaceholder />
+            <div className="cozy-home-hero-overlay">
+              <p className="cozy-home-page__eyebrow">Деревенский дом</p>
+              <h1 className="cozy-home-page__title">Дом</h1>
+              <p className="cozy-home-page__status">{statusLine}</p>
+              <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
+                <p className="text-sm font-semibold text-[var(--app-text)]">
+                  Восстановлено {progress.done} / {progress.total} улучшений
+                </p>
+                <p className="text-xs font-medium text-[var(--app-garden)]">{progress.percent}%</p>
               </div>
-            ))}
+              <div className="cozy-progress-track mt-2">
+                <div
+                  className="cozy-progress-fill transition-all"
+                  style={{ width: `${progress.percent}%` }}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
       </CozyBotanicalFrame>
+
+      <div className="cozy-resource-grid" aria-label="Ресурсы дома">
+        {badges.map((b) => (
+          <div key={b.id} className={RESOURCE_META[b.id].chipClass}>
+            <span className="cozy-resource-chip__icon" aria-hidden>
+              {RESOURCE_META[b.id].icon}
+            </span>
+            <div className="min-w-0">
+              <p className="cozy-resource-chip__label">{b.label}</p>
+              <p className="cozy-resource-chip__value">{b.value}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p className="px-0.5 text-sm leading-relaxed text-[var(--app-text-muted)]">
+        {progress.percent >= 100
+          ? statusLine
+          : progress.done === 0
+            ? getThemedEmptyStateCopy('cozy', 'noUpgrades', today).description
+            : 'Двор, сад и комнаты оживают по мере заботы о теле.'}
+      </p>
 
       {totalResources === 0 ? (
         <section className="cozy-home-empty" data-testid="cozy-home-empty-resources">
@@ -213,7 +202,9 @@ export function CozyHomePage() {
           <div>
             <h2 className="text-sm font-semibold text-[var(--app-text)]">Зоны дома</h2>
             <p className="mt-0.5 text-xs text-[var(--app-text-muted)]">
-              Комнаты, двор и сад ждут восстановления
+              {progress.percent >= 100
+                ? 'Дом восстановлен'
+                : 'Комнаты, двор и сад ждут восстановления'}
             </p>
           </div>
         </div>

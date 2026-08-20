@@ -13,7 +13,8 @@ import {
 } from './momentumEngine';
 import { previewDailyCoins } from './coinEngine';
 import { getDailyQuests, getQuestCompletionStats, isDayEmpty } from './questEngine';
-import { getRecoveryState, shouldShowRecoveryCard } from './recoveryEngine';
+import { getDaysSinceLastEntry, getRecoveryState, shouldShowRecoveryCard } from './recoveryEngine';
+import { hasAnyDailyData } from './achievementHelpers';
 import { getDayMode } from './stepsEngine';
 import { getOrCreateDailyMobForEntry } from '../game/dailyMobEngine';
 import { getDailyMobContextLine } from './todayMobContext';
@@ -170,6 +171,10 @@ export function buildTodayDerivedState(input: TodayDerivedInput) {
     questTotal: stats.total,
     points,
     themeId,
+    meta: {
+      daysAway: getDaysSinceLastEntry(selectedDate, dailyEntries),
+      loggedDayCount: dailyEntries.filter((item) => hasAnyDailyData(item)).length,
+    },
   });
   const granted = entry.cozyRewardsGranted
     ? null

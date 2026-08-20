@@ -20,8 +20,27 @@
 5. **Cozy Theme:** center on home + daily care, not battle scene — see [`themes.md`](themes.md) → Cozy Dashboard Concept
 6. **Avatar layers:** show «Стадия тела» and «Состояние героя» separately — never one misleading slim-%; body art from `bodyStage` only; Hero State via overlay/chrome (`HeroStateChrome`)
 7. Avatar paths only via `getResolvedAvatarStageAsset` / `useHeroStageAssets` — no hardcoded theme paths in panels
-8. **Hero scene:** figure centered horizontally, lifted off the floor (inset padding). Do not crop approved avatar files to remove transparent margins. Companion chip sits top-right, not on the feet.
+8. **Hero scene:** figure centered horizontally, lifted off the floor (inset padding). Do not crop approved avatar files to remove transparent margins. Dark Fantasy: companion chip sits top-right, not on the feet. Cozy: companion is a circular scene presence beside the figure (Level C), not a second hero and not a tiny toolbar icon.
 9. On viewports `< lg`, command-bridge shows **hero first**, then threats, then day actions.
+10. **Hierarchy NOW / NEXT / LONG.** NOW = today's CTA + context + compact Hero State. NEXT = one nearest meaningful change (`getDashboardNextProgress`). LONG = Journey chapter + Body Stage. Coins are meta receipt in header, not a hero number. Cozy resource counters live on `/home`, not as four Dashboard chips.
+
+## Cozy art hierarchy (2026-08-20)
+
+Existing Cozy rasters form the visual language. Do not stamp the same thumbnail size everywhere.
+
+| Level | Role | Where |
+|-------|------|--------|
+| **A — Scene** | Large emotional space | Dashboard hero environment, Home, current Journey chapter, current Season chronicle |
+| **B — Event / progress** | Mid visual block | Home zones, obstacles, past Journey chapters, season memory markers |
+| **C — Character / detail** | Small presence | Avatar, companion, iconographic detail |
+
+Rules:
+
+- Home opens on the house, then resources/controls.
+- Journey current chapter dominates; past muted; future quieter. Not nine equal cards. Not giant canvas v2.
+- Today: maximum one meaningful environmental artwork above the fold (the day's friction). Not a gallery.
+- Cozy obstacle art is environmental metaphor (`object-cover` scene). Dark Fantasy keeps cutout sprites (`object-contain`).
+- Do not generate Home L2, extra Journey chapters, avatars, or empty-state rasters unless a composition is actually broken.
 
 ## Navigation
 
@@ -40,6 +59,8 @@
 - Поддерживающий, взрослый
 - Без shame language
 - Recovery = помощь, не наказание
+- High-frequency lines: context → pool → date-stable pick. Same saved day does not shuffle. See [`../design/content-principles.md`](../design/content-principles.md).
+- Cozy: дом / сад / свет / порядок. Dark Fantasy: путь / туман / камень / огонь. No death, game-over, or invented emotions.
 
 ## Onboarding (`/start`)
 

@@ -1,10 +1,11 @@
 import type { AppSettings, DailyEntry } from '../types';
 import type { AppThemeId } from '../types/theme';
 import type { CozyRewardsGranted } from '../types/cozyHome';
-import { getThemedTodayCopy } from '../constants/themeContentRegistry';
+import type { TodayReactionContext } from '../content/todayReactions';
+import { pickTodayReaction } from '../content/todayReactions';
 import { getDayMode } from './stepsEngine';
 import { getDailyResource } from './resourceEngine';
-import { isNutritionLogged } from './nutritionEngine';
+import { isNutritionLogged, isNutritionTrackingEnabled } from './nutritionEngine';
 import { isDayEmpty } from './questEngine';
 import {
   getMovementCredit,
@@ -17,12 +18,85 @@ export type TodaySaveReaction = {
   headline: string;
   detail: string;
   baseLine?: string;
+  contextId?: TodayReactionContext;
+  variantId?: string;
   /**
    * Structured Cozy Home feedback for the save moment.
    * Set only when resources were just granted (not on reload re-display).
    */
   cozyFeedback?: CozyRewardsGranted | null;
 };
+
+export type TodayReactionMeta = {
+  daysAway?: number;
+  loggedDayCount?: number;
+};
+
+function alcoholTrackingOn(settings: AppSettings): boolean {
+  return settings.enableAlcoholTracking !== false;
+}
+
+function physicalTrackingOn(settings: AppSettings): boolean {
+  return settings.enablePhysicalActivityTracking !== false;
+}
+
+export function resolveTodayReactionContext(params: {
+  entry: DailyEntry;
+  settings: AppSettings;
+  questDone: number;
+  questTotal: number;
+  points: number;
+  meta?: TodayReactionMeta;
+}): TodayReactionContext {
+  const { entry, settings, questDone, questTotal, points, meta } = params;
+  const mode = getDayMode(entry.dayMode);
+  const resource = getDailyResource(entry);
+  const movement = getMovementCredit(entry, settings);
+  const logged = meta?.loggedDayCount ?? 0;
+  const daysAway = meta?.daysAway ?? 0;
+  const nutritionOn = isNutritionTrackingEnabled(settings);
+  const alcoholOn = alcoholTrackingOn(settings);
+  const paOn = physicalTrackingOn(settings);
+
+  if (mode === 'minimal') return 'minimal';
+  if (mode === 'recovery') return 'recovery';
+  if (Number.isFinite(daysAway) && daysAway >= 3) return 'return';
+  if (logged <= 1) return 'first_day';
+
+  if (paOn && isHeavyPhysicalActivity(entry) && movement.holdsMinimumMovement) {
+    return 'heavy_physical';
+  }
+  if (paOn && hasMarkedPhysicalActivity(entry) && movement.holdsMinimumMovement) {
+    return 'physical';
+  }
+  if ((entry.steps ?? 0) > 0) return 'steps';
+
+  if (resource.level === 'low' || (entry.energyLevel != null && entry.energyLevel <= 2)) {
+    return 'low_resource';
+  }
+
+  const nutritionHeld = nutritionOn && isNutritionLogged({ entry, settings });
+  const eveningClear = alcoholOn && entry.alcohol === 'none';
+  if (nutritionHeld && eveningClear && questDone > 0 && points < 70) {
+    return 'mixed';
+  }
+  if (nutritionHeld && points < 40) {
+    return 'imperfect';
+  }
+  if (nutritionHeld) return 'nutrition';
+  if (eveningClear) return 'alcohol_free';
+
+  if (logged >= 90 && questDone > 0) return 'veteran';
+
+  if (questDone > 0 && questTotal > 0) {
+    if (questDone >= Math.ceil(questTotal * 0.6)) return 'good_day';
+    return 'quests_progress';
+  }
+
+  if (!isDayEmpty(entry, settings) && points > 0) return 'points_saved';
+  if (isDayEmpty(entry, settings)) return 'empty_saved';
+  return 'default';
+}
 
 export function getTodaySaveReaction(params: {
   entry: DailyEntry;
@@ -31,111 +105,21 @@ export function getTodaySaveReaction(params: {
   questTotal: number;
   points: number;
   themeId?: AppThemeId;
+  meta?: TodayReactionMeta;
 }): TodaySaveReaction {
-  const { entry, settings, questDone, questTotal, points } = params;
-  const themeId = params.themeId ?? settings.themeId ?? 'cozy';
-  const mode = getDayMode(entry.dayMode);
-  const resource = getDailyResource(entry);
-  const movement = getMovementCredit(entry, settings);
-
-  const pick = (
-    context: Parameters<typeof getThemedTodayCopy>[1],
-    dark: { headline: string; detail: string },
-  ) => getThemedTodayCopy(themeId, context, dark);
-
-  if (mode === 'minimal') {
-    return pick('minimal', {
-      headline: 'Маршрут удержан.',
-      detail:
-        'Минимальный день — валидный ход. День не обязан быть идеальным, он должен быть сохранён.',
-    });
-  }
-
-  if (mode === 'recovery') {
-    return pick('recovery', {
-      headline: 'Ядро стабилизируется.',
-      detail: 'День восстановления сохранён. Персонаж продолжает путь — можно идти мягко.',
-    });
-  }
-
-  if (isHeavyPhysicalActivity(entry) && movement.holdsMinimumMovement) {
-    return pick('heavy_physical', {
-      headline: 'Тело сегодня работало.',
-      detail:
-        'Маршрут движения удержан через физическую активность. Движение засчитано — теперь защити ресурс.',
-    });
-  }
-
-  if (hasMarkedPhysicalActivity(entry) && movement.holdsMinimumMovement) {
-    return pick('physical', {
-      headline: 'Движение удержано.',
-      detail: 'Шагов было мало, но тело сегодня работало. День не пустой.',
-    });
-  }
-
-  if ((entry.steps ?? 0) > 0) {
-    return pick('steps', {
-      headline: 'Движение зафиксировано.',
-      detail: 'Шаги отмечены — путь продолжается. Завтра можно вернуться снова.',
-    });
-  }
-
-  if (resource.level === 'low' || (entry.energyLevel != null && entry.energyLevel <= 2)) {
-    return pick('low_resource', {
-      headline: 'Ресурс просел — маршрут жив.',
-      detail: 'Туман усталости ослаб, когда день отмечен. Первый шаг сохранён.',
-    });
-  }
-
-  if (isNutritionLogged({ entry, settings })) {
-    return pick('nutrition', {
-      headline: 'Контроль дня отмечен.',
-      detail: 'Маршрут удержан. Питание в фокусе — персонаж сделал шаг вперёд.',
-    });
-  }
-
-  if (entry.alcohol === 'none') {
-    return pick('alcohol_free', {
-      headline: 'День без алкоголя удержан.',
-      detail: 'Ясность сохранена. Персонаж не отдал вечер старым цепям.',
-    });
-  }
-
-  if (questDone > 0 && questTotal > 0) {
-    const dark = {
-      headline: 'Персонаж сделал шаг вперёд.',
-      detail: `Маршрут удержан: ${questDone} из ${questTotal} квестов. Ядро стабильно.`,
-    };
-    if (themeId === 'cozy' && questDone >= Math.ceil(questTotal * 0.6)) {
-      return pick('good_day', dark);
-    }
-    const reaction = pick('quests_progress', dark);
-    if (themeId !== 'cozy') return reaction;
-    return {
-      ...reaction,
-      detail: `Задачи дня: ${questDone} из ${questTotal}. Дом получил след заботы.`,
-    };
-  }
-
-  if (!isDayEmpty(entry, settings) && points > 0) {
-    return pick('points_saved', {
-      headline: 'Маршрут удержан.',
-      detail: 'День сохранён — прогресс засчитан. Можно возвращаться завтра без давления.',
-    });
-  }
-
-  if (isDayEmpty(entry, settings)) {
-    return pick('empty_saved', {
-      headline: 'День сохранён.',
-      detail:
-        'Маршрут ждёт отметок — но уже зафиксирован. Можно вернуться и дополнить позже.',
-    });
-  }
-
-  return pick('default', {
-    headline: 'Маршрут удержан.',
-    detail: 'День сохранён. Не обязан быть идеальным — достаточно, что путь продолжается.',
+  const themeId = params.themeId ?? params.settings.themeId ?? 'cozy';
+  const context = resolveTodayReactionContext(params);
+  const picked = pickTodayReaction({
+    themeId,
+    context,
+    date: params.entry.date,
   });
+  return {
+    headline: picked.headline,
+    detail: picked.detail,
+    contextId: context,
+    variantId: picked.id,
+  };
 }
 
 export function attachCozySaveFeedback(

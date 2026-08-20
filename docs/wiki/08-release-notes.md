@@ -2,6 +2,47 @@
 
 ## Unreleased
 
+### Cozy Visual Integration & Art Direction Pass v1
+
+- Cozy art now drives composition: large scenes on Dashboard, Home, Journey, and the current Season; mid blocks for zones and obstacles; small companion/avatar presence.
+- Home opens on the house. Journey current chapter dominates. Today shows one day illustration, not a gallery.
+- Cozy environmental plates use cover scenes; Dark Fantasy cutouts unchanged. No new generation. Avatars untouched. No economy/gameplay change.
+- Audit: [`../audits/cozy-visual-integration-v1.md`](../audits/cozy-visual-integration-v1.md).
+
+### Cozy Visual Asset Production Pack v1
+
+- Home zones use L0/L1 plates plus the existing L3 restorations. L2 falls back to L1 until a matching camera plate exists.
+- Cozy Journey chapters 1–9 have dedicated village-home scenes (no Dark Fantasy maps).
+- Main and daily obstacles in Cozy are household metaphors (fog, open door, empty room, night kitchen…), not mascot creatures. IDs unchanged.
+- Cozy companions: cat, Alabai, raven, fox portraits.
+- Season chronicle uses 8 reusable Cozy vignettes.
+- `GAME_ASSET_VERSION` 67. Approved avatars unchanged. No economy/gameplay change.
+- Audit: [`../audits/cozy-asset-production-v1.md`](../audits/cozy-asset-production-v1.md).
+
+### Content depth / anti-repetition v1
+
+- Contextual copy pools for Today, daily obstacles, Home status, companions, return-after-absence, Journey state flavor, season phases. Stable IDs; date-hashed selection; no content-history store.
+- Tracking flags hide nutrition/alcohol/PA-specific lines. Sofa obstacle no longer appears on an active, well-resourced day.
+- DEV `/dev/content-lab`. Principles: [`../design/content-principles.md`](../design/content-principles.md). Audit: [`../audits/content-depth-v1.md`](../audits/content-depth-v1.md).
+- No new systems, currencies, XP, Home costs, or Journey chapters.
+
+### Progression economy calibration v1
+
+- Cozy Home costs retuned (`COZY_HOME_ECONOMY_VERSION = 2`): early L1 stays cheap, late L2/L3 are long projects. Full Home is months, not 28 days. Already purchased upgrades are kept.
+- Clarity is spent on hallway / kitchen / bedroom / workshop (and late porch / companion). Daily Home income numbers unchanged.
+- Coins stay a meta receipt: amounts unchanged, Dashboard display secondary. No shop.
+- XP unchanged.
+- Dashboard reads NOW / NEXT / LONG. Next resolver: `getDashboardNextProgress`.
+- Audit: [`../audits/progression-economy-calibration-v1.md`](../audits/progression-economy-calibration-v1.md).
+
+### Game design consistency v1
+
+- Systemic audit: [`../audits/game-design-consistency-v1.md`](../audits/game-design-consistency-v1.md). Principles: [`../design/progression-principles.md`](../design/progression-principles.md).
+- Journey weight gates scale to the personal goal (never harder than 1/5/10/20/50 kg). A −10 kg path can finish the campaign weight conditions.
+- After ≥7 days away, Next Best Action offers a small return step instead of jumping to calories.
+- Day status below 40 XP is «Тихий день» (was «День выживания»). Legacy weight path no longer treats 200 kg as game-over.
+- Dev/test simulator `simulateUserJourney` (CASUAL / BALANCED / ACTIVE / RECOVERY_HEAVY / INCONSISTENT × 28/90/365). **No XP/coin/Home cost retune.** No new giant systems.
+
 ### Architecture
 
 - Refactored Today and Settings page architecture without changing user-facing behavior. Pages are orchestrators; domain logic stays in engines. See [`../audits/page-decomposition-v1.md`](../audits/page-decomposition-v1.md).

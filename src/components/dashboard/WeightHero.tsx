@@ -1,7 +1,5 @@
-import { Skull } from 'lucide-react';
 import type { CharacterGender } from '../../types';
 import type { WeightJourney } from '../../utils/weightJourney';
-import { WEIGHT_DEATH_KG } from '../../utils/weightJourney';
 import { CARD_ACCENT, SURFACE_INSET } from '../../constants/cardTheme';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
@@ -12,15 +10,12 @@ interface WeightHeroProps {
   gender: CharacterGender;
 }
 
+/** Legacy weight path card. Live body visual is Avatar Stages — this is unused on Dashboard. */
 export function WeightHero({ journey, gender }: WeightHeroProps) {
   const delta = journey.deltaSinceLast;
 
   return (
-    <Card
-      className={`${CARD_ACCENT.primary} ${
-        journey.isGameOver ? 'border-2 border-[var(--app-danger)] ring-2 ring-[color-mix(in_srgb,var(--app-danger)_30%,transparent)]' : ''
-      }`}
-    >
+    <Card className={CARD_ACCENT.primary}>
       <h2 className="mb-1 text-lg font-semibold text-[var(--app-text)]">
         Путь к {journey.targetWeight} кг
       </h2>
@@ -29,18 +24,6 @@ export function WeightHero({ journey, gender }: WeightHeroProps) {
           ? `Пик ${journey.peakWeight} кг · сейчас ${journey.currentWeight} кг · стадия ${journey.stage + 1} из ${journey.visualStageCount}`
           : 'Запишите стартовый вес в разделе «Замеры»'}
       </p>
-
-      {journey.isGameOver && (
-        <div className="mb-4 flex items-center gap-3 rounded-xl border border-[var(--app-danger)] bg-[color-mix(in_srgb,var(--app-danger)_12%,var(--app-card-strong))] px-4 py-3 text-[var(--app-danger)]">
-          <Skull size={28} className="shrink-0" />
-          <div>
-            <div className="text-lg font-bold">Смерть</div>
-            <div className="text-sm">
-              {WEIGHT_DEATH_KG} кг — проигрыш. Персонаж не выдержал.
-            </div>
-          </div>
-        </div>
-      )}
 
       <WeightSpriteProgress journey={journey} gender={gender} />
 
@@ -78,22 +61,10 @@ export function WeightHero({ journey, gender }: WeightHeroProps) {
               </div>
             </div>
 
-            {!journey.isGameOver && journey.kgUntilDeath !== null && (
-              <div
-                className={`mt-2 rounded-lg px-3 py-2 text-center text-xs ${
-                  journey.kgUntilDeath <= 10
-                    ? 'bg-[color-mix(in_srgb,var(--app-danger)_12%,var(--app-card-strong))] font-semibold text-[var(--app-danger)]'
-                    : 'bg-[var(--app-bg-soft)] text-[var(--app-text-muted)]'
-                }`}
-              >
-                Лимит смерти: {WEIGHT_DEATH_KG} кг · до проигрыша {journey.kgUntilDeath.toFixed(1)} кг
-              </div>
-            )}
-
             {delta !== null && delta !== 0 && (
               <p
                 className={`mt-2 text-center text-xs font-medium ${
-                  delta > 0 ? 'text-[var(--app-danger)]' : 'text-[var(--app-success)]'
+                  delta > 0 ? 'text-[var(--app-text-muted)]' : 'text-[var(--app-success)]'
                 }`}
               >
                 С прошлого замера: {delta > 0 ? '+' : '−'}
@@ -103,7 +74,7 @@ export function WeightHero({ journey, gender }: WeightHeroProps) {
           </>
         ) : (
           <div className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-4 text-center text-sm text-[var(--app-text-muted)]">
-            Внесите первый замер — персонаж начнёт худеть вместе с вами
+            Внесите первый замер — путь тела начнёт отображаться вместе с данными
           </div>
         )}
       </div>

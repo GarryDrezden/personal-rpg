@@ -9,8 +9,11 @@ import {
   getRecoveryQuests,
   getRecoveryQuestStats,
   getRecoveryState,
+  getDaysSinceLastEntry,
   isMinimalDayCompleted,
 } from '../../utils/recoveryEngine';
+import { pickReturnAfterAbsenceCopy } from '../../content/returnAfterAbsence';
+import { useAppTheme } from '../../hooks/useAppTheme';
 import { CARD_ACCENT, BTN_SECONDARY, SURFACE_INSET } from '../../constants/cardTheme';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
@@ -47,6 +50,7 @@ export function RecoveryCard({
   todayEntry,
   showLink = true,
 }: RecoveryCardProps) {
+  const { themeId } = useAppTheme();
   const state = getRecoveryState({ today, dailyEntries, settings, todayEntry });
   const quests = getRecoveryQuests({ today, dailyEntries, settings, todayEntry });
   const stats = getRecoveryQuestStats(quests);
@@ -60,8 +64,15 @@ export function RecoveryCard({
       ? RECOVERY_STATE_TITLES.recovered
       : RECOVERY_STATE_TITLES[state] || 'Поддержка режима';
 
+  const daysAway = getDaysSinceLastEntry(today, dailyEntries);
+  const returnCopy =
+    state === 'after_absence'
+      ? pickReturnAfterAbsenceCopy({ themeId, daysAway, date: today })
+      : null;
   const message =
-    state === 'recovered' ? RECOVERY_STATE_MESSAGES.recovered : RECOVERY_STATE_MESSAGES[state];
+    state === 'recovered'
+      ? RECOVERY_STATE_MESSAGES.recovered
+      : returnCopy?.text ?? RECOVERY_STATE_MESSAGES[state];
 
   return (
     <Card className={`h-full ${stateAccent(state)}`}>

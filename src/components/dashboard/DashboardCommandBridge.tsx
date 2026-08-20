@@ -29,6 +29,9 @@ import { MovementCreditDashboardCard } from './MovementCreditDashboardCard';
 import { RecoveryCompactPanel } from './RecoveryCompactPanel';
 import { DashboardHeroAvatar } from './DashboardHeroAvatar';
 import { useCompanionsVisible } from '../../hooks/useCompanionsVisible';
+import { pickCompanionReaction, resolveCompanionContext } from '../../content/companions';
+import { getDaysSinceLastEntry } from '../../utils/recoveryEngine';
+import { getCozyHomeState } from '../../utils/cozyHomeEngine';
 
 type DashboardCommandBridgeProps = {
   level: number;
@@ -47,11 +50,34 @@ type DashboardCommandBridgeProps = {
   onDismissMomentumHelp: () => void;
 };
 
-function CompanionStatusChip({ companionId }: { companionId: CompanionId }) {
+function CompanionStatusChip({
+  companionId,
+  today,
+  todayEntry,
+}: {
+  companionId: CompanionId;
+  today: string;
+  todayEntry: DailyEntry | undefined;
+}) {
   const { themeId, isCozy } = useAppTheme();
+  const { settings, dailyEntries } = useAppStore();
   const meta = getCompanionMeta(companionId);
   const presentation = getCompanionPresentation(themeId, companionId, meta);
   const candidates = getCompanionImageCandidates(companionId, themeId);
+  const daysAway = getDaysSinceLastEntry(today, dailyEntries);
+  const home = getCozyHomeState(settings);
+  const context = resolveCompanionContext({
+    todayEntry,
+    daysAway,
+    lastUpgradeAt: home.lastUpgrade?.at ?? null,
+    today,
+  });
+  const reaction = pickCompanionReaction({
+    companionId,
+    themeId,
+    context,
+    date: today,
+  });
 
   return (
     <Link
@@ -100,6 +126,16 @@ function CompanionStatusChip({ companionId }: { companionId: CompanionId }) {
         >
           {presentation.title}
         </span>
+        <span
+          title={reaction.text}
+          className={
+            isCozy
+              ? 'mt-0.5 block truncate text-[10px] leading-tight text-[var(--app-text-muted)]'
+              : 'mt-0.5 block truncate text-[10px] leading-tight text-amber-100/70'
+          }
+        >
+          {reaction.text}
+        </span>
       </span>
     </Link>
   );
@@ -143,6 +179,13 @@ export function DashboardCommandBridge({
       : 0;
   const showMilestones = pathSetup.kind === 'ready';
   const backdropSrc = getHeroSceneBackdropPath(themeId);
+  const companionId = game.profile.activeCompanionId;
+  const companionPresentation = getCompanionPresentation(
+    themeId,
+    companionId,
+    getCompanionMeta(companionId),
+  );
+  const companionCandidates = getCompanionImageCandidates(companionId, themeId);
 
   const shellClass = isDarkFantasy
     ? 'overflow-hidden rounded-2xl border border-[var(--app-border)] bg-gradient-to-br from-[#171329] via-[#111022] to-[#090812] shadow-[var(--app-shadow)] hero-glow'
@@ -165,11 +208,13 @@ export function DashboardCommandBridge({
             </span>
           </div>
           <span
-            className={`inline-flex shrink-0 items-center gap-1 rounded-full border border-[color-mix(in_srgb,var(--app-border)_60%,transparent)] px-2.5 py-1 text-xs font-semibold tabular-nums text-[var(--app-primary)] ${
-              isCozy ? 'bg-[var(--app-card-strong)]/80' : 'bg-black/20'
+            data-testid="dashboard-coins-meta"
+            aria-label={`Монеты: ${availableCoins.toLocaleString('ru')}`}
+            className={`inline-flex shrink-0 items-center gap-1 rounded-full border border-[color-mix(in_srgb,var(--app-border)_50%,transparent)] px-2 py-0.5 text-[11px] font-medium tabular-nums text-[var(--app-text-muted)] ${
+              isCozy ? 'bg-[var(--app-card-strong)]/60' : 'bg-black/20'
             }`}
           >
-            <Coins size={13} />
+            <Coins size={12} aria-hidden />
             {availableCoins.toLocaleString('ru')}
           </span>
         </div>
@@ -216,7 +261,13 @@ export function DashboardCommandBridge({
       </div>
 
       {/* Command bridge: threats | hero | day */}
-      <div className="grid grid-cols-1 gap-0 lg:grid-cols-[minmax(11rem,0.95fr)_minmax(0,1.35fr)_minmax(14rem,1.05fr)]">
+      <div
+        className={`grid grid-cols-1 gap-0 ${
+          isCozy
+            ? 'lg:grid-cols-[minmax(12rem,0.82fr)_minmax(0,1.5fr)_minmax(14rem,1.02fr)]'
+            : 'lg:grid-cols-[minmax(11rem,0.95fr)_minmax(0,1.35fr)_minmax(14rem,1.05fr)]'
+        }`}
+      >
         {/* Left — threats (after hero on mobile so the portrait stays the visual center) */}
         <div
           data-testid="command-bridge-threats"
@@ -226,15 +277,15 @@ export function DashboardCommandBridge({
             bossId={game.bossId}
             chapter={game.chapter}
             status={game.bossStatus}
-            layout="portrait"
+            layout={isCozy ? 'banner' : 'portrait'}
           />
-          <DailyMobMiniCard mobId={game.dailyMobId} layout="portrait" />
+          <DailyMobMiniCard mobId={game.dailyMobId} layout={isCozy ? 'banner' : 'portrait'} />
         </div>
 
         {/* Center — hero scene (large framed portrait like dashboard reference) */}
         <div
           data-testid="command-bridge-hero"
-          className={`relative order-1 min-h-[22rem] overflow-hidden border-b border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] sm:min-h-[24rem] lg:order-2 lg:min-h-[30rem] lg:border-b-0 lg:border-r ${
+          className={`relative order-1 min-h-[20rem] overflow-hidden border-b border-[color-mix(in_srgb,var(--app-border)_40%,transparent)] sm:min-h-[24rem] lg:order-2 lg:min-h-[32rem] lg:border-b-0 lg:border-r ${
             isCozy ? 'bg-[#efe4d2]' : 'bg-[#0c0a12]'
           }`}
         >
@@ -265,17 +316,43 @@ export function DashboardCommandBridge({
 
           <div
             className={`absolute left-2 top-2 z-20 rounded-full border border-[var(--app-border)] px-2.5 py-0.5 text-xs font-bold text-[var(--app-primary)] backdrop-blur-sm ${
-              isCozy ? 'bg-[var(--app-card-strong)]/90' : 'bg-black/45'
+              isCozy ? 'bg-[var(--app-card-strong)]/80' : 'bg-black/45'
             }`}
           >
             Ур. {level}
           </div>
 
-          <div className="absolute right-2 top-2 z-20">
-            {companionsVisible ? (
-              <CompanionStatusChip companionId={game.profile.activeCompanionId} />
-            ) : null}
-          </div>
+          {companionsVisible && isCozy ? (
+            <Link
+              to="/settings"
+              data-testid="companion-status-chip"
+              aria-label={`Спутник: ${companionPresentation.title}`}
+              className="absolute bottom-[16%] right-[4%] z-20 flex w-[4.5rem] flex-col items-center sm:w-[5.25rem]"
+            >
+              <span className="relative block aspect-square w-full overflow-hidden rounded-full shadow-[0_8px_18px_rgba(74,55,32,0.22)] ring-2 ring-[color-mix(in_srgb,#fff8ee_72%,transparent)]">
+                <GameAssetImage
+                  variant="companion"
+                  src={companionPresentation.imagePath}
+                  alt=""
+                  fallbackCandidates={companionCandidates.slice(1)}
+                  status="unlocked"
+                  fit="companion"
+                  className="h-full w-full"
+                  imageClassName="object-cover object-[center_18%] scale-110"
+                />
+              </span>
+            </Link>
+          ) : (
+            <div className="absolute right-2 top-2 z-20">
+              {companionsVisible ? (
+                <CompanionStatusChip
+                  companionId={game.profile.activeCompanionId}
+                  today={today}
+                  todayEntry={todayEntry}
+                />
+              ) : null}
+            </div>
+          )}
 
           <DashboardHeroAvatar
             themeId={themeId}
@@ -289,9 +366,13 @@ export function DashboardCommandBridge({
 
         {/* Right — day actions */}
         <div
-          data-testid="command-bridge-day"
+          data-testid="dashboard-now"
           className="order-3 flex flex-col gap-2.5 p-2.5 sm:p-3 lg:order-3"
         >
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--app-text-muted)]">
+            Сейчас
+          </p>
+          <div data-testid="command-bridge-day" className="flex flex-col gap-2.5">
           <DashboardPrimaryCta action={primaryAction} />
           <DashboardResourceCompact entry={todayEntry} />
           <MovementCreditDashboardCard
@@ -323,6 +404,7 @@ export function DashboardCommandBridge({
             settings={settings}
             date={today}
           />
+          </div>
         </div>
       </div>
 
@@ -336,7 +418,10 @@ export function DashboardCommandBridge({
       >
         <div className="flex items-center gap-2">
           <span className="text-xs uppercase tracking-wide text-[var(--app-text-muted)]">Уровень</span>
-          <span className="text-2xl font-bold tabular-nums leading-none text-[var(--app-primary)]">
+          <span
+            data-testid="dashboard-level-hud"
+            className="text-2xl font-bold tabular-nums leading-none text-[var(--app-primary)]"
+          >
             {level}
           </span>
           <span className="hidden items-center gap-1 rounded-lg bg-black/20 px-2 py-1 text-xs font-semibold tabular-nums sm:inline-flex">

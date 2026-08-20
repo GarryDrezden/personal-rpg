@@ -1,14 +1,14 @@
 # Roadmap
 
-> **Единый источник правды.** Обновлено: 2026-08-19 (Project Hardening v1).
+> **Единый источник правды.** Обновлено: 2026-08-20 (Cozy Visual Integration v1).
 
 ## Статус слоёв
 
 | Слой | Состояние |
 |------|-----------|
 | **DONE** | Stabilize closeout, Onboarding v1, Today core loop, Seasons v1/v2, Body Abilities v1, Plateau, Camp/Base, Boss Campaign v1/v2 (derived), Cozy Home v1, sidebar visibility, **Project Hardening v1** |
-| **CURRENT** | Cozy Art Fill Plan C1–C7 (visual); keep core loop healthy |
-| **NEXT** | HTTPS public cert on host; Dashboard declutter; DF female visual anchors |
+| **CURRENT** | Keep core loop healthy; Cozy empty-state raster only if a screen is compositionally empty |
+| **NEXT** | HTTPS public cert on host; DF female visual anchors; Alabai breed correction only if enlarged UI makes the draft read as retriever |
 | **LATER** | Chapter/act boss art; weekly season quests; Freedom Score × Body Abilities v2 |
 | **DEFERRED** | VPS/Node production, OAuth, combat, 20 physical avatar files, Cyberpunk, New Game+ |
 

@@ -66,6 +66,7 @@ export function ChapterBossMiniCard({
       title={presentation.title}
       subtitle={`Гл. ${chapter}${reward ? ` · ${reward}` : ''}`}
       surfaceTone={isCozy ? 'warm' : 'dark'}
+      className={isCozy ? 'min-h-[8.5rem] lg:min-h-[9.25rem]' : undefined}
       accent={getThemeTerm(themeId, 'bossAccent')}
     />
   );

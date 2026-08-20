@@ -6,7 +6,8 @@ import {
 } from '../../game/themeCampaignPresentation';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import { ManifestArtScene } from '../game/ManifestArtScene';
-import { CozyArtPlaceholder } from '../game/CozyArtPlaceholder';
+import { GameAssetImage } from '../game/GameAssetImage';
+import { getCozySeasonVignettePath } from '../../game/themeAssetRegistry';
 import { ProgressBar } from '../ui/ProgressBar';
 
 function RewardChip({ status, label }: { status: SeasonRewardStatus; label: string }) {
@@ -26,6 +27,8 @@ export function SeasonHistoryCard({ entry }: { entry: SeasonHistoryEntry }) {
     !isLocked && rewardStatus === 'earned'
       ? getSeasonRewardManifestAssetId(entry.seasonIndex)
       : undefined;
+  const showThumb = !(isCozy && isCurrent);
+  const thumbTone = isLocked ? 'season-history-thumb--fog' : isCurrent ? '' : 'season-history-thumb--memory';
 
   return (
     <article
@@ -35,13 +38,16 @@ export function SeasonHistoryCard({ entry }: { entry: SeasonHistoryEntry }) {
       data-testid={`season-history-${entry.seasonIndex}`}
     >
       <div className="flex gap-3">
-        <div className="season-history-thumb">
-          {rewardArtId && isCozy ? (
-            <CozyArtPlaceholder
-              label={rewardName}
-              layout="compact"
-              testId={`season-history-reward-art-${entry.seasonIndex}`}
-              className="h-full w-full rounded-none border-0"
+        {showThumb ? (
+        <div className={`season-history-thumb ${thumbTone}`}>
+          {isCozy ? (
+            <GameAssetImage
+              src={getCozySeasonVignettePath(entry.seasonIndex)}
+              alt=""
+              variant="artifact"
+              status={isLocked ? 'locked' : 'unlocked'}
+              className="h-full w-full"
+              imageClassName="h-full w-full object-cover"
             />
           ) : rewardArtId ? (
             <ManifestArtScene
@@ -55,6 +61,7 @@ export function SeasonHistoryCard({ entry }: { entry: SeasonHistoryEntry }) {
             <span aria-hidden>{isLocked ? '🌫️' : REWARD_EMOJI}</span>
           )}
         </div>
+        ) : null}
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--app-gold)]/80">

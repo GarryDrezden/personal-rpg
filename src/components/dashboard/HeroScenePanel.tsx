@@ -84,8 +84,12 @@ export function HeroScenePanel({
           <span className="inline-flex shrink-0 items-center rounded-md bg-[var(--app-primary-soft)] px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-[var(--app-primary)]">
             Глава {chapter.chapter}
           </span>
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[color-mix(in_srgb,var(--app-border)_60%,transparent)] bg-black/20 px-2.5 py-1 text-xs font-semibold tabular-nums text-[var(--app-primary)]">
-            <Coins size={13} />
+          <span
+            data-testid="dashboard-coins-meta"
+            aria-label={`Монеты: ${availableCoins.toLocaleString('ru')}`}
+            className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[color-mix(in_srgb,var(--app-border)_50%,transparent)] bg-black/20 px-2 py-0.5 text-[11px] font-medium tabular-nums text-[var(--app-text-muted)]"
+          >
+            <Coins size={12} aria-hidden />
             {availableCoins.toLocaleString('ru')}
           </span>
         </div>

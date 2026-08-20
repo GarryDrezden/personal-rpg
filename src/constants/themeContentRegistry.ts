@@ -10,7 +10,6 @@ import { JOURNEY_STAGE_MAP } from './journeyMap';
 import {
   COZY_BOSS_COPY,
   COZY_DASHBOARD_COPY,
-  COZY_EMPTY_STATES,
   COZY_FALLBACK_CHAPTER,
   COZY_FALLBACK_ENTITY,
   COZY_JOURNEY_CHAPTERS,
@@ -24,6 +23,7 @@ import {
   type CozyTodayReactionKey,
 } from './cozyContentPack';
 import { getThemeTerm } from './themeTerms';
+import { pickEmptyStateCopy, type EmptyStateKey } from '../content/emptyStates';
 
 export type ThemedTextPresentation = {
   title: string;
@@ -219,48 +219,10 @@ export function getThemedDashboardCopy(themeId: AppThemeId) {
 
 export function getThemedEmptyStateCopy(
   themeId: AppThemeId,
-  key: keyof typeof COZY_EMPTY_STATES,
+  key: EmptyStateKey,
+  date?: string,
 ): { title: string; description: string; ctaLabel?: string } {
-  if (themeId === 'cozy') {
-    const state = COZY_EMPTY_STATES[key];
-    return { ...state };
-  }
-
-  const dark: Record<
-    keyof typeof COZY_EMPTY_STATES,
-    { title: string; description: string; ctaLabel?: string }
-  > = {
-    noDayData: {
-      title: 'День ещё пуст',
-      description: 'Отметь хотя бы питание, шаги или ресурс.',
-    },
-    noResources: {
-      title: 'Ресурсов пока нет',
-      description: 'Сохрани день — появятся первые материалы прогресса.',
-    },
-    noUpgrades: {
-      title: 'Улучшения ждут',
-      description: 'Сегодняшние действия приближают прогресс.',
-    },
-    noSeason: {
-      title: 'Сезон ещё не начат',
-      description: 'Первый сохранённый день откроет летопись.',
-    },
-    noWeight: {
-      title: 'Путь ещё не начался',
-      description:
-        'Внеси первый вес — откроется глава 1, вехи трансформации и прогресс героя.',
-      ctaLabel: 'Добавить вес',
-    },
-    noTarget: {
-      title: 'Задай цель веса',
-      description:
-        'Без цели система не покажет путь трансформации. Укажи целевой вес в настройках персонажа.',
-      ctaLabel: 'Указать цель',
-    },
-  };
-
-  return dark[key];
+  return pickEmptyStateCopy({ themeId, key, date });
 }
 
 export function getCozyBossCopy(bossId: BossId): CozyEntityCopy {

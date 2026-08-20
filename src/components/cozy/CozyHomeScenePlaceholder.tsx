@@ -23,6 +23,7 @@ export function CozyHomeScenePlaceholder({
         status="unlocked"
         className="absolute inset-0"
         imageClassName="h-full w-full object-cover object-[center_58%]"
+        loading="eager"
       />
       <div
         className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[color-mix(in_srgb,#2a2418_28%,transparent)] via-transparent to-transparent"

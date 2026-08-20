@@ -45,6 +45,21 @@ describe('resolveDailyMobForEntry', () => {
     expect(mob).not.toBe('sofa_magnet');
   });
 
+  it('does not pick sofa_magnet when sleep is good and the day is active', () => {
+    expect(
+      resolveDailyMobForEntry(
+        entry({
+          steps: 9000,
+          dayMode: 'normal',
+          energyLevel: 5,
+          sleepQuality: 'good',
+          journal: true,
+        }),
+        DEFAULT_APP_SETTINGS,
+      ),
+    ).not.toBe('sofa_magnet');
+  });
+
   it('picks fog after heavy physical activity with low energy', () => {
     expect(
       resolveDailyMobForEntry(

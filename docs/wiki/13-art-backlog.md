@@ -304,7 +304,7 @@ Runtime folders already exist under `public/game-assets/themes/cozy/` (avatars, 
 | `cozy-zone-porch` | zone card | `themes/cozy/home/zones/porch.webp` | **in-app** |
 | `cozy-zone-kitchen` | zone card | `themes/cozy/home/zones/kitchen.webp` | **in-app** |
 | `cozy-zone-garden` | zone card | `themes/cozy/home/zones/garden.webp` | **in-app** |
-| Remaining zones / L0–L3 pairs | `/home` | level variants | pending (base plates for all 8 zones in-app) |
+| Remaining zones / L0–L3 pairs | `/home` | `themes/cozy/home/{zone}/level-00.webp` + `level-01.webp`; L3 = existing `zones/{id}.webp`; L2 falls back to L1 | **in-app** (2026-08-20) |
 
 **All 8 zone establishing plates in-app:** porch, hallway, kitchen, bedroom, yard, garden, workshop, pet_corner.
 
@@ -313,26 +313,24 @@ Runtime folders already exist under `public/game-assets/themes/cozy/` (avatars, 
 
 | id | Path |
 |----|------|
-| 4 companions cozy cutouts | `themes/cozy/companions/{id}.webp` |
+| 4 companions cozy portraits | `themes/cozy/companions/{id}.webp` | **in-app** (2026-08-20 production pack; Alabai is a usable draft) |
 
 Only when pets toggle stays useful; otherwise keep SVG placeholder.
 
 ### Batch C5 — Obstacles / weekly threats (P1–P2)
 
-Cozy «помехи» = **бытовые монстры грязи и дел по дому** (пыль, беспорядок, грязная посуда, незакрытые дела), не DF-боссы и не пустая мебель.
-
-Примеры направления: пылевой комок, гора белья, крошечный хаос перекусов, лужа на полу, грязная посуда — тёплый cozy-стиль, чуть озорные, не horror.
+Cozy «помехи» for the production pack = **household environmental metaphors** (fog, draft, unused corner, empty room), not DF bosses and not kawaii dirt mascots. Season-obstacle cutouts S01–S03 remain as earlier C5 experiments.
 
 Paths under `themes/cozy/bosses/` and `themes/cozy/mobs/`.  
-**In-app cutouts:** S01 dust monster, S02 laundry blob, S03 crumb chaos; chapter boss `lord_of_empty_day.webp`; daily mob `night_call.webp` (command-bridge threat cards).
+**In-app (2026-08-20):** all 8 BossId + all 8 MobId environmental cards. Legacy dust-bunny cutouts replaced for `lord_of_empty_day` and `night_call`.
 
 ### Batch C6 — Journey chapter vignettes (P2)
 
-`themes/cozy/journey/chapters/chapter-NN.webp` ×9 — warm village-road metaphor; chapter placeholder until then.
+`themes/cozy/journey/chapters/chapter-NN.webp` ×9 — **in-app** (2026-08-20). Same village house as Home.
 
 ### Batch C7 — Seasonal decor & UI polish (P3)
 
-`themes/cozy/ui/textures/`, `decor/seasonal/` — paper/wood accents beyond CSS botanical print.
+`themes/cozy/ui/seasons/vignette-0N.webp` ×8 — **in-app** chronicle vignettes (2026-08-20). Empty-state raster pack still P6.
 
 ### Очередь генерации (рекомендуемый порядок)
 

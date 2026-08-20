@@ -73,6 +73,13 @@ const AvatarPipelineDevPage = import.meta.env.DEV
       })),
     )
   : null;
+const ContentLabPage = import.meta.env.DEV
+  ? lazy(() =>
+      import('./pages/dev/ContentLabPage').then((m) => ({
+        default: m.ContentLabPage,
+      })),
+    )
+  : null;
 
 function LoadingScreen() {
   return (
@@ -187,6 +194,9 @@ function AuthenticatedApp() {
           <Route path="/codex" element={<GameCodexPage />} />
           {AvatarPipelineDevPage ? (
             <Route path="/dev/avatar-pipeline" element={<AvatarPipelineDevPage />} />
+          ) : null}
+          {ContentLabPage ? (
+            <Route path="/dev/content-lab" element={<ContentLabPage />} />
           ) : null}
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

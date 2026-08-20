@@ -381,6 +381,11 @@ export function getSeasonSnapshotWithRecap(params: {
   today?: string;
 }): SeasonSnapshotWithRecap {
   const snapshot = getSeasonSnapshot(params);
-  const recapText = getSeasonRecapText(snapshot.partialStatus, snapshot.config);
+  const recapText = getSeasonRecapText(snapshot.partialStatus, snapshot.config, {
+    themeId: params.settings.themeId ?? 'darkFantasy',
+    date: params.today ?? snapshot.seasonStartDate,
+    dayNumber: snapshot.dayNumber,
+    seasonLength: snapshot.seasonLength,
+  });
   return { ...snapshot, recapText };
 }

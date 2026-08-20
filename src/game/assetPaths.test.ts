@@ -79,6 +79,23 @@ describe('getThemeAsset', () => {
     expect(ref.path).toContain('/themes/cozy/bosses/misty_baron.webp');
     expect(candidates.at(-1)).toContain('/themes/cozy/bosses/placeholders/boss-placeholder');
   });
+
+  it('resolves cozy journey chapters and season vignettes inside cozy only', () => {
+    const chapter = getThemeAsset({
+      themeId: 'cozy',
+      kind: 'chapter_background',
+      entityId: '3',
+    });
+    expect(chapter.path).toContain('/themes/cozy/journey/chapters/chapter-03.webp');
+    expect(chapter.fallbackPath).toContain('/themes/cozy/journey/');
+
+    const season = getThemeAsset({
+      themeId: 'cozy',
+      kind: 'scene_backdrop',
+      entityId: '13',
+    });
+    expect(season.path).toContain('/themes/cozy/ui/seasons/vignette-05.webp');
+  });
 });
 
 describe('variant path helpers', () => {

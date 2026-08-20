@@ -19,6 +19,47 @@ export function DailyMobCard({ mobId, compact = false, contextLine }: DailyMobCa
   const settings = useAppStore((s) => s.settings);
   const { themeId, isCozy } = useAppTheme();
   const presentation = getMobPresentation(themeId, mobId, meta);
+  const weakness = isCozy
+    ? presentation.description
+    : getMobWeaknessText(meta.weakness, { settings, mobId });
+
+  if (isCozy) {
+    return (
+      <section
+        data-testid="daily-mob-card"
+        className="relative overflow-hidden rounded-2xl border border-[color-mix(in_srgb,var(--app-wood)_28%,var(--app-border))]"
+      >
+        <div
+          className={`relative w-full overflow-hidden ${compact ? 'aspect-[2.35/1] min-h-[7.25rem] max-h-[10.5rem]' : 'aspect-[16/9] min-h-[10rem] max-h-[16rem]'}`}
+        >
+          <GameAssetImage
+            variant="mob"
+            src={presentation.imagePath}
+            alt={presentation.title}
+            fallbackCandidates={presentation.imageCandidates.slice(1)}
+            fit="scene"
+            className="absolute inset-0 h-full w-full"
+            imageClassName="object-cover object-center"
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#f1ebe0]/92 via-[#f1ebe0]/28 to-transparent"
+            aria-hidden
+          />
+          <div className="absolute inset-x-0 bottom-0 z-10 p-3.5 sm:p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--app-garden)]">
+              {getThemeTerm(themeId, 'mob')}
+            </p>
+            <h3 className="mt-0.5 text-base font-semibold leading-tight text-[var(--app-text)]">
+              {presentation.title}
+            </h3>
+            <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-[var(--app-text-muted)]">
+              {contextLine ?? weakness}
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <Card data-testid="daily-mob-card" className={compact ? 'p-4' : ''}>
@@ -46,11 +87,7 @@ export function DailyMobCard({ mobId, compact = false, contextLine }: DailyMobCa
           {!compact && (
             <p className="mt-1 text-sm text-[var(--app-text-muted)]">{presentation.description}</p>
           )}
-          <p className="mt-2 text-xs font-medium text-[var(--app-text)]">
-            {isCozy
-              ? presentation.description
-              : getMobWeaknessText(meta.weakness, { settings, mobId })}
-          </p>
+          <p className="mt-2 text-xs font-medium text-[var(--app-text)]">{weakness}</p>
           {contextLine ? (
             <p className="mt-1 text-xs text-[var(--app-text-muted)]">{contextLine}</p>
           ) : null}

@@ -101,7 +101,7 @@ Legacy v1 статусы (`approved`, `draft`, …) сохранены в пол
 4. Bump `GAME_ASSET_VERSION`
 5. Отдельный спринт — wire в UI (не автоматически)
 
-**Future Cozy / Village Home Recovery** — не входит в Dark MVP пакет. Path-категории и **план заполнения картинками (batches C1–C7)** — в [`13-art-backlog.md`](13-art-backlog.md) → Cozy Art Fill Plan. Сейчас в `themes/cozy/`: male avatar anchors webp + SVG placeholders; Dashboard Season/Camp в Cozy ещё на `CozyArtPlaceholder`.
+**Cozy Visual Asset Production Pack v1 (2026-08-20):** Home L0/L1 + kept L3 plates, Journey chapters, environmental obstacles, companions, season vignettes under `public/game-assets/themes/cozy/`. Sources: `art-source/cozy/`. Missing Cozy art still falls back to same-theme SVG, never Dark Fantasy. Empty-state raster pack is still later (P6).
 
 | Path prefix | Назначение |
 |-------------|------------|

@@ -3,6 +3,7 @@ import { sortMeasurementsByDate } from './measurements';
 import { WEIGHT_STAGE_COUNT } from './weightStages';
 
 export const WEIGHT_TARGET_KG = 100;
+/** @deprecated Weight is a signal, not a fail state. Never used for game-over. */
 export const WEIGHT_DEATH_KG = 200;
 
 /** Минимум картинок в пути (напр. 75→65 кг: стадии 5, 6, 7) */
@@ -130,8 +131,8 @@ export function calcWeightJourney(
   const deltaSinceLast =
     previousWeight !== null ? currentWeight - previousWeight : null;
 
-  const isGameOver = currentWeight >= WEIGHT_DEATH_KG;
-  const kgUntilDeath = isGameOver ? 0 : WEIGHT_DEATH_KG - currentWeight;
+  const isGameOver = false;
+  const kgUntilDeath = null;
 
   const atFinalStage = stage >= visualStageCount - 1;
   const kgUntilNextStage = atFinalStage

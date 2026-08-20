@@ -15,12 +15,14 @@ import {
 } from './momentumEngine';
 import { getStepsThresholds, getDayMode } from './stepsEngine';
 import { DEFAULT_STEPS_THRESHOLDS } from '../constants/steps';
-import { MINIMAL_DAY_STEPS } from './recoveryEngine';
+import { MINIMAL_DAY_STEPS, getDaysSinceLastEntry } from './recoveryEngine';
 import { shouldSuggestRecoveryFromResource } from './resourceEngine';
 import {
   getMovementCredit,
   isHeavyPhysicalActivity,
 } from './movementCreditEngine';
+import { pickReturnAfterAbsenceCopy } from '../content/returnAfterAbsence';
+import { pickNbaCopy } from '../content/nbaCopy';
 
 function themedAction(
   actionId: string,
@@ -82,15 +84,32 @@ export function getNextBestAction(params: {
     dailyEntries.some((e) => hasAnyDailyData(e));
 
   if (!hasAnyData) {
+    const theme = themeId ?? 'darkFantasy';
     return {
       id: 'start_system',
       priority: 'base',
       title:
-        themeId === 'cozy' ? 'Первый след в доме' : 'Первый сигнал системе',
+        theme === 'cozy' ? 'Первый след в доме' : 'Первый сигнал системе',
+      description: pickNbaCopy({ family: 'today_not_started', themeId: theme, date: today }),
+      actionLabel: 'Открыть день',
+      targetRoute: '/today',
+      icon: '🌱',
+    };
+  }
+
+  if (recoveryState === 'after_absence') {
+    const theme = themeId ?? 'darkFantasy';
+    const daysAway = getDaysSinceLastEntry(today, dailyEntries);
+    const picked = pickReturnAfterAbsenceCopy({ themeId: theme, daysAway, date: today });
+    return {
+      id: 'return_after_absence',
+      priority: 'recovery',
+      title: theme === 'cozy' ? 'Снова дома' : 'Снова в игре',
       description:
-        themeId === 'cozy'
-          ? 'Отметь питание, движение или ресурс — и день уже оставит след.'
-          : 'Начни с первого сигнала системы: внеси вес или калории.',
+        picked?.text ??
+        (theme === 'cozy'
+          ? 'Не нужно закрывать прошлые дни. Отметь сегодняшний маленький шаг — дом снова заметит тебя.'
+          : 'Не нужно закрывать прошлые дни. Просто отметь сегодняшний день — система снова в ходу.'),
       actionLabel: 'Открыть день',
       targetRoute: '/today',
       icon: '🌱',
@@ -153,11 +172,12 @@ export function getNextBestAction(params: {
   }
 
   if (dayMode === 'recovery' || dayMode === 'minimal') {
+    const theme = themeId ?? 'darkFantasy';
     return {
       id: 'hold_base',
       priority: 'recovery',
       title: 'Удержать базу',
-      description: 'Главный ход дня — не максимум, а сохранение режима без отката.',
+      description: pickNbaCopy({ family: 'recovery', themeId: theme, date: today }),
       actionLabel: 'Открыть день',
       targetRoute: '/today',
       icon: '🔋',

@@ -29,6 +29,11 @@ import {
   getWaistLossCm,
   getAllBodyAbilityProgress,
 } from './bodyAbilityEngine';
+import {
+  formatJourneyKg,
+  resolvePersonalWeightGoalKg,
+  scaleJourneyWeightTarget,
+} from './journeyWeightGates';
 
 type EngineParams = {
   dailyEntries: DailyEntry[];
@@ -144,17 +149,40 @@ export function getJourneyConditionCurrentValue(
   }
 }
 
+function resolveConditionTarget(
+  params: EngineParams & { condition: JourneyStageCondition },
+): { target: number; title: string } {
+  const { condition } = params;
+  if (condition.type !== 'weight_loss_kg') {
+    return { target: condition.target, title: condition.title };
+  }
+  const personal = resolvePersonalWeightGoalKg(params.settings, params.measurements);
+  const target = scaleJourneyWeightTarget(condition.target, personal);
+  const title =
+    target === condition.target
+      ? condition.title
+      : `Снизить вес на ${formatJourneyKg(target)} кг`;
+  return { target, title };
+}
+
 function buildConditionProgress(
   params: EngineParams & { condition: JourneyStageCondition },
 ): JourneyStageConditionProgress {
   const { condition } = params;
   const current = getJourneyConditionCurrentValue(params);
-  const target = condition.target;
+  const resolved = resolveConditionTarget(params);
+  const target = resolved.target;
   const completed = current >= target;
   const progressPercent =
     target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
 
-  return { condition, current, target, completed, progressPercent };
+  return {
+    condition: { ...condition, title: resolved.title, target },
+    current,
+    target,
+    completed,
+    progressPercent,
+  };
 }
 
 function isStageFullyComplete(conditions: JourneyStageConditionProgress[]): boolean {

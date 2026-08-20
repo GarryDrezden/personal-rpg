@@ -190,7 +190,7 @@
   border: 1px solid color-mix(in srgb, var(--app-wood) 26%, var(--app-border));
   background:
     linear-gradient(160deg, rgba(255, 252, 246, 0.97), rgba(241, 232, 214, 0.93));
-  padding: 1rem 1rem 1.05rem;
+  padding: 0 0 1.05rem;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.55) inset,
     0 10px 24px rgba(74, 55, 32, 0.06);
@@ -311,11 +311,36 @@
   color: var(--app-text-muted);
 }
 
+[data-theme='cozy'] .cozy-zone-card__art {
+  position: relative;
+  height: 9.25rem;
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(180deg, #fff6e4, #e8efdf);
+}
+
+@media (min-width: 1024px) {
+  [data-theme='cozy'] .cozy-zone-card__art {
+    height: 11rem;
+  }
+}
+
+[data-theme='cozy'] .cozy-zone-card--max .cozy-zone-card__art {
+  filter: saturate(0.92);
+}
+
+[data-theme='cozy'] .cozy-zone-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 0.85rem 1rem 0;
+}
+
 [data-theme='cozy'] .cozy-zone-card__next {
-  border-radius: 0.85rem;
-  border: 1px solid color-mix(in srgb, var(--app-wood) 18%, transparent);
-  background: color-mix(in srgb, var(--app-panel-highlight) 72%, transparent);
-  padding: 0.65rem 0.75rem;
+  padding: 0.2rem 0 0;
+  border: none;
+  background: transparent;
+  border-radius: 0;
 }
 
 [data-theme='cozy'] .cozy-zone-level {
@@ -660,6 +685,63 @@
   background: color-mix(in srgb, var(--app-garden) 10%, var(--app-card-strong));
 }
 
+[data-theme='cozy'] .season-history-thumb--memory {
+  height: 2.75rem;
+  width: 2.75rem;
+  filter: saturate(0.72) brightness(0.98);
+}
+
+[data-theme='cozy'] .season-history-thumb--fog {
+  height: 2.5rem;
+  width: 2.5rem;
+  filter: saturate(0.4) brightness(1.04);
+  opacity: 0.78;
+}
+
+[data-theme='cozy'] .season-memory-list {
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme='cozy'] .season-memory-list .season-history-card {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  padding: 0.85rem 0.1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--app-wood) 16%, transparent);
+}
+
+[data-theme='cozy'] .season-memory-list .season-history-card:last-child {
+  border-bottom: none;
+}
+
+[data-theme='cozy'] .season-chronicle-hero--scene {
+  padding: 0;
+}
+
+[data-theme='cozy'] .season-chronicle-hero__art {
+  position: relative;
+  height: 10rem;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  [data-theme='cozy'] .season-chronicle-hero__art {
+    height: 13.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  [data-theme='cozy'] .season-chronicle-hero__art {
+    height: 16rem;
+  }
+}
+
+[data-theme='cozy'] .season-chronicle-hero__body {
+  padding: 1rem 1.15rem 1.15rem;
+}
+
 [data-theme='cozy'] .season-section-label {
   color: var(--app-garden) !important;
   opacity: 0.85;
@@ -777,15 +859,62 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: 16 / 9;
-  max-height: 15rem;
+  max-height: 11.5rem;
   width: 100%;
-  border-bottom: 1px solid color-mix(in srgb, var(--app-wood) 18%, transparent);
   background: linear-gradient(180deg, #fff6e4, #e8efdf);
 }
 
 @media (min-width: 640px) {
   [data-theme='cozy'] .cozy-home-scene {
     max-height: 18rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  [data-theme='cozy'] .cozy-home-scene {
+    max-height: 24rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  [data-theme='cozy'] .cozy-home-scene {
+    max-height: 26rem;
+  }
+}
+
+[data-theme='cozy'] .cozy-home-hero-stage {
+  position: relative;
+}
+
+[data-theme='cozy'] .cozy-home-hero-overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  padding: 1.05rem 1.1rem 1.1rem;
+  background: linear-gradient(
+    to top,
+    rgba(241, 235, 224, 0.94) 0%,
+    rgba(241, 235, 224, 0.62) 42%,
+    rgba(241, 235, 224, 0.08) 100%
+  );
+}
+
+@media (min-width: 640px) {
+  [data-theme='cozy'] .cozy-home-hero-overlay {
+    padding: 1.25rem 1.35rem 1.3rem;
+  }
+}
+
+@media (max-width: 639px) {
+  [data-theme='cozy'] .cozy-home-hero-overlay .cozy-home-page__title {
+    font-size: 1.3rem;
+  }
+
+  [data-theme='cozy'] .cozy-home-hero-overlay .cozy-home-page__status {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
 
