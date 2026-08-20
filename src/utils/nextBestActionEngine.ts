@@ -6,7 +6,6 @@ import type { NextBestAction } from '../types/nextBestAction';
 import type { RecoveryState } from '../types/recovery';
 import type { AppThemeId } from '../types/theme';
 import { hasAnyDailyData } from './achievementHelpers';
-import { isCaloriesInLimit } from './achievementEngine';
 import { getIncompleteConditions } from './journeyMapEngine';
 import {
   getMomentumSummary,
@@ -23,6 +22,24 @@ import {
 } from './movementCreditEngine';
 import { pickReturnAfterAbsenceCopy } from '../content/returnAfterAbsence';
 import { pickNbaCopy } from '../content/nbaCopy';
+import { isNutritionTrackingEnabled, isNutritionLogged } from './nutritionEngine';
+
+function alcoholTrackingOn(settings: AppSettings): boolean {
+  return settings.enableAlcoholTracking !== false;
+}
+
+function physicalActivityTrackingOn(settings: AppSettings): boolean {
+  return settings.enablePhysicalActivityTracking !== false;
+}
+
+function baseDayHint(settings: AppSettings): string {
+  const parts: string[] = [];
+  if (isNutritionTrackingEnabled(settings)) parts.push('питание');
+  parts.push('минимум шагов');
+  if (alcoholTrackingOn(settings)) parts.push('ясный вечер');
+  parts.push('одна строка дневника');
+  return parts.join(', ');
+}
 
 function themedAction(
   actionId: string,
@@ -33,20 +50,18 @@ function themedAction(
 }
 
 function isTodayAlmostClosed(entry: DailyEntry, settings: AppSettings): boolean {
-  return (
-    entry.calories !== null &&
-    entry.calories !== undefined &&
-    isCaloriesInLimit(entry, settings) &&
-    isBaseMomentumDay(entry, settings)
-  );
+  return isNutritionLogged({ entry, settings }) && isBaseMomentumDay(entry, settings);
 }
 
-function hasLittleTodayData(entry: DailyEntry | null): boolean {
+function hasLittleTodayData(entry: DailyEntry | null, settings: AppSettings): boolean {
   if (!entry) return true;
   const signals = [
-    entry.calories !== null && entry.calories !== undefined,
+    isNutritionTrackingEnabled(settings) &&
+      entry.calories !== null &&
+      entry.calories !== undefined,
     entry.steps !== null && entry.steps !== undefined,
-    entry.alcohol !== null && entry.alcohol !== undefined,
+    alcoholTrackingOn(settings) && entry.alcohol !== null && entry.alcohol !== undefined,
+    entry.journal,
   ].filter(Boolean).length;
   return signals <= 1;
 }
@@ -123,8 +138,12 @@ export function getNextBestAction(params: {
       title: themeId === 'cozy' ? 'Вернуться к дому' : 'Вернуться в систему',
       description:
         themeId === 'cozy'
-          ? 'Сегодня дом просит мягкого режима: питание, маленький маршрут, ясный вечер и одна строка в дневнике.'
-          : 'Сегодня не нужен подвиг. Достаточно удержать базу: калории, минимум шагов, без алкоголя и одна строка дневника.',
+          ? isNutritionTrackingEnabled(settings)
+            ? 'Сегодня дом просит мягкого режима: питание, маленький маршрут, ясный вечер и одна строка в дневнике.'
+            : 'Сегодня дом просит мягкого режима: маленький маршрут, ясный вечер и одна строка в дневнике.'
+          : isNutritionTrackingEnabled(settings)
+            ? 'Сегодня не нужен подвиг. Достаточно удержать базу: калории, минимум шагов, без алкоголя и одна строка дневника.'
+            : 'Сегодня не нужен подвиг. Достаточно удержать базу: минимум шагов и одна строка дневника.',
       actionLabel: 'Открыть день',
       targetRoute: '/today',
       icon: '🛡️',
@@ -163,8 +182,7 @@ export function getNextBestAction(params: {
       id: 'low_resource_minimal',
       priority: 'recovery',
       title: 'Удержать маршрут',
-      description:
-        'Сегодня ресурс низкий. Лучший ход — минимальный день: питание, 5000 шагов, без алкоголя, одна строка дневника.',
+      description: `Сегодня ресурс низкий. Лучший ход — минимальный день: ${baseDayHint(settings)}.`,
       actionLabel: 'Открыть восстановление',
       targetRoute: '/today',
       icon: '🔋',
@@ -187,8 +205,7 @@ export function getNextBestAction(params: {
   if (momentum <= -40) {
     const fb = {
       title: 'Вернуть ход системы',
-      description:
-        'Инерция сильно просела. Сегодня не нужен максимум — нужен один день без отката: калории, 5000 шагов, без алкоголя и одна строка.',
+      description: `Инерция сильно просела. Сегодня не нужен максимум — нужен один день без отката: ${baseDayHint(settings)}.`,
     };
     const text = themedAction('momentum_lost_speed_return', themeId, fb);
     return {
@@ -205,8 +222,7 @@ export function getNextBestAction(params: {
   if (momentum >= -39 && momentum <= -10) {
     const fb = {
       title: 'Собрать базовый день для инерции',
-      description:
-        'Один базовый день уже начнет возвращать ход: внеси калории, добери минимум шагов и удержи ясность.',
+      description: `Один базовый день уже начнет возвращать ход: ${baseDayHint(settings)}.`,
     };
     const text = themedAction('momentum_base_day', themeId, fb);
     return {
@@ -220,7 +236,10 @@ export function getNextBestAction(params: {
     };
   }
 
-  if (!entry || entry.calories === null || entry.calories === undefined) {
+  if (
+    isNutritionTrackingEnabled(settings) &&
+    (!entry || entry.calories === null || entry.calories === undefined)
+  ) {
     return {
       id: 'log_calories',
       priority: 'calories',
@@ -232,7 +251,10 @@ export function getNextBestAction(params: {
     };
   }
 
-  if (!entry || entry.alcohol === null || entry.alcohol === undefined) {
+  if (
+    alcoholTrackingOn(settings) &&
+    (!entry || entry.alcohol === null || entry.alcohol === undefined)
+  ) {
     return {
       id: 'log_alcohol',
       priority: 'clarity',
@@ -256,7 +278,11 @@ export function getNextBestAction(params: {
       id: 'reach_steps_minimum',
       priority: 'steps',
       title: 'Добрать минимум шагов',
-      description: `Минимум движения удерживает базу дня. Осталось до ${minimum.toLocaleString('ru')} шагов: ${remaining.toLocaleString('ru')}. Если тело уже работало — отметь физическую активность.`,
+      description: `Минимум движения удерживает базу дня. Осталось до ${minimum.toLocaleString('ru')} шагов: ${remaining.toLocaleString('ru')}.${
+        physicalActivityTrackingOn(settings)
+          ? ' Если тело уже работало — отметь физическую активность.'
+          : ''
+      }`,
       actionLabel: 'Открыть день',
       targetRoute: '/today',
       icon: '👟',
@@ -305,10 +331,12 @@ export function getNextBestAction(params: {
     }
   }
 
-  if (momentum >= -9 && momentum <= 9 && hasLittleTodayData(entry)) {
+  if (momentum >= -9 && momentum <= 9 && hasLittleTodayData(entry, settings)) {
     const fb = {
       title: 'Задать направление дню',
-      description: 'Инерция нейтральна. Начни с одного сигнала системы: калории, шаги или ясность.',
+      description: isNutritionTrackingEnabled(settings)
+        ? 'Инерция нейтральна. Начни с одного сигнала: питание, шаги или ясность.'
+        : 'Инерция нейтральна. Начни с одного сигнала: шаги, ясность или отмеченный день.',
     };
     const text = themedAction('momentum_set_direction', themeId, fb);
     return {
@@ -356,7 +384,9 @@ export function getNextBestAction(params: {
     id: 'hold_good_day',
     priority: 'base',
     title: 'Удержать хороший день',
-    description: 'Сегодня цель простая: калории, шаги и ясность. Не героизм, а повторяемость.',
+    description: isNutritionTrackingEnabled(settings)
+      ? 'Сегодня цель простая: калории, шаги и ясность. Не героизм, а повторяемость.'
+      : 'Сегодня цель простая: шаги, ясность и отмеченный день. Не героизм, а повторяемость.',
     actionLabel: 'Открыть день',
     targetRoute: '/today',
     icon: '✨',

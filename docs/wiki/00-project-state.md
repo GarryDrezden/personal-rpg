@@ -1,6 +1,6 @@
 # Текущее состояние проекта
 
-> **Единый источник правды.** Обновлено: 2026-08-20 (Cozy Visual Integration & Art Direction Pass v1).
+> **Единый источник правды.** Обновлено: 2026-08-20 (Real User Journey QA Pass v1).
 
 ## Краткое описание
 
@@ -57,6 +57,9 @@
 - **Game design consistency:** [`../audits/game-design-consistency-v1.md`](../audits/game-design-consistency-v1.md), [`../design/progression-principles.md`](../design/progression-principles.md)
 - **Progression economy calibration:** [`../audits/progression-economy-calibration-v1.md`](../audits/progression-economy-calibration-v1.md)
 - **Content depth / anti-repetition:** [`../audits/content-depth-v1.md`](../audits/content-depth-v1.md), [`../design/content-principles.md`](../design/content-principles.md)
+- **Cozy asset production:** [`../audits/cozy-asset-production-v1.md`](../audits/cozy-asset-production-v1.md)
+- **Cozy visual integration:** [`../audits/cozy-visual-integration-v1.md`](../audits/cozy-visual-integration-v1.md)
+- **Real user journey QA:** [`../audits/real-user-journey-v1.md`](../audits/real-user-journey-v1.md)
 - **Hardening audit:** [`../audits/project-hardening-v1.md`](../audits/project-hardening-v1.md)
 - **Visual UX audit:** [`../audits/visual-ux-pass-v1.md`](../audits/visual-ux-pass-v1.md)
 - **Page decomposition:** [`../audits/page-decomposition-v1.md`](../audits/page-decomposition-v1.md)
@@ -77,7 +80,7 @@
 ### Экраны и навигация
 
 - **Today** (`/today`) — ввод дня, квесты, nutrition modes, **физическая активность**; контекстные реакции дня (пулы `src/content/todayReactions.ts`); переключение прошлой недели для дополнения записей; начисление cozy-ресурсов дома при первом сохранении дня
-- **Dashboard** (`/`) — NOW / NEXT / LONG: герой, сегодняшний CTA, одно ближайшее изменение, Journey + стадия тела; Cozy Home compact; монеты secondary в шапке
+- **Dashboard** (`/`) — NOW / NEXT / LONG: герой, сегодняшний CTA, одно ближайшее изменение, Journey + стадия тела; Cozy Home compact; монеты secondary в шапке; после Home 24/24 NEXT не предлагает улучшение дома (`continue_rhythm` → Сегодня)
 - **Week** (`/week`) — недельный босс, календарь, бонусы; навигация по прошлым неделям
 - **Дом** (`/home`) — **Cozy Home v1**: ресурсы Уют/Материалы/Сад/Ясность, 8 зон дома L0–3, улучшения; после сохранения дня — compact Cozy Reward Feedback
 - **Growth hub** (`/growth/:tab`) — skills, abilities, camp, rewards, achievements, trials; **Growth Hub integration QA (2026-06)** — unified hero panels, tab chrome, trials/achievements copy aligned across tabs
@@ -331,6 +334,7 @@ Settings autosave no longer clobbers unsaved draft fields ([`../audits/settings-
 - Settings: autosave islands vs field-level dirty draft merge (not a single global Save)
 - Authenticated pages are route-lazy; Dashboard/Today prefetch after auth
 - User data: explicit `dataSchemaVersion`, migrate-then-normalize, JSON backup/restore, optional `revision` 409
+- Real user journey QA: tracking-off NBA, Home 24/24 NEXT, 409 copy, theme-neutral first onboarding screen — no new systems
 
 См. [`07-decision-log.md`](07-decision-log.md).
 

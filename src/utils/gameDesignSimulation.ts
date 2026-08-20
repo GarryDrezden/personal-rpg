@@ -24,7 +24,7 @@ import {
 import { getJourneyMapSummary } from './journeyMapEngine';
 import { getLevelInfo } from './levels';
 import { calcMomentumBonusXp, getMomentumSummary } from './momentumEngine';
-import { calcTotalEarnedXP } from './points';
+import { calcDailyPoints, calcTotalEarnedXP } from './points';
 
 export const SIM_HORIZONS = [28, 60, 90, 180, 365] as const;
 export type SimHorizon = (typeof SIM_HORIZONS)[number];
@@ -66,6 +66,27 @@ export type SimulateUserJourneyParams = {
   targetWeight: number;
   waistStartCm?: number;
   autoUpgradeHome?: boolean;
+  /** When set, overrides profile skip/log cadence (Persona F: 5 on / 18 off). */
+  cycle?: { onDays: number; offDays: number };
+  /** Multiply logged step counts. Default 1. Persona C can use 0.4. */
+  stepScale?: number;
+  /** Collect a per-day event timeline. Off for the horizon matrix (speed). */
+  includeEvents?: boolean;
+};
+
+export type SimEventKind =
+  | 'home_upgrade'
+  | 'level_up'
+  | 'body_stage_change'
+  | 'journey_chapter'
+  | 'season_complete'
+  | 'ability_unlock';
+
+export type SimEvent = {
+  day: number;
+  date: string;
+  kind: SimEventKind;
+  detail: string;
 };
 
 export type SimSnapshot = {
@@ -91,6 +112,7 @@ export type SimSnapshot = {
   heroState: string;
   currentWeight: number;
   weightLostKg: number;
+  events: SimEvent[];
 };
 
 function cloneSettings(weightGoal: number): AppSettings {
@@ -126,7 +148,16 @@ function emptyDaily(date: string): DailyEntry {
   };
 }
 
-export function simDayKind(profileId: SimProfileId, dayIndex: number, date: string): SimDayKind {
+export function simDayKind(
+  profileId: SimProfileId,
+  dayIndex: number,
+  date: string,
+  cycle?: { onDays: number; offDays: number },
+): SimDayKind {
+  if (cycle) {
+    const period = Math.max(1, cycle.onDays + cycle.offDays);
+    return dayIndex % period < cycle.onDays ? 'light' : 'skip';
+  }
   const weekday = getISODay(parseISO(date));
   if (profileId === 'inconsistent') {
     return dayIndex % 14 < 5 ? 'light' : 'skip';
@@ -148,14 +179,19 @@ export function simDayKind(profileId: SimProfileId, dayIndex: number, date: stri
   return 'good';
 }
 
-function fillEntry(kind: Exclude<SimDayKind, 'skip'>, date: string): DailyEntry {
+function fillEntry(
+  kind: Exclude<SimDayKind, 'skip'>,
+  date: string,
+  stepScale = 1,
+): DailyEntry {
+  const scale = (n: number) => Math.max(0, Math.round(n * stepScale));
   const entry = emptyDaily(date);
   if (kind === 'light') {
     return {
       ...entry,
       calories: 2400,
       nutritionLevel: 'light',
-      steps: 8000,
+      steps: scale(8000),
       alcohol: 'none',
       journal: true,
       comment: 'sim light',
@@ -170,7 +206,7 @@ function fillEntry(kind: Exclude<SimDayKind, 'skip'>, date: string): DailyEntry 
       ...entry,
       calories: 2300,
       nutritionLevel: 'light',
-      steps: 12000,
+      steps: scale(12000),
       alcohol: 'none',
       morningExercise: weekday === 1,
       gym: weekday === 2 || weekday === 4,
@@ -188,7 +224,7 @@ function fillEntry(kind: Exclude<SimDayKind, 'skip'>, date: string): DailyEntry 
       ...entry,
       calories: 2200,
       nutritionLevel: 'light',
-      steps: 14000,
+      steps: scale(14000),
       alcohol: 'none',
       morningExercise: true,
       gym: weekday === 1 || weekday === 3 || weekday === 5,
@@ -207,7 +243,7 @@ function fillEntry(kind: Exclude<SimDayKind, 'skip'>, date: string): DailyEntry 
       dayMode: 'recovery',
       calories: 2400,
       nutritionLevel: 'light',
-      steps: 5000,
+      steps: scale(5000),
       alcohol: 'none',
       journal: true,
       comment: 'sim recovery',
@@ -222,7 +258,7 @@ function fillEntry(kind: Exclude<SimDayKind, 'skip'>, date: string): DailyEntry 
       dayMode: 'minimal',
       calories: 2400,
       nutritionLevel: 'light',
-      steps: 5000,
+      steps: scale(5000),
       alcohol: 'none',
       journal: true,
       comment: 'sim minimal',
@@ -234,7 +270,7 @@ function fillEntry(kind: Exclude<SimDayKind, 'skip'>, date: string): DailyEntry 
     ...entry,
     calories: 4200,
     nutritionLevel: 'heavy',
-    steps: 1800,
+    steps: scale(1800),
     alcohol: 'heavy',
     comment: 'sim bad',
     energyLevel: 1,
@@ -256,20 +292,27 @@ function syntheticWeight(
   return round1(Math.max(targetWeight, startWeight - lost));
 }
 
-function spendHome(settings: AppSettings, at: string): AppSettings {
+function spendHome(
+  settings: AppSettings,
+  at: string,
+): { settings: AppSettings; upgrades: { zoneId: string; level: number }[] } {
   let home = getCozyHomeState(settings);
+  const upgrades: { zoneId: string; level: number }[] = [];
   for (let i = 0; i < 24; i++) {
     const next = findAffordableUpgrade(home);
     if (!next) break;
     home = upgradeCozyZone(home, next.zoneId, at);
+    upgrades.push({ zoneId: next.zoneId, level: next.nextLevel.level });
   }
-  return { ...settings, cozyHome: home };
+  return { settings: { ...settings, cozyHome: home }, upgrades };
 }
 
 export function simulateUserJourney(params: SimulateUserJourneyParams): SimSnapshot {
   const startDate = params.startDate ?? DEFAULT_START_DATE;
   const autoUpgrade = params.autoUpgradeHome !== false;
   const waistStart = params.waistStartCm ?? 100;
+  const stepScale = params.stepScale ?? 1;
+  const includeEvents = params.includeEvents !== false;
   let settings = cloneSettings(params.targetWeight);
   const dailyEntries: DailyEntry[] = [];
   const measurements: MeasurementEntry[] = [
@@ -289,17 +332,28 @@ export function simulateUserJourney(params: SimulateUserJourneyParams): SimSnaps
 
   let loggedDays = 0;
   let skippedDays = 0;
+  const events: SimEvent[] = [];
+  let prevLevel = 1;
+  let prevBody = 1;
+  let prevJourney = 0;
+  let prevSeason = 1;
+  let prevAbilities = 0;
+  let runningXp = 0;
 
   for (let i = 0; i < params.days; i++) {
     const date = format(addDays(parseISO(startDate), i), 'yyyy-MM-dd');
-    const kind = simDayKind(params.profileId, i, date);
+    const kind = simDayKind(params.profileId, i, date, params.cycle);
     const weight = syntheticWeight(
       params.profileId,
       i,
       params.startWeight,
       params.targetWeight,
     );
-    const waist = round1(waistStart - (waistStart - 80) * (params.startWeight - weight) / Math.max(1, params.startWeight - params.targetWeight));
+    const waist = round1(
+      waistStart -
+        ((waistStart - 80) * (params.startWeight - weight)) /
+          Math.max(1, params.startWeight - params.targetWeight),
+    );
 
     if (kind === 'skip') {
       skippedDays += 1;
@@ -307,7 +361,7 @@ export function simulateUserJourney(params: SimulateUserJourneyParams): SimSnaps
     }
 
     loggedDays += 1;
-    const raw = fillEntry(kind, date);
+    const raw = fillEntry(kind, date, stepScale);
     const applied = applyCozyRewardsOnSave({
       entry: raw,
       settings,
@@ -316,7 +370,18 @@ export function simulateUserJourney(params: SimulateUserJourneyParams): SimSnaps
     settings = applied.settings;
     dailyEntries.push(applied.entry);
     if (autoUpgrade) {
-      settings = spendHome(settings, `${date}T12:00:00.000Z`);
+      const spent = spendHome(settings, `${date}T12:00:00.000Z`);
+      settings = spent.settings;
+      if (includeEvents) {
+        for (const up of spent.upgrades) {
+          events.push({
+            day: i + 1,
+            date,
+            kind: 'home_upgrade',
+            detail: `${up.zoneId} → ${up.level}`,
+          });
+        }
+      }
     }
 
     const weekday = getISODay(parseISO(date));
@@ -333,6 +398,72 @@ export function simulateUserJourney(params: SimulateUserJourneyParams): SimSnaps
         biceps: null,
         comment: '',
       });
+    }
+
+    if (!includeEvents) continue;
+    runningXp += calcDailyPoints(applied.entry, settings);
+    const level = getLevelInfo(runningXp).level;
+    if (level > prevLevel) {
+      events.push({
+        day: i + 1,
+        date,
+        kind: 'level_up',
+        detail: `${prevLevel} → ${level}`,
+      });
+      prevLevel = level;
+    }
+
+    const sampleHeavy =
+      weekday === 1 || i === params.days - 1 || spentToday(events, i + 1);
+    if (!sampleHeavy) continue;
+
+    const journey = getJourneyMapSummary({ dailyEntries, measurements, settings });
+    if (journey.completedStages > prevJourney) {
+      events.push({
+        day: i + 1,
+        date,
+        kind: 'journey_chapter',
+        detail: `${prevJourney} → ${journey.completedStages}/${journey.totalStages}`,
+      });
+      prevJourney = journey.completedStages;
+    }
+
+    const season = getSeasonSnapshot({ settings, dailyEntries, today: date });
+    if (season.seasonIndex > prevSeason) {
+      events.push({
+        day: i + 1,
+        date,
+        kind: 'season_complete',
+        detail: `сезон ${prevSeason} закрыт → ${season.seasonIndex}`,
+      });
+      prevSeason = season.seasonIndex;
+    }
+
+    const abilities = getBodyAbilityStats({ dailyEntries, measurements, settings });
+    if (abilities.unlocked > prevAbilities) {
+      events.push({
+        day: i + 1,
+        date,
+        kind: 'ability_unlock',
+        detail: `${prevAbilities} → ${abilities.unlocked}`,
+      });
+      prevAbilities = abilities.unlocked;
+    }
+
+    const avatar = resolveAvatarStageSnapshot({
+      dailyEntries,
+      measurements,
+      settings,
+      today: date,
+    });
+    if (avatar.bodyStage !== prevBody) {
+      events.push({
+        day: i + 1,
+        date,
+        kind: 'body_stage_change',
+        detail: `${prevBody} → ${avatar.bodyStage}`,
+      });
+      prevBody = avatar.bodyStage;
     }
   }
 
@@ -390,7 +521,36 @@ export function simulateUserJourney(params: SimulateUserJourneyParams): SimSnaps
     heroState: avatar.heroState,
     currentWeight: lastWeight,
     weightLostKg: round1(Math.max(0, params.startWeight - lastWeight)),
+    events,
   };
+}
+
+function spentToday(events: SimEvent[], day: number): boolean {
+  return events.some((e) => e.day === day && e.kind === 'home_upgrade');
+}
+
+export function firstSimEvent(
+  events: SimEvent[],
+  kind: SimEventKind,
+): SimEvent | undefined {
+  return events.find((e) => e.kind === kind);
+}
+
+export function countSimEventsByKind(events: SimEvent[]): Record<SimEventKind, number> {
+  const out: Record<SimEventKind, number> = {
+    home_upgrade: 0,
+    level_up: 0,
+    body_stage_change: 0,
+    journey_chapter: 0,
+    season_complete: 0,
+    ability_unlock: 0,
+  };
+  for (const event of events) out[event.kind] += 1;
+  return out;
+}
+
+export function simEventsPerWeek(events: SimEvent[], days: number): number {
+  return round1(events.length / Math.max(1, days / 7));
 }
 
 export function simulateHorizonMatrix(params: {
@@ -406,6 +566,7 @@ export function simulateHorizonMatrix(params: {
         days,
         startWeight: params.startWeight,
         targetWeight: params.targetWeight,
+        includeEvents: false,
       });
     }
   }

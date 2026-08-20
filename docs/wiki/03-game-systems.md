@@ -23,6 +23,7 @@
 
 Канон иерархии наград и инвариантов: [`../design/progression-principles.md`](../design/progression-principles.md).  
 Системный аудит (2026-08-20): [`../audits/game-design-consistency-v1.md`](../audits/game-design-consistency-v1.md).  
+Сквозной пользовательский проход (2026-08-20): [`../audits/real-user-journey-v1.md`](../audits/real-user-journey-v1.md). Next Best Action скрывает питание/алкоголь/ПА, если трекер выключен. Dashboard NEXT после Home 24/24 не предлагает комнату — fallback `continue_rhythm` на Сегодня.  
 Контент / антиповтор (2026-08-20): [`../design/content-principles.md`](../design/content-principles.md), [`../audits/content-depth-v1.md`](../audits/content-depth-v1.md). Реестры: `src/content/*`. Выбор: контекст → пул → `date|family|theme` hash, без `Math.random()` на рендере.
 
 ---

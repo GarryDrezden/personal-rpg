@@ -40,9 +40,12 @@ export function CozyRewardFeedbackCard({
   const reasons = pickCozyRewardReasons(rewards.reasons, 3);
   const next = getNextCozyHomeUpgrade(homeState);
   const hint = getCozyUpgradeHintLine(homeState);
-  const ctaLabel = next?.canUpgrade ? 'Улучшить дом' : 'Открыть дом';
-  const title = 'Дом стал чуть теплее';
-  const lead = 'День сохранён. Забота о теле принесла ресурсы для дома.';
+  const complete = !next;
+  const ctaLabel = next?.canUpgrade ? 'Улучшить дом' : complete ? 'Посмотреть дом' : 'Открыть дом';
+  const title = complete ? 'Дом уже восстановлен' : 'Дом стал чуть теплее';
+  const lead = complete
+    ? 'День сохранён. Ресурсы ещё приходят — тратить их больше не нужно.'
+    : 'День сохранён. Забота о теле принесла ресурсы для дома.';
 
   return (
     <section

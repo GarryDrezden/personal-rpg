@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Real User Journey QA Pass v1
+
+- Next Best Action no longer asks for calories, alcohol, or physical activity when those trackers are off.
+- After Cozy Home 24/24, Dashboard NEXT does not offer another upgrade; save copy says the house is already restored.
+- On a phone, «Сохранить ход» sits above the bottom menu so it can actually be tapped.
+- If two tabs conflict, the toast says the save did not apply and to refresh — no technical revision jargon.
+- First onboarding screen is theme-neutral (world comes later). FAQ start path matches the live campaign launch (no companion on `/start`).
+- Audit: [`../audits/real-user-journey-v1.md`](../audits/real-user-journey-v1.md). No new systems, economy, or images.
+
 ### Cozy Visual Integration & Art Direction Pass v1
 
 - Cozy art now drives composition: large scenes on Dashboard, Home, Journey, and the current Season; mid blocks for zones and obstacles; small companion/avatar presence.

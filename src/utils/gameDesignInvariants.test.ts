@@ -315,6 +315,29 @@ describe('game-design invariants', () => {
     expect(action.description.toLowerCase()).toContain('не нужно закрывать');
   });
 
+  it('does not ask for calories or alcohol when that tracking is off', () => {
+    const settings: AppSettings = {
+      ...DEFAULT_APP_SETTINGS,
+      nutritionTrackingMode: 'disabled',
+      enableAlcoholTracking: false,
+      enablePhysicalActivityTracking: false,
+    };
+    const yesterday = goodDay('2026-08-01');
+    const todayEntry = baseEntry({
+      id: 't-2026-08-02',
+      date: '2026-08-02',
+    });
+    const action = getNextBestAction({
+      today: '2026-08-02',
+      todayEntry,
+      dailyEntries: [yesterday, todayEntry],
+      measurements: [measurement('2026-08-01', 90)],
+      settings,
+    });
+    expect(action.id).not.toBe('log_calories');
+    expect(action.id).not.toBe('log_alcohol');
+  });
+
   it('quiet day copy replaces survival/shame status', () => {
     expect(getDayStatus(0)).toBe('Тихий день');
     expect(getDayStatus(39)).toBe('Тихий день');

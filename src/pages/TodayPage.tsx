@@ -14,7 +14,7 @@ export function TodayPage() {
 
   return (
     <div
-      className="today-v2 space-y-5 overflow-x-hidden pb-24 lg:space-y-6 lg:pb-8"
+      className="today-v2 space-y-5 overflow-x-hidden pb-32 lg:space-y-6 lg:pb-8"
       data-testid="today-v2"
     >
       <TodayHeader model={model} />

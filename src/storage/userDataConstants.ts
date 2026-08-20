@@ -40,6 +40,6 @@ export const SIDECAR_BACKUP_TYPES = [
 ] as const;
 
 export const DATA_CONFLICT_MESSAGE =
-  'Данные изменились в другой вкладке. Перезагрузите страницу.';
+  'Сохранение не записалось: данные уже обновились в другой вкладке. Обновите страницу.';
 
 export const SAVE_BEFORE_HYDRATION_MESSAGE = 'Данные ещё не загружены';

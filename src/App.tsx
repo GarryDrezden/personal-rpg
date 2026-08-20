@@ -80,6 +80,13 @@ const ContentLabPage = import.meta.env.DEV
       })),
     )
   : null;
+const UserJourneyLabPage = import.meta.env.DEV
+  ? lazy(() =>
+      import('./pages/dev/UserJourneyLabPage').then((m) => ({
+        default: m.UserJourneyLabPage,
+      })),
+    )
+  : null;
 
 function LoadingScreen() {
   return (
@@ -197,6 +204,9 @@ function AuthenticatedApp() {
           ) : null}
           {ContentLabPage ? (
             <Route path="/dev/content-lab" element={<ContentLabPage />} />
+          ) : null}
+          {UserJourneyLabPage ? (
+            <Route path="/dev/user-journey-lab" element={<UserJourneyLabPage />} />
           ) : null}
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

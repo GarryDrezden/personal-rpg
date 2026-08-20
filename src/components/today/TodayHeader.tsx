@@ -94,7 +94,7 @@ export function TodayHeader({ model }: TodayHeaderProps) {
 export function TodayMobileSaveBar({ model }: TodayHeaderProps) {
   const { dirty, saving, saveReaction, derived, saveDay } = model;
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--app-border)] bg-[var(--app-bg)]/95 px-4 py-3 backdrop-blur-sm lg:hidden">
+    <div className="fixed inset-x-0 bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-40 border-t border-[var(--app-border)] bg-[var(--app-bg)]/95 px-4 py-3 backdrop-blur-sm lg:hidden">
       <div className="mx-auto flex max-w-lg items-center gap-3">
         <div className="min-w-0 flex-1 text-xs text-[var(--app-text-muted)]">
           {dirty ? 'Есть изменения' : saveReaction ? 'Ход сохранён' : 'Готово к сохранению'}

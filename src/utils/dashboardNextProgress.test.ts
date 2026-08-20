@@ -11,6 +11,7 @@ import {
 } from './dashboardNextProgress';
 import { DEFAULT_COZY_HOME_STATE } from './cozyHomeEngine';
 import { getJourneyMapSummary } from './journeyMapEngine';
+import { COZY_HOME_MAX_LEVEL, COZY_HOME_ZONE_IDS } from '../constants/cozyHomeConfig';
 
 function emptySeason(over: Partial<SeasonSnapshot> = {}): SeasonSnapshot {
   const quests = over.quests ?? [
@@ -94,6 +95,33 @@ function settingsWithHome(
       ...DEFAULT_COZY_HOME_STATE,
       resources: { ...DEFAULT_COZY_HOME_STATE.resources, ...resources },
     },
+  };
+}
+
+function settingsWithCompletedHome(): AppSettings {
+  const zones = Object.fromEntries(
+    COZY_HOME_ZONE_IDS.map((id) => [id, { zoneId: id, level: COZY_HOME_MAX_LEVEL }]),
+  ) as typeof DEFAULT_COZY_HOME_STATE.zones;
+  return {
+    ...DEFAULT_APP_SETTINGS,
+    cozyHome: {
+      ...DEFAULT_COZY_HOME_STATE,
+      zones,
+      totalUpgrades: COZY_HOME_ZONE_IDS.length * COZY_HOME_MAX_LEVEL,
+      resources: { comfort: 40, materials: 40, garden: 40, clarity: 40 },
+    },
+  };
+}
+
+function completedJourney(settings: AppSettings = DEFAULT_APP_SETTINGS): JourneyMapSummary {
+  const base = journeyFromSettings(settings);
+  return {
+    ...base,
+    completedStages: base.totalStages,
+    overallProgressPercent: 100,
+    currentStage: base.currentStage
+      ? { ...base.currentStage, status: 'completed' }
+      : null,
   };
 }
 
@@ -252,5 +280,38 @@ describe('getDashboardNextProgress', () => {
     });
     expect(next?.kind).toBe('journey_milestone');
     expect(next?.title).toMatch(/Глава 1 из 9/);
+  });
+
+  it('does not keep Home as NEXT after 24/24 upgrades', () => {
+    const settings = settingsWithCompletedHome();
+    const next = getDashboardNextProgress({
+      themeId: 'cozy',
+      settings,
+      dailyEntries: [],
+      measurements: [],
+      season: emptySeason(),
+      journeySummary: journeyFromSettings(settings),
+      bodyStage: 1,
+    });
+    expect(next.kind).toBe('journey_milestone');
+    expect(next.kind).not.toBe('home_upgrade');
+    expect(next.kind).not.toBe('home_missing');
+    expect(next.title).not.toMatch(/До восстановления|Можно улучшить|До следующего/i);
+  });
+
+  it('falls back to a Today rhythm step when Home and Journey are complete', () => {
+    const settings = settingsWithCompletedHome();
+    const next = getDashboardNextProgress({
+      themeId: 'cozy',
+      settings,
+      dailyEntries: [],
+      measurements: [],
+      season: emptySeason(),
+      journeySummary: completedJourney(settings),
+      bodyStage: 1,
+    });
+    expect(next.kind).toBe('continue_rhythm');
+    expect(next.targetRoute).toBe('/today');
+    expect(next.title).not.toMatch(/До восстановления|Можно улучшить|До следующего/i);
   });
 });

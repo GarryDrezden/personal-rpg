@@ -1,5 +1,20 @@
 # Decision Log
 
+## 2026-08-20 — Real User Journey & Long-Horizon Gameplay QA v1
+
+Context:
+Core loop, economy, content, and Cozy art were mature, but the product had not been walked as a player from first session through months, absence, and Home completion.
+
+Decision:
+- Audit the lifecycle; do not add shop, Home endgame, Skill Map merge, or new progression.
+- Fix only comprehension bugs: tracking-off Next Best Action, Home 24/24 NEXT, 409 copy, mixed onboarding metaphor, FAQ companion leftover.
+- Simulator gains a per-day event timeline and six personas. DEV `/dev/user-journey-lab`.
+
+Consequences:
+NBA no longer asks for disabled trackers. Completed Home does not nag an upgrade. Optional screens classified KEEP/MERGE/DEFER, not deleted. Coins still have no sink (KI-09). See [`../audits/real-user-journey-v1.md`](../audits/real-user-journey-v1.md).
+
+---
+
 ## 2026-08-20 — Cozy Visual Integration & Art Direction Pass v1
 
 Context:

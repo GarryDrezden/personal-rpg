@@ -19,7 +19,8 @@ export type DashboardNextKind =
   | 'season_near'
   | 'body_stage_near'
   | 'home_missing'
-  | 'journey_milestone';
+  | 'journey_milestone'
+  | 'continue_rhythm';
 
 export type DashboardNextProgress = {
   id: string;
@@ -56,7 +57,7 @@ export function getDashboardNextProgress(params: {
   journeySummary: JourneyMapSummary;
   bodyStage: number;
   today?: string;
-}): DashboardNextProgress | null {
+}): DashboardNextProgress {
   const { themeId, settings, season, journeySummary, bodyStage } = params;
   const isCozy = themeId === 'cozy';
   const today = params.today ?? season.seasonStartDate;
@@ -147,5 +148,14 @@ export function getDashboardNextProgress(params: {
     };
   }
 
-  return null;
+  return {
+    id: 'continue_rhythm',
+    kind: 'continue_rhythm',
+    title: isCozy ? 'Ритм продолжается' : 'Путь продолжается',
+    description: isCozy
+      ? 'Ближайший смысл — сегодняшний день. Долгий путь тела никуда не делся.'
+      : 'Ближайший шаг — отметить сегодняшний день. Долгий путь никуда не делся.',
+    actionLabel: 'Открыть день',
+    targetRoute: '/today',
+  };
 }

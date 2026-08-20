@@ -20,7 +20,11 @@ export function SaveStatusIndicator() {
         : 'text-[var(--app-text-muted)]';
 
   return (
-    <p className={`fixed bottom-20 right-4 z-50 rounded-lg border border-[var(--app-border)] bg-[var(--app-card)]/95 px-3 py-1.5 text-xs shadow-lg md:bottom-4 ${color}`}>
+    <p
+      className={`fixed bottom-20 right-4 z-50 rounded-lg border border-[var(--app-border)] bg-[var(--app-card)]/95 px-3 py-1.5 text-xs shadow-lg md:bottom-4 ${color}`}
+      data-testid="save-status-indicator"
+      data-save-status={status}
+    >
       {label}
     </p>
   );

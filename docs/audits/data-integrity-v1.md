@@ -69,7 +69,7 @@ Normalize is not a hidden migration dump.
 
 ## Concurrency (KI-01)
 
-If the client sends `revision` and it does not match the row, API returns **409** `{ error, currentRevision }`. SPA shows: «Данные изменились в другой вкладке. Перезагрузите страницу.»
+If the client sends `revision` and it does not match the row, API returns **409** `{ error, currentRevision }`. SPA shows: «Сохранение не записалось: данные уже обновились в другой вкладке. Обновите страницу.»
 
 Clients that omit `revision` stay last-write-wins (old PWA until SW updates).
 
