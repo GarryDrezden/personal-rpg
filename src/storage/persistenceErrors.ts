@@ -1,5 +1,5 @@
 import { ApiError } from '../api/httpClient';
-import { DATA_CONFLICT_MESSAGE } from './userDataConstants';
+import { DATA_CONFLICT_MESSAGE, SAVE_FAILED_MESSAGE } from './userDataConstants';
 
 /** Server revision check used by PHP upsert and documented for KI-01 tests. */
 export function isRevisionMismatch(
@@ -9,9 +9,19 @@ export function isRevisionMismatch(
   return expected !== undefined && actual !== undefined && expected !== actual;
 }
 
-export function remapPersistenceError(error: unknown): never {
+export function mapPersistenceError(error: unknown): unknown {
   if (error instanceof ApiError && error.status === 409) {
-    throw new ApiError(DATA_CONFLICT_MESSAGE, 409, error.body);
+    return new ApiError(DATA_CONFLICT_MESSAGE, 409, error.body);
   }
-  throw error;
+  if (
+    error instanceof ApiError &&
+    /SQLSTATE|Unknown column|42S22/i.test(error.message)
+  ) {
+    return new ApiError(SAVE_FAILED_MESSAGE, error.status, error.body);
+  }
+  return error;
+}
+
+export function remapPersistenceError(error: unknown): never {
+  throw mapPersistenceError(error);
 }

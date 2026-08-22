@@ -66,7 +66,7 @@ After installing LE:
 3. [ ] На FTP **нет** `api/config/config.php` из Git (создаётся вручную)
 4. [ ] В ispmanager создана БД (+ пользователь)
 5. [ ] В phpMyAdmin выполнен SQL из `api/migrations/001_create_accounts_tables.sql`
-5b. [ ] Для существующих БД: dump, затем `002_user_data_revision_and_backups.sql` (см. [`15-backup-and-recovery.md`](15-backup-and-recovery.md))
+5b. [ ] Для существующих БД: dump, затем `002_user_data_revision_and_backups.sql` (см. [`15-backup-and-recovery.md`](15-backup-and-recovery.md)). After the auto-ensure PHP deploy, `/api/health.php` also applies 002 if still missing.
 6. [ ] Создан `api/config/config.php` по шаблону
 7. [ ] **Доверенный** HTTPS (не self-signed)
 8. [ ] Открыть `https://fit-rpg.ru/api/health.php` — `"ok": true`
@@ -121,7 +121,7 @@ powershell -File scripts/smoke-production-api.ps1
 Таблицы после 001: `users`, `user_profiles`, `user_settings`, `user_data`, `auth_sessions`.  
 После 002: `user_data.revision`, `user_data_backups`.
 
-Порядок production deploy: dump → 002 → `api/` → `dist/` → health → smoke. Rollback: см. [`15-backup-and-recovery.md`](15-backup-and-recovery.md).
+Порядок production deploy: dump → 002 → `api/` → `dist/` → health → smoke. If 002 was skipped, PHP `ensureMysqlUserDataSchema` applies it on the next connect. Rollback: см. [`15-backup-and-recovery.md`](15-backup-and-recovery.md).
 
 ---
 

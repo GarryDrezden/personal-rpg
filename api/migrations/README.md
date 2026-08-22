@@ -11,6 +11,7 @@ Rules:
 
 - Additive first. Do not drop columns in the same release as a frontend that still reads them.
 - `002` may error on `Duplicate column name 'revision'` if it was already applied — that is safe to ignore.
+- PHP also applies 002 on connect if `revision` / `user_data_backups` are missing (`ensureMysqlUserDataSchema`). phpMyAdmin is still the documented production path.
 - Before any migration: phpMyAdmin export (SQL dump) of the database.
 - After migration: deploy PHP, then frontend, then `GET /api/health.php`.
 

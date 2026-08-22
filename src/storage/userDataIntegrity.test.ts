@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { CURRENT_DATA_SCHEMA_VERSION, DATA_CONFLICT_MESSAGE, SAVE_BEFORE_HYDRATION_MESSAGE } from './userDataConstants';
+import { CURRENT_DATA_SCHEMA_VERSION, DATA_CONFLICT_MESSAGE, SAVE_BEFORE_HYDRATION_MESSAGE, SAVE_FAILED_MESSAGE } from './userDataConstants';
 import { envelopeFromRawData, migrateUserData, detectDataSchemaVersion } from './migrateUserData';
 import { normalizeUserDataWithReport } from './normalizeUserData';
 import {
@@ -55,6 +55,14 @@ describe('revision conflict (KI-01)', () => {
       expect((mapped as ApiError).status).toBe(409);
       expect((mapped as ApiError).body).toEqual({ currentRevision: 6 });
     }
+  });
+
+  it('hides SQLSTATE from the save toast', () => {
+    const err = new ApiError(
+      "SQLSTATE[42S22]: Column not found: 1054 Unknown column 'revision' in 'field list'",
+      500,
+    );
+    expect(() => remapPersistenceError(err)).toThrow(SAVE_FAILED_MESSAGE);
   });
 });
 

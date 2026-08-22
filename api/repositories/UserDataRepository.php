@@ -90,16 +90,29 @@ class UserDataRepository
             }
         }
 
-        $stmt = $this->pdo->prepare(
-            'INSERT INTO user_data (user_id, type, payload, revision)
-             VALUES (:user_id, :type, :payload, 1)
-             ON DUPLICATE KEY UPDATE payload = VALUES(payload), revision = revision + 1, updated_at = CURRENT_TIMESTAMP',
-        );
-        $stmt->execute([
+        $params = [
             'user_id' => $userId,
             'type' => $type,
             'payload' => $json,
-        ]);
+        ];
+        try {
+            $stmt = $this->pdo->prepare(
+                'INSERT INTO user_data (user_id, type, payload, revision)
+                 VALUES (:user_id, :type, :payload, 1)
+                 ON DUPLICATE KEY UPDATE payload = VALUES(payload), revision = revision + 1, updated_at = CURRENT_TIMESTAMP',
+            );
+            $stmt->execute($params);
+        } catch (PDOException $e) {
+            if (!$this->isUnknownRevisionColumn($e)) {
+                throw $e;
+            }
+            $stmt = $this->pdo->prepare(
+                'INSERT INTO user_data (user_id, type, payload)
+                 VALUES (:user_id, :type, :payload)
+                 ON DUPLICATE KEY UPDATE payload = VALUES(payload), updated_at = CURRENT_TIMESTAMP',
+            );
+            $stmt->execute($params);
+        }
 
         $result = $this->getByType($userId, $type);
         return $result ?? [
@@ -167,5 +180,12 @@ class UserDataRepository
         } catch (Throwable) {
             return false;
         }
+    }
+
+    private function isUnknownRevisionColumn(PDOException $e): bool
+    {
+        $sqlState = (string) $e->getCode();
+        $message = $e->getMessage();
+        return $sqlState === '42S22' || str_contains($message, "Unknown column 'revision'");
     }
 }

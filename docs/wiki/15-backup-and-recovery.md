@@ -28,7 +28,7 @@ Before any schema migration or risky deploy:
 2. Keep the dump off the web root.
 3. Run `api/migrations/00N_*.sql` in order (`api/migrations/README.md`).
 4. Deploy PHP, then frontend.
-5. `GET /api/health.php` → `"ok": true`.
+5. `GET /api/health.php` → `"ok": true`. If `userDataRevision` is false, PHP will add the column on the next API request after the auto-ensure deploy (or run `002` in phpMyAdmin).
 6. Smoke: `scripts/smoke-production-api.ps1` (creates a **temporary** user; delete it in phpMyAdmin if needed).
 
 ## Deploy order for this pass

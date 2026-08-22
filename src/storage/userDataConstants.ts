@@ -42,4 +42,7 @@ export const SIDECAR_BACKUP_TYPES = [
 export const DATA_CONFLICT_MESSAGE =
   'Сохранение не записалось: данные уже обновились в другой вкладке. Обновите страницу.';
 
+export const SAVE_FAILED_MESSAGE =
+  'Не удалось сохранить данные. Обновите страницу и попробуйте снова.';
+
 export const SAVE_BEFORE_HYDRATION_MESSAGE = 'Данные ещё не загружены';
